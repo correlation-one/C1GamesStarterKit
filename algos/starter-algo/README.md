@@ -1,20 +1,5 @@
 # Starter Algo
 
-## Getting Started
-
-Start implementing your own strategy by modifying `algo_strategy.py`. Check out 
-the [Algo Creation Guide](https://github.com/correlation-one/starter-algo/blob/dev/Algo_Creation_Guide.md) for more information.
-
-
-## Submitting your algo
-
-Zip this entire starter-algo directory or run the `archive_algo.sh` script:
-
-    ./archive_algo.sh path/to/starter-algo
-
-The script will generate a file at `~dist/starter-algo.zip` which you can
-rename to whatever-you-want.zip and upload on [terminal.c1games.com](terminal.c1games.com)
-
 ## File Overview
 
 ```
