@@ -21,11 +21,11 @@ AIGamesStarterKit
  │       │    └──util.py
  │       │ 
  │       ├──algo_strategy.py                    // basic strategy for starter-algo 
- │       ├──README.md                           // detailed starter-algo documentation
- │       └──run.sh                              // entry point for starter-algo (required)
+ │       ├──README.md                           // detailed starter-algo and gammelib documentation
+ │       └──run.sh                              // entry point for algo (required)
  │ 
  ├──dist                                        // directory where archived algos get saved 
- │   ├──renamed-algo.zip                        // archived renamed-algo (ready to upload)
+ │   ├──renamed-algo.zip                        // archived algo (ready to upload)
  │   └──starter-algo.zip                        
  │ 
  ├──docs                                        // more detailed guides/documentation
@@ -33,7 +33,7 @@ AIGamesStarterKit
  │   └──C1_CLI_COMMANDS.md
  │ 
  ├──replays                                     // where match replay files get saved
- │   ├──p1-DD-MM-YYYY-HH-MM-SS-UUID.replay      // replay file (ready to upload/watch on c1games.com)
+ │   ├──p1-DD-MM-YYYY-HH-MM-SS-UUID.replay      // replay file (ready to upload/watch on terminal.c1games.com)
  │   └──p1-DD-MM-YYYY-HH-MM-SS-UUID.replay      
  │ 
  ├──scripts                                     // Helpful commands/scripts
