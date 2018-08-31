@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 echo "Run Match"
+cd ..
 defaultAlgo=$PWD/algos/starter-algo
 algo1=${1:-${defaultAlgo}}
 algo2=${2:-${defaultAlgo}}
