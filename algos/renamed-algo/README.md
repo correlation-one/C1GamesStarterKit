@@ -1,51 +1,34 @@
-# Starter Algo
+# Python Starter Algo
 
-## Getting Started
+You should only need to modify `algo_strategy.py` to implement your strategy,
+however looking at other files may help you understand the game structure,
+and create more complex and efficient algos
 
-Start implementing your own strategy by modifying `algo_strategy.py`. Check out 
-the [Algo Creation Guide](https://github.com/correlation-one/starter-algo/blob/dev/Algo_Creation_Guide.md) for more information.
+## Submitting your bot
 
+Run the `archive_algo.sh` script while your working directory is inside the git
+repository:
 
-## Submitting your algo
+    cd path/to/repos/starter-algo
+    ./archive_algo.sh
 
-Zip this entire starter-algo directory or run the `archive_algo.sh` script:
-
-    ./archive_algo.sh path/to/starter-algo
-
-The script will generate a file at `~dist/starter-algo.zip` which you can
-rename to whatever-you-want.zip and upload on [terminal.c1games.com](terminal.c1games.com)
+The script will generate a file at `~/my-algo-archive.zip` which you can
+upload through the web interface.
 
 ## File Overview
-
-```
-starter-algo
- │
- ├──gamelib
- │   ├──__init__.py
- │   ├──advanced.py
- │   ├──algocore.py
- │   ├──game.py
- │   ├──map.py
- │   ├──navigation.py
- │   ├──tests.py
- │   ├──unit.py
- │   └──util.py
- │ 
- ├──algo_strategy.py
- ├──README.md
- └──run.sh
-```
 
 ### `algo_strategy.py`
 
 This file contains the `AlgoStrategy` class which you should modify to implement
 your strategy.
 
-At a minimum you must implement the `on_turn` method which handles responding to
-the game state for each turn. Refer to the `starter_strategy` method for inspiration.
+At a minimum you must implement the `step` method which handles responding to
+the game state for each turn since the default implementation simply ends the
+turn without doing anything. Refer to the included starter strategy for
+inspiration.
 
 If your algo requires initialization then you should also implement the
-`on_game_start` method and do any inital setup there.
+`process_config` method an do any inital setup there.
 
 ### `run.sh`
 
@@ -62,9 +45,10 @@ the latest turn, and estimating paths based on the latest board state.
 
 ### `gamelib/algocore.py`
 
-This file contains code that handles the communication between your algo and the
-core game logic module. You shouldn't need to change this directly. Feel free to 
-just overwrite the core methods that you would like to behave differently. 
+This file contains code implementing the communication between the algo and the
+core game logic module so that your algo doesn't need to implement it. You
+shouldn't need to change this directly, just overwrite the core methods that you
+would like to behave differently. 
 
 ### `gamelib/game.py`
 
