@@ -48,11 +48,11 @@ AIGamesStarterKit
  │       │    └──util.py
  │       │ 
  │       ├──algo_strategy.py                    // basic strategy for starter-algo 
- │       ├──README.md                           // detailed starter-algo documentation
- │       └──run.sh                              // entry point for starter-algo (required)
+ │       ├──README.md                           // detailed starter-algo and gammelib documentation
+ │       └──run.sh                              // entry point for algo (required)
  │ 
  ├──dist                                        // directory where archived algos get saved 
- │   ├──renamed-algo.zip                        // archived renamed-algo (ready to upload)
+ │   ├──renamed-algo.zip                        // archived algo (ready to upload)
  │   └──starter-algo.zip                        
  │ 
  ├──docs                                        // more detailed guides/documentation
@@ -60,7 +60,7 @@ AIGamesStarterKit
  │   └──C1_CLI_COMMANDS.md
  │ 
  ├──replays                                     // where match replay files get saved
- │   ├──p1-DD-MM-YYYY-HH-MM-SS-UUID.replay      // replay file (ready to upload/watch on c1games.com)
+ │   ├──p1-DD-MM-YYYY-HH-MM-SS-UUID.replay      // replay file (ready to upload/watch on terminal.c1games.com)
  │   └──p1-DD-MM-YYYY-HH-MM-SS-UUID.replay      
  │ 
  ├──scripts                                     // Helpful commands/scripts
@@ -74,17 +74,29 @@ AIGamesStarterKit
 
 ## Using the C1 CLI
 
+Imagine you have a local directory `algos/` with the following:
+
+    algos/STarter
+    algos/funtimes
+
+`$ scripts/run_match.sh path/to/algo1 algos/funtimes`
+
+
 ### Running matches locally between algos
 Easily run a match between two local algos using the `run_match.sh` script. The resulting replay file
 will be saved in the /replays directory and can be uploaded and watched on terminal.c1games.com/play.
 
-`$ scripts/run_match.sh path/to/algo1 path/to/algo2`
+For example, if you wanted to run starter_algo against a renamed_algo of your own creation in the command line,
+you can cd into the AIGamesStarterKit and run the following command:
+`$ ./scripts/run_match.sh ./algos/starter_algo ./algos/renamed_algo`
+assuming both of these algos are located in algos in AIGamesStarterKit
 
 ### Uploading your algo
 Zip the entire algo directory or run the `archive_algo.sh` script to zip an algo. It will be saved in 
 the /dist directory and can then be uploaded on terminal.c1games.com/myalgos to compete in ranked matches.
 
-`$ scripts/archive_algo.sh dist/renamed-algo.zip algos/renamed-algo`
+While using AIGamesStarterKit as your working directory, to zip an algo in the algos folder, you can use
+`$ ./scripts/archive_algo.sh ./dist/renamed-algo.zip ./algos/renamed-algo`
 
 Check out all the [C1 CLI Commands](https://github.com/correlation-one/AIGamesStarterKit/blob/dev/docs/C1_CLI_COMMANDS.md) for more information.
 
