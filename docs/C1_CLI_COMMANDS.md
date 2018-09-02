@@ -1,5 +1,7 @@
 # C1 CLI Commands
 
+NOTE: All example commands assume you are starting in the AIGamesStarterKit's root directory.
+
 ## Forking a Local Algo
 
 Copy the `starter-algo` to start your own bot, or duplicate a local algo to pursue an alternative
