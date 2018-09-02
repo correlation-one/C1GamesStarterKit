@@ -75,7 +75,7 @@ Helper functions and values that do not yet have a better place to live.
 
 ## Strategy Overview
 
-The starter strategy is designed to highlight a few common game_map functions
+The starter strategy is designed to highlight a few common `GameMap` functions
 and give the user a functioning example to work with. It's gameplan is to 
 draw the C1 logo, place destructors in its corners, and randomly spawn encryptors
 and units.

@@ -1,37 +1,34 @@
-## C1 CLI Commands
+# C1 CLI Commands
 
-#### Run Match
+## Forking a Local Algo
 
-`$ scripts/run_match.sh`   
+Copy the `starter-algo` to start your own bot, or duplicate a local algo to pursue an alternative
+line of development:
 
-`$ scripts/run_match.sh <path/to/algo1> <path/to/algo2>`
+    $ scripts/fork_algo.sh <path/to/algo1> <path/to/algo2>
 
-`$ scripts/run_match.sh algos/starter-algo algos/renamed-algo`
+### Concrete Examples
 
+    $ scripts/fork_algo.sh algos/starter-algo algos/renamed-algo
 
-#### Archive Algo
+## Run Match
 
-`$ scripts/archive_algo.sh`
+Play a match between two local algos, the replay from Player One's perspective will be saved in
+`replays/`:
 
-`$ scripts/archive_algo.sh <output/path/algo.zip> <input/path/algo>`
+    $ scripts/run_match.sh <path/to/algo1> <path/to/algo2>
 
-`$ scripts/archive_algo.sh dist/renamed-algo.zip algos/renamed-algo`
+### Concrete Examples
 
+    $ scripts/run_match.sh algos/starter-algo algos/renamed-algo
 
-## TODO
+## Archive Algo
 
-#### Pre-Upload Test for an algo (final check to make sure everything looks good)
+Run the archive script to prepare an algo for upload:
 
-#### Boss Gauntlet (Run an algo agianst bosses in order until a loss)
+    $ scripts/archive_algo.sh <input/path/algo> <output/path/algo.zip>
 
-#### Round Robin (Run all algos agianst eachother and output rank order)
+### Concrete Examples
 
-#### Hide ugly shell scripts behind a sexy c1 namespace like:  
+    $ scripts/archive_algo.sh algos/renamed-algo dist/renamed-algo.zip
 
-```
-$ c1 match algo1 algo2
-$ c1 hot-zip -watch
-$ c1 test algo1
-
-etc.
-```

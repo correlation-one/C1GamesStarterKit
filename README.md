@@ -29,6 +29,7 @@ This class holds information about the current location of units on the game map
 The GameUnit class represents one unit. You will most often access it by getting the list of units on a given tile via game_map.map[x,y] then getting a unit from this list.
 
 ## StarterKit Files
+
 ```
 AIGamesStarterKit
  │
@@ -81,7 +82,8 @@ will be saved in the replays/ directory and can be uploaded and watched on termi
 
 For example, if you wanted to run starter_algo against a renamed_algo of your own creation in the command line,
 you can cd into the AIGamesStarterKit and run the following command:
-`$ scripts/run_match.sh algos/starter_algo algos/renamed_algo`
+
+    $ scripts/run_match.sh algos/starter_algo algos/renamed_algo
 
 This will also save a replay file in replays/, which you can upload on our site to watch your game
 
@@ -90,9 +92,11 @@ Zip the entire algo directory or run the `archive_algo.sh` script to zip an algo
 the /dist directory and can then be uploaded on terminal.c1games.com/myalgos to compete in ranked matches.
 
 While using AIGamesStarterKit as your working directory, to zip an algo in the algos folder, you can use
-`$ scripts/archive_algo.sh dist/renamed-algo.zip algos/renamed-algo`
+
+    $ scripts/archive_algo.sh dist/renamed-algo.zip algos/renamed-algo
 
 Check out all the [C1 CLI Commands](https://github.com/correlation-one/AIGamesStarterKit/blob/dev/docs/C1_CLI_COMMANDS.md) for more information.
 
 ## Custom Config
+
 Customize the "debug" values in game-configs.json to control the level of error/debug information printed during a match.
