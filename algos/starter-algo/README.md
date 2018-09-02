@@ -17,7 +17,6 @@ starter-algo
  │   └──util.py
  │ 
  ├──algo_strategy.py
- ├──archive_algo.sh
  ├──README.md
  └──run.sh
 ```
