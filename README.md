@@ -32,45 +32,43 @@ The GameUnit class represents one unit. You will most often access it by getting
 
 ```
 AIGamesStarterKit
- │
- ├──algos                                       // src directory for your algos
- │   ├──renamed-algo                            // a renamed starter-algo for you to customize
- │   └──starter-algo                            // basic starter-algo
- │       │          
- │       ├──gamelib                             // core api, classes, and methods for starter-algo
- │       │    ├──__init__.py
- │       │    ├──advanced.py
- │       │    ├──algocore.py
- │       │    ├──game.py
- │       │    ├──map.py
- │       │    ├──navigation.py                 
- │       │    ├──tests.py
- │       │    ├──unit.py
- │       │    └──util.py
- │       │ 
- │       ├──algo_strategy.py                    // basic strategy for starter-algo 
- │       ├──README.md                           // detailed starter-algo and gammelib documentation
- │       └──run.sh                              // entry point for algo (required)
- │ 
- ├──dist                                        // directory where archived algos get saved 
- │   ├──renamed-algo.zip                        // archived algo (ready to upload)
- │   └──starter-algo.zip                        
- │ 
- ├──docs                                        // more detailed guides/documentation
- │   ├──ALGO_CREATION_GUIDE.md
- │   └──C1_CLI_COMMANDS.md
- │ 
- ├──replays                                     // where match replay files get saved
- │   ├──p1-DD-MM-YYYY-HH-MM-SS-UUID.replay      // replay file (ready to upload/watch on terminal.c1games.com)
- │   └──p1-DD-MM-YYYY-HH-MM-SS-UUID.replay      
- │ 
- ├──scripts                                     // Helpful commands/scripts
- │   ├──archive_algo.sh
- │   └──run_match.sh
- │ 
- ├──engine.jar                                  // Game Engine Executable
- ├──game-configs.json                           // Game Configs
- └──README.md                                   // General StarterKit Overview
+│
+├── README.md                                   // General StarterKit Overview
+├── engine.jar                                  // Game Engine Executable
+├── game-configs.json                           // Game Configs
+│
+├── algos                                       // src directory for your algos
+│   │
+│   └── starter-algo                            // basic starter-algo
+│       ├── gamelib                             // core api, classes, and methods for starter-algo
+│       │   ├── __init__.py
+│       │   ├── advanced.py
+│       │   ├── algocore.py
+│       │   ├── game.py
+│       │   ├── map.py
+│       │   ├── navigation.py
+│       │   ├── tests.py
+│       │   ├── unit.py
+│       │   └── util.py
+│       │
+│       ├── README.md                           // detailed starter-algo and gammelib documentation
+│       ├── algo_strategy.py                    // basic strategy for starter-algo (required)
+│       └── run.sh                              // entry point for algo (required)
+│
+├── dist                                        // directory where archived algos get saved 
+│   └── starter-algo.zip
+│
+├── docs                                        // more detailed guides/documentation
+│   └── C1_CLI_COMMANDS.md
+│
+├── replays                                     // where match replay files from player one's perspective get saved
+│   ├── p1-DD-MM-YYYY-HH-MM-SS-UUID.replay      // replay file, ready to watch at https://terminal.c1games.com/playground
+│   └── p1-DD-MM-YYYY-HH-MM-SS-UUID.replay      
+│
+└── scripts                                     // Helpful commands/scripts
+    ├── archive_algo.sh
+    ├── fork_algo.sh
+    └── run_match.sh
 ```
 
 ## Using the C1 CLI
