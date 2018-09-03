@@ -4,8 +4,12 @@ from .unit import GameUnit
 class GameMap:
     def __init__(self, config):
         self.config = config
-        self.arena_size = 28 
-        self.half_arena = int(self.arena_size / 2)
+        self.ARENA_SIZE = 28 
+        self.HALF_ARENA = int(self.ARENA_SIZE / 2)
+        self.TOP_RIGHT = 0
+        self.TOP_LEFT = 1
+        self.BOTTOM_LEFT = 2
+        self.BOTTOM_RIGHT = 3
         self.__map = self.__empty_grid()
         self.__start = [13,0]
     
@@ -31,7 +35,7 @@ class GameMap:
             raise StopIteration
         new_location = [location[0]+1, location[1]]
         while not self.in_arena_bounds(new_location) and not location == [14,27]:
-            if new_location[0] == self.arena_size:
+            if new_location[0] == self.ARENA_SIZE:
                 new_location = [0, new_location[1]+1]
             else:
                 new_location = [new_location[0]+1, new_location[1]]
@@ -40,9 +44,9 @@ class GameMap:
 
     def __empty_grid(self):
         grid = []
-        for x in range(0, self.arena_size):
+        for x in range(0, self.ARENA_SIZE):
             grid.append([])
-            for y in range(0, self.arena_size):
+            for y in range(0, self.ARENA_SIZE):
                 grid[x].append([])
         return grid
 
@@ -51,33 +55,27 @@ class GameMap:
         Checks if the given location is inside the diamond shaped game board.
         '''
         x, y = location
-        half_board = self.half_arena
+        half_board = self.HALF_ARENA
 
         row_size = y + 1
         startx = half_board - row_size
         endx = startx + (2 * row_size) - 1
-        top_half_check = (y < self.half_arena and x >= startx and x <= endx)
+        top_half_check = (y < self.HALF_ARENA and x >= startx and x <= endx)
 
-        row_size = (self.arena_size - 1 - y) + 1
+        row_size = (self.ARENA_SIZE - 1 - y) + 1
         startx = half_board - row_size
         endx = startx + (2 * row_size) - 1
-        bottom_half_check = (y >= self.half_arena and x >= startx and x <= endx)
+        bottom_half_check = (y >= self.HALF_ARENA and x >= startx and x <= endx)
 
         return bottom_half_check or top_half_check
 
     def get_edge_locations(self, quadrant_description):
         '''
         Takes in an edge description and returns a list of locations.
-        Valid quadrant descriptions: top_right, top_left, bottom_left, bottom_right
+        Valid quadrant descriptions: GameMap.TOP_RIGHT, GameMap.TOP_LEFT, GameMap.BOTTOM_RIGHT, GameMap.BOTTOM_LEFT
         '''
-        edge_quadrant_indices = {
-                "top_right": 0,
-                "top_left": 1,
-                "bottom_left": 2,
-                "bottom_right": 3}
-        edge_index = edge_quadrant_indices.get(quadrant_description)
         edges = self.get_edges()
-        return edges[edge_index]
+        return edges[quadrant_description]
 
     def get_edges(self):
         '''
@@ -85,35 +83,35 @@ class GameMap:
         [0] = top_right, [1] = top_left, [2] = bottom_left, [3] = bottom_right.
         '''
         top_right = []
-        for num in range(0, self.half_arena):
-            x = self.half_arena + num
-            y = self.arena_size - 1 - num
+        for num in range(0, self.HALF_ARENA):
+            x = self.HALF_ARENA + num
+            y = self.ARENA_SIZE - 1 - num
             top_right.append([int(x), int(y)])
         top_left = []
-        for num in range(0, self.half_arena):
-            x = self.half_arena - 1 - num
-            y = self.arena_size - 1 - num
+        for num in range(0, self.HALF_ARENA):
+            x = self.HALF_ARENA - 1 - num
+            y = self.ARENA_SIZE - 1 - num
             top_left.append([int(x), int(y)])
         bottom_left = []
-        for num in range(0, self.half_arena):
-            x = self.half_arena - 1 - num
+        for num in range(0, self.HALF_ARENA):
+            x = self.HALF_ARENA - 1 - num
             y = num
             bottom_left.append([int(x), int(y)])
         bottom_right = []
-        for num in range(0, self.half_arena):
-            x = self.half_arena + num
+        for num in range(0, self.HALF_ARENA):
+            x = self.HALF_ARENA + num
             y = num
             bottom_right.append([int(x), int(y)])
         return [top_right, top_left, bottom_left, bottom_right]
     
-    def add_unit(self, unit_type, location, player_id=0):
+    def add_unit(self, unit_type, location, player_index=0):
         '''
         Add a single GameUnit to the map at the given location.
         '''
         if not self.in_arena_bounds(location):
             raise InvalidCoordinate(location)
         x, y = location
-        new_unit = GameUnit(unit_type, self.config, player_id, None, "", location[0], location[1])
+        new_unit = GameUnit(unit_type, self.config, player_index, None, "", location[0], location[1])
         if not new_unit.stationary:
             self.__map[x][y].append(new_unit)
         else:

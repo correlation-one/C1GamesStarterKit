@@ -15,28 +15,28 @@ class AdvancedGameState(GameState):
         Target priority: Infantry > Nearest Unit > Lowest Stability > Lowest Y position > Closest to edge (Highest distance of X from the boards center, 13.5)
         '''
         attacker_location = [attacking_unit.x, attacking_unit.y]
-        possible_locations = self.map.get_locations_in_range(attacker_location, attacking_unit.range)
+        possible_locations = self.game_map.get_locations_in_range(attacker_location, attacking_unit.range)
         target = None
         target_stationary = True
-        target_distance = sys.maxint
-        target_stability = sys.maxint
-        target_y = self.arena_size
+        target_distance = sys.maxsize
+        target_stability = sys.maxsize
+        target_y = self.ARENA_SIZE
         target_x_distance = 0
 
         for location in possible_locations:
-            for unit in self.map[location]:
+            for unit in self.game_map[location]:
                 '''
                 NOTE: scrambler units cannot attack firewalls so skip them if unit is firewall
                 '''
-                if unit.player_id == attacking_unit.player_id or (attacking_unit.unit_type == SCRAMBLER and is_stationary(unit)):
+                if unit.player_index == attacking_unit.player_index or (attacking_unit.unit_type == SCRAMBLER and is_stationary(unit)):
                     continue
 
                 new_target = False
                 unit_stationary = unit.stationary
-                unit_distance = self.map.distance_between_locations(location, [attacking_unit.x, attacking_unit.y])
+                unit_distance = self.game_map.distance_between_locations(location, [attacking_unit.x, attacking_unit.y])
                 unit_stability = unit.stability
                 unit_y = unit.y
-                unit_x_distance = abs(self.half_arena - 0.5 - unit.x)
+                unit_x_distance = abs(self.HALF_ARENA - 0.5 - unit.x)
 
                 if target_stationary and not unit_stationary:
                     new_target = True
@@ -70,7 +70,7 @@ class AdvancedGameState(GameState):
                     target_x_distance = unit_x_distance
         return target
 
-    def get_attackers(self, location, player_id):
+    def get_attackers(self, location, player_index):
         '''
         Returns list of destructors that would attack a unit at the given location with the given player id.
         '''
@@ -80,9 +80,9 @@ class AdvancedGameState(GameState):
         '''
         Get locations in the range of DESTRUCTOR units
         '''
-        possible_locations= self.map.get_locations_in_range(location, self.config["unitInformation"][UNIT_TYPE_TO_INDEX[DESTRUCTOR]]["range"])
+        possible_locations= self.game_map.get_locations_in_range(location, self.config["unitInformation"][UNIT_TYPE_TO_INDEX[DESTRUCTOR]]["range"])
         for location in possible_locations:
-            for unit in self.map[location]:
-                if unit.unit_type == DESTRUCTOR and unit.player_id != player_id:
+            for unit in self.game_map[location]:
+                if unit.unit_type == DESTRUCTOR and unit.player_index != player_index:
                     attackers.append(unit)
         return attackers

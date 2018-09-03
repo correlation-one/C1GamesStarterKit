@@ -24,9 +24,9 @@ class ShortestPathFinder:
     def navigate_multiple_endpoints(self, start_point, end_points, game_state):
         #Initialize map 
         self.game_state = game_state
-        self.game_map = [[Node() for x in range(self.game_state.arena_size)] for y in range(self.game_state.arena_size)]
+        self.game_map = [[Node() for x in range(self.game_state.ARENA_SIZE)] for y in range(self.game_state.ARENA_SIZE)]
         #Fill in walls
-        for location in self.game_state.map:
+        for location in self.game_state.game_map:
             if self.game_state.contains_stationary_unit(location):
                 self.game_map[location[0]][location[1]].blocked = True
         #Do pathfinding
@@ -47,7 +47,7 @@ class ShortestPathFinder:
         while not current.empty():
             search_location = current.get()
             for neighbor in self.get_neighbors(search_location):
-                if not self.game_state.map.in_arena_bounds(neighbor) or self.game_map[neighbor[0]][neighbor[1]].blocked:
+                if not self.game_state.game_map.in_arena_bounds(neighbor) or self.game_map[neighbor[0]][neighbor[1]].blocked:
                     continue
 
                 x, y = neighbor
@@ -71,9 +71,9 @@ class ShortestPathFinder:
         point = end_points[0]
         x, y = point
         direction = [1, 1]
-        if x < self.game_state.half_arena:
+        if x < self.game_state.HALF_ARENA:
            direction[0] = -1
-        if y < self.game_state.half_arena:
+        if y < self.game_state.HALF_ARENA:
             direction[1] = -1
         return direction
 
@@ -109,14 +109,14 @@ class ShortestPathFinder:
         else:
             current.put(ideal_tile)
             self.game_map[ideal_tile[0]][ideal_tile[1]].pathlength = 0
-            self.game_map[location[0]][location[1]].visited_validate = True
+            self.game_map[ideal_tile[0]][ideal_tile[1]].visited_validate = True
 
         #While current is not empty
         while not current.empty():
             current_location = current.get()
             current_node = self.game_map[current_location[0]][current_location[1]]
             for neighbor in self.get_neighbors(current_location):
-                if not self.game_state.map.in_arena_bounds(neighbor) or self.game_map[neighbor[0]][neighbor[1]].blocked:
+                if not self.game_state.game_map.in_arena_bounds(neighbor) or self.game_map[neighbor[0]][neighbor[1]].blocked:
                     continue
 
                 neighbor_node = self.game_map[neighbor[0]][neighbor[1]]
@@ -158,7 +158,7 @@ class ShortestPathFinder:
         best_pathlength = self.game_map[current_point[0]][current_point[1]].pathlength
         for neighbor in neighbors:
             #debug_write("Comparing champ {} and contender {}".format(ideal_neighbor, neighbor))
-            if not self.game_state.map.in_arena_bounds(neighbor) or self.game_map[neighbor[0]][neighbor[1]].blocked:
+            if not self.game_state.game_map.in_arena_bounds(neighbor) or self.game_map[neighbor[0]][neighbor[1]].blocked:
                 continue
 
             new_best = False

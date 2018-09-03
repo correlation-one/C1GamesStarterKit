@@ -19,7 +19,7 @@ class GameState:
     The game board is stored as: a 2 dimensional array representing each tile on
     the board. Each tile is yet another array containing the units located at
     the x,y coordinates specified in the first two indices. So getting the 2nd
-    of 3 units located at (12, 13) would look like: `unit = self.map[12,13,1]`
+    of 3 units located at (12, 13) would look like: `unit = self.game_map[12,13][1]`
 
     Path finding helpers are stored in the `shortest_path_finder` attribute.
     '''
@@ -46,9 +46,12 @@ class GameState:
         
         FIREWALL_TYPES = [FILTER, ENCRYPTOR, DESTRUCTOR]
 
-        self.arena_size = 28
-        self.half_arena = int(self.arena_size / 2)
-        self.map = GameMap(self.config)
+        self.ARENA_SIZE = 28
+        self.HALF_ARENA = int(self.ARENA_SIZE / 2)
+        self.BITS = 0
+        self.CORES = 1
+
+        self.game_map = GameMap(self.config)
         self.shortest_path_finder = ShortestPathFinder()
         self.build_stack = []
         self.deploy_stack = []
@@ -59,7 +62,7 @@ class GameState:
 
     def __parse_state(self, state_line):
         '''
-        Fills in map based on the serialized game state so that self.map[x,y] is a list of GameUnits at that location.
+        Fills in map based on the serialized game state so that self.game_map[x,y] is a list of GameUnits at that location.
         state_line is the game state as a json string.
         '''
         state = json.loads(state_line)
@@ -98,22 +101,26 @@ class GameState:
                 hp = float(shp)
                 # This depends on RM always being the last type to be processed
                 if unit_type == REMOVE:
-                    self.map[x,y][0].pending_removal = True
+                    self.game_map[x,y][0].pending_removal = True
                 unit = GameUnit(unit_type, self.config, player_number, hp, unit_id, x, y)
-                self.map[x,y].append(unit)
+                self.game_map[x,y].append(unit)
 
     def __resource_required(self, unit_type):
-        return 'cores' if is_stationary(unit_type) else 'bits'
+        return self.CORES if is_stationary(unit_type) else self.BITS
 
-    def __set_resource(self, resource_type, amount, player_id=0):
+    def __set_resource(self, resource_type, amount, player_index=0):
         '''
-        Sets the resources for the given player_id and resource_type.
+        Sets the resources for the given player_index and resource_type.
         Is automatically called by other provided functions. 
         '''
-        held_resource = self.get_resource(resource_type, player_id)
-        self.player_resources[player_id][resource_type] = held_resource + amount
+        if resource_type == self.BITS:
+            resource_key = 'bits'
+        elif resource_type == self.CORES:
+            resource_key = 'cores'
+        held_resource = self.get_resource(resource_type, player_index)
+        self.player_resources[player_index][resource_key] = held_resource + amount
 
-    def sumbit_turn(self):
+    def submit_turn(self):
         '''
         Sends build message to the game. 
         Must be called at the end of the algo_strategy step function or the algo will hang.
@@ -123,14 +130,18 @@ class GameState:
         send_command(build_string)
         send_command(deploy_string)
 
-    def get_resource(self, resource_type, player_id = 0):
+    def get_resource(self, resource_type, player_index = 0):
         '''
-        Returns number of given resource_type given player_id has.
+        Returns number of given resource_type given player_index has.
         Parameter resource_type must be cores or bits.
-        Parameter player_id must be 0 or 1, 0 for yourself 1 for enemy.
+        Parameter player_index must be 0 or 1, 0 for yourself 1 for enemy.
         '''
-        resources = self.player_resources[player_id]
-        return resources.get(resource_type, None)
+        if resource_type == self.BITS:
+            resource_key = 'bits'
+        elif resource_type == self.CORES:
+            resource_key = 'cores'
+        resources = self.player_resources[player_index]
+        return resources.get(resource_key, None)
 
     def number_affordable(self, unit_type):
         '''
@@ -141,18 +152,16 @@ class GameState:
         player_held = self.get_resource(resource_type)
         return math.floor(player_held / cost)
 
-    def project_future_bits(self, turns_in_future=1, player_id=0, current_bits=None):
+    def project_future_bits(self, turns_in_future=1, player_index=0, current_bits=None):
         '''
-        Returns number of bits stored after the given number of turns.
+        Returns number of bits stored after the given number of turns, assuming we start with the bits currently 
+        held by the player corresponding to player_index or starting from current_bits instead if it is provided. 
         '''
-        bits = self.get_resource('bits', player_id) if not current_bits else current_bits
+        bits = self.get_resource(self.BITS, player_index) if not current_bits else current_bits
         for increment in range(1, turns_in_future + 1):
             current_turn = self.turn_number + increment
             bits *= (1 - self.config["resources"]["bitDecayPerRound"])
-            if current_turn == 0:
-                bits_gained = self.config["resources"]["startingBits"]
-            else:
-                bits_gained = self.config["resources"]["bitsPerRound"] + (current_turn // self.config["resources"]["turnIntervalForBitSchedule"])
+            bits_gained = self.config["resources"]["bitsPerRound"] + (current_turn // self.config["resources"]["turnIntervalForBitSchedule"])
             bits += bits_gained
             bits = math.floor(bits * 100) / 100
         return bits
@@ -171,10 +180,9 @@ class GameState:
         """
         affordable = self.number_affordable(unit_type) >= num
         stationary = is_stationary(unit_type)
-        blocked = self.contains_stationary_unit(location) or (stationary and len(self.map[location[0],location[1]]) > 0)
-        correct_territory = location[1] < self.half_arena
-        
-        on_edge = location in (self.map.get_edge_locations("bottom_left") + self.map.get_edge_locations("bottom_right"))
+        blocked = self.contains_stationary_unit(location) or (stationary and len(self.game_map[location[0],location[1]]) > 0)
+        correct_territory = location[1] < self.HALF_ARENA
+        on_edge = location in (self.game_map.get_edge_locations(self.game_map.BOTTOM_LEFT) + self.game_map.get_edge_locations(self.game_map.BOTTOM_RIGHT))
 
         return (affordable and correct_territory and not blocked and
                 (stationary or on_edge) and
@@ -199,7 +207,7 @@ class GameState:
                     cost = self.type_cost(unit_type)
                     resource_type = self.__resource_required(unit_type)
                     self.__set_resource(resource_type, -cost)
-                    self.map.add_unit(unit_type, location, 1)
+                    self.game_map.add_unit(unit_type, location, 0)
                     if is_stationary(unit_type):
                         self.build_stack.append((unit_type, x, y))
                     else:
@@ -218,14 +226,13 @@ class GameState:
             locations = [locations]
         removed_units = 0
         for location in locations:
-            if location[1] < self.half_arena and self.contains_stationary_unit(location):
+            if location[1] < self.HALF_ARENA and self.contains_stationary_unit(location):
                 x, y = map(int, location)
-                removed_unit = self.map[x,y][0]
+                removed_unit = self.game_map[x,y][0]
                 self.build_stack.append((REMOVE, x, y))
                 resource_type = self.__resource_required(removed_unit)
                 refund = self.type_cost(removed_unit.unit_type) * self.config["mechanics"]["destroyOwnUnitRefund"] * (removed_unit.stability / removed_unit.max_stability)
                 self.__set_resource(resource_type, refund)
-                self.map[x,y] = []
                 removed_units += 1
         return removed_units
 
@@ -235,13 +242,13 @@ class GameState:
         map state. The path may change if the map is modified by adding
         additional firewalls after this turn by the enemy player.
         '''
-        end_points = self.map.get_edge_locations(target_edge)
+        end_points = self.game_map.get_edge_locations(target_edge)
         self.shortest_path_finder.navigate_multiple_endpoints(start_location, end_points, self)
 
     def contains_stationary_unit(self, location):
         """ Check if a Firewall exists at the given location. """
         x, y = map(int, location)
-        for unit in self.map[x,y]:
+        for unit in self.game_map[x,y]:
             if unit.stationary:
                 return unit
         return False

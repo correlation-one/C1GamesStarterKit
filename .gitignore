@@ -1,3 +1,9 @@
 *.DS_Store*
 *.replay
 *__pycache__*
+
+algos/*
+!algos/starter-algo
+
+dist/*
+!dist/starter-algo.zip

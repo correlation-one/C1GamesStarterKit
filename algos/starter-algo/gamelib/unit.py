@@ -6,10 +6,10 @@ class GameUnit:
     Class that holds information about a unit. Uses the config file. Useful for tracking what units are, where on the map
     their current stability, and also can be used with default parameters to check how much a unit type costs, its range etc.
     '''
-    def __init__(self, unit_type, config, player_id=None, stability=None, unit_id="", x=-1, y=-1):
+    def __init__(self, unit_type, config, player_index=None, stability=None, unit_id="", x=-1, y=-1):
         self.unit_type = unit_type
         self.config = config
-        self.player_id = player_id
+        self.player_index = player_index
         self.unit_id = unit_id
         self.pending_removal = False
         self.x = x
@@ -37,7 +37,7 @@ class GameUnit:
         self.cost = type_config["cost"]
 
     def __toString(self):
-        owner = "Friendly" if self.player_id == 0 else "Enemy"
+        owner = "Friendly" if self.player_index == 0 else "Enemy"
         removal = ", pending removal" if self.pending_removal else ""
         return "{} {}, stability: {} location: {} {} ".format(owner, self.unit_type, self.stability, [self.x, self.y], removal)
 

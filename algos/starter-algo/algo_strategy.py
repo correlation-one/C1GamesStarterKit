@@ -51,10 +51,9 @@ class AlgoStrategy(gamelib.AlgoCore):
         game_state = gamelib.GameState(self.config, cmd)
         gamelib.debug_write('Performing turn {} of your custom algo strategy'.format(game_state.turn_number))
 
-        self.starter_strategy(game_state)  # Replace with your own strategy.
-        gamelib.debug_write(game_state.find_path_to_edge([13,0], 'top_right'))
+        self.starter_strategy(game_state)
 
-        game_state.sumbit_turn()
+        game_state.submit_turn()
 
     '''
     NOTE: All the methods after this point are part of the sample starter-algo
@@ -125,9 +124,9 @@ class AlgoStrategy(gamelib.AlgoCore):
         that are in the arena bounds.
         '''
         all_locations = []
-        for i in range(game_state.arena_size):
-            for j in range(math.floor(game_state.arena_size / 2)):
-                if (game_state.map.in_arena_bounds([i, j])):
+        for i in range(game_state.ARENA_SIZE):
+            for j in range(math.floor(game_state.ARENA_SIZE / 2)):
+                if (game_state.game_map.in_arena_bounds([i, j])):
                     all_locations.append([i, j])
         
         '''
@@ -138,7 +137,7 @@ class AlgoStrategy(gamelib.AlgoCore):
         '''
         While we have cores to spend, build a random Encryptor.
         '''
-        while game_state.get_resource('cores') >= game_state.type_cost(ENCRYPTOR) and len(possible_locations) > 0:
+        while game_state.get_resource(game_state.CORES) >= game_state.type_cost(ENCRYPTOR) and len(possible_locations) > 0:
             # Choose a random location.
             location_index = random.randint(0, len(possible_locations) - 1)
             build_location = possible_locations[location_index]
@@ -154,7 +153,7 @@ class AlgoStrategy(gamelib.AlgoCore):
         First lets check if we have 10 bits, if we don't we lets wait for 
         a turn where we do.
         '''
-        if (game_state.get_resource('bits') < 10):
+        if (game_state.get_resource(game_state.BITS) < 10):
             return
         
         '''
@@ -181,7 +180,7 @@ class AlgoStrategy(gamelib.AlgoCore):
         Firstly information units can only deploy on our edges. So lets get a 
         list of those locations.
         '''
-        friendly_edges = game_state.map.get_edge_locations("bottom_left") + game_state.map.get_edge_locations("bottom_right")
+        friendly_edges = game_state.game_map.get_edge_locations(game_state.game_map.BOTTOM_LEFT) + game_state.game_map.get_edge_locations(game_state.game_map.BOTTOM_RIGHT)
         
         '''
         Remove locations that are blocked by our own firewalls since we can't 
@@ -192,7 +191,7 @@ class AlgoStrategy(gamelib.AlgoCore):
         '''
         While we have remaining bits to spend lets send out scramblers randomly.
         '''
-        while game_state.get_resource('bits') >= game_state.type_cost(SCRAMBLER) and len(deploy_locations) > 0:
+        while game_state.get_resource(game_state.BITS) >= game_state.type_cost(SCRAMBLER) and len(deploy_locations) > 0:
            
             '''
             Choose a random deploy location.
