@@ -19,7 +19,7 @@ class GameState:
     The game board is stored as: a 2 dimensional array representing each tile on
     the board. Each tile is yet another array containing the units located at
     the x,y coordinates specified in the first two indices. So getting the 2nd
-    of 3 units located at (12, 13) would look like: `unit = self.game_map[12,13,1]`
+    of 3 units located at (12, 13) would look like: `unit = self.game_map[12,13][1]`
 
     Path finding helpers are stored in the `shortest_path_finder` attribute.
     '''
