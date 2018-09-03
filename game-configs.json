@@ -1,12 +1,12 @@
 {
   "debug":{
-    "printMapString":true,
-    "printTStrings":true,
-    "printActStrings":true,
-    "printHitStrings":true,
+    "printMapString":false,
+    "printTStrings":false,
+    "printActStrings":false,
+    "printHitStrings":false,
     "printPlayerInputStrings":true,
     "printBotErrors":true,
-    "printPlayerGetHitStrings":true
+    "printPlayerGetHitStrings":false
   },
   "unitInformation":[
     {

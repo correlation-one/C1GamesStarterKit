@@ -1,37 +1,36 @@
-## C1 CLI Commands
+# C1 CLI Commands
 
-#### Run Match
+NOTE: All example commands assume you are starting in the AIGamesStarterKit's root directory.
 
-`$ scripts/run_match.sh`   
+## Forking a Local Algo
 
-`$ scripts/run_match.sh <path/to/algo1> <path/to/algo2>`
+Copy the `starter-algo` to start your own bot, or duplicate a local algo to pursue an alternative
+line of development:
 
-`$ scripts/run_match.sh algos/starter-algo algos/renamed-algo`
+    $ scripts/fork_algo.sh <path/to/algo1> <path/to/algo2>
 
+### Concrete Examples
 
-#### Archive Algo
+    $ scripts/fork_algo.sh algos/starter-algo algos/renamed-algo
 
-`$ scripts/archive_algo.sh`
+## Run Match
 
-`$ scripts/archive_algo.sh <output/path/algo.zip> <input/path/algo>`
+Play a match between two local algos, the replay from Player One's perspective will be saved in
+`replays/`:
 
-`$ scripts/archive_algo.sh dist/renamed-algo.zip algos/renamed-algo`
+    $ scripts/run_match.sh <path/to/algo1> <path/to/algo2>
 
+### Concrete Examples
 
-## TODO
+    $ scripts/run_match.sh algos/starter-algo algos/renamed-algo
 
-#### Pre-Upload Test for an algo (final check to make sure everything looks good)
+## Archive Algo
 
-#### Boss Gauntlet (Run an algo agianst bosses in order until a loss)
+Run the archive script to prepare an algo for upload:
 
-#### Round Robin (Run all algos agianst eachother and output rank order)
+    $ scripts/archive_algo.sh <input/path/algo> <output/path/algo.zip>
 
-#### Hide ugly shell scripts behind a sexy c1 namespace like:  
+### Concrete Examples
 
-```
-$ c1 match algo1 algo2
-$ c1 hot-zip -watch
-$ c1 test algo1
+    $ scripts/archive_algo.sh algos/renamed-algo dist/renamed-algo.zip
 
-etc.
-```
