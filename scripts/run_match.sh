@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 echo "Run Match"
 defaultAlgo=$PWD/algos/starter-algo
+
 algo1=${1:-${defaultAlgo}}
+algo1=${algo1%/}
 algo2=${2:-${defaultAlgo}}
+algo2=${algo2%/}
 
 echo "P1: ${algo1}"
 echo "P2: ${algo2}"
