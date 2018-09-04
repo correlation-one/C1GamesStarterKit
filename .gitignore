@@ -6,4 +6,4 @@ algos/*
 !algos/starter-algo
 
 dist/*
-!dist/starter-algo.zip
+!dist/.gitkeep
