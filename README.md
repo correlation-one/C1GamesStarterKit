@@ -1,5 +1,11 @@
 # AIGamesStarterKit
 
+Welcome to the C1 Starter Kit! This collection of scripts and an example `starter-algo` should help
+you start on your journey to developing the ultimate algo.
+
+For more details about competitions and the game itself please check out our
+[main site](https://terminal.c1games.com/rules).
+
 ## First Time Walkthrough
 
 1. We recommend familiarizing yourself with the game and creating a strategy through playing by
