@@ -1,6 +1,6 @@
 # C1 CLI Commands
 
-NOTE: All example commands assume you are starting in the AIGamesStarterKit's root directory.
+NOTE: All example commands assume you are starting in the C1GamesStarterKit's root directory.
 
 ## Forking a Local Algo
 
