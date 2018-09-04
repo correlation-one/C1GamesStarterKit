@@ -163,7 +163,7 @@ class GameState:
             bits *= (1 - self.config["resources"]["bitDecayPerRound"])
             bits_gained = self.config["resources"]["bitsPerRound"] + (current_turn // self.config["resources"]["turnIntervalForBitSchedule"])
             bits += bits_gained
-            bits = math.floor(bits * 100) / 100
+            bits = round(bits, 1)
         return bits
 
     def type_cost(self, unit_type):
@@ -230,9 +230,6 @@ class GameState:
                 x, y = map(int, location)
                 removed_unit = self.game_map[x,y][0]
                 self.build_stack.append((REMOVE, x, y))
-                resource_type = self.__resource_required(removed_unit)
-                refund = self.type_cost(removed_unit.unit_type) * self.config["mechanics"]["destroyOwnUnitRefund"] * (removed_unit.stability / removed_unit.max_stability)
-                self.__set_resource(resource_type, refund)
                 removed_units += 1
         return removed_units
 
