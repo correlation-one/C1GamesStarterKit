@@ -21,7 +21,7 @@ class BasicTests(unittest.TestCase):
             "unitInformation":[
                 {
                 "damage":0.0,
-                "cost":1.5,
+                "cost":1,
                 "getHitRadius":0.51,
                 "display":"Filter",
                 "range":3.0,
@@ -30,7 +30,7 @@ class BasicTests(unittest.TestCase):
                 },
                 {
                 "damage":0.0,
-                "cost":8.0,
+                "cost":4,
                 "getHitRadius":0.51,
                 "shieldAmount":10.0,
                 "display":"Encryptor",
@@ -40,7 +40,7 @@ class BasicTests(unittest.TestCase):
                 },
                 {
                 "damage":4.0,
-                "cost":6.0,
+                "cost":3,
                 "getHitRadius":0.51,
                 "display":"Destructor",
                 "range":3.0,
@@ -105,11 +105,11 @@ class BasicTests(unittest.TestCase):
                 "startingHP":30.0,
                 "maxBits":999999.0,
                 "bitsPerRound":5.0,
-                "coresPerRound":10.0,
-                "coresForPlayerDamage":2.0,
+                "coresPerRound":5.0,
+                "coresForPlayerDamage":1.0,
                 "startingBits":5.0,
                 "bitDecayPerRound":0.33333,
-                "startingCores":50.0
+                "startingCores":25.0
             },
             "mechanics":{
                 "basePlayerHealthDamage":1.0,
@@ -127,7 +127,7 @@ class BasicTests(unittest.TestCase):
             }
         }
         '''
-        turn_0 = '''{"p2Units":[[],[],[],[],[],[],[]],"turnInfo":[0,0,-1],"p1Stats":[30.0,50.0,5.0,0],"p1Units":[[],[],[],[],[],[],[]],"p2Stats":[30.0,50.0,5.0,0],"events":{"selfDestruct":[],"breach":[],"damage":[],"shield":[],"move":[],"spawn":[],"death":[],"attack":[],"melee":[]}}'''
+        turn_0 = '''{"p2Units":[[],[],[],[],[],[],[]],"turnInfo":[0,0,-1],"p1Stats":[30.0,25.0,5.0,0],"p1Units":[[],[],[],[],[],[],[]],"p2Stats":[30.0,25.0,5.0,0],"events":{"selfDestruct":[],"breach":[],"damage":[],"shield":[],"move":[],"spawn":[],"death":[],"attack":[],"melee":[]}}'''
         if adv:
             return AdvancedGameState(json.loads(config), turn_0)
         return GameState(json.loads(config), turn_0)
@@ -146,9 +146,9 @@ class BasicTests(unittest.TestCase):
     def test_simple_fields(self, adv=False):
         game = self.make_turn_0_map(adv)
         self.assertEqual(5, game.get_resource(game.BITS), "I should have 5 bits")
-        self.assertEqual(50, game.get_resource(game.CORES), "I should have 50 cores")
+        self.assertEqual(25, game.get_resource(game.CORES), "I should have 25 cores")
         self.assertEqual(5, game.get_resource(game.BITS, 1), "My opponent should have 5 bits")
-        self.assertEqual(50, game.get_resource(game.CORES, 1), "My opponent should have 50 cores")
+        self.assertEqual(25, game.get_resource(game.CORES, 1), "My opponent should have 25 cores")
         self.assertEqual(0, game.turn_number, "The map does not have a turn_number, or we can't read it")
         self.assertEqual(30, game.my_health, "My integrity is not working")
         self.assertEqual(30, game.enemy_health, "My opponent has no integrity!")
@@ -165,6 +165,8 @@ class BasicTests(unittest.TestCase):
 
     def test_trivial_functions(self, adv=False):
         game = self.make_turn_0_map(adv)
+
+        #Distance Between locations
         self.assertEqual(1, game.game_map.distance_between_locations([0, 0], [0,-1]), "The distance between 0,0 and 0,-1 should be 1")
         self.assertEqual(1, game.game_map.distance_between_locations([-1, -1], [-2,-1]), "The distance between -1,-1 and -2,-1 should be 1")
         self.assertEqual(5, game.game_map.distance_between_locations([0, 0], [4, 3]), "The distance between 0,0 and 16,9 should be 5")
@@ -186,8 +188,8 @@ class BasicTests(unittest.TestCase):
         self.assertEqual(1, len(game.game_map.get_locations_in_range([13,13], 0)), "We should be in 0 range of ourself")
         self.assertEqual(37, len(game.game_map.get_locations_in_range([13,13], 3)), "Wrong number of tiles in range")
 
-    def _test_get_attackers(self, adv=False):
-        game = self.make_turn_0_map(adv)
+    def _test_get_attackers(self):
+        game = self.make_turn_0_map(True)
         
         self.assertEqual([], game.get_attackers([13,13], 0), "Are we being attacked by a ghost?")
         game.game_map.add_unit("DF", [12,12], 0)
@@ -207,20 +209,34 @@ class BasicTests(unittest.TestCase):
 
         game.game_map.add_unit("FF", [14,13], 1)
         got_string = str(game.game_map[14,13][0])
-        expected_string = "Enemy FF, 100% stability"
-        self.assertEqual(got_string, expected_string, "Expected {} from print_unit test got {}".format(expected_string, got_string))
+        expected_string = "Enemy FF, stability: 60.0 location: [14, 13] "
+        self.assertEqual(got_string, expected_string, "Expected {} from print_unit test got {} ".format(expected_string, got_string))
 
     def test_future_bits(self, adv=False):
         game = self.make_turn_0_map(adv)
 
-        self.future_turn_testing_function(game, 8.33, 1)
-        self.future_turn_testing_function(game, 10.55, 2)
-        self.future_turn_testing_function(game, 12.04, 3)
-        self.future_turn_testing_function(game, 13.03, 4)
-        self.future_turn_testing_function(game, 13.68, 5)
-        self.future_turn_testing_function(game, 14.74, 9)
-        self.future_turn_testing_function(game, 15.83, 10)
+        self.future_turn_testing_function(game, 8.3, 1)
+        self.future_turn_testing_function(game, 10.5, 2)
+        self.future_turn_testing_function(game, 12.0, 3)
+        self.future_turn_testing_function(game, 13.0, 4)
+        self.future_turn_testing_function(game, 13.7, 5)
+        self.future_turn_testing_function(game, 14.1, 6)
+        self.future_turn_testing_function(game, 14.4, 7)
+        self.future_turn_testing_function(game, 14.6, 8)
+        self.future_turn_testing_function(game, 14.7, 9)
+        self.future_turn_testing_function(game, 15.8, 10)
+        self.future_turn_testing_function(game, 16.5, 11)
+        self.future_turn_testing_function(game, 17.0, 12)
+        self.future_turn_testing_function(game, 17.3, 13)
+        self.future_turn_testing_function(game, 17.5, 14)
+        self.future_turn_testing_function(game, 17.7, 15)
+        self.future_turn_testing_function(game, 17.8, 16)
+        self.future_turn_testing_function(game, 17.9, 17)
+        self.future_turn_testing_function(game, 17.9, 18)
+        self.future_turn_testing_function(game, 17.9, 19)
+        self.future_turn_testing_function(game, 18.9, 20)
 
     def future_turn_testing_function(self, game, expected, turns):
         actual = game.project_future_bits(turns)
         self.assertAlmostEqual(actual, expected, 0, "Expected {} power {} turns from now, got {}".format(expected, turns, actual))
+
