@@ -111,10 +111,10 @@ Easily run a match between two local algos using the `run_match.sh` script. The 
 file will be saved in the replays/ directory and can be uploaded and watched on
 https://terminal.c1games.com/playground.
 
-For example, if you wanted to run `starter_algo` against the `renamed_algo` of your own creation in
+For example, if you wanted to run `starter-algo` against the `renamed-algo` of your own creation in
 the command line, you can cd into the C1GamesStarterKit and run the following command:
 
-    $ scripts/run_match.sh algos/starter_algo algos/renamed_algo
+    $ scripts/run_match.sh algos/starter-algo algos/renamed-algo
 
 This will also save a replay file in replays/, which you can upload on our site to watch your game
 
@@ -125,7 +125,7 @@ the /dist directory and can then be uploaded on terminal.c1games.com/myalgos to 
 
 While using C1GamesStarterKit as your working directory, to zip an algo in the algos folder, you can use
 
-    $ scripts/archive_algo.sh dist/renamed-algo.zip algos/renamed-algo
+    $ scripts/archive_algo.sh algos/renamed-algo dist/renamed-algo.zip
 
 Check out all the [C1 CLI Commands](https://github.com/correlation-one/C1GamesStarterKit/blob/master/docs/C1_CLI_COMMANDS.md) for more information.
 
