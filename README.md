@@ -127,7 +127,7 @@ While using C1GamesStarterKit as your working directory, to zip an algo in the a
 
     $ scripts/archive_algo.sh dist/renamed-algo.zip algos/renamed-algo
 
-Check out all the [C1 CLI Commands](https://github.com/correlation-one/C1GamesStarterKit/blob/dev/docs/C1_CLI_COMMANDS.md) for more information.
+Check out all the [C1 CLI Commands](https://github.com/correlation-one/C1GamesStarterKit/blob/master/docs/C1_CLI_COMMANDS.md) for more information.
 
 ### Custom Config
 
