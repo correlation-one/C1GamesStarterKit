@@ -10,14 +10,29 @@ For more details about competitions and the game itself please check out our
 
 1. We recommend familiarizing yourself with the game and creating a strategy through playing by
 hand before starting your algo.
-2. Once you are ready, open algo-strategy in starter-algo using the editor of your choice and
-create your strategy using the functions provided in gamelib. The provided strategy has examples
-with explanations on how to do this.
-3. Explore changes to your algo by running matches using our Command Line Interface, detailed below.
-4. When you are ready to test your algo, you can use the CLI to archive the algo, saving it as a zip
-with the desired algo name that is visible to other users.
-5. You can upload it on the "My Algos" page of the terminal site, then that’s it! Your zipped algo
-will automatically begin playing in matches.
+1. Once you are ready, create your own Algo by forking the example `starter-algo` to serve as a base
+for you to develop your own strategy in.
+
+    scripts/fork_algo.sh algos/starter-algo algos/my-algo
+
+1. Open `algo_strategy.py` in your new algo using the editor of your choice and create your strategy
+using the functions provided in gamelib. The provided strategy has examples with explanations on how
+to do this.
+1. Explore changes to your algo by running matches using our CLI:
+
+    scripts/run_match.sh algos/starter-algo algos/my-algo
+
+1. When you are ready to test your algo, you can use the CLI to archive it as a zip with a filename
+that matches how you want your algo to be identified to other users on the site.
+
+    scripts/archive_algo.sh algos/my-algo dist/my-algo.zip
+
+1. You can upload the zipped algo on the "My Algos" page of the terminal site, then that’s it! Your
+zipped algo will automatically begin playing in matches and can be selected as your entry in any
+competitions you are eligible for.
+
+Check out all of the [C1 CLI Commands][C1 CLI Commands] to learn how to create, run and upload your
+algos!
 
 ## Documentation for Creators
 
@@ -90,4 +105,4 @@ C1GamesStarterKit
     └── run_match.sh
 ```
 
-Check out all of the [C1 CLI Commands](https://github.com/correlation-one/C1GamesStarterKit/blob/master/docs/C1_CLI_COMMANDS.md) to learn how to create, run and upload your algos!
+[C1 CLI Commands]: https://github.com/correlation-one/C1GamesStarterKit/blob/master/docs/C1_CLI_COMMANDS.md
