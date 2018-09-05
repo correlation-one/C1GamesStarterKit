@@ -1,36 +1,41 @@
-# C1 CLI Commands
+### Using the C1 CLI
 
-NOTE: All example commands assume you are starting in the C1GamesStarterKit's root directory.
+In the below examples, we assume your working directory is C1GamesStarterKit and you are storing
+your algos in the algos/ directory
 
-## Forking a Local Algo
+#### Creating your first algo
 
-Copy the `starter-algo` to start your own bot, or duplicate a local algo to pursue an alternative
-line of development:
-
-    $ scripts/fork_algo.sh <path/to/algo1> <path/to/algo2>
-
-### Concrete Examples
+Fork the provided `starter-algo` to create a modifiable base of your own. You will likely want to
+give your algos descriptive names but for this example we will create an algo called
+`renamed-algo`.
 
     $ scripts/fork_algo.sh algos/starter-algo algos/renamed-algo
 
-## Run Match
+Modify the files in `algos/renamed-algo/` to create your own strategy.
 
-Play a match between two local algos, the replay from Player One's perspective will be saved in
-`replays/`:
+#### Running matches locally between algos
 
-    $ scripts/run_match.sh <path/to/algo1> <path/to/algo2>
+Easily run a match between two local algos using the `run_match.sh` script. The resulting replay
+file will be saved in the replays/ directory and can be uploaded and watched on
+https://terminal.c1games.com/playground.
 
-### Concrete Examples
+For example, if you wanted to run `starter-algo` against the `renamed-algo` of your own creation in
+the command line, you can cd into the C1GamesStarterKit and run the following command:
 
     $ scripts/run_match.sh algos/starter-algo algos/renamed-algo
 
-## Archive Algo
+This will also save a replay file in replays/, which you can upload on our site to watch your game
 
-Run the archive script to prepare an algo for upload:
+#### Uploading your algo
 
-    $ scripts/archive_algo.sh <input/path/algo> <output/path/algo.zip>
+Zip the entire algo directory or run the `archive_algo.sh` script to zip an algo. It will be saved in
+the /dist directory and can then be uploaded on terminal.c1games.com/myalgos to compete in ranked matches.
 
-### Concrete Examples
+While using C1GamesStarterKit as your working directory, to zip an algo in the algos folder, you can use
 
     $ scripts/archive_algo.sh algos/renamed-algo dist/renamed-algo.zip
+
+### Custom Config
+
+Customize the "debug" values in game-configs.json to control the level of error/debug information printed during a match.
 
