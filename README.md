@@ -13,19 +13,19 @@ hand before starting your algo.
 1. Once you are ready, create your own Algo by forking the example `starter-algo` to serve as a base
 for you to develop your own strategy in.
 
-    scripts/fork_algo.sh algos/starter-algo algos/my-algo
+    `scripts/fork_algo.sh algos/starter-algo algos/my-algo`
 
 1. Open `algo_strategy.py` in your new algo using the editor of your choice and create your strategy
 using the functions provided in gamelib. The provided strategy has examples with explanations on how
 to do this.
 1. Explore changes to your algo by running matches using our CLI:
 
-    scripts/run_match.sh algos/starter-algo algos/my-algo
+    `scripts/run_match.sh algos/starter-algo algos/my-algo`
 
 1. When you are ready to test your algo, you can use the CLI to archive it as a zip with a filename
 that matches how you want your algo to be identified to other users on the site.
 
-    scripts/archive_algo.sh algos/my-algo dist/my-algo.zip
+    `scripts/archive_algo.sh algos/my-algo dist/my-algo.zip`
 
 1. You can upload the zipped algo on the "My Algos" page of the terminal site, then that’s it! Your
 zipped algo will automatically begin playing in matches and can be selected as your entry in any
