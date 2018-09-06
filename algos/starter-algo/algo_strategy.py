@@ -150,7 +150,7 @@ class AlgoStrategy(gamelib.AlgoCore):
             possible_locations.remove(build_location)
 
     def deploy_attackers(self, game_state):
-       nextPos = {0,0,0,0,0}
+        nextPos = [0,0,0,0,0]
 
         '''
         First lets check if we have 10 bits, if we don't we lets wait for 

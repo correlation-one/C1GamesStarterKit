@@ -16,8 +16,8 @@
       <file leaf-file-name="algo_strategy.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/algos/starter-algo/algo_strategy.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="477">
-              <caret line="216" column="27" lean-forward="true" selection-start-line="216" selection-end-line="217" />
+            <state relative-caret-position="366">
+              <caret line="161" column="29" lean-forward="true" selection-start-line="161" selection-start-column="29" selection-end-line="161" selection-end-column="29" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
               </folding>
@@ -214,8 +214,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/algos/starter-algo/algo_strategy.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="477">
-          <caret line="216" column="27" lean-forward="true" selection-start-line="216" selection-end-line="217" />
+        <state relative-caret-position="366">
+          <caret line="161" column="29" lean-forward="true" selection-start-line="161" selection-start-column="29" selection-end-line="161" selection-end-column="29" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
           </folding>
