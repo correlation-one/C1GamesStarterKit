@@ -240,7 +240,7 @@ class GameState:
         additional firewalls after this turn by the enemy player.
         '''
         end_points = self.game_map.get_edge_locations(target_edge)
-        self.shortest_path_finder.navigate_multiple_endpoints(start_location, end_points, self)
+        return self.shortest_path_finder.navigate_multiple_endpoints(start_location, end_points, self)
 
     def contains_stationary_unit(self, location):
         """ Check if a Firewall exists at the given location. """
