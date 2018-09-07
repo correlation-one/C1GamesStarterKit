@@ -27,7 +27,7 @@ hand before starting your algo.
     ```
 
 1. Once you are ready, create your own Algo by forking the example `starter-algo` to serve as a base
-for you to develop your own strategy in. Can use the below script if on unix or simply copy paste the folder.
+for you to develop your own strategy in. You can use the below script if on unix or simply copy paste the folder.
 
     `scripts/fork_algo.sh algos/starter-algo algos/my-algo`
 
@@ -35,14 +35,14 @@ for you to develop your own strategy in. Can use the below script if on unix or 
 using the functions provided in gamelib. The provided strategy has examples with explanations on how
 to do this.
 
-1. When you are ready to test your algo, you can use the CLI to archive it if in unix as a zip with a filename
-that matches how you want your algo to be identified to other users on the site. Or simply right click it and use built in compression methods for your OS.
+1. When you are ready to post your algo, you can use the CLI to archive it if in unix. Or simply right click it and use built in compression methods for your OS. Save it as a zip with a filename
+that matches how you want your algo to be identified to other users on the site.
 
     `scripts/archive_algo.sh algos/my-algo dist/my-algo.zip`
 
 1. You can upload the zipped algo on the "My Algos" page of the terminal site, then that’s it! Your
 zipped algo will automatically begin playing in matches and can be selected as your entry in any
-competitions you are eligible for.
+competitions you are eligible for. You can also play with or against it in Play mode.
 
 Check out all of the [C1 CLI Commands][C1 CLI Commands] to learn how to create, run and upload your
 algos!
