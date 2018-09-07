@@ -10,6 +10,7 @@ For more details about competitions and the game itself please check out our
 
 1. We recommend familiarizing yourself with the game and creating a strategy through playing by
 hand before starting your algo.
+<<<<<<< HEAD
 
 1. In order to run the the game locally [java jdk](http://www.oracle.com/technetwork/java/javase/downloads/jdk10-downloads-4416644.html) version 10 or above must be installed. You may need to restart your shell after installing or updating dependencies. If using the python starter-algo Python3 must be installed and the command `python3` for unix or `py -3` for windows must work. If you are on windows `powershell` is required but should come pre-installed on your windows OS.
 
@@ -28,15 +29,28 @@ hand before starting your algo.
 
 1. Once you are ready, create your own Algo by forking the example `starter-algo` to serve as a base
 for you to develop your own strategy in. Can use the below script if on unix or simply copy paste the folder.
+=======
+1. Once you are ready, create your own Algo by forking the example `starter-algo` to serve as a base
+for you to develop your own strategy in.
+>>>>>>> c4e4d628dcf1585733c4fa07d2f297c86c2f474b
 
     `scripts/fork_algo.sh algos/starter-algo algos/my-algo`
 
 1. Open `algo_strategy.py` in your new algo using the editor of your choice and create your strategy
 using the functions provided in gamelib. The provided strategy has examples with explanations on how
 to do this.
+<<<<<<< HEAD
 
 1. When you are ready to test your algo, you can use the CLI to archive it if in unix as a zip with a filename
 that matches how you want your algo to be identified to other users on the site. Or simply right click it and use built in compression methods for your OS.
+=======
+1. Explore changes to your algo by running matches using our CLI:
+
+    `scripts/run_match.sh algos/starter-algo algos/my-algo`
+
+1. When you are ready to test your algo, you can use the CLI to archive it as a zip with a filename
+that matches how you want your algo to be identified to other users on the site.
+>>>>>>> c4e4d628dcf1585733c4fa07d2f297c86c2f474b
 
     `scripts/archive_algo.sh algos/my-algo dist/my-algo.zip`
 
