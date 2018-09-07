@@ -10,6 +10,14 @@ For more details about competitions and the game itself please check out our
 
 1. We recommend familiarizing yourself with the game and creating a strategy through playing by
 hand before starting your algo.
+Note commands may differ if you are on windows and require powershell which should come
+pre-installed on your windows OS.
+
+1. First try running a match with the defualt starter-algo using our CLI. You can also leave arguments blank and it will default to the starter-algo.
+
+    `scripts/run_match.sh algos/starter-algo algos/my-algo`
+	Windows: `scripts\run_match.ps1 algos\starter-algo algos\starter-algo`
+
 1. Once you are ready, create your own Algo by forking the example `starter-algo` to serve as a base
 for you to develop your own strategy in.
 
@@ -18,9 +26,6 @@ for you to develop your own strategy in.
 1. Open `algo_strategy.py` in your new algo using the editor of your choice and create your strategy
 using the functions provided in gamelib. The provided strategy has examples with explanations on how
 to do this.
-1. Explore changes to your algo by running matches using our CLI:
-
-    `scripts/run_match.sh algos/starter-algo algos/my-algo`
 
 1. When you are ready to test your algo, you can use the CLI to archive it as a zip with a filename
 that matches how you want your algo to be identified to other users on the site.
