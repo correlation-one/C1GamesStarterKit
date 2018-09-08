@@ -22,6 +22,8 @@ the actual current map state.
 '''
 
 class AlgoStrategy(gamelib.AlgoCore):
+    damList = []
+    posList = [[0, 0, 0, 0, 0]]
     def __init__(self):
         super().__init__()
         random.seed()
@@ -98,7 +100,6 @@ class AlgoStrategy(gamelib.AlgoCore):
         '''
         firewall_locations = [[11, 7], [13, 9], [15, 11]]
         game_state.attempt_spawn(DESTRUCTOR, firewall_locations)
-
     def build_defences(self, game_state):
         '''
         First lets protect ourselves a little with destructors:
@@ -149,23 +150,23 @@ class AlgoStrategy(gamelib.AlgoCore):
             possible_locations.remove(build_location)
 
     def deploy_attackers(self, game_state):
+        nextPos = [0,0,0,0,0]
+
         '''
         First lets check if we have 10 bits, if we don't we lets wait for 
         a turn where we do.
         '''
-        if (game_state.get_resource(game_state.BITS) < 10):
-            return
-        
+
+
         '''
         First lets deploy an EMP long range unit to destroy firewalls for us.
         '''
-        game_state.attempt_spawn(EMP, [3, 10])
-
+      #  game_state.attempt_spawn(EMP, [3, 10])
         '''
         Now lets send out 3 Pings to hopefully score, we can spawn multiple 
         information units in the same location.
         '''
-        game_state.attempt_spawn(PING, [14,0], 3)
+       # game_state.attempt_spawn(PING, [14,0], 3)
 
         '''
         NOTE: the locations we used above to spawn information units may become 
@@ -189,17 +190,31 @@ class AlgoStrategy(gamelib.AlgoCore):
         deploy_locations = self.filter_blocked_locations(friendly_edges, game_state)
         
         '''
-        While we have remaining bits to spend lets send out scramblers randomly.
+        While we have remaining bits to spend lets send out scramblers randomly
         '''
+        currentDamDone = 30 - game_state.enemy_health
+        totalDamageDoneOnLastTurn = currentDamDone-sum(self.damList)
+        self.damList.append(totalDamageDoneOnLastTurn)
         while game_state.get_resource(game_state.BITS) >= game_state.type_cost(SCRAMBLER) and len(deploy_locations) > 0:
            
             '''
             Choose a random deploy location.
             '''
-            deploy_index = random.randint(0, len(deploy_locations) - 1)
-            deploy_location = deploy_locations[deploy_index]
+           # deploy_index = random.randint(0, len(deploy_locations) - 1)
+            #deploy_location = deploy_locations[deploy_index]
             
-            game_state.attempt_spawn(SCRAMBLER, deploy_location)
+          # game_state.attempt_spawn(SCRAMBLER, deploy_location)
+
+            for i in range(0, 4):
+                nextPos[i] = random.randint(0, len(deploy_locations) - 1)
+                for j in range (0, len(self.posList)-1):
+                    nextPos[i]+=self.posList[j][i]*self.damList[j]
+                nextPos[i] /= (currentDamDone+1)
+                game_state.attempt_spawn(PING, nextPos[i])
+
+            if (game_state.get_resource(game_state.BITS) < 10):
+                return
+            self.posList.append(nextPos)
             '''
             We don't have to remove the location since multiple information 
             units can occupy the same space.
