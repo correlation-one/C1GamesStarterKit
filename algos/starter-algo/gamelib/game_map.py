@@ -2,7 +2,31 @@ import math
 from .unit import GameUnit
 
 class GameMap:
+    """Holds data about the current game map and provides functions
+    useful for getting information related to the map.
+
+    Note that the game board is stored as a 2 dimensional array representing each tile on
+    the board. Each tile is yet another array containing the units located at
+    the x,y coordinates specified in the first two indices. So getting the 2nd
+    of 3 units located at (12, 13) would look like: `unit = instance_of_game_map[12,13][1]`
+
+    Attributes:
+        config (JSON): Contains information about the game
+        ARENA_SIZE (int): The size of the arena.
+        HALF_ARENA (int): Half of the size of the arena.
+        TOP_RIGHT (int): A constant that represents the top right edge
+        TOP_LEFT (int): A constant that represents the top left edge
+        BOTTOM_LEFT (int): Hidden challange! Can you guess what this constant represents???
+        BOTTOM_RIGHT (int): A constant that represents the bottom right edge
+
+    """
     def __init__(self, config):
+        """Initializes constants and game map
+
+        Args:
+            config (JSON): Contains information about the game
+
+        """
         self.config = config
         self.ARENA_SIZE = 28 
         self.HALF_ARENA = int(self.ARENA_SIZE / 2)
@@ -46,14 +70,20 @@ class GameMap:
         grid = []
         for x in range(0, self.ARENA_SIZE):
             grid.append([])
-            for y in range(0, self.ARENA_SIZE):
+            for _ in range(0, self.ARENA_SIZE):
                 grid[x].append([])
         return grid
 
     def in_arena_bounds(self, location):
-        '''
-        Checks if the given location is inside the diamond shaped game board.
-        '''
+        """Checks if the given location is inside the diamond shaped game board.
+
+        Args:
+            location: A map location
+
+        Returns:
+            True if the location is on the board, False otherwise
+        
+        """
         x, y = location
         half_board = self.HALF_ARENA
 
@@ -70,18 +100,26 @@ class GameMap:
         return bottom_half_check or top_half_check
 
     def get_edge_locations(self, quadrant_description):
-        '''
-        Takes in an edge description and returns a list of locations.
-        Valid quadrant descriptions: GameMap.TOP_RIGHT, GameMap.TOP_LEFT, GameMap.BOTTOM_RIGHT, GameMap.BOTTOM_LEFT
-        '''
+        """Takes in an edge description and returns a list of locations.
+        
+        Args:
+            quadrant_description: A constant corresponding to an edge. Valid quadrant descriptions are
+            GameMap.TOP_RIGHT, GameMap.TOP_LEFT, GameMap.BOTTOM_RIGHT, GameMap.BOTTOM_LEFT
+
+        Returns:
+            A list of locations corresponding to the requested edge
+
+        """
         edges = self.get_edges()
         return edges[quadrant_description]
 
     def get_edges(self):
-        '''
-        Returns a list with four lists inside of it of locations corresponding to the four edges.
-        [0] = top_right, [1] = top_left, [2] = bottom_left, [3] = bottom_right.
-        '''
+        """Gets all of the edges and their edge locations
+
+        Returns:
+            A list with four lists inside of it of locations corresponding to the four edges.
+            [0] = top_right, [1] = top_left, [2] = bottom_left, [3] = bottom_right.
+        """
         top_right = []
         for num in range(0, self.HALF_ARENA):
             x = self.HALF_ARENA + num
@@ -105,31 +143,50 @@ class GameMap:
         return [top_right, top_left, bottom_left, bottom_right]
     
     def add_unit(self, unit_type, location, player_index=0):
-        '''
-        Add a single GameUnit to the map at the given location.
-        '''
+        """Add a single GameUnit to the map at the given location.
+
+        Args:
+            unit_type: The type of the new unit
+            location: The location of the new unit
+            player_index: The index corresponding to the player controlling the new unit, 0 for you 1 for the enemy
+
+        This function does not affect your turn and only changes the data stored in GameMap. The intended use of this function
+        is to allow you to create arbitrary gamestates. Using this function on the GameMap inside game_state can cause your algo to crash.
+        """
         if not self.in_arena_bounds(location):
             raise InvalidCoordinate(location)
         x, y = location
-        new_unit = GameUnit(unit_type, self.config, player_index, None, "", location[0], location[1])
+        new_unit = GameUnit(unit_type, self.config, player_index, None, location[0], location[1])
         if not new_unit.stationary:
             self.__map[x][y].append(new_unit)
         else:
             self.__map[x][y] = [new_unit]
 
     def remove_unit(self, location):
-        '''
-        Remove all units on the map in the given location.
-        '''
+        """Remove all units on the map in the given location.
+
+        Args:
+            location: The location that you will empty of units
+
+        This function does not affect your turn and only changes the data stored in GameMap. The intended use of this function
+        is to allow you to create arbitrary gamestates. Using this function on the GameMap inside game_state can cause your algo to crash.
+        """
         if not self.in_arena_bounds(location):
             raise InvalidCoordinate(location)
         x, y = location
         self.__map[x][y] = []
 
     def get_locations_in_range(self, location, radius):
-        '''
-        Returns locations in range of the given radius centered at the given location.
-        '''
+        """Gets locations in a circular area around a location
+
+        Args:
+            location: The center of our search area
+            radius: The radius of our search area
+
+        Returns:
+            The locations that are within our search area
+
+        """
         x, y = location
         locations = []
         for i in range(int(x - radius), int(x + radius + 1)):
@@ -141,14 +198,23 @@ class GameMap:
         return locations
 
     def distance_between_locations(self, location_1, location_2):
-        '''
-        Euclidean distance between two locations.
-        '''
+        """Euclidean distance between two locations.
+
+        Args:
+            location_1: An arbitrary location
+            location_2: An arbitrary location
+
+        Returns:
+            The euclidean distance between the two locations
+
+        """
         x1, y1 = location_1
         x2, y2 = location_2
 
         return math.sqrt((x1 - x2)**2 + (y1 - y2)**2)
 
 class InvalidCoordinate(Exception):
+    """Attempting to use a location that is out of bounds will raise this exception
+    """
     def __init__(self, location):
         super().__init__("{} is an invalid coordinate.".format(str(location)))
