@@ -5,20 +5,20 @@ class GameUnit:
     """Holds information about a Unit. 
 
     Attributes:
-        unit_type (string): This unit's type
-        config (JSON): Contains information about the game
-        player_index (integer): The player that controls this unit. 0 for you, 1 for your opponent.
-        stability (integer): The health of the unit
-        x (integer): The x coordinate of the unit
-        y (integer): The y coordinate of the unit
-        stationary (bool): Whether or not this unit is a firewall
-        speed (float): A unit will move once every 1/speed frames
-        damage (int): The amount of damage this firwall unit will deal to enemy information.
-        damage_f (int): The amount of damage this information unit will deal to enemy firewalls.
-        damage_i (int): The amount of damage this information unit will deal to enemy information.
-        range (float): The effective range of this unit
-        stability (float): The current health of this unit
-        cost (int): The resource cost of this unit
+        * unit_type (string): This unit's type
+        * config (JSON): Contains information about the game
+        * player_index (integer): The player that controls this unit. 0 for you, 1 for your opponent.
+        * stability (integer): The health of the unit
+        * x (integer): The x coordinate of the unit
+        * y (integer): The y coordinate of the unit
+        * stationary (bool): Whether or not this unit is a firewall
+        * speed (float): A unit will move once every 1/speed frames
+        * damage (int): The amount of damage this firwall unit will deal to enemy information.
+        * damage_f (int): The amount of damage this information unit will deal to enemy firewalls.
+        * damage_i (int): The amount of damage this information unit will deal to enemy information.
+        * range (float): The effective range of this unit
+        * stability (float): The current health of this unit
+        * cost (int): The resource cost of this unit
 
     """
     def __init__(self, unit_type, config, player_index=None, stability=None, x=-1, y=-1):

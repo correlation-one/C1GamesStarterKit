@@ -13,7 +13,7 @@ class AdvancedGameState(GameState):
             Infantry > Nearest Unit > Lowest Stability > Lowest Y position > Closest to edge (Highest distance of X from the boards center, 13.5)
 
         Args:
-            attacking_unit: A GameUnit
+            * attacking_unit: A GameUnit
 
         Returns:
             The GameUnit this unit would choose to attack.
@@ -78,14 +78,14 @@ class AdvancedGameState(GameState):
         return target
 
     def get_attackers(self, location, player_index):
-        """Returns list of destructors that would attack a unit at the given location with the given player id.
+        """Gets the destructors threatening a given location
 
         Args:
-            location: The location of the defender
-            player_index: The index corresponding to the player controlling the unit, 0 for you 1 for the enemy
+            * location: The location of a hypothetical defender
+            * player_index: The index corresponding to the defending player, 0 for you 1 for the enemy
 
         Returns:
-            A direction [x,y] representing the edge. For example, [1,1] for the top right and [-1, 1] for the top left
+            A list of destructors that would attack a unit controlled by the given player at the given location
 
         """
         from .game import DESTRUCTOR, UNIT_TYPE_TO_INDEX

@@ -6,7 +6,7 @@ BANNER_TEXT = "---------------- Starting Your Algo --------------------"
 
 def get_command():
     """Gets input from stdin
-    
+
     """
     return sys.stdin.readline()
 
@@ -22,7 +22,7 @@ def debug_write(*msg):
     """Prints a message to the games debug output
 
     Args:
-        msg: The message
+        * msg: The message to output
 
     """
     #Printing to STDERR is okay and printed out by the game but doesn't effect turns.

@@ -1,0 +1,160 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>gamelib.unit &#8212; C1 Terminal Python Starterkit 1.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for gamelib.unit</h1><div class="highlight"><pre>
+<div class="viewcode-block" id="is_stationary"><a class="viewcode-back" href="../../gamelib.html#gamelib.unit.is_stationary">[docs]</a><span></span><span class="k">def</span> <span class="nf">is_stationary</span><span class="p">(</span><span class="n">unit_type</span><span class="p">,</span> <span class="n">firewall_types</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">unit_type</span> <span class="ow">in</span> <span class="n">firewall_types</span></div>
+
+<div class="viewcode-block" id="GameUnit"><a class="viewcode-back" href="../../gamelib.html#gamelib.unit.GameUnit">[docs]</a><span class="k">class</span> <span class="nc">GameUnit</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Holds information about a Unit. </span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        * unit_type (string): This unit&#39;s type</span>
+<span class="sd">        * config (JSON): Contains information about the game</span>
+<span class="sd">        * player_index (integer): The player that controls this unit. 0 for you, 1 for your opponent.</span>
+<span class="sd">        * stability (integer): The health of the unit</span>
+<span class="sd">        * x (integer): The x coordinate of the unit</span>
+<span class="sd">        * y (integer): The y coordinate of the unit</span>
+<span class="sd">        * stationary (bool): Whether or not this unit is a firewall</span>
+<span class="sd">        * speed (float): A unit will move once every 1/speed frames</span>
+<span class="sd">        * damage (int): The amount of damage this firwall unit will deal to enemy information.</span>
+<span class="sd">        * damage_f (int): The amount of damage this information unit will deal to enemy firewalls.</span>
+<span class="sd">        * damage_i (int): The amount of damage this information unit will deal to enemy information.</span>
+<span class="sd">        * range (float): The effective range of this unit</span>
+<span class="sd">        * stability (float): The current health of this unit</span>
+<span class="sd">        * cost (int): The resource cost of this unit</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unit_type</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">player_index</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stability</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">x</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Initialize unit variables using args passed</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unit_type</span> <span class="o">=</span> <span class="n">unit_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">player_index</span> <span class="o">=</span> <span class="n">player_index</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pending_removal</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__serialize_type</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stability</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_stability</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">stability</span> <span class="k">else</span> <span class="n">stability</span>
+
+    <span class="k">def</span> <span class="nf">__serialize_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">.game</span> <span class="k">import</span> <span class="n">FIREWALL_TYPES</span><span class="p">,</span> <span class="n">UNIT_TYPE_TO_INDEX</span><span class="p">,</span> <span class="n">ENCRYPTOR</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stationary</span> <span class="o">=</span> <span class="n">is_stationary</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">unit_type</span><span class="p">,</span> <span class="n">FIREWALL_TYPES</span><span class="p">)</span>
+        <span class="n">type_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;unitInformation&quot;</span><span class="p">][</span><span class="n">UNIT_TYPE_TO_INDEX</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">unit_type</span><span class="p">]]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stationary</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">speed</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit_type</span> <span class="o">==</span> <span class="n">ENCRYPTOR</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">damage</span> <span class="o">=</span> <span class="n">type_config</span><span class="p">[</span><span class="s2">&quot;shieldAmount&quot;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">damage</span> <span class="o">=</span> <span class="n">type_config</span><span class="p">[</span><span class="s2">&quot;damage&quot;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">speed</span> <span class="o">=</span> <span class="n">type_config</span><span class="p">[</span><span class="s2">&quot;speed&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">damage_f</span> <span class="o">=</span> <span class="n">type_config</span><span class="p">[</span><span class="s2">&quot;damageF&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">damage_i</span> <span class="o">=</span> <span class="n">type_config</span><span class="p">[</span><span class="s2">&quot;damageI&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">range</span> <span class="o">=</span> <span class="n">type_config</span><span class="p">[</span><span class="s2">&quot;range&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_stability</span> <span class="o">=</span> <span class="n">type_config</span><span class="p">[</span><span class="s2">&quot;stability&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cost</span> <span class="o">=</span> <span class="n">type_config</span><span class="p">[</span><span class="s2">&quot;cost&quot;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__toString</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">owner</span> <span class="o">=</span> <span class="s2">&quot;Friendly&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">player_index</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;Enemy&quot;</span>
+        <span class="n">removal</span> <span class="o">=</span> <span class="s2">&quot;, pending removal&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pending_removal</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">, stability: </span><span class="si">{}</span><span class="s2"> location: </span><span class="si">{}{}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">owner</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stability</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">],</span> <span class="n">removal</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__toString</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__toString</span><span class="p">()</span></div>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">C1 Terminal Python Starterkit</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../gamelib.html">gamelib package</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Correlation One.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

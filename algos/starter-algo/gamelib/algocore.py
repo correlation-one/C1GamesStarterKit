@@ -7,7 +7,7 @@ class AlgoCore(object):
     """This class handles communication with the game itself. Your strategy should subclass it.
 
     Attributes:
-        config (JSON): json object containing information about the game
+        * config (JSON): json object containing information about the game
 
     """
     def __init__(self):

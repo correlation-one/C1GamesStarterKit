@@ -8,10 +8,10 @@ class Node:
     """A pathfinding node
 
     Attributes:
-        visited_idealness (bool): Have we visited this node during the idealness search step?
-        visited_validate (bool): Have we visited this node during the validation step?
-        blocked (bool): Is there a firewall at this node's location
-        pathlength: The distance between this node and the target location
+        * visited_idealness (bool): Have we visited this node during the idealness search step?
+        * visited_validate (bool): Have we visited this node during the validation step?
+        * blocked (bool): Is there a firewall at this node's location
+        * pathlength: The distance between this node and the target location
 
     """
     def __init__(self):
@@ -29,11 +29,11 @@ class ShortestPathFinder:
     """Handles pathfinding
 
     Attributes:
-        HORIZONTAL (int): A constant representing a horizontal movement
-        VERTICAL (int): A constant representing a vertical movement
+        * HORIZONTAL (int): A constant representing a horizontal movement
+        * VERTICAL (int): A constant representing a vertical movement
 
-        game_state (:obj: GameState): The current gamestate
-        game_map (:obj: GameMap): The current gamemap
+        * game_state (:obj: GameState): The current gamestate
+        * game_map (:obj: GameMap): The current gamemap
 
     """
     def __init__(self):
@@ -44,9 +44,9 @@ class ShortestPathFinder:
         """Finds tha path a unit would take to reach a set of endpoints
 
         Args:
-            start_point: The starting location of the unit
-            end_points: The end points of the unit, should be a list of edge locations
-            game_state: The current game state
+            * start_point: The starting location of the unit
+            * end_points: The end points of the unit, should be a list of edge locations
+            * game_state: The current game state
 
         Returns:
             The path a unit at start_point would take when trying to reach end_points given the current game state.
@@ -104,7 +104,7 @@ class ShortestPathFinder:
         """Prints a message to the games debug output
 
         Args:
-            end_points: A set of endpoints, should be an edge 
+            * end_points: A set of endpoints, should be an edge 
 
         Returns:
             A direction [x,y] representing the edge. For example, [1,1] for the top right and [-1, 1] for the top left

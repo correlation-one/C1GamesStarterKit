@@ -11,20 +11,20 @@ class GameMap:
     of 3 units located at (12, 13) would look like: `unit = instance_of_game_map[12,13][1]`
 
     Attributes:
-        config (JSON): Contains information about the game
-        ARENA_SIZE (int): The size of the arena.
-        HALF_ARENA (int): Half of the size of the arena.
-        TOP_RIGHT (int): A constant that represents the top right edge
-        TOP_LEFT (int): A constant that represents the top left edge
-        BOTTOM_LEFT (int): Hidden challange! Can you guess what this constant represents???
-        BOTTOM_RIGHT (int): A constant that represents the bottom right edge
+        * config (JSON): Contains information about the game
+        * ARENA_SIZE (int): The size of the arena.
+        * HALF_ARENA (int): Half of the size of the arena.
+        * TOP_RIGHT (int): A constant that represents the top right edge
+        * TOP_LEFT (int): A constant that represents the top left edge
+        * BOTTOM_LEFT (int): Hidden challange! Can you guess what this constant represents???
+        * BOTTOM_RIGHT (int): A constant that represents the bottom right edge
 
     """
     def __init__(self, config):
         """Initializes constants and game map
 
         Args:
-            config (JSON): Contains information about the game
+            * config (JSON): Contains information about the game
 
         """
         self.config = config
@@ -78,7 +78,7 @@ class GameMap:
         """Checks if the given location is inside the diamond shaped game board.
 
         Args:
-            location: A map location
+            * location: A map location
 
         Returns:
             True if the location is on the board, False otherwise
@@ -103,8 +103,11 @@ class GameMap:
         """Takes in an edge description and returns a list of locations.
         
         Args:
-            quadrant_description: A constant corresponding to an edge. Valid quadrant descriptions are
-            GameMap.TOP_RIGHT, GameMap.TOP_LEFT, GameMap.BOTTOM_RIGHT, GameMap.BOTTOM_LEFT
+            * quadrant_description: A constant corresponding to an edge. Valid quadrant descriptions are
+                * GameMap.TOP_RIGHT
+                * GameMap.TOP_LEFT
+                * GameMap.BOTTOM_RIGHT
+                * GameMap.BOTTOM_LEFT
 
         Returns:
             A list of locations corresponding to the requested edge
@@ -146,9 +149,9 @@ class GameMap:
         """Add a single GameUnit to the map at the given location.
 
         Args:
-            unit_type: The type of the new unit
-            location: The location of the new unit
-            player_index: The index corresponding to the player controlling the new unit, 0 for you 1 for the enemy
+            * unit_type: The type of the new unit
+            * location: The location of the new unit
+            * player_index: The index corresponding to the player controlling the new unit, 0 for you 1 for the enemy
 
         This function does not affect your turn and only changes the data stored in GameMap. The intended use of this function
         is to allow you to create arbitrary gamestates. Using this function on the GameMap inside game_state can cause your algo to crash.
@@ -166,7 +169,7 @@ class GameMap:
         """Remove all units on the map in the given location.
 
         Args:
-            location: The location that you will empty of units
+            * location: The location that you will empty of units
 
         This function does not affect your turn and only changes the data stored in GameMap. The intended use of this function
         is to allow you to create arbitrary gamestates. Using this function on the GameMap inside game_state can cause your algo to crash.
@@ -180,8 +183,8 @@ class GameMap:
         """Gets locations in a circular area around a location
 
         Args:
-            location: The center of our search area
-            radius: The radius of our search area
+            * location: The center of our search area
+            * radius: The radius of our search area
 
         Returns:
             The locations that are within our search area
@@ -198,11 +201,11 @@ class GameMap:
         return locations
 
     def distance_between_locations(self, location_1, location_2):
-        """Euclidean distance between two locations.
+        """Euclidean distance
 
         Args:
-            location_1: An arbitrary location
-            location_2: An arbitrary location
+            * location_1: An arbitrary location
+            * location_2: An arbitrary location
 
         Returns:
             The euclidean distance between the two locations

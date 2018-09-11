@@ -14,34 +14,34 @@ class GameState:
     Provides methods related to resources and unit deployment
 
     Attributes:
-        UNIT_TYPE_TO_INDEX (dict): Maps a unit to a corresponding index
-        FILTER (str): A constant representing the filter unit
-        ENCRYPTOR (str): A constant representing the encryptor unit
-        DESTRUCTOR (str): A constant representing the destructor unit
-        PING (str): A constant representing the ping unit
-        EMP (str): A constant representing the emp unit
-        SCRAMBLER (str): A constant representing the scrambler unit
-        FIREWALL_TYPES (list): A list of the firewall units
+        * UNIT_TYPE_TO_INDEX (dict): Maps a unit to a corresponding index \n
+        * FILTER (str): A constant representing the filter unit \n
+        * ENCRYPTOR (str): A constant representing the encryptor unit
+        * DESTRUCTOR (str): A constant representing the destructor unit
+        * PING (str): A constant representing the ping unit
+        * EMP (str): A constant representing the emp unit
+        * SCRAMBLER (str): A constant representing the scrambler unit
+        * FIREWALL_TYPES (list): A list of the firewall units
 
-        ARENA_SIZE (int): The size of the arena
-        HALF_ARENA (int): Half the size of the arena
-        BITS (int): A constant representing the bits resource
-        CORES (int): A constant representing the cores resource
+        * ARENA_SIZE (int): The size of the arena
+        * HALF_ARENA (int): Half the size of the arena
+        * BITS (int): A constant representing the bits resource
+        * CORES (int): A constant representing the cores resource
          
-        game_map (:obj: GameMap): The current GameMap
-        turn_number (int): The current turn number. Starts at 0.
-        my_health (int): Your current remaining health
-        my_time (int): The time you took to submit your previous turn
-        enemy_health (int): Your opponents current remaining health
-        enemy_time (int): Your opponents current remaining time
+        * game_map (:obj: GameMap): The current GameMap
+        * turn_number (int): The current turn number. Starts at 0.
+        * my_health (int): Your current remaining health
+        * my_time (int): The time you took to submit your previous turn
+        * enemy_health (int): Your opponents current remaining health
+        * enemy_time (int): Your opponents current remaining time
     """
 
     def __init__(self, config, serialized_string):
         """ Setup a turns variables using arguments passed
 
         Args:
-            config (JSON): A json object containing information about the game
-            serialized_string (string): A string containing information about the game state at the start of this turn
+            * config (JSON): A json object containing information about the game
+            * serialized_string (string): A string containing information about the game state at the start of this turn
 
         """
         self.serialized_string = serialized_string
@@ -154,8 +154,8 @@ class GameState:
         """Gets a players resources
 
         Args:
-            resource_type: self.CORES or self.BITS
-            player_index: The index corresponding to the player whos resources you are querying, 0 for you 1 for the enemy
+            * resource_type: self.CORES or self.BITS
+            * player_index: The index corresponding to the player whos resources you are querying, 0 for you 1 for the enemy
 
         Returns:
             The number of the given resource the given player controls
@@ -172,7 +172,7 @@ class GameState:
         """The number of units of a given type we can afford
 
         Args:
-            unit_type: A unit type, PING, FILTER, etc.
+            * unit_type: A unit type, PING, FILTER, etc.
 
         Returns:
             The number of units affordable of the given unit_type.
@@ -187,9 +187,9 @@ class GameState:
         """Predicts the number of bits we will have on a future turn
 
         Args:
-            turns_in_future: The number of turns in the future we want to look forward to predict
-            player_index: The player whos bits we are tracking
-            current_bits: If we pass a value here, we will use that value instead of the current bits of the given player.
+            * turns_in_future: The number of turns in the future we want to look forward to predict
+            * player_index: The player whos bits we are tracking
+            * current_bits: If we pass a value here, we will use that value instead of the current bits of the given player.
 
         Returns:
             The number of bits the given player will have after the given number of turns
@@ -208,7 +208,7 @@ class GameState:
         """Gets the cost of a unit based on its type
 
         Args:
-            unit_type: The units type
+            * unit_type: The units type
 
         Returns:
             The units cost
@@ -225,9 +225,9 @@ class GameState:
         and on an edge if the unit is information.
 
         Args:
-            unit_type: The type of the unit
-            location: The location we want to spawn the unit
-            num: The number of units we want to spawn
+            * unit_type: The type of the unit
+            * location: The location we want to spawn the unit
+            * num: The number of units we want to spawn
 
         Returns:
             True if we can spawn the unit(s)
@@ -247,9 +247,9 @@ class GameState:
         """Attempts to spawn new units with the type given in the given locations.
 
         Args:
-            unit_type: The type of unit we want to spawn
-            locations: A single location or list of locations to spawn units at
-            num: The number of units of unit_type to deploy at the given location(s)
+            * unit_type: The type of unit we want to spawn
+            * locations: A single location or list of locations to spawn units at
+            * num: The number of units of unit_type to deploy at the given location(s)
 
         Returns:
             The number of units successfully spawned
@@ -277,7 +277,7 @@ class GameState:
         """Attempts to remove existing friendly firewalls in the given locations.
 
         Args:
-            locations: A location or list of locations we want to remove firewalls from
+            * locations: A location or list of locations we want to remove firewalls from
 
         Returns:
             The number of firewalls successfully flagged for removal
@@ -297,8 +297,8 @@ class GameState:
         """Gets the path a unit at a given location would take
 
         Args:
-            start_location: The location of a hypothetical unit
-            target_edge: The edge the unit wants to reach. game_map.TOP_LEFT, game_map.BOTTOM_RIGHT, etc.
+            * start_location: The location of a hypothetical unit
+            * target_edge: The edge the unit wants to reach. game_map.TOP_LEFT, game_map.BOTTOM_RIGHT, etc.
 
         Returns:
             A list of locations corresponding to the path the unit would take 
@@ -312,7 +312,8 @@ class GameState:
         """Check if a location is blocked
 
         Args:
-            location: The location to check
+            * location: The location to check
+
         Returns:
             True if there is a stationary unit at the location, False otherwise
         """
