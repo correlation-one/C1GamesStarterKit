@@ -5,23 +5,54 @@ import queue
 from .util import debug_write
 
 class Node:
+    """A pathfinding node
+
+    Attributes:
+        * visited_idealness (bool): Have we visited this node during the idealness search step?
+        * visited_validate (bool): Have we visited this node during the validation step?
+        * blocked (bool): Is there a firewall at this node's location
+        * pathlength: The distance between this node and the target location
+
+    """
     def __init__(self):
         self.visited_idealness = False
         self.visited_validate = False
         self.blocked = False
         self.pathlength = -1
 
-'''
+"""
 This class helps with pathfinding. We guarentee the results will
 be accurate, but top players may want to write their own pathfinding
 code to maximise time efficiancy
-'''
+"""
 class ShortestPathFinder:
+    """Handles pathfinding
+
+    Attributes:
+        * HORIZONTAL (int): A constant representing a horizontal movement
+        * VERTICAL (int): A constant representing a vertical movement
+
+        * game_state (:obj: GameState): The current gamestate
+        * game_map (:obj: GameMap): The current gamemap
+
+    """
     def __init__(self):
         self.HORIZONTAL = 1
         self.VERTICAL = 2
 
     def navigate_multiple_endpoints(self, start_point, end_points, game_state):
+        """Finds tha path a unit would take to reach a set of endpoints
+
+        Args:
+            * start_point: The starting location of the unit
+            * end_points: The end points of the unit, should be a list of edge locations
+            * game_state: The current game state
+
+        Returns:
+            The path a unit at start_point would take when trying to reach end_points given the current game state.
+            Note that this path can change if a tower is destroyed during pathing, or if you or your enemy places firewalls.
+
+        """
         #Initialize map 
         self.game_state = game_state
         self.game_map = [[Node() for x in range(self.game_state.ARENA_SIZE)] for y in range(self.game_state.ARENA_SIZE)]
@@ -30,28 +61,28 @@ class ShortestPathFinder:
             if self.game_state.contains_stationary_unit(location):
                 self.game_map[location[0]][location[1]].blocked = True
         #Do pathfinding
-        ideal_endpoints = self.idealness_search(start_point, end_points)
-        self.validate(ideal_endpoints, end_points)
-        return self.get_path(start_point, end_points)
+        ideal_endpoints = self._idealness_search(start_point, end_points)
+        self._validate(ideal_endpoints, end_points)
+        return self._get_path(start_point, end_points)
 
-    def idealness_search(self, start, end_points):
-        '''
-        Finds the most ideal tile in our 'pocket' of space to path to. The edge if it is available, 
-        or the best self destruct location otherwise
-        '''
+    def _idealness_search(self, start, end_points):
+        """
+        Finds the most ideal tile in our 'pocket' of pathable space. 
+        The edge if it is available, or the best self destruct location otherwise
+        """
         current = queue.Queue()
         current.put(start)
-        best_idealness = self.get_idealness(start, end_points)
+        best_idealness = self._get_idealness(start, end_points)
         most_ideal = start
 
         while not current.empty():
             search_location = current.get()
-            for neighbor in self.get_neighbors(search_location):
+            for neighbor in self._get_neighbors(search_location):
                 if not self.game_state.game_map.in_arena_bounds(neighbor) or self.game_map[neighbor[0]][neighbor[1]].blocked:
                     continue
 
                 x, y = neighbor
-                current_idealness = self.get_idealness(neighbor, end_points)
+                current_idealness = self._get_idealness(neighbor, end_points)
 
                 if current_idealness > best_idealness:
                     best_idealness = current_idealness
@@ -63,11 +94,22 @@ class ShortestPathFinder:
 
         return most_ideal
 
-    def get_neighbors(self, location):
+    def _get_neighbors(self, location):
+        """Get the locations adjacent to a location
+        """
         x, y = location
         return [[x, y + 1], [x, y - 1], [x + 1, y], [x - 1, y]]
 
-    def get_direction_from_endpoints(self, end_points):
+    def _get_direction_from_endpoints(self, end_points):
+        """Prints a message to the games debug output
+
+        Args:
+            * end_points: A set of endpoints, should be an edge 
+
+        Returns:
+            A direction [x,y] representing the edge. For example, [1,1] for the top right and [-1, 1] for the top left
+
+        """
         point = end_points[0]
         x, y = point
         direction = [1, 1]
@@ -77,11 +119,17 @@ class ShortestPathFinder:
             direction[1] = -1
         return direction
 
-    def get_idealness(self, location, end_points):
+    def _get_idealness(self, location, end_points):
+        """Get the idealness of a tile, the reachable tile the unit most wants to path to.
+        Better self destruct locations are more ideal. The endpoints are perfectly ideal. 
+
+        Returns:
+            A location the unit will attempt to reach
+        """
         if location in end_points:
             return sys.maxsize
 
-        direction = self.get_direction_from_endpoints(end_points)
+        direction = self._get_direction_from_endpoints(end_points)
 
         idealness = 0
         if direction[1] == 1:
@@ -95,9 +143,11 @@ class ShortestPathFinder:
 
         return idealness
 
-    def validate(self, ideal_tile, end_points):
+    def _validate(self, ideal_tile, end_points):
+        """Breadth first search of the grid, setting the pathlengths of each node
+
+        """
         #VALDIATION
-       
         #Add our most ideal tiles to current
         current = queue.Queue()
         if ideal_tile in end_points:
@@ -115,7 +165,7 @@ class ShortestPathFinder:
         while not current.empty():
             current_location = current.get()
             current_node = self.game_map[current_location[0]][current_location[1]]
-            for neighbor in self.get_neighbors(current_location):
+            for neighbor in self._get_neighbors(current_location):
                 if not self.game_state.game_map.in_arena_bounds(neighbor) or self.game_map[neighbor[0]][neighbor[1]].blocked:
                     continue
 
@@ -129,7 +179,10 @@ class ShortestPathFinder:
         #self.print_map()
         return
 
-    def get_path(self, start_point, end_points):
+    def _get_path(self, start_point, end_points):
+        """Once all nodes are validated, and a target is found, the unit can path to its target
+
+        """
         #GET THE PATH
         path = [start_point]
         current = start_point
@@ -137,7 +190,7 @@ class ShortestPathFinder:
 
         while not self.game_map[current[0]][current[1]].pathlength == 0:
             #debug_write("current tile {} has cost {}".format(current, self.game_map[current[0]][current[1]].pathlength))
-            next_move = self.choose_next_move(current, move_direction, end_points)
+            next_move = self._choose_next_move(current, move_direction, end_points)
             #debug_write(next_move)
 
             if current[0] == next_move[0]:
@@ -150,8 +203,10 @@ class ShortestPathFinder:
         debug_write(path)
         return path
   
-    def choose_next_move(self, current_point, previous_move_direction, end_points):
-        neighbors = self.get_neighbors(current_point)
+    def _choose_next_move(self, current_point, previous_move_direction, end_points):
+        """Given the current location and adjacent locations, return the best 'next step' for a given unit to take
+        """
+        neighbors = self._get_neighbors(current_point)
         #debug_write("Unit at {} previously moved {} and has these neighbors {}".format(current_point, previous_move_direction, neighbors))
 
         ideal_neighbor = current_point
@@ -173,7 +228,7 @@ class ShortestPathFinder:
                 new_best = True
 
             #Filter by direction based on prev move
-            if not new_best and not self.better_direction(current_point, neighbor, ideal_neighbor, previous_move_direction, end_points):
+            if not new_best and not self._better_direction(current_point, neighbor, ideal_neighbor, previous_move_direction, end_points):
                 continue
 
             ideal_neighbor = neighbor
@@ -182,7 +237,10 @@ class ShortestPathFinder:
         #debug_write("Gave unit at {} new tile {}".format(current_point, ideal_neighbor))
         return ideal_neighbor
 
-    def better_direction(self, prev_tile, new_tile, prev_best, previous_move_direction, end_points):
+    def _better_direction(self, prev_tile, new_tile, prev_best, previous_move_direction, end_points):
+        """Compare two tiles and return True if the unit would rather move to the new one
+
+        """
         #True if we are moving in a different direction than prev move and prev is not
         #If we previously moved horizontal, and now one of our options has a different x position then the other (the two options are not up/down)
         if previous_move_direction == self.HORIZONTAL and not new_tile[0] == prev_best[0]:
@@ -201,7 +259,7 @@ class ShortestPathFinder:
             return True
         
         #To make it here, both moves are on the same axis 
-        direction = self.get_direction_from_endpoints(end_points)
+        direction = self._get_direction_from_endpoints(end_points)
         if new_tile[1] == prev_best[1]: #If they both moved horizontal...
             if direction[0] == 1 and new_tile[0] > prev_best[0]: #If we moved right and right is our direction, we moved towards our direction
                 return True 
@@ -213,16 +271,22 @@ class ShortestPathFinder:
         return True
 
     def print_map(self):
+        """Prints an ASCII version of the current game map for debug purposes
+
+        """
         for y in range(28):
             for x in range(28):
                 node = self.game_map[x][28 - y - 1]
                 if not node.blocked and not node.pathlength == -1:
-                    self.print_justified(node.pathlength)
+                    self._print_justified(node.pathlength)
                 else:
                     sys.stderr.write("   ")
             debug_write("")
 
-    def print_justified(self, number):
+    def _print_justified(self, number):
+        """Prints a number between 100 and -10 in 3 spaces
+
+        """
         if number < 10 and number > -1:
             sys.stderr.write(" ")
         sys.stderr.write(str(number))
