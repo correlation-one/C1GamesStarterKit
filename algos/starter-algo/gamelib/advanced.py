@@ -1,4 +1,4 @@
-from .game import GameState, GameUnit, SCRAMBLER, is_stationary, DESTRUCTOR, UNIT_TYPE_TO_INDEX
+from .game import GameState, GameUnit
 import sys
 import warnings
 
@@ -20,6 +20,7 @@ class AdvancedGameState(GameState):
             The GameUnit this unit would choose to attack.
 
         """
+        from .game import SCRAMBLER, is_stationary
 
         if not isinstance(attacking_unit, GameUnit):
             warnings.warn("Passed a {} to get_target as attacking_unit. Expected a GameUnit.".format(type(attacking_unit)))
@@ -91,6 +92,8 @@ class AdvancedGameState(GameState):
             A list of destructors that would attack a unit controlled by the given player at the given location
 
         """
+        from .game import DESTRUCTOR, UNIT_TYPE_TO_INDEX
+
         if not player_index == 0 and not player_index == 1:
             warnings.warn("Passed invalid player index {} to get_attackers. Player index should always be 0 (you) or 1 (your opponent)".format(player_index))
         if not self.game_map.in_arena_bounds(location):
