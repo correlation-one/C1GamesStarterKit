@@ -1,5 +1,6 @@
 import math
 import json
+import warnings
 
 from .navigation import ShortestPathFinder
 from .util import send_command, debug_write
@@ -161,6 +162,11 @@ class GameState:
             The number of the given resource the given player controls
 
         """
+        if not player_index == 1 and not player_index == 0:
+            warnings.warn("Player index {} is invalid. Player index should always be 0 (you) or 1 (your opponent).".format(player_index))
+        if not resource_type == self.BITS and not resource_type == self.CORES:
+            warnings.warn("Invalid resource_type '{}'. Please use game_state.BITS or game_state.CORES".format(resource_type))
+
         if resource_type == self.BITS:
             resource_key = 'bits'
         elif resource_type == self.CORES:
@@ -195,6 +201,14 @@ class GameState:
             The number of bits the given player will have after the given number of turns
 
         """
+
+        if turns_in_future < 1 or turns_in_future > 99:
+            warnings.warn("Invalid turns in future used ({}). Turns in future should be between 1 and 99".format(turns_in_future))
+        if not player_index == 1 and not player_index == 0:
+            warnings.warn("Player index {} is invalid. Player index should always be 0 (you) or 1 (your opponent).".format(player_index))
+        if type(current_bits) == int and current_bits < 0:
+            warnings.warn("Invalid current bits ({}). Current bits cannot be negative.".format(current_bits))
+
         bits = self.get_resource(self.BITS, player_index) if not current_bits else current_bits
         for increment in range(1, turns_in_future + 1):
             current_turn = self.turn_number + increment
@@ -233,6 +247,7 @@ class GameState:
             True if we can spawn the unit(s)
 
         """
+
         affordable = self.number_affordable(unit_type) >= num
         stationary = is_stationary(unit_type)
         blocked = self.contains_stationary_unit(location) or (stationary and len(self.game_map[location[0],location[1]]) > 0)
@@ -255,10 +270,16 @@ class GameState:
             The number of units successfully spawned
 
         """
+        if num < 1:
+            warnings.warn("Attempted to spawn fewer than one units! ({})".format(num))
+
         if type(locations[0]) == int:
             locations = [locations]
         spawned_units = 0
         for location in locations:
+            if location[1] >= self.HALF_ARENA:
+                warnings.warn("Attempted to spawn unit at {} which is in enemy territory!".format(locations))
+
             for _ in range(num):
                 if self.can_spawn(unit_type, location):
                     x, y = map(int, location)
@@ -287,6 +308,8 @@ class GameState:
             locations = [locations]
         removed_units = 0
         for location in locations:
+            if location[1] >= self.HALF_ARENA:
+                warnings.warn("Attempted to remove a unit at {} which is in enemy territory!".format(locations))
             if location[1] < self.HALF_ARENA and self.contains_stationary_unit(location):
                 x, y = map(int, location)
                 self._build_stack.append((REMOVE, x, y))
@@ -306,7 +329,7 @@ class GameState:
 
         """
         end_points = self.game_map.get_edge_locations(target_edge)
-        return self.shortest_path_finder.navigate_multiple_endpoints(start_location, end_points, self)
+        return self._shortest_path_finder.navigate_multiple_endpoints(start_location, end_points, self)
 
     def contains_stationary_unit(self, location):
         """Check if a location is blocked
