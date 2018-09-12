@@ -10,26 +10,39 @@ For more details about competitions and the game itself please check out our
 
 1. We recommend familiarizing yourself with the game and creating a strategy through playing by
 hand before starting your algo.
+
+1. In order to run the the game locally [java jdk](http://www.oracle.com/technetwork/java/javase/downloads/jdk10-downloads-4416644.html) version 10 or above must be installed. You may need to restart your shell after installing or updating dependencies. If using the python starter-algo Python3 must be installed and the command `python3` for unix or `py -3` for windows must work. If you are on windows `powershell` is required but should come pre-installed on your windows OS.
+
+1. First try running a match with the defualt starter-algo using our CLI. You can also leave arguments blank and it will default to the starter-algo.
+
+    ```
+    scripts/run_match.sh
+    or
+    scripts/run_match.sh algos/starter-algo algos/my-algo
+
+    Windows:
+    scripts\run_match.ps1
+    or
+    scripts\run_match.ps1 algos\starter-algo algos\starter-algo
+    ```
+
 1. Once you are ready, create your own Algo by forking the example `starter-algo` to serve as a base
-for you to develop your own strategy in.
+for you to develop your own strategy in. You can use the below script if on unix or simply copy paste the folder.
 
     `scripts/fork_algo.sh algos/starter-algo algos/my-algo`
 
 1. Open `algo_strategy.py` in your new algo using the editor of your choice and create your strategy
 using the functions provided in gamelib. The provided strategy has examples with explanations on how
 to do this.
-1. Explore changes to your algo by running matches using our CLI:
 
-    `scripts/run_match.sh algos/starter-algo algos/my-algo`
-
-1. When you are ready to test your algo, you can use the CLI to archive it as a zip with a filename
+1. When you are ready to post your algo, you can use the CLI to archive it if in unix. Or simply right click it and use built in compression methods for your OS. Save it as a zip with a filename
 that matches how you want your algo to be identified to other users on the site.
 
     `scripts/archive_algo.sh algos/my-algo dist/my-algo.zip`
 
 1. You can upload the zipped algo on the "My Algos" page of the terminal site, then that’s it! Your
 zipped algo will automatically begin playing in matches and can be selected as your entry in any
-competitions you are eligible for.
+competitions you are eligible for. You can also play with or against it in Play mode.
 
 Check out all of the [C1 CLI Commands][C1 CLI Commands] to learn how to create, run and upload your
 algos!
@@ -89,7 +102,7 @@ C1GamesStarterKit
 │       ├── algo_strategy.py                    // basic strategy for starter-algo (required)
 │       └── run.sh                              // entry point for algo (required)
 │
-├── dist                                        // directory where archived algos get saved 
+├── dist                                        // directory where archived algos get saved
 │   └── starter-algo.zip
 │
 ├── docs                                        // more detailed guides/documentation
