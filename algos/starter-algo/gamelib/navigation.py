@@ -200,7 +200,7 @@ class ShortestPathFinder:
             path.append(next_move)
             current = next_move
         
-        debug_write(path)
+        #debug_write(path)
         return path
   
     def _choose_next_move(self, current_point, previous_move_direction, end_points):

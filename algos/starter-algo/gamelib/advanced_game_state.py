@@ -1,4 +1,4 @@
-from .game import GameState
+from .game_state import GameState
 import sys
 
 class AdvancedGameState(GameState):
@@ -19,7 +19,7 @@ class AdvancedGameState(GameState):
             The GameUnit this unit would choose to attack.
 
         """
-        from .game import SCRAMBLER, is_stationary
+        from .game_state import SCRAMBLER, is_stationary
 
         attacker_location = [attacking_unit.x, attacking_unit.y]
         possible_locations = self.game_map.get_locations_in_range(attacker_location, attacking_unit.range)
@@ -88,7 +88,7 @@ class AdvancedGameState(GameState):
             A list of destructors that would attack a unit controlled by the given player at the given location
 
         """
-        from .game import DESTRUCTOR, UNIT_TYPE_TO_INDEX
+        from .game_state import DESTRUCTOR, UNIT_TYPE_TO_INDEX
 
         attackers = []
         """
