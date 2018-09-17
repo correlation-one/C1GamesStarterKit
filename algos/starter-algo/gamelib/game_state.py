@@ -1,5 +1,6 @@
 import math
 import json
+import warnings
 
 from .navigation import ShortestPathFinder
 from .util import send_command, debug_write
@@ -306,7 +307,7 @@ class GameState:
 
         """
         if self.contains_stationary_unit(start_location):
-            #TODO: Add warning
+            warnings.warn("Attempted to perform pathing from blocked starting location {}".format(start_location))
             return
         end_points = self.game_map.get_edge_locations(target_edge)
         return self._shortest_path_finder.navigate_multiple_endpoints(start_location, end_points, self)
