@@ -35,7 +35,7 @@ class GameUnit:
         self.stability = self.max_stability if not stability else stability
 
     def __serialize_type(self):
-        from .game import FIREWALL_TYPES, UNIT_TYPE_TO_INDEX, ENCRYPTOR
+        from .game_state import FIREWALL_TYPES, UNIT_TYPE_TO_INDEX, ENCRYPTOR
         self.stationary = is_stationary(self.unit_type, FIREWALL_TYPES)
         type_config = self.config["unitInformation"][UNIT_TYPE_TO_INDEX[self.unit_type]]
         if self.stationary:
