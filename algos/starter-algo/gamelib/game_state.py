@@ -309,7 +309,7 @@ class GameState:
                         self._deploy_stack.append((unit_type, x, y))
                     spawned_units += 1
                 else:
-                    warnings.warn("Could not spawn {} number {} at location {}. Location is blocked or invalid.".format(unit_type, i, location))
+                    warnings.warn("Could not spawn {} number {} at location {}. Location is blocked, invalid, or you don't have enough resources.".format(unit_type, i, location))
         return spawned_units
 
     def attempt_remove(self, locations):
