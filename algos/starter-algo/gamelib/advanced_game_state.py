@@ -25,6 +25,7 @@ class AdvancedGameState(GameState):
 
         if not isinstance(attacking_unit, GameUnit):
             warnings.warn("Passed a {} to get_target as attacking_unit. Expected a GameUnit.".format(type(attacking_unit)))
+            return
 
         attacker_location = [attacking_unit.x, attacking_unit.y]
         possible_locations = self.game_map.get_locations_in_range(attacker_location, attacking_unit.range)

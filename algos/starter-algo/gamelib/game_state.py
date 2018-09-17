@@ -48,7 +48,7 @@ class GameState:
         self.serialized_string = serialized_string
         self.config = config
 
-        global FILTER, ENCRYPTOR, DESTRUCTOR, PING, EMP, SCRAMBLER, REMOVE, FIREWALL_TYPES, UNIT_TYPE_TO_INDEX
+        global FILTER, ENCRYPTOR, DESTRUCTOR, PING, EMP, SCRAMBLER, REMOVE, FIREWALL_TYPES, ALL_UNITS, UNIT_TYPE_TO_INDEX
         UNIT_TYPE_TO_INDEX = {}
         FILTER = config["unitInformation"][0]["shorthand"]
         UNIT_TYPE_TO_INDEX[FILTER] = 0
@@ -64,7 +64,8 @@ class GameState:
         UNIT_TYPE_TO_INDEX[SCRAMBLER] = 5
         REMOVE = config["unitInformation"][6]["shorthand"]
         UNIT_TYPE_TO_INDEX[REMOVE] = 6
-        
+
+        ALL_UNITS = [PING, EMP, SCRAMBLER, FILTER, ENCRYPTOR, DESTRUCTOR]
         FIREWALL_TYPES = [FILTER, ENCRYPTOR, DESTRUCTOR]
 
         self.ARENA_SIZE = 28
@@ -184,6 +185,10 @@ class GameState:
             The number of units affordable of the given unit_type.
 
         """
+        if unit_type not in ALL_UNITS:
+            warnings.warn("Invalid unit '{}'.")
+            return
+
         cost = self.type_cost(unit_type)
         resource_type = self.__resource_required(unit_type)
         player_held = self.get_resource(resource_type)
@@ -228,6 +233,10 @@ class GameState:
             The units cost
 
         """
+        if unit_type not in ALL_UNITS:
+            warnings.warn("Invalid unit '{}'.")
+            return
+
         unit_def = self.config["unitInformation"][UNIT_TYPE_TO_INDEX[unit_type]]
         return unit_def.get('cost')
 
@@ -247,7 +256,13 @@ class GameState:
             True if we can spawn the unit(s)
 
         """
+        if unit_type not in ALL_UNITS:
+            warnings.warn("Invalid unit '{}'.")
+            return
         
+        if not self.game_map.in_arena_bounds(location):
+            return False
+
         affordable = self.number_affordable(unit_type) >= num
         stationary = is_stationary(unit_type)
         blocked = self.contains_stationary_unit(location) or (stationary and len(self.game_map[location[0],location[1]]) > 0)
@@ -270,27 +285,31 @@ class GameState:
             The number of units successfully spawned
 
         """
+        if unit_type not in ALL_UNITS:
+            warnings.warn("Invalid unit '{}'.")
+            return
         if num < 1:
             warnings.warn("Attempted to spawn fewer than one units! ({})".format(num))
+            return
       
         if type(locations[0]) == int:
             locations = [locations]
         spawned_units = 0
         for location in locations:
-            if location[1] >= self.HALF_ARENA:
-                warnings.warn("Attempted to spawn unit at {} which is in enemy territory!".format(locations))
-            for _ in range(num):
+            for i in range(num):
                 if self.can_spawn(unit_type, location):
                     x, y = map(int, location)
                     cost = self.type_cost(unit_type)
                     resource_type = self.__resource_required(unit_type)
-                    self.__set_resource(resource_type, -cost)
+                    self.__set_resource(resource_type, 0 - cost)
                     self.game_map.add_unit(unit_type, location, 0)
                     if is_stationary(unit_type):
                         self._build_stack.append((unit_type, x, y))
                     else:
                         self._deploy_stack.append((unit_type, x, y))
                     spawned_units += 1
+                else:
+                    warnings.warn("Could not spawn {} number {} at location {}. Location is blocked or invalid.".format(unit_type, i, location))
         return spawned_units
 
     def attempt_remove(self, locations):
@@ -307,13 +326,12 @@ class GameState:
             locations = [locations]
         removed_units = 0
         for location in locations:
-            if location[1] >= self.HALF_ARENA:
-                warnings.warn("Attempted to remove a unit at {} which is in enemy territory!".format(locations))
-
             if location[1] < self.HALF_ARENA and self.contains_stationary_unit(location):
                 x, y = map(int, location)
                 self._build_stack.append((REMOVE, x, y))
                 removed_units += 1
+            else:
+                warnings.warn("Could not remove a unit from {}. Location has no firewall or is enemy territory.".format(location))
         return removed_units
 
     def find_path_to_edge(self, start_location, target_edge):
