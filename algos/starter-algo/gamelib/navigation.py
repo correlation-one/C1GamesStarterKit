@@ -200,7 +200,7 @@ class ShortestPathFinder:
             path.append(next_move)
             current = next_move
         
-        debug_write(path)
+        #debug_write(path)
         return path
   
     def _choose_next_move(self, current_point, previous_move_direction, end_points):
@@ -263,9 +263,13 @@ class ShortestPathFinder:
         if new_tile[1] == prev_best[1]: #If they both moved horizontal...
             if direction[0] == 1 and new_tile[0] > prev_best[0]: #If we moved right and right is our direction, we moved towards our direction
                 return True 
+            if direction[0] == -1 and new_tile[0] < prev_best[0]: #If we moved left and left is our direction, we moved towards our direction
+                return True 
             return False 
         if new_tile[0] == prev_best[0]: #If they both moved vertical...
             if direction[1] == 1 and new_tile[1] > prev_best[1]: #If we moved up and up is our direction, we moved towards our direction
+                return True
+            if direction[1] == -1 and new_tile[1] < prev_best[1]: #If we moved down and down is our direction, we moved towards our direction
                 return True
             return False
         return True

@@ -247,7 +247,7 @@ class GameState:
             True if we can spawn the unit(s)
 
         """
-
+        
         affordable = self.number_affordable(unit_type) >= num
         stationary = is_stationary(unit_type)
         blocked = self.contains_stationary_unit(location) or (stationary and len(self.game_map[location[0],location[1]]) > 0)
@@ -272,14 +272,13 @@ class GameState:
         """
         if num < 1:
             warnings.warn("Attempted to spawn fewer than one units! ({})".format(num))
-
+      
         if type(locations[0]) == int:
             locations = [locations]
         spawned_units = 0
         for location in locations:
             if location[1] >= self.HALF_ARENA:
                 warnings.warn("Attempted to spawn unit at {} which is in enemy territory!".format(locations))
-
             for _ in range(num):
                 if self.can_spawn(unit_type, location):
                     x, y = map(int, location)
@@ -310,6 +309,7 @@ class GameState:
         for location in locations:
             if location[1] >= self.HALF_ARENA:
                 warnings.warn("Attempted to remove a unit at {} which is in enemy territory!".format(locations))
+
             if location[1] < self.HALF_ARENA and self.contains_stationary_unit(location):
                 x, y = map(int, location)
                 self._build_stack.append((REMOVE, x, y))
