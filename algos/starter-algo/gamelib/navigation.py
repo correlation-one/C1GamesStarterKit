@@ -17,7 +17,7 @@ class Node:
     def __init__(self):
         self.visited_idealness = False
         self.visited_validate = False
-        self.blocked = False 
+        self.blocked = False
         self.pathlength = -1
 
 """
