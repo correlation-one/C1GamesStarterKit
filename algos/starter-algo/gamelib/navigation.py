@@ -53,6 +53,9 @@ class ShortestPathFinder:
             Note that this path can change if a tower is destroyed during pathing, or if you or your enemy places firewalls.
 
         """
+        if game_state.contains_stationary_unit(start_point):
+            return
+
         #Initialize map 
         self.game_state = game_state
         self.game_map = [[Node() for x in range(self.game_state.ARENA_SIZE)] for y in range(self.game_state.ARENA_SIZE)]
@@ -73,6 +76,7 @@ class ShortestPathFinder:
         current = queue.Queue()
         current.put(start)
         best_idealness = self._get_idealness(start, end_points)
+        self.game_map[start[0]][start[1]].visited_idealness = True
         most_ideal = start
 
         while not current.empty():
