@@ -1,19 +1,32 @@
-from .game import GameState
+from .game_state import GameState, GameUnit
 import sys
+import warnings
 
-'''
-Some advanced functions you can use by initializing an AdvancedGameState instead of Gamestate in algo_strategy
-'''
 class AdvancedGameState(GameState):
-    def get_target(self, attacking_unit):
-        '''
-        Returns target of given unit based on current map of the game board
-        '''
-        from .game import SCRAMBLER, is_stationary
+    """A version of gamestate with access to a few more advanced functions
 
-        '''
-        Target priority: Infantry > Nearest Unit > Lowest Stability > Lowest Y position > Closest to edge (Highest distance of X from the boards center, 13.5)
-        '''
+    """
+    def get_target(self, attacking_unit):
+        """Returns target of given unit based on current map of the game board. 
+        A Unit can often have many other units in range, and Units that attack do so once each frame.
+
+        Their targeting priority is as follows:
+            Infantry > Nearest Unit > Lowest Stability > Lowest Y position > Closest to edge (Highest distance of X from the boards center, 13.5)
+
+        Args:
+            * attacking_unit: A GameUnit
+
+        Returns:
+            The GameUnit this unit would choose to attack.
+
+        """
+        
+        from .game_state import SCRAMBLER, is_stationary
+
+        if not isinstance(attacking_unit, GameUnit):
+            warnings.warn("Passed a {} to get_target as attacking_unit. Expected a GameUnit.".format(type(attacking_unit)))
+            return
+
         attacker_location = [attacking_unit.x, attacking_unit.y]
         possible_locations = self.game_map.get_locations_in_range(attacker_location, attacking_unit.range)
         target = None
@@ -25,9 +38,9 @@ class AdvancedGameState(GameState):
 
         for location in possible_locations:
             for unit in self.game_map[location]:
-                '''
+                """
                 NOTE: scrambler units cannot attack firewalls so skip them if unit is firewall
-                '''
+                """
                 if unit.player_index == attacking_unit.player_index or (attacking_unit.unit_type == SCRAMBLER and is_stationary(unit)):
                     continue
 
@@ -71,15 +84,28 @@ class AdvancedGameState(GameState):
         return target
 
     def get_attackers(self, location, player_index):
-        '''
-        Returns list of destructors that would attack a unit at the given location with the given player id.
-        '''
-        from .game import DESTRUCTOR, UNIT_TYPE_TO_INDEX
+        """Gets the destructors threatening a given location
+
+        Args:
+            * location: The location of a hypothetical defender
+            * player_index: The index corresponding to the defending player, 0 for you 1 for the enemy
+
+        Returns:
+            A list of destructors that would attack a unit controlled by the given player at the given location
+
+        """
+        
+        from .game_state import DESTRUCTOR, UNIT_TYPE_TO_INDEX
+
+        if not player_index == 0 and not player_index == 1:
+            warnings.warn("Passed invalid player index {} to get_attackers. Player index should always be 0 (you) or 1 (your opponent)".format(player_index))
+        if not self.game_map.in_arena_bounds(location):
+            warnings.warn("Location {} is not in the arena bounds.".format(location))
 
         attackers = []
-        '''
+        """
         Get locations in the range of DESTRUCTOR units
-        '''
+        """
         possible_locations= self.game_map.get_locations_in_range(location, self.config["unitInformation"][UNIT_TYPE_TO_INDEX[DESTRUCTOR]]["range"])
         for location in possible_locations:
             for unit in self.game_map[location]:

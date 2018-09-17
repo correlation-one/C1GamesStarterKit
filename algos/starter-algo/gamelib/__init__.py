@@ -1,12 +1,13 @@
-'''
-Welcome to >_Terminal
-'''
+"""
+The gamelib package contains modules that assist in algo creation
+"""
 
 from .algocore import AlgoCore
-from .util import debug_write, point_in_list
-from .game import GameState
+from .util import debug_write
+from .game_state import GameState
 from .unit import GameUnit
-from .map import GameMap
-from .advanced import AdvancedGameState
+from .game_map import GameMap
+from .advanced_game_state import AdvancedGameState
 
-__all__ = [AlgoCore, debug_write, point_in_list, GameState, GameUnit, GameMap, AdvancedGameState]
+__all__ = ["advanced_game_state", "algocore", "game_state", "game_map", "navigation", "unit", "util"]
+ 

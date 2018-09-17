@@ -1,13 +1,13 @@
 import unittest
 import json
-from .game import GameState
+from .game_state import GameState
 from .unit import GameUnit
-from .advanced import AdvancedGameState
+from .advanced_game_state import AdvancedGameState
 
 class BasicTests(unittest.TestCase):
 
     def make_turn_0_map(self, adv=False):
-        config = '''
+        config = """
         {
             "debug":{
                 "printMapString":false,
@@ -126,8 +126,8 @@ class BasicTests(unittest.TestCase):
                 "firewallBuildTime":0
             }
         }
-        '''
-        turn_0 = '''{"p2Units":[[],[],[],[],[],[],[]],"turnInfo":[0,0,-1],"p1Stats":[30.0,25.0,5.0,0],"p1Units":[[],[],[],[],[],[],[]],"p2Stats":[30.0,25.0,5.0,0],"events":{"selfDestruct":[],"breach":[],"damage":[],"shield":[],"move":[],"spawn":[],"death":[],"attack":[],"melee":[]}}'''
+        """
+        turn_0 = """{"p2Units":[[],[],[],[],[],[],[]],"turnInfo":[0,0,-1],"p1Stats":[30.0,25.0,5.0,0],"p1Units":[[],[],[],[],[],[],[]],"p2Stats":[30.0,25.0,5.0,0],"events":{"selfDestruct":[],"breach":[],"damage":[],"shield":[],"move":[],"spawn":[],"death":[],"attack":[],"melee":[]}}"""
         if adv:
             return AdvancedGameState(json.loads(config), turn_0)
         return GameState(json.loads(config), turn_0)
@@ -160,8 +160,8 @@ class BasicTests(unittest.TestCase):
         self.assertEqual(False, game.can_spawn("FF", [14, 14]), "Apparently I can place towers on my opponent's side")
         self.assertEqual(True, game.attempt_spawn("DF", [[13, 6]]), "We cannot spawn a tower!")
         self.assertEqual(2, game.attempt_spawn("SI", [[13, 0], [13, 0], [13, 5]]), "More or less than 2 units were spawned!")
-        self.assertEqual([("DF", 13, 6)], game.build_stack, "Build queue is wrong!")
-        self.assertEqual([("SI", 13, 0), ("SI", 13, 0), ("SI", 13, 0)], game.deploy_stack, "Deploy queue is wrong!")
+        self.assertEqual([("DF", 13, 6)], game._build_stack, "Build queue is wrong!")
+        self.assertEqual([("SI", 13, 0), ("SI", 13, 0), ("SI", 13, 0)], game._deploy_stack, "Deploy queue is wrong!")
 
     def test_trivial_functions(self, adv=False):
         game = self.make_turn_0_map(adv)
@@ -176,10 +176,10 @@ class BasicTests(unittest.TestCase):
     def test_get_units(self, adv=False):
         game = self.make_turn_0_map(adv)
         self.assertEqual(0, len(game.game_map[13,13]), "There should not be a unit on this location")
-        for i in range(3):
+        for _ in range(3):
             game.game_map.add_unit("EI", [13,13])
         self.assertEqual(3, len(game.game_map[13,13]), "Information seems not to be stacking")
-        for i in range(3):
+        for _ in range(3):
             game.game_map.add_unit("FF", [13,13])
         self.assertEqual(1, len(game.game_map[13,13]), "Towers seem to be stacking")
         
