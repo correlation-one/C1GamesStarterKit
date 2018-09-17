@@ -40,7 +40,7 @@ class AlgoStrategy(gamelib.AlgoCore):
         EMP = config["unitInformation"][4]["shorthand"]
         SCRAMBLER = config["unitInformation"][5]["shorthand"]
 
-    def on_turn(self, cmd):
+    def on_turn(self, turn_state):
         """
         This function is called every turn with the game state wrapper as
         an argument. The wrapper stores the state of the arena and has methods
@@ -48,7 +48,7 @@ class AlgoStrategy(gamelib.AlgoCore):
         unit deployments, and transmitting your intended deployments to the
         game engine.
         """
-        game_state = gamelib.GameState(self.config, cmd)
+        game_state = gamelib.GameState(self.config, turn_state)
         gamelib.debug_write('Performing turn {} of your custom algo strategy'.format(game_state.turn_number))
 
         self.starter_strategy(game_state)
