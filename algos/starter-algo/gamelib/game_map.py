@@ -1,4 +1,5 @@
 import math
+import warnings
 from .unit import GameUnit
 
 class GameMap:
@@ -28,7 +29,7 @@ class GameMap:
 
         """
         self.config = config
-        self.ARENA_SIZE = 28 
+        self.ARENA_SIZE = 28
         self.HALF_ARENA = int(self.ARENA_SIZE / 2)
         self.TOP_RIGHT = 0
         self.TOP_LEFT = 1
@@ -113,6 +114,9 @@ class GameMap:
             A list of locations corresponding to the requested edge
 
         """
+        if not quadrant_description in [self.TOP_LEFT, self.TOP_RIGHT, self.BOTTOM_LEFT, self.BOTTOM_RIGHT]:
+            warnings.warn("Passed invalid quadrent_description '{}'. See the documentation for valid inputs for get_edge_locations.".format(quadrant_description))
+
         edges = self.get_edges()
         return edges[quadrant_description]
 
@@ -158,6 +162,9 @@ class GameMap:
         """
         if not self.in_arena_bounds(location):
             raise InvalidCoordinate(location)
+        if player_index < 0 or player_index > 1:
+            warnings.warn("Player index {} is invalid. Player index should be 0 or 1.".format(player_index))
+
         x, y = location
         new_unit = GameUnit(unit_type, self.config, player_index, None, location[0], location[1])
         if not new_unit.stationary:
@@ -176,6 +183,7 @@ class GameMap:
         """
         if not self.in_arena_bounds(location):
             raise InvalidCoordinate(location)
+        
         x, y = location
         self.__map[x][y] = []
 
@@ -190,6 +198,9 @@ class GameMap:
             The locations that are within our search area
 
         """
+        if radius < 0 or radius > self.ARENA_SIZE:
+            warnings.warn("Radius {} was passed to get_locations_in_range. Expected integer between 0 and {}".format(radius, self.ARENA_SIZE))
+
         x, y = location
         locations = []
         for i in range(int(x - radius), int(x + radius + 1)):
@@ -216,8 +227,9 @@ class GameMap:
 
         return math.sqrt((x1 - x2)**2 + (y1 - y2)**2)
 
-class InvalidCoordinate(Exception):
-    """Attempting to use a location that is out of bounds will raise this exception
+class InvalidCoordinate(Warning):
+    """Attempting to use a location that is out of bounds will raise this warning
     """
     def __init__(self, location):
-        super().__init__("{} is an invalid coordinate.".format(str(location)))
+        super().__init__("{} is out of bounds.".format(str(location)))
+

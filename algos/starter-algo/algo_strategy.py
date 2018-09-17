@@ -3,7 +3,6 @@ import random
 import math
 from sys import maxsize
 
-
 """
 Most of the algo code you write will be in this file unless you create new
 modules yourself. Start by modifying the 'on_turn' function.
