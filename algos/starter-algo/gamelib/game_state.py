@@ -15,8 +15,8 @@ class GameState:
     Provides methods related to resources and unit deployment
 
     Attributes:
-        * UNIT_TYPE_TO_INDEX (dict): Maps a unit to a corresponding index \n
-        * FILTER (str): A constant representing the filter unit \n
+        * UNIT_TYPE_TO_INDEX (dict): Maps a unit to a corresponding index
+        * FILTER (str): A constant representing the filter unit
         * ENCRYPTOR (str): A constant representing the encryptor unit
         * DESTRUCTOR (str): A constant representing the destructor unit
         * PING (str): A constant representing the ping unit

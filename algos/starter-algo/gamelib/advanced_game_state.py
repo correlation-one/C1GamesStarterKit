@@ -1,4 +1,4 @@
-from .game import GameState, GameUnit
+from .game_state import GameState, GameUnit
 import sys
 import warnings
 
@@ -21,7 +21,7 @@ class AdvancedGameState(GameState):
 
         """
         
-        from .game import SCRAMBLER, is_stationary
+        from .game_state import SCRAMBLER, is_stationary
 
         if not isinstance(attacking_unit, GameUnit):
             warnings.warn("Passed a {} to get_target as attacking_unit. Expected a GameUnit.".format(type(attacking_unit)))
@@ -94,7 +94,7 @@ class AdvancedGameState(GameState):
 
         """
         
-        from .game import DESTRUCTOR, UNIT_TYPE_TO_INDEX
+        from .game_state import DESTRUCTOR, UNIT_TYPE_TO_INDEX
 
         if not player_index == 0 and not player_index == 1:
             warnings.warn("Passed invalid player index {} to get_attackers. Player index should always be 0 (you) or 1 (your opponent)".format(player_index))

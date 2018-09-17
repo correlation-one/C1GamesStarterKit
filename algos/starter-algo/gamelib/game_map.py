@@ -29,7 +29,7 @@ class GameMap:
 
         """
         self.config = config
-        self.ARENA_SIZE = 28 
+        self.ARENA_SIZE = 28
         self.HALF_ARENA = int(self.ARENA_SIZE / 2)
         self.TOP_RIGHT = 0
         self.TOP_LEFT = 1

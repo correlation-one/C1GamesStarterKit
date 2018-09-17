@@ -1,6 +1,6 @@
 import json
 
-from .game import GameState
+from .game_state import GameState
 from .util import get_command, debug_write, BANNER_TEXT, send_command
 
 class AlgoCore(object):
