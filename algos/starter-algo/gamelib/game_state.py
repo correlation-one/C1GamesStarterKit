@@ -366,3 +366,9 @@ class GameState:
             if unit.stationary:
                 return unit
         return False
+
+    def suppress_all_warnings(self):
+        warnings.filterwarnings("ignore")
+    
+    def show_warnings(self):
+        warnings.resetwarnings()
