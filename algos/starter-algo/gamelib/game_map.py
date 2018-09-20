@@ -203,6 +203,8 @@ class GameMap:
         """
         if radius < 0 or radius > self.ARENA_SIZE:
             warnings.warn("Radius {} was passed to get_locations_in_range. Expected integer between 0 and {}".format(radius, self.ARENA_SIZE))
+        if not self.in_arena_bounds(location):
+            self._invalid_coordinates(location)
 
         x, y = location
         locations = []
