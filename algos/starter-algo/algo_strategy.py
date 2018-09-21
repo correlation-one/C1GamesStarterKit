@@ -1,6 +1,7 @@
 import gamelib
 import random
 import math
+import warnings
 from sys import maxsize
 
 """
@@ -39,6 +40,7 @@ class AlgoStrategy(gamelib.AlgoCore):
         EMP = config["unitInformation"][4]["shorthand"]
         SCRAMBLER = config["unitInformation"][5]["shorthand"]
 
+
     def on_turn(self, turn_state):
         """
         This function is called every turn with the game state wrapper as
@@ -49,6 +51,7 @@ class AlgoStrategy(gamelib.AlgoCore):
         """
         game_state = gamelib.GameState(self.config, turn_state)
         gamelib.debug_write('Performing turn {} of your custom algo strategy'.format(game_state.turn_number))
+        #game_state.suppress_warnings(True)  #Uncomment this line to suppress warnings.
 
         self.starter_strategy(game_state)
 
@@ -84,26 +87,34 @@ class AlgoStrategy(gamelib.AlgoCore):
         First, we build the letter C.
         """
         firewall_locations = [[8, 11], [9, 11], [7,10], [7, 9], [7, 8], [8, 7], [9, 7]]
-        game_state.attempt_spawn(FILTER, firewall_locations)
+        for location in firewall_locations:
+            if game_state.can_spawn(FILTER, location):
+                game_state.attempt_spawn(FILTER, location)
         
         """
         Build the number 1.
         """
         firewall_locations = [[17, 11], [18, 11], [18, 10], [18, 9], [18, 8], [17, 7], [18, 7], [19,7]]
-        game_state.attempt_spawn(FILTER, firewall_locations)
+        for location in firewall_locations:
+            if game_state.can_spawn(FILTER, location):
+                game_state.attempt_spawn(FILTER, location)
 
         """
         Build 3 dots with destructors so it looks neat.
         """
         firewall_locations = [[11, 7], [13, 9], [15, 11]]
-        game_state.attempt_spawn(DESTRUCTOR, firewall_locations)
+        for location in firewall_locations:
+            if game_state.can_spawn(DESTRUCTOR, location):
+                game_state.attempt_spawn(DESTRUCTOR, location)
 
     def build_defences(self, game_state):
         """
         First lets protect ourselves a little with destructors:
         """
         firewall_locations = [[0, 13], [27, 13]]
-        game_state.attempt_spawn(DESTRUCTOR, firewall_locations)
+        for location in firewall_locations:
+            if game_state.can_spawn(DESTRUCTOR, location):
+                game_state.attempt_spawn(DESTRUCTOR, location)
 
         """
         Then lets boost our offense by building some encryptors to shield 
@@ -112,7 +123,9 @@ class AlgoStrategy(gamelib.AlgoCore):
         are more effective.
         """
         firewall_locations = [[3, 11], [4, 11], [5, 11]]
-        game_state.attempt_spawn(ENCRYPTOR, firewall_locations)
+        for location in firewall_locations:
+            if game_state.can_spawn(ENCRYPTOR, location):
+                game_state.attempt_spawn(ENCRYPTOR, location)
 
         """
         Lastly lets build encryptors in random locations. Normally building 
@@ -158,13 +171,15 @@ class AlgoStrategy(gamelib.AlgoCore):
         """
         First lets deploy an EMP long range unit to destroy firewalls for us.
         """
-        game_state.attempt_spawn(EMP, [3, 10])
+        if game_state.can_spawn(EMP, [3, 10]):
+            game_state.attempt_spawn(EMP, [3, 10])
 
         """
         Now lets send out 3 Pings to hopefully score, we can spawn multiple 
         information units in the same location.
         """
-        game_state.attempt_spawn(PING, [14,0], 3)
+        if game_state.can_spawn(PING, [14, 0], 3):
+            game_state.attempt_spawn(PING, [14,0], 3)
 
         """
         NOTE: the locations we used above to spawn information units may become 

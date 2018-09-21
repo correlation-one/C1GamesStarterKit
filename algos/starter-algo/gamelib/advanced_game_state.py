@@ -98,7 +98,7 @@ class AdvancedGameState(GameState):
         from .game_state import DESTRUCTOR, UNIT_TYPE_TO_INDEX
 
         if not player_index == 0 and not player_index == 1:
-            warnings.warn("Passed invalid player index {} to get_attackers. Player index should always be 0 (you) or 1 (your opponent)".format(player_index))
+            self._invalid_player_index(player_index)
         if not self.game_map.in_arena_bounds(location):
             warnings.warn("Location {} is not in the arena bounds.".format(location))
 
