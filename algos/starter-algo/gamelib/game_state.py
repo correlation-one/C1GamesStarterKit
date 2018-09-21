@@ -373,8 +373,15 @@ class GameState:
                 return unit
         return False
 
-    def suppress_all_warnings(self):
-        warnings.filterwarnings("ignore")
-    
-    def show_warnings(self):
-        warnings.resetwarnings()
+    def suppress_warnings(self, suppress):
+        """Suppress all warnings
+
+        Args: 
+            * suppress: If true, disable warnings. If false, enable warnings.
+        """
+
+        if suppress:
+            warnings.filterwarnings("ignore")
+        else:
+            warnings.resetwarnings()
+
