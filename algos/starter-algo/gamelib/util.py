@@ -13,6 +13,10 @@ def get_command():
     except EOFError:
         # Game parent process terminated so exit
         exit()
+    if ret == "":
+        # Happens if parent game process dies, so exit for cleanup
+        debug_write("Got EOF, parent game process must have died, exiting for cleanup")
+        exit()
     return ret
 
 def send_command(cmd):
