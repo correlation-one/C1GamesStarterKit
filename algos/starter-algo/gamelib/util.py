@@ -14,7 +14,8 @@ def get_command():
         # Game parent process terminated so exit
         exit()
     if ret == "":
-        # Happens if parent game process dies, so exit for cleanup
+        # Happens if parent game process dies, so exit for cleanup, 
+        # Don't change or starter-algo process won't exit even though the game has closed
         debug_write("Got EOF, parent game process must have died, exiting for cleanup")
         exit()
     return ret
