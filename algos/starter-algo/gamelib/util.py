@@ -8,7 +8,12 @@ def get_command():
     """Gets input from stdin
 
     """
-    return sys.stdin.readline()
+    try:
+        ret = sys.stdin.readline()
+    except EOFError:
+        # Game parent process terminated so exit
+        exit()
+    return ret
 
 def send_command(cmd):
     """Sends your turn to standard output.
