@@ -16,7 +16,7 @@ hand before starting your algo.
     Set-ExecutionPolicy Unrestricted
     ```
 
-1. First try running a match with the defualt starter-algo using our CLI. You can also leave arguments blank and it will default to the starter-algo.
+1. First try running a match with the default starter-algo using our CLI. You can also leave arguments blank and it will default to the starter-algo.
 
     ```
     scripts/run_match.sh
