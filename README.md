@@ -15,6 +15,10 @@ hand before starting your algo.
     ```
     Set-ExecutionPolicy Unrestricted
     ```
+    If this doesn't work try:
+    ```
+    Set-ExecutionPolicy Unrestricted CurrentUser
+    ```
 
 1. First try running a match with the default starter-algo using our CLI. You can also leave arguments blank and it will default to the starter-algo.
 
