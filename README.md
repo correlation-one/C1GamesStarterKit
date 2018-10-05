@@ -33,8 +33,6 @@ hand before starting your algo.
     scripts\run_match.ps1 algos\starter-algo algos\starter-algo
     ```
    
-    Note replay files generated on windows may need to be converted to unix line endings which can be done using various text editors or the following website: http://newline.nadav.org/
-
 1. Once you are ready, create your own Algo by forking the example `starter-algo` to serve as a base
 for you to develop your own strategy in. You can use the below script if on unix or simply copy paste the folder.
 
