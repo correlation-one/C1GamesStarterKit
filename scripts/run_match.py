@@ -37,12 +37,13 @@ if len(sys.argv) > 2:
     algo2 = sys.argv[2]
 
 # If folder path is given instead of run file path, add the run file to the path based on OS
+# trailing_char deals with if there is a trailing \ or / or not after the directory name
 if is_windows:
     if "run.ps1" not in algo1:
-        trailing_char = "" if algo1.endswith('\\') else "\\"
+        trailing_char = "" if algo1.endswith("\\") else "\\"
         algo1 = algo1 + trailing_char + "run.ps1"
     if "run.ps1" not in algo2:
-        trailing_char = "" if algo2.endswith('\\') else "\\"
+        trailing_char = "" if algo2.endswith("\\") else "\\"
         algo2 = algo2 + trailing_char + "run.ps1"
 else:
     if "run.sh" not in algo1:
