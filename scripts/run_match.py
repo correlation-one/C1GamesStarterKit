@@ -3,7 +3,7 @@ import subprocess
 import sys
 
 # Runs a single game
-def runSingleGame(process_command):
+def run_single_game(process_command):
     print("Start run a match")
     p = subprocess.Popen(
         process_command,
@@ -38,17 +38,19 @@ if len(sys.argv) > 2:
 
 # If folder path is given instead of run file path, add the run file to the path based on OS
 if is_windows:
+    trailing_char = "" if algo1[-1] == '\\' else "\\"
     if "run.ps1" not in algo1:
-        algo1 = algo1 + "\\run.ps1"
+        algo1 = algo1 + trailing_char + "run.ps1"
     if "run.ps1" not in algo2:
-        algo2 = algo2 + "\\run.ps1"
+        algo2 = algo2 + trailing_char + "run.ps1"
 else:
+    trailing_char = "" if algo1[-1] == '/' else "/"
     if "run.sh" not in algo1:
-        algo1 = algo1 + "/run.sh"
+        algo1 = algo1 + trailing_char + "/run.sh"
     if "run.sh" not in algo2:
-        algo2 = algo2 + "/run.sh"
+        algo2 = algo2 + trailing_char + "/run.sh"
 
 print("Algo 1: ", algo1)
 print("Algo 2:", algo2)
 
-runSingleGame("cd {} && java -jar engine.jar work {} {}".format(parent_dir, algo1, algo2))
+run_single_game("cd {} && java -jar engine.jar work {} {}".format(parent_dir, algo1, algo2))
