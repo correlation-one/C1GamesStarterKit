@@ -18,7 +18,9 @@ def runSingleGame(process_command):
     p.wait()
     print("Finished running match")
 
-default_algo = parent_dir + "/algos/starter-algo/run.sh"
+is_windows = sys.platform.startswith('win')
+print("Is windows: {}".format(is_windows))
+default_algo = parent_dir + "\\algos\\starter-algo\\run.ps1" if is_windows else parent_dir + "/algos/starter-algo/run.sh" 
 algo1 = default_algo
 algo2 = default_algo
 if len(sys.argv) > 1:
