@@ -19,6 +19,10 @@ hand before starting your algo.
     ```
     Set-ExecutionPolicy Unrestricted CurrentUser
     ```
+    Also try the following if the above don't work, and run the powershell as admin:
+    ```
+    Set-ExecutionPolicy Bypass
+    ```
 
 1. First try running a match with the default starter-algo using our CLI. You can also leave arguments blank and it will default to the starter-algo.
 
