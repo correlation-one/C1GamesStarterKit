@@ -26,7 +26,7 @@ hand before starting your algo.
 
 1. First try running a match with the default starter-algo using our CLI. You can also leave arguments blank and it will default to the starter-algo.
 
-You can use the new run_match.py script to run on any OS that is more robust than the other run_match scripts.
+You can use the new run_match.py script to run on any OS that is more robust than the other run_match scripts. Can be run from any directory but needs absolute paths for the algos.
 
     Windows:
     py run_match.py 
@@ -43,7 +43,7 @@ You can use the new run_match.py script to run on any OS that is more robust tha
     or
     python3 run_match.py /Users/junaid/Documents/C1GamesStarterKit/algos/starter-algo-ZIPME /Users/junaid/Documents/C1GamesStarterKit/algos/starter-algo-ZIPME
 
-Old Scripts:
+Old Scripts, note they must be run in the parent directory not the scripts directory:
 
     Windows:
     scripts\run_match.ps1
