@@ -2,7 +2,7 @@
 echo "Archive Algo"
 
 defaultAlgoZip=$PWD/dist/starter-algo.zip
-defaultAlgoRaw=$PWD/algos/starter-algo
+defaultAlgoRaw=$PWD/algos/starter-algo-ZIPME
 
 algoRaw=${1:-${defaultAlgoRaw}}
 algoRaw=${algoRaw%/} # remove trailing slash

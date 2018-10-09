@@ -4,6 +4,7 @@
 
 algos/*
 !algos/starter-algo
+!algos/starter-algo-ZIPME
 
 dist/*
 !dist/.gitkeep

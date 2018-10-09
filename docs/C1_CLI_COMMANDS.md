@@ -9,7 +9,7 @@ Fork the provided `starter-algo` to create a modifiable base of your own. You wi
 give your algos descriptive names but for this example we will create an algo called
 `my-algo`.
 
-    $ scripts/fork_algo.sh algos/starter-algo algos/my-algo
+    $ scripts/fork_algo.sh algos/starter-algo-ZIPME algos/my-algo
 
 Modify the files in `algos/my-algo/` to create your own strategy.
 
