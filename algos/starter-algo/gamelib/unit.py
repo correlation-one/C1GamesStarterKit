@@ -8,7 +8,6 @@ class GameUnit:
         * unit_type (string): This unit's type
         * config (JSON): Contains information about the game
         * player_index (integer): The player that controls this unit. 0 for you, 1 for your opponent.
-        * stability (integer): The health of the unit
         * x (integer): The x coordinate of the unit
         * y (integer): The y coordinate of the unit
         * stationary (bool): Whether or not this unit is a firewall
@@ -17,6 +16,7 @@ class GameUnit:
         * damage_f (int): The amount of damage this information unit will deal to enemy firewalls.
         * damage_i (int): The amount of damage this information unit will deal to enemy information.
         * range (float): The effective range of this unit
+        * max_stability (float): The starting stability of this unit. Note than stability can be increased beyond this value by encryptors
         * stability (float): The current health of this unit
         * cost (int): The resource cost of this unit
 

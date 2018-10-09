@@ -6,10 +6,8 @@ class GameMap:
     """Holds data about the current game map and provides functions
     useful for getting information related to the map.
 
-    Note that the game board is stored as a 2 dimensional array representing each tile on
-    the board. Each tile is yet another array containing the units located at
-    the x,y coordinates specified in the first two indices. So getting the 2nd
-    of 3 units located at (12, 13) would look like: `unit = instance_of_game_map[12,13][1]`
+    game_map[x, y] will return a list of Units located at that location, 
+    or an empty list if there are no units at the location
 
     Attributes:
         * config (JSON): Contains information about the game

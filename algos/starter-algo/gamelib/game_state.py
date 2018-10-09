@@ -29,12 +29,13 @@ class GameState:
         * BITS (int): A constant representing the bits resource
         * CORES (int): A constant representing the cores resource
          
-        * game_map (:obj: GameMap): The current GameMap
+        * game_map (:obj: GameMap): The current GameMap. To retrieve a list of GameUnits at a location, use game_map[x, y]
         * turn_number (int): The current turn number. Starts at 0.
         * my_health (int): Your current remaining health
         * my_time (int): The time you took to submit your previous turn
         * enemy_health (int): Your opponents current remaining health
         * enemy_time (int): Your opponents current remaining time
+
     """
 
     def __init__(self, config, serialized_string):
@@ -366,6 +367,7 @@ class GameState:
 
         Returns:
             True if there is a stationary unit at the location, False otherwise
+            
         """
         x, y = map(int, location)
         for unit in self.game_map[x,y]:
@@ -378,6 +380,7 @@ class GameState:
 
         Args: 
             * suppress: If true, disable warnings. If false, enable warnings.
+            
         """
 
         if suppress:
