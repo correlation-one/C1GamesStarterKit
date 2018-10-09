@@ -30,6 +30,7 @@ You can use the new run_match.py script to run on any OS that is more robust tha
     py run_match.py C:\Users\Junaid\Downloads\starterKitClone\C1GamesStarterKit\algos\starter-algo
     or
     py run_match.py C:\Users\Junaid\Downloads\starterKitClone\C1GamesStarterKit\algos\starter-algo C:\Users\Junaid\Downloads\starterKitClone\C1GamesStarterKit\algos\starter-algo
+    Also try: py -3 run_match.py if the above doesn't work
     
     Unix:
     python3 run_match.py
