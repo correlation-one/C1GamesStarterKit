@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 echo "Fork Algo"
 
-defaultAlgo=$PWD/algos/starter-algo
+defaultAlgo=$PWD/algos/starter-algo-ZIPME
 defaultTarget=$PWD/algos/renamed-algo
 
 algoSrc=${1:-${defaultAlgo}}

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 echo "Run Match"
-defaultAlgo=$PWD/algos/starter-algo
+defaultAlgo=$PWD/algos/starter-algo-ZIPME
 
 algo1=${1:-${defaultAlgo}}
 algo1=${algo1%/}
