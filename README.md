@@ -49,7 +49,7 @@ You can use the new run_match.py script to run on any OS that is more robust tha
     scripts\run_match.ps1 algos\starter-algo algos\starter-algo
     ```
    
-
+   
 1. Once you are ready, create your own Algo by forking the example `starter-algo` to serve as a base
 for you to develop your own strategy in. You can use the below script if on unix or simply copy paste the folder.
 
