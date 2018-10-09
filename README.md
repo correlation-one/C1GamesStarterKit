@@ -19,24 +19,47 @@ hand before starting your algo.
     ```
     Set-ExecutionPolicy Unrestricted CurrentUser
     ```
+    Also try the following if the above don't work, and run the powershell as admin:
+    ```
+    Set-ExecutionPolicy Bypass
+    ```
 
 1. First try running a match with the default starter-algo using our CLI. You can also leave arguments blank and it will default to the starter-algo.
 
-    ```
-    scripts/run_match.sh
+You can use the new run_match.py script to run on any OS that is more robust than the other run_match scripts. Can be run from any directory but needs absolute paths for the algos.
+
+    Windows:
+    py run_match.py 
     or
-    scripts/run_match.sh algos/starter-algo algos/my-algo
+    py run_match.py C:\Users\Junaid\Downloads\starterKitClone\C1GamesStarterKit\algos\starter-algo-ZIPME
+    or
+    py run_match.py C:\Users\Junaid\Downloads\starterKitClone\C1GamesStarterKit\algos\starter-algo-ZIPME C:\Users\Junaid\Downloads\starterKitClone\C1GamesStarterKit\algos\starter-algo-ZIPME
+    Also try: py -3 run_match.py if the above doesn't work
+    
+    Unix:
+    python3 run_match.py
+    or
+    python3 run_match.py /Users/junaid/Documents/C1GamesStarterKit/algos/starter-algo-ZIPME
+    or
+    python3 run_match.py /Users/junaid/Documents/C1GamesStarterKit/algos/starter-algo-ZIPME /Users/junaid/Documents/C1GamesStarterKit/algos/starter-algo-ZIPME
+
+Old Scripts, note they must be run in the parent directory not the scripts directory:
 
     Windows:
     scripts\run_match.ps1
     or
-    scripts\run_match.ps1 algos\starter-algo algos\starter-algo
-    ```
+    scripts\run_match.ps1 algos\starter-algo-ZIPME algos\starter-algo-ZIPME
+
+    Unix:
+    scripts/run_match.sh
+    or
+    scripts/run_match.sh algos/starter-algo-ZIPME algos/starter-algo-ZIPME
+    
    
 1. Once you are ready, create your own Algo by forking the example `starter-algo` to serve as a base
 for you to develop your own strategy in. You can use the below script if on unix or simply copy paste the folder.
 
-    `scripts/fork_algo.sh algos/starter-algo algos/my-algo`
+    `scripts/fork_algo.sh algos/starter-algo-ZIPME algos/my-algo`
 
 1. Open `algo_strategy.py` in your new algo using the editor of your choice and create your strategy
 using the functions provided in gamelib. The provided strategy has examples with explanations on how

@@ -1,0 +1,318 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>gamelib.game_map &#8212; C1 Terminal Python Starterkit 1.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for gamelib.game_map</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">.unit</span> <span class="k">import</span> <span class="n">GameUnit</span>
+
+<div class="viewcode-block" id="GameMap"><a class="viewcode-back" href="../../gamelib.html#gamelib.game_map.GameMap">[docs]</a><span class="k">class</span> <span class="nc">GameMap</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Holds data about the current game map and provides functions</span>
+<span class="sd">    useful for getting information related to the map.</span>
+
+<span class="sd">    Note that the game board is stored as a 2 dimensional array representing each tile on</span>
+<span class="sd">    the board. Each tile is yet another array containing the units located at</span>
+<span class="sd">    the x,y coordinates specified in the first two indices. So getting the 2nd</span>
+<span class="sd">    of 3 units located at (12, 13) would look like: `unit = instance_of_game_map[12,13][1]`</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        * config (JSON): Contains information about the game</span>
+<span class="sd">        * ARENA_SIZE (int): The size of the arena.</span>
+<span class="sd">        * HALF_ARENA (int): Half of the size of the arena.</span>
+<span class="sd">        * TOP_RIGHT (int): A constant that represents the top right edge</span>
+<span class="sd">        * TOP_LEFT (int): A constant that represents the top left edge</span>
+<span class="sd">        * BOTTOM_LEFT (int): Hidden challange! Can you guess what this constant represents???</span>
+<span class="sd">        * BOTTOM_RIGHT (int): A constant that represents the bottom right edge</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initializes constants and game map</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            * config (JSON): Contains information about the game</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ARENA_SIZE</span> <span class="o">=</span> <span class="mi">28</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">HALF_ARENA</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ARENA_SIZE</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">TOP_RIGHT</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">TOP_LEFT</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">BOTTOM_LEFT</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">BOTTOM_RIGHT</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__empty_grid</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__start</span> <span class="o">=</span> <span class="p">[</span><span class="mi">13</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">location</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_arena_bounds</span><span class="p">(</span><span class="n">location</span><span class="p">):</span>
+            <span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">location</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__map</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span>
+        <span class="k">raise</span> <span class="n">InvalidCoordinate</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">location</span><span class="p">)</span> <span class="o">==</span> <span class="nb">tuple</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">location</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_arena_bounds</span><span class="p">(</span><span class="n">location</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__map</span><span class="p">[</span><span class="n">location</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">location</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">val</span>
+            <span class="k">return</span>
+        <span class="k">raise</span> <span class="n">InvalidCoordinate</span><span class="p">(</span><span class="n">location</span><span class="p">)</span> 
+
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__start</span> <span class="o">=</span> <span class="p">[</span><span class="mi">13</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span>
+    
+    <span class="k">def</span> <span class="nf">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__start</span>
+        <span class="k">if</span> <span class="n">location</span> <span class="o">==</span> <span class="p">[</span><span class="mi">15</span><span class="p">,</span><span class="mi">27</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">StopIteration</span>
+        <span class="n">new_location</span> <span class="o">=</span> <span class="p">[</span><span class="n">location</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">location</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_arena_bounds</span><span class="p">(</span><span class="n">new_location</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">location</span> <span class="o">==</span> <span class="p">[</span><span class="mi">14</span><span class="p">,</span><span class="mi">27</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">new_location</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">ARENA_SIZE</span><span class="p">:</span>
+                <span class="n">new_location</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">new_location</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">new_location</span> <span class="o">=</span> <span class="p">[</span><span class="n">new_location</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">new_location</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__start</span> <span class="o">=</span> <span class="n">new_location</span>
+        <span class="k">return</span> <span class="n">location</span> 
+
+    <span class="k">def</span> <span class="nf">__empty_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">grid</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ARENA_SIZE</span><span class="p">):</span>
+            <span class="n">grid</span><span class="o">.</span><span class="n">append</span><span class="p">([])</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ARENA_SIZE</span><span class="p">):</span>
+                <span class="n">grid</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">([])</span>
+        <span class="k">return</span> <span class="n">grid</span>
+
+<div class="viewcode-block" id="GameMap.in_arena_bounds"><a class="viewcode-back" href="../../gamelib.html#gamelib.game_map.GameMap.in_arena_bounds">[docs]</a>    <span class="k">def</span> <span class="nf">in_arena_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Checks if the given location is inside the diamond shaped game board.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            * location: A map location</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            True if the location is on the board, False otherwise</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">location</span>
+        <span class="n">half_board</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">HALF_ARENA</span>
+
+        <span class="n">row_size</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">startx</span> <span class="o">=</span> <span class="n">half_board</span> <span class="o">-</span> <span class="n">row_size</span>
+        <span class="n">endx</span> <span class="o">=</span> <span class="n">startx</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">row_size</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">top_half_check</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">HALF_ARENA</span> <span class="ow">and</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="n">startx</span> <span class="ow">and</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">endx</span><span class="p">)</span>
+
+        <span class="n">row_size</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ARENA_SIZE</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">startx</span> <span class="o">=</span> <span class="n">half_board</span> <span class="o">-</span> <span class="n">row_size</span>
+        <span class="n">endx</span> <span class="o">=</span> <span class="n">startx</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">row_size</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">bottom_half_check</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">HALF_ARENA</span> <span class="ow">and</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="n">startx</span> <span class="ow">and</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">endx</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">bottom_half_check</span> <span class="ow">or</span> <span class="n">top_half_check</span></div>
+
+<div class="viewcode-block" id="GameMap.get_edge_locations"><a class="viewcode-back" href="../../gamelib.html#gamelib.game_map.GameMap.get_edge_locations">[docs]</a>    <span class="k">def</span> <span class="nf">get_edge_locations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quadrant_description</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Takes in an edge description and returns a list of locations.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            * quadrant_description: A constant corresponding to an edge. Valid quadrant descriptions are</span>
+<span class="sd">                * GameMap.TOP_RIGHT</span>
+<span class="sd">                * GameMap.TOP_LEFT</span>
+<span class="sd">                * GameMap.BOTTOM_RIGHT</span>
+<span class="sd">                * GameMap.BOTTOM_LEFT</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A list of locations corresponding to the requested edge</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">edges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_edges</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">edges</span><span class="p">[</span><span class="n">quadrant_description</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="GameMap.get_edges"><a class="viewcode-back" href="../../gamelib.html#gamelib.game_map.GameMap.get_edges">[docs]</a>    <span class="k">def</span> <span class="nf">get_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gets all of the edges and their edge locations</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A list with four lists inside of it of locations corresponding to the four edges.</span>
+<span class="sd">            [0] = top_right, [1] = top_left, [2] = bottom_left, [3] = bottom_right.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">top_right</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">HALF_ARENA</span><span class="p">):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">HALF_ARENA</span> <span class="o">+</span> <span class="n">num</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ARENA_SIZE</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">num</span>
+            <span class="n">top_right</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">y</span><span class="p">)])</span>
+        <span class="n">top_left</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">HALF_ARENA</span><span class="p">):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">HALF_ARENA</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">num</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ARENA_SIZE</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">num</span>
+            <span class="n">top_left</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">y</span><span class="p">)])</span>
+        <span class="n">bottom_left</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">HALF_ARENA</span><span class="p">):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">HALF_ARENA</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">num</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">num</span>
+            <span class="n">bottom_left</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">y</span><span class="p">)])</span>
+        <span class="n">bottom_right</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">HALF_ARENA</span><span class="p">):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">HALF_ARENA</span> <span class="o">+</span> <span class="n">num</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">num</span>
+            <span class="n">bottom_right</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">y</span><span class="p">)])</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">top_right</span><span class="p">,</span> <span class="n">top_left</span><span class="p">,</span> <span class="n">bottom_left</span><span class="p">,</span> <span class="n">bottom_right</span><span class="p">]</span></div>
+    
+<div class="viewcode-block" id="GameMap.add_unit"><a class="viewcode-back" href="../../gamelib.html#gamelib.game_map.GameMap.add_unit">[docs]</a>    <span class="k">def</span> <span class="nf">add_unit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unit_type</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">player_index</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add a single GameUnit to the map at the given location.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            * unit_type: The type of the new unit</span>
+<span class="sd">            * location: The location of the new unit</span>
+<span class="sd">            * player_index: The index corresponding to the player controlling the new unit, 0 for you 1 for the enemy</span>
+
+<span class="sd">        This function does not affect your turn and only changes the data stored in GameMap. The intended use of this function</span>
+<span class="sd">        is to allow you to create arbitrary gamestates. Using this function on the GameMap inside game_state can cause your algo to crash.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_arena_bounds</span><span class="p">(</span><span class="n">location</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">InvalidCoordinate</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">location</span>
+        <span class="n">new_unit</span> <span class="o">=</span> <span class="n">GameUnit</span><span class="p">(</span><span class="n">unit_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">player_index</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">location</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">location</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">new_unit</span><span class="o">.</span><span class="n">stationary</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__map</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_unit</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__map</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">new_unit</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="GameMap.remove_unit"><a class="viewcode-back" href="../../gamelib.html#gamelib.game_map.GameMap.remove_unit">[docs]</a>    <span class="k">def</span> <span class="nf">remove_unit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Remove all units on the map in the given location.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            * location: The location that you will empty of units</span>
+
+<span class="sd">        This function does not affect your turn and only changes the data stored in GameMap. The intended use of this function</span>
+<span class="sd">        is to allow you to create arbitrary gamestates. Using this function on the GameMap inside game_state can cause your algo to crash.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_arena_bounds</span><span class="p">(</span><span class="n">location</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">InvalidCoordinate</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">location</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__map</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+<div class="viewcode-block" id="GameMap.get_locations_in_range"><a class="viewcode-back" href="../../gamelib.html#gamelib.game_map.GameMap.get_locations_in_range">[docs]</a>    <span class="k">def</span> <span class="nf">get_locations_in_range</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">radius</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gets locations in a circular area around a location</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            * location: The center of our search area</span>
+<span class="sd">            * radius: The radius of our search area</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The locations that are within our search area</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">location</span>
+        <span class="n">locations</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">radius</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">radius</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">radius</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">y</span> <span class="o">+</span> <span class="n">radius</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)):</span>
+                <span class="n">new_location</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+                <span class="c1"># A unit with a given range affects all locations who&#39;s centers are within that range + 0.51 so we add 0.51 here</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_arena_bounds</span><span class="p">(</span><span class="n">new_location</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance_between_locations</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">new_location</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">radius</span> <span class="o">+</span> <span class="mf">0.51</span><span class="p">:</span>
+                    <span class="n">locations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_location</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">locations</span></div>
+
+<div class="viewcode-block" id="GameMap.distance_between_locations"><a class="viewcode-back" href="../../gamelib.html#gamelib.game_map.GameMap.distance_between_locations">[docs]</a>    <span class="k">def</span> <span class="nf">distance_between_locations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location_1</span><span class="p">,</span> <span class="n">location_2</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Euclidean distance</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            * location_1: An arbitrary location</span>
+<span class="sd">            * location_2: An arbitrary location</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The euclidean distance between the two locations</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">location_1</span>
+        <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">location_2</span>
+
+        <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">x1</span> <span class="o">-</span> <span class="n">x2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">y1</span> <span class="o">-</span> <span class="n">y2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="InvalidCoordinate"><a class="viewcode-back" href="../../gamelib.html#gamelib.game_map.InvalidCoordinate">[docs]</a><span class="k">class</span> <span class="nc">InvalidCoordinate</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Attempting to use a location that is out of bounds will raise this exception</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> is an invalid coordinate.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">location</span><span class="p">)))</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">C1 Terminal Python Starterkit</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../gamelib.html">gamelib package</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Correlation One.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
