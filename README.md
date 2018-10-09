@@ -30,7 +30,7 @@ You can use the new run_match.py script to run on any OS that is more robust tha
     py run_match.py C:\Users\Junaid\Downloads\starterKitClone\C1GamesStarterKit\algos\starter-algo
     or
     py run_match.py C:\Users\Junaid\Downloads\starterKitClone\C1GamesStarterKit\algos\starter-algo C:\Users\Junaid\Downloads\starterKitClone\C1GamesStarterKit\algos\starter-algo
-
+    
     Unix:
     python3 run_match.py
     or
@@ -38,6 +38,7 @@ You can use the new run_match.py script to run on any OS that is more robust tha
     or
     python3 run_match.py /Users/junaid/Documents/C1GamesStarterKit/algos/starter-algo /Users/junaid/Documents/C1GamesStarterKit/algos/starter-algo
 
+Old Scripts:
     scripts/run_match.sh
     or
     scripts/run_match.sh algos/starter-algo algos/my-algo
