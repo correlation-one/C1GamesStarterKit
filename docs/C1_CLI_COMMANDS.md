@@ -9,7 +9,7 @@ Fork the provided `starter-algo` to create a modifiable base of your own. You wi
 give your algos descriptive names but for this example we will create an algo called
 `my-algo`.
 
-    $ scripts/fork_algo.sh algos/starter-algo algos/my-algo
+    $ scripts/fork_algo.sh algos/starter-algo-ZIPME algos/my-algo
 
 Modify the files in `algos/my-algo/` to create your own strategy.
 
@@ -22,7 +22,7 @@ https://terminal.c1games.com/playground.
 For example, if you wanted to run `starter-algo` against the `my-algo` of your own creation in
 the command line, you can cd into the C1GamesStarterKit and run the following command:
 
-    $ scripts/run_match.sh algos/starter-algo algos/my-algo
+    $ scripts/run_match.sh algos/starter-algo-ZIPME algos/my-algo
 
 This will also save a replay file in replays/, which you can upload on our site to watch your game
 
@@ -38,4 +38,3 @@ While using C1GamesStarterKit as your working directory, to zip an algo in the a
 ### Custom Config
 
 Customize the "debug" values in game-configs.json to control the level of error/debug information printed during a match.
-
