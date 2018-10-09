@@ -36,7 +36,6 @@ class GameState:
         * enemy_health (int): Your opponents current remaining health
         * enemy_time (int): Your opponents current remaining time
 
-        
     """
 
     def __init__(self, config, serialized_string):
@@ -368,6 +367,7 @@ class GameState:
 
         Returns:
             True if there is a stationary unit at the location, False otherwise
+            
         """
         x, y = map(int, location)
         for unit in self.game_map[x,y]:
@@ -380,6 +380,7 @@ class GameState:
 
         Args: 
             * suppress: If true, disable warnings. If false, enable warnings.
+            
         """
 
         if suppress:

@@ -11,9 +11,20 @@ For more details about competitions and the game itself please check out our
 1. We recommend familiarizing yourself with the game and creating a strategy through playing by
 hand before starting your algo.
 
-1. In order to run the the game locally [java jdk](http://www.oracle.com/technetwork/java/javase/downloads/jdk10-downloads-4416644.html) version 10 or above must be installed. You may need to restart your shell after installing or updating dependencies. If using the python starter-algo Python3 must be installed and the command `python3` for unix or `py -3` for windows must work. If you are on windows `powershell` is required but should come pre-installed on your windows OS.
+1. In order to run the the game locally [java jdk](http://www.oracle.com/technetwork/java/javase/downloads/jdk10-downloads-4416644.html) version 10 or above must be installed. You may need to restart your shell after installing or updating dependencies. If using the python starter-algo Python3 must be installed and the command `python3` for unix or `py -3` for windows must work. If you are on windows `powershell` is required but should come pre-installed on your windows OS. All commands on windows should be run using the `powershell`. Additionally, some windows users might need to run the following powershell command in adminstrator mode (simply right click powershell and hit run as adminstrator):
+    ```
+    Set-ExecutionPolicy Unrestricted
+    ```
+    If this doesn't work try:
+    ```
+    Set-ExecutionPolicy Unrestricted CurrentUser
+    ```
+    Also try the following if the above don't work, and run the powershell as admin:
+    ```
+    Set-ExecutionPolicy Bypass
+    ```
 
-1. First try running a match with the defualt starter-algo using our CLI. You can also leave arguments blank and it will default to the starter-algo.
+1. First try running a match with the default starter-algo using our CLI. You can also leave arguments blank and it will default to the starter-algo.
 
     ```
     scripts/run_match.sh
@@ -25,7 +36,7 @@ hand before starting your algo.
     or
     scripts\run_match.ps1 algos\starter-algo algos\starter-algo
     ```
-
+   
 1. Once you are ready, create your own Algo by forking the example `starter-algo` to serve as a base
 for you to develop your own strategy in. You can use the below script if on unix or simply copy paste the folder.
 

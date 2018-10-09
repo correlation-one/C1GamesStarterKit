@@ -8,7 +8,18 @@ def get_command():
     """Gets input from stdin
 
     """
-    return sys.stdin.readline()
+    try:
+        ret = sys.stdin.readline()
+    except EOFError:
+        # Game parent process terminated so exit
+        debug_write("Got EOF, parent game process must have died, exiting for cleanup")
+        exit()
+    if ret == "":
+        # Happens if parent game process dies, so exit for cleanup, 
+        # Don't change or starter-algo process won't exit even though the game has closed
+        debug_write("Got EOF, parent game process must have died, exiting for cleanup")
+        exit()
+    return ret
 
 def send_command(cmd):
     """Sends your turn to standard output.
