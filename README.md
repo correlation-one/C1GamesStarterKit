@@ -23,6 +23,7 @@ hand before starting your algo.
 1. First try running a match with the default starter-algo using our CLI. You can also leave arguments blank and it will default to the starter-algo.
 
 You can use the new run_match.py script to run on any OS that is more robust than the other run_match scripts.
+
     ```
     Windows:
     py run_match.py 
