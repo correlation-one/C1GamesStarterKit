@@ -6,7 +6,8 @@ class GameMap:
     """Holds data about the current game map and provides functions
     useful for getting information related to the map.
 
-    game_map[x, y] will return a list of Units located at that location, or None if there are no units
+    game_map[x, y] will return a list of Units located at that location, 
+    or an empty list ([]) if there are no units at the location
 
     Attributes:
         * config (JSON): Contains information about the game
