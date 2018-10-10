@@ -46,6 +46,7 @@ For ($i = 1; $i -lt $args[0]+1; $i++) {
 		param($num,$path)
 		cd $path
 		cd ..
+		cd ..
 		scripts/run_match.ps1 algos/starter-algo algos/starter-algo | Out-Null				# Edit this to change the algo you are running
 	}
 	$job = Start-Job $runprog -ArgumentList $i,$dir 		# Start the new powershell
@@ -69,4 +70,4 @@ While ($global:completed -lt $args[0]) {}
 Write-Host "FINISHED ALL GAMES!`n"
 
 # This script looks at all the replay files and prints out the number of winners
-py scripts/get_winners.py
+py scripts/contributions/get_winners.py
