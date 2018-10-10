@@ -14,7 +14,7 @@ If you have questions just ask me on the forums (https://c1playtestforum.com/) -
 try:
 	import os
 
-	replayDir = os.getcwd().replace('scripts','') + '\\replays'			# Gets the main directory
+	replayDir = os.getcwd().replace('scripts/contributions','') + '/replays'			# Gets the main directory
 
 	# Initialize counters
 	p1WinCnt = 0
