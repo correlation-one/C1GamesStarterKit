@@ -79,12 +79,12 @@
     }
   ],
   "timingAndReplay":{
-    "waitTimeBotMax":50000,
-    "playWaitTimeBotMax":70000,
+    "waitTimeBotMax":35000,
+    "playWaitTimeBotMax":40000,
     "waitTimeManual":1820000,
     "waitForever":false,
-    "waitTimeBotSoft":20000,
-    "playWaitTimeBotSoft":40000,
+    "waitTimeBotSoft":5000,
+    "playWaitTimeBotSoft":10000,
     "replaySave":1,
     "playReplaySave":0,
     "storeBotTimes":true
