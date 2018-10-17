@@ -1,6 +1,5 @@
 import math
 import json
-import warnings
 
 from .navigation import ShortestPathFinder
 from .util import send_command, debug_write
@@ -48,6 +47,7 @@ class GameState:
         """
         self.serialized_string = serialized_string
         self.config = config
+        self.enable_warnings = True
 
         global FILTER, ENCRYPTOR, DESTRUCTOR, PING, EMP, SCRAMBLER, REMOVE, FIREWALL_TYPES, ALL_UNITS, UNIT_TYPE_TO_INDEX
         UNIT_TYPE_TO_INDEX = {}
@@ -144,10 +144,10 @@ class GameState:
         self._player_resources[player_index][resource_key] = held_resource + amount
 
     def _invalid_player_index(self, index):
-        warnings.warn("Invalid player index {} passed, player index should always be 0 (yourself) or 1 (your opponent)".format(index))
+        self.warn("Invalid player index {} passed, player index should always be 0 (yourself) or 1 (your opponent)".format(index))
     
     def _invalid_unit(self, unit):
-        warnings.warn("Invalid unit {}".format(unit))
+        self.warn("Invalid unit {}".format(unit))
 
     def submit_turn(self):
         """Submit and end your turn.
@@ -172,8 +172,10 @@ class GameState:
         """
         if not player_index == 1 and not player_index == 0:
             self._invalid_player_index(player_index)
+            return
         if not resource_type == self.BITS and not resource_type == self.CORES:
-            warnings.warn("Invalid resource_type '{}'. Please use game_state.BITS or game_state.CORES".format(resource_type))
+            self.warn("Invalid resource_type '{}'. Please use game_state.BITS or game_state.CORES".format(resource_type))
+            return
 
         if resource_type == self.BITS:
             resource_key = 'bits'
@@ -215,11 +217,11 @@ class GameState:
         """
 
         if turns_in_future < 1 or turns_in_future > 99:
-            warnings.warn("Invalid turns in future used ({}). Turns in future should be between 1 and 99".format(turns_in_future))
+            self.warn("Invalid turns in future used ({}). Turns in future should be between 1 and 99".format(turns_in_future))
         if not player_index == 1 and not player_index == 0:
             self._invalid_player_index(player_index)
         if type(current_bits) == int and current_bits < 0:
-            warnings.warn("Invalid current bits ({}). Current bits cannot be negative.".format(current_bits))
+            self.warn("Invalid current bits ({}). Current bits cannot be negative.".format(current_bits))
 
         bits = self.get_resource(self.BITS, player_index) if not current_bits else current_bits
         for increment in range(1, turns_in_future + 1):
@@ -247,7 +249,7 @@ class GameState:
         unit_def = self.config["unitInformation"][UNIT_TYPE_TO_INDEX[unit_type]]
         return unit_def.get('cost')
 
-    def can_spawn(self, unit_type, location, num=1):
+    def can_spawn(self, unit_type, location, num=1, warnings = False):
         """Check if we can spawn a unit at a location. 
 
         To units, we need to be able to afford them, and the location must be
@@ -268,6 +270,8 @@ class GameState:
             return
         
         if not self.game_map.in_arena_bounds(location):
+            if self.enable_warnings:
+                self.warn("Could not spawn {} at location {}. Location invalid.".format(unit_type, location))
             return False
 
         affordable = self.number_affordable(unit_type) >= num
@@ -275,6 +279,18 @@ class GameState:
         blocked = self.contains_stationary_unit(location) or (stationary and len(self.game_map[location[0],location[1]]) > 0)
         correct_territory = location[1] < self.HALF_ARENA
         on_edge = location in (self.game_map.get_edge_locations(self.game_map.BOTTOM_LEFT) + self.game_map.get_edge_locations(self.game_map.BOTTOM_RIGHT))
+
+        if self.enable_warnings:
+            fail_reason = ""
+            if not affordable:
+                fail_reason = fail_reason + " Not enough resources."
+            if blocked:
+                fail_reason = fail_reason + " Location is blocked."
+            if not correct_territory:
+                fail_reason = fail_reason + " Location in enemy terretory."
+            if not (stationary or on_edge):
+                fail_reason = fail_reason + " Information units must be deployed on the edge."
+            self.warn("Could not spawn {} at location {}.{}".format(unit_type, location, fail_reason))
 
         return (affordable and correct_territory and not blocked and
                 (stationary or on_edge) and
@@ -296,7 +312,7 @@ class GameState:
             self._invalid_unit(unit_type)
             return
         if num < 1:
-            warnings.warn("Attempted to spawn fewer than one units! ({})".format(num))
+            self.warn("Attempted to spawn fewer than one units! ({})".format(num))
             return
       
         if type(locations[0]) == int:
@@ -304,7 +320,7 @@ class GameState:
         spawned_units = 0
         for location in locations:
             for i in range(num):
-                if self.can_spawn(unit_type, location):
+                if self.can_spawn(unit_type, location, 1, True):
                     x, y = map(int, location)
                     cost = self.type_cost(unit_type)
                     resource_type = self.__resource_required(unit_type)
@@ -315,8 +331,6 @@ class GameState:
                     else:
                         self._deploy_stack.append((unit_type, x, y))
                     spawned_units += 1
-                else:
-                    warnings.warn("Could not spawn {} number {} at location {}. Location is blocked, invalid, or you don't have enough resources.".format(unit_type, i, location))
         return spawned_units
 
     def attempt_remove(self, locations):
@@ -338,7 +352,7 @@ class GameState:
                 self._build_stack.append((REMOVE, x, y))
                 removed_units += 1
             else:
-                warnings.warn("Could not remove a unit from {}. Location has no firewall or is enemy territory.".format(location))
+                self.warn("Could not remove a unit from {}. Location has no firewall or is enemy territory.".format(location))
         return removed_units
 
     def find_path_to_edge(self, start_location, target_edge):
@@ -354,7 +368,7 @@ class GameState:
 
         """
         if self.contains_stationary_unit(start_location):
-            warnings.warn("Attempted to perform pathing from blocked starting location {}".format(start_location))
+            self.warn("Attempted to perform pathing from blocked starting location {}".format(start_location))
             return
         end_points = self.game_map.get_edge_locations(target_edge)
         return self._shortest_path_finder.navigate_multiple_endpoints(start_location, end_points, self)
@@ -375,6 +389,11 @@ class GameState:
                 return unit
         return False
 
+    def warn(self, message):
+        if(self.enable_warnings):
+            debug_write(message)
+            debug_write("\n")
+
     def suppress_warnings(self, suppress):
         """Suppress all warnings
 
@@ -383,8 +402,6 @@ class GameState:
             
         """
 
-        if suppress:
-            warnings.filterwarnings("ignore")
-        else:
-            warnings.resetwarnings()
+        self.enable_warnings = not suppress
+        self.game_map.enable_warnings
 

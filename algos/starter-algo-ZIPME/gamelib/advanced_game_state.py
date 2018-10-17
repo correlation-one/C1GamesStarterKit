@@ -1,6 +1,5 @@
 from .game_state import GameState, GameUnit
 import sys
-import warnings
 
 class AdvancedGameState(GameState):
     """A version of gamestate with access to a few more advanced functions
@@ -24,7 +23,7 @@ class AdvancedGameState(GameState):
         from .game_state import SCRAMBLER, is_stationary
 
         if not isinstance(attacking_unit, GameUnit):
-            warnings.warn("Passed a {} to get_target as attacking_unit. Expected a GameUnit.".format(type(attacking_unit)))
+            self.warn("Passed a {} to get_target as attacking_unit. Expected a GameUnit.".format(type(attacking_unit)))
             return
 
         attacker_location = [attacking_unit.x, attacking_unit.y]
@@ -100,7 +99,7 @@ class AdvancedGameState(GameState):
         if not player_index == 0 and not player_index == 1:
             self._invalid_player_index(player_index)
         if not self.game_map.in_arena_bounds(location):
-            warnings.warn("Location {} is not in the arena bounds.".format(location))
+            self.warn("Location {} is not in the arena bounds.".format(location))
 
         attackers = []
         """
