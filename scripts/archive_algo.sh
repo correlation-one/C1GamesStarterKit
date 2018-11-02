@@ -17,6 +17,10 @@ algoZip=${2:-${defaultAlgoZip}}
 #zip -r "${algoZip}" "${stagingArea}"
 #rm -r "${stagingArea}"
 
-zip -r "${algoZip}" "${algoRaw}"
+cd ${algoRaw} && cd ..
+xbase=${algoRaw##*/}
+
+echo $PWD ${xbase}
+zip -r "${algoZip}" "${xbase}"
 
 echo "Done: saved in ${algoZip}"
