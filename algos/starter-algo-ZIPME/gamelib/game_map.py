@@ -1,6 +1,6 @@
 import math
-import warnings
 from .unit import GameUnit
+from .util import debug_write
 
 class GameMap:
     """Holds data about the current game map and provides functions
@@ -27,6 +27,7 @@ class GameMap:
 
         """
         self.config = config
+        self.enable_warnings = True
         self.ARENA_SIZE = 28
         self.HALF_ARENA = int(self.ARENA_SIZE / 2)
         self.TOP_RIGHT = 0
@@ -74,7 +75,7 @@ class GameMap:
         return grid
 
     def _invalid_coordinates(self, location):
-        warnings.warn("{} is out of bounds.".format(str(location)))
+        self.warn("{} is out of bounds.".format(str(location)))
 
     def in_arena_bounds(self, location):
         """Checks if the given location is inside the diamond shaped game board.
@@ -116,7 +117,8 @@ class GameMap:
 
         """
         if not quadrant_description in [self.TOP_LEFT, self.TOP_RIGHT, self.BOTTOM_LEFT, self.BOTTOM_RIGHT]:
-            warnings.warn("Passed invalid quadrent_description '{}'. See the documentation for valid inputs for get_edge_locations.".format(quadrant_description))
+            self.warn("Passed invalid quadrent_description '{}'. See the documentation for valid inputs for get_edge_locations.".format(quadrant_description))
+            return
 
         edges = self.get_edges()
         return edges[quadrant_description]
@@ -164,7 +166,7 @@ class GameMap:
         if not self.in_arena_bounds(location):
             self._invalid_coordinates(location)
         if player_index < 0 or player_index > 1:
-            warnings.warn("Player index {} is invalid. Player index should be 0 or 1.".format(player_index))
+            self.warn("Player index {} is invalid. Player index should be 0 or 1.".format(player_index))
 
         x, y = location
         new_unit = GameUnit(unit_type, self.config, player_index, None, location[0], location[1])
@@ -200,7 +202,7 @@ class GameMap:
 
         """
         if radius < 0 or radius > self.ARENA_SIZE:
-            warnings.warn("Radius {} was passed to get_locations_in_range. Expected integer between 0 and {}".format(radius, self.ARENA_SIZE))
+            self.warn("Radius {} was passed to get_locations_in_range. Expected integer between 0 and {}".format(radius, self.ARENA_SIZE))
         if not self.in_arena_bounds(location):
             self._invalid_coordinates(location)
 
@@ -229,3 +231,7 @@ class GameMap:
         x2, y2 = location_2
 
         return math.sqrt((x1 - x2)**2 + (y1 - y2)**2)
+
+    def warn(self, message):
+        if(self.enable_warnings):
+            debug_write(message)
