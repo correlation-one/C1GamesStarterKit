@@ -128,9 +128,12 @@ class BasicTests(unittest.TestCase):
         }
         """
         turn_0 = """{"p2Units":[[],[],[],[],[],[],[]],"turnInfo":[0,0,-1],"p1Stats":[30.0,25.0,5.0,0],"p1Units":[[],[],[],[],[],[],[]],"p2Stats":[30.0,25.0,5.0,0],"events":{"selfDestruct":[],"breach":[],"damage":[],"shield":[],"move":[],"spawn":[],"death":[],"attack":[],"melee":[]}}"""
+        
+        state = GameState(json.loads(config), turn_0)
         if adv:
-            return AdvancedGameState(json.loads(config), turn_0)
-        return GameState(json.loads(config), turn_0)
+            state = AdvancedGameState(json.loads(config), turn_0)
+        state.suppress_warnings(True)
+        return state
 
     def test_basic(self, adv=False):
         self.assertEqual(True, True, "It's the end of the world as we know it, and I feel fine")
