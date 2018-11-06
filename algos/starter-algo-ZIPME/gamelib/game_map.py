@@ -235,4 +235,3 @@ class GameMap:
     def warn(self, message):
         if(self.enable_warnings):
             debug_write(message)
-            debug_write("\n")
