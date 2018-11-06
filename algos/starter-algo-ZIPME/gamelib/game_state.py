@@ -392,7 +392,6 @@ class GameState:
     def warn(self, message):
         if(self.enable_warnings):
             debug_write(message)
-            debug_write("\n")
 
     def suppress_warnings(self, suppress):
         """Suppress all warnings
