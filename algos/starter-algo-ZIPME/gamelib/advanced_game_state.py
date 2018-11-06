@@ -41,7 +41,7 @@ class AdvancedGameState(GameState):
                 """
                 NOTE: scrambler units cannot attack firewalls so skip them if unit is firewall
                 """
-                if unit.player_index == attacking_unit.player_index or (attacking_unit.unit_type == SCRAMBLER and is_stationary(unit)):
+                if unit.player_index == attacking_unit.player_index or (attacking_unit.unit_type == SCRAMBLER and is_stationary(unit.unit_type)):
                     continue
 
                 new_target = False

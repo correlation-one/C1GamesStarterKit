@@ -39,9 +39,21 @@ class ShortestPathFinder:
     def __init__(self):
         self.HORIZONTAL = 1
         self.VERTICAL = 2
+        self.initialized = False
+
+    def initialize_map(self, game_state):
+        """Initializes the map
+
+        Args:
+            * game_state: A GameState object representing the gamestate we want to 
+        """
+        #Initialize map 
+        self.initialized = True
+        self.game_state = game_state
+        self.game_map = [[Node() for x in range(self.game_state.ARENA_SIZE)] for y in range(self.game_state.ARENA_SIZE)]
 
     def navigate_multiple_endpoints(self, start_point, end_points, game_state):
-        """Finds tha path a unit would take to reach a set of endpoints
+        """Finds the path a unit would take to reach a set of endpoints
 
         Args:
             * start_point: The starting location of the unit
@@ -57,8 +69,7 @@ class ShortestPathFinder:
             return
 
         #Initialize map 
-        self.game_state = game_state
-        self.game_map = [[Node() for x in range(self.game_state.ARENA_SIZE)] for y in range(self.game_state.ARENA_SIZE)]
+        self.initialize_map(game_state)
         #Fill in walls
         for location in self.game_state.game_map:
             if self.game_state.contains_stationary_unit(location):
@@ -282,6 +293,10 @@ class ShortestPathFinder:
         """Prints an ASCII version of the current game map for debug purposes
 
         """
+        if not self.initialized:
+            debug_write("Attempted to print_map before pathfinder initialization. Use 'this_object.initialize_map(game_state)' to initialize the map first")
+            return
+
         for y in range(28):
             for x in range(28):
                 node = self.game_map[x][28 - y - 1]
