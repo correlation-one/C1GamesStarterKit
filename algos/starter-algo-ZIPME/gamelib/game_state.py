@@ -402,5 +402,5 @@ class GameState:
         """
 
         self.enable_warnings = not suppress
-        self.game_map.enable_warnings
+        self.game_map.enable_warnings = not suppress
 
