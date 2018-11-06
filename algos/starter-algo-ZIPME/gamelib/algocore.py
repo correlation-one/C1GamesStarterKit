@@ -31,7 +31,6 @@ class AlgoCore(object):
         send_command("")
         send_command("")
 
-    # only override this function if you have a 
     def start(self):
         """ 
         Start the parsing loop.
