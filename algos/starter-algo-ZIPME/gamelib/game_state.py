@@ -125,8 +125,9 @@ class GameState:
                 # This depends on RM always being the last type to be processed
                 if unit_type == REMOVE:
                     self.game_map[x,y][0].pending_removal = True
-                unit = GameUnit(unit_type, self.config, player_number, hp, x, y)
-                self.game_map[x,y].append(unit)
+                else:
+                    unit = GameUnit(unit_type, self.config, player_number, hp, x, y)
+                    self.game_map[x,y].append(unit)
 
     def __resource_required(self, unit_type):
         return self.CORES if is_stationary(unit_type) else self.BITS
