@@ -503,31 +503,31 @@ class Replay:
 			algo.addData(self.fname, t, 'bits_spent', self.getBitsSpent(algo, spawn), True)
 
 	def unpackData(self, algos):
-		# try:
-		self.algo1, self.algo2 = self.createAlgos(algos)
+		try:
+			self.algo1, self.algo2 = self.createAlgos(algos)
 
-		for t, f in self.getValidTurns():
-			turn = self.getTurn(t, f)
+			for t, f in self.getValidTurns():
+				turn = self.getTurn(t, f)
 
-			turnInfo = turn['turnInfo']
-			events = turn['events']
-			spawn = events['spawn']
+				turnInfo = turn['turnInfo']
+				events = turn['events']
+				spawn = events['spawn']
 
-			p1Stats = turn['p1Stats']
-			p1Units = turn['p1Units']
+				p1Stats = turn['p1Stats']
+				p1Units = turn['p1Units']
 
-			p2Stats = turn['p2Stats']
-			p2Units = turn['p2Units']
+				p2Stats = turn['p2Stats']
+				p2Units = turn['p2Units']
 
-			self.addDataToAlgo(self.algo1, t, f, p1Stats, p1Units, spawn)
-			self.addDataToAlgo(self.algo2, t, f, p2Stats, p2Units, spawn)
+				self.addDataToAlgo(self.algo1, t, f, p1Stats, p1Units, spawn)
+				self.addDataToAlgo(self.algo2, t, f, p2Stats, p2Units, spawn)
 
-		self.algo1.recordFinalData(self.fname, self.algo2)
-		self.algo2.recordFinalData(self.fname, self.algo1)
-		self.algo1.addEndStats(self.fname, self.turns[self.validTurns[-1]]['endStats']['player1'])
-		self.algo2.addEndStats(self.fname, self.turns[self.validTurns[-1]]['endStats']['player2'])
-		# except Exception as e:
-		# 	sys.stderr.write(str(e))
+			self.algo1.recordFinalData(self.fname, self.algo2)
+			self.algo2.recordFinalData(self.fname, self.algo1)
+			self.algo1.addEndStats(self.fname, self.turns[self.validTurns[-1]]['endStats']['player1'])
+			self.algo2.addEndStats(self.fname, self.turns[self.validTurns[-1]]['endStats']['player2'])
+		except Exception as e:
+			sys.stderr.write(str(e))
 
 	# only creates a new algo class if that algo does not already exist. Otherwise data is added to the existing one
 	def createAlgos(self, algos):
@@ -634,16 +634,16 @@ def run_every_replay_verbose(fh, graphingEnabled, options):
 			disp = False
 			Graph.init(options['graph_verbose'])
 
-		# try:
-		for algo in replay.getAlgos():
-			algo.dispData(options, replay.fname)
+		try:
+			for algo in replay.getAlgos():
+				algo.dispData(options, replay.fname)
 
-			if graphingEnabled:
-				if algo.addPlot(options['graph_verbose'], replay.fname):
-					disp = True
-		# except Exception as e:
-		# 	sys.stderr.write('Error parsing file\n')
-		# 	sys.stderr.write(str(e)+'\n')
+				if graphingEnabled:
+					if algo.addPlot(options['graph_verbose'], replay.fname):
+						disp = True
+		except Exception as e:
+			sys.stderr.write('Error parsing file\n')
+			sys.stderr.write(str(e)+'\n')
 
 
 		if graphingEnabled:
@@ -660,11 +660,14 @@ def run_every_replay_agg(fh, graphingEnabled, options):
 	sys.stderr.write(fh.getAlgoWinSummary())
 
 	if graphingEnabled:
+		if len(options) == 0:
+			options = ['wins']
 		Graph.init(options)
 		for option in options:
 			fh.addPlot(option)
 		Graph.show()
 
+# parses the graphing arguments, seperates them into single (v) or multiple (s) results with the ':' delimiter
 def getGraphOptions(options):
 	v = []
 	s = []
