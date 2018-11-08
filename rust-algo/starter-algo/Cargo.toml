@@ -1,0 +1,8 @@
+[package]
+name = "starter-algo"
+version = "0.1.0"
+authors = ["Phoenix Kahlo <phoenix@correlation-one.com>"]
+
+[dependencies]
+algo = { path = "../algo" }
+rand = "0.5.5"

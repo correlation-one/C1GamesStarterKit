@@ -1,0 +1,8 @@
+[package]
+name = "pathtest"
+version = "0.1.0"
+authors = ["Phoenix Kahlo <phoenix@correlation-one.com>"]
+
+[dependencies]
+algo = { path = "../algo" }
+serde_json = "1.0.31"
