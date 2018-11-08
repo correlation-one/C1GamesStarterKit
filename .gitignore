@@ -7,3 +7,6 @@ algos/*
 
 dist/*
 !dist/.gitkeep
+
+*.zip
+*/.idea/*
