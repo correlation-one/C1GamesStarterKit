@@ -115,6 +115,9 @@ In contrast:
 Will only display a summary and show the graph for wins (health graph parameter is simply
 ignored).
 
+You can see all valid options by running:
+>py scripts/contributions/get_results.py -h
+
 ----------------------------------------------------------------------------------------
 
 Everything is output using std.stderr.write, meaning it is safe to import and print
@@ -160,12 +163,12 @@ def ParseArgs():
 	ap.add_argument(
 		"-v", "--verbose",
 		action='store_true',
-		help="will force the program to run each replay seperately and print detailed information\n\n")
+		help="will force the program to run each replay seperately and print information individual games\n\n")
 	ap.add_argument(
 		"-avg", "--averages",
 		nargs="*",
 		default=[],
-		help="data you would like the average of (not very useful right now)\nValid Options:\n\t- health\n\t- bits\n\t- cores\n\n")
+		help="data you would like the average of (not very useful right now)\nValid Options:\n\t- health\n\t- bits\n\t- cores\n\t- cores_spent\n\t- bits_spent\n\t- cores_on_board\n\n")
 	ap.add_argument(
 		"-f", "--file",
 		nargs="*",
@@ -175,7 +178,7 @@ def ParseArgs():
 		"-g", "--graph",
 		nargs="*",
 		default=[],
-		help="specify what data you would like to be graphed - you must have matplotlib installed\nValid Options:\n\t- health\n\t- bits\n\t- cores\n\t- wins (for multiple replays)\n\n")
+		help="specify what data you would like to be graphed - you must have matplotlib installed\n\nValid Options For Single Game:\n\t- health\n\t- bits\n\t- cores\n\t- cores_spent\n\t- bits_spent\n\t- cores_on_board\n\nValid Options For Multiple Games:\n\t- wins\n\n")
 	return vars(ap.parse_args())
 
 
@@ -184,6 +187,7 @@ class Algo:
 	def __init__(self, name):
 		self.name = name
 		self.wins = 0
+		self.cores_on_board = {}
 		self.replays = {} 	# this effectively holds all raw json information
 
 	# NOTE: eq will return true when comparing to strings of the same name - this is intentional to be able to use: str in listOfAlgos syntax.
@@ -214,7 +218,7 @@ class Algo:
 			sys.stderr.write("Error: Dividing by zero")
 			return -1
 
-	def addData(self, replay, turn, arg, data):
+	def addData(self, replay, turn, arg, data, cumulative=False):
 		if replay in self.replays:
 			if turn in self.replays[replay]:
 				pass
@@ -224,7 +228,13 @@ class Algo:
 			self.replays[replay] = {}
 			self.replays[replay][turn] = {}
 
-		self.replays[replay][turn][arg] = data
+		if cumulative:
+			try:
+				self.replays[replay][turn][arg] = self.replays[replay][turn-1][arg] + data
+			except KeyError:
+				self.replays[replay][turn][arg] = data
+		else:
+			self.replays[replay][turn][arg] = data
 
 
 	def recordFinalData(self, replay, other):
@@ -270,7 +280,7 @@ class Algo:
 		sys.stderr.write('\n')
 
 	def addPlot(self, options, replay):
-		avalible = ['health', 'bits', 'cores']
+		avalible = ['health', 'bits', 'cores', 'cores_spent', 'bits_spent', 'cores_on_board']
 		disp = False
 		for lbl in options:
 			if lbl in avalible:
@@ -320,31 +330,62 @@ class Replay:
 						if (turnNum, frameNum) not in self.validTurns:
 							self.validTurns.append((turnNum, frameNum))
 
+	def getCoresOnBoard(self, filters, encryptors, destructors):
+		return len(filters) + len(encryptors) * 4 + len(destructors) * 3
+
+	def getBitsSpent(self, algo, spawn):
+		p_index = 1 if algo == self.algo1 else 2
+		pings = [x for x in spawn if x[3] == p_index and x[1] == 3]
+		emps = [x for x in spawn if x[3] == p_index and x[1] == 4]
+		scramblers = [x for x in spawn if x[3] == p_index and x[1] == 5]
+		return len(pings) + len(emps) * 3 + len(scramblers)
+
+	def getCoresSpent(self, algo, spawn):
+		p_index = 1 if algo == self.algo1 else 2
+		filters = [x for x in spawn if x[3] == p_index and x[1] == 0]
+		encryptors = [x for x in spawn if x[3] == p_index and x[1] == 1]
+		destructors = [x for x in spawn if x[3] == p_index and x[1] == 2]
+		return len(filters) + len(encryptors) * 4 + len(destructors) * 3
+
+	def addDataToAlgo(self, algo, t, f, stats, units, spawn):
+		algo.addData(self.fname, t, 'health', stats[0])
+		algo.addData(self.fname, t, 'cores', stats[1])
+		algo.addData(self.fname, t, 'bits', stats[2])
+
+		filters, encryptors, destructors, pings, emps, scramblers, removes = units
+
+		algo.addData(self.fname, t, 'cores_on_board', self.getCoresOnBoard(filters, encryptors, destructors))
+
+		if f == 0:
+			algo.addData(self.fname, t, 'cores_spent', self.getCoresSpent(algo, spawn), True)
+			algo.addData(self.fname, t, 'bits_spent', self.getBitsSpent(algo, spawn), True)
+
 	def unpackData(self, algos):
-		try:
-			self.algo1, self.algo2 = self.createAlgos(algos)
+		# try:
+		self.algo1, self.algo2 = self.createAlgos(algos)
 
-			for t, f in self.getValidTurns():
-				turn = self.getTurn(t, f)
+		for t, f in self.getValidTurns():
+			turn = self.getTurn(t, f)
 
-				turnInfo = turn['turnInfo']
-				p1Stats = turn['p1Stats']
-				p2Stats = turn['p2Stats']
+			turnInfo = turn['turnInfo']
+			events = turn['events']
+			spawn = events['spawn']
 
-				self.algo1.addData(self.fname, t, 'health', p1Stats[0])
-				self.algo1.addData(self.fname, t, 'cores', p1Stats[1])
-				self.algo1.addData(self.fname, t, 'bits', p1Stats[2])
+			p1Stats = turn['p1Stats']
+			p1Units = turn['p1Units']
 
-				self.algo2.addData(self.fname, t, 'health', p2Stats[0])
-				self.algo2.addData(self.fname, t, 'cores', p2Stats[1])
-				self.algo2.addData(self.fname, t, 'bits', p2Stats[2])
+			p2Stats = turn['p2Stats']
+			p2Units = turn['p2Units']
 
-			self.algo1.recordFinalData(self.fname, self.algo2)
-			self.algo2.recordFinalData(self.fname, self.algo1)
-			self.algo1.addEndStats(self.fname, self.turns[self.validTurns[-1]]['endStats']['player1'])
-			self.algo2.addEndStats(self.fname, self.turns[self.validTurns[-1]]['endStats']['player2'])
-		except Exception as e:
-			sys.stderr.write(str(e))
+			self.addDataToAlgo(self.algo1, t, f, p1Stats, p1Units, spawn)
+			self.addDataToAlgo(self.algo2, t, f, p2Stats, p2Units, spawn)
+
+		self.algo1.recordFinalData(self.fname, self.algo2)
+		self.algo2.recordFinalData(self.fname, self.algo1)
+		self.algo1.addEndStats(self.fname, self.turns[self.validTurns[-1]]['endStats']['player1'])
+		self.algo2.addEndStats(self.fname, self.turns[self.validTurns[-1]]['endStats']['player2'])
+		# except Exception as e:
+		# 	sys.stderr.write(str(e))
 
 	# only creates a new algo class if that algo does not already exist. Otherwise data is added to the existing one
 	def createAlgos(self, algos):
