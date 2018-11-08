@@ -1,12 +1,24 @@
-'''
+#!/usr/bin/env python
 
+'''
+------------------------------------------------------------------------------------------------
+Author: @Isaac
+Last Updated: 7 Nov 2018
+Contact: Message @Isaac at https://forum.c1games.com/
+Copyright: CC0 - completely open to edit, share, etc
+
+Short Description: 
 This is a file to help display data about Terminal matches.
-This file should be in the scripts/contributions/ directory.
+------------------------------------------------------------------------------------------------
+
+README:
+
+This program assumes this file is in the contributions/scripts directory
 
 You can call this by opening Powershell or Terminal the same way you would start a game.
 Then, you can run it by executing:
->py [PATH_TO_FILE]/[FILE_NAME].py
-where FILE_NAME is the name of this file.
+>py [PATH_TO_FILE]/get_results.py
+where PATH_TO_FILE is the path to this file.
 
 Just running this should output that looks something like this:
 Getting Results:
@@ -43,68 +55,76 @@ By default, this will run the replay file that was created the most recently.
 ----------------------------------------------------------------------------------------
 
 You can specify which file you would like to run by:
->py scripts/contributions/[FILE_NAME].py -f [REPLAY_FILE].replay
+>py scripts/contributions/get_results.py -f [REPLAY_FILE].replay
 where REPLAY_FILE is the file you'd like to look at. You can list as many files as you would like and it will run on each file. For example:
->py scripts/contributions/[FILE_NAME].py -f [REPLAY_FILE].replay [REPLAY_FILE].replay [REPLAY_FILE].replay
+>py scripts/contributions/get_results.py -f [REPLAY_FILE].replay [REPLAY_FILE].replay [REPLAY_FILE].replay
 
 You can also specify how many replays back you would like to run (by date) using the -n parameter. Example:
->py scripts/contributions/[FILE_NAME].py -n 3
+>py scripts/contributions/get_results.py -n 3
 would run the last 3 games you ran
 
 ----------------------------------------------------------------------------------------
 
 You can output the averages for health, bits, and cores for a single match by using the following:
->py scripts/contributions/[FILE_NAME].py -avg health
+>py scripts/contributions/get_results.py -avg health
 The only (currently) accepted parameters for -avg are:
 	- health
 	- bits
 	- cores
 You can include 1, 2, or all 3 in your output. For example:
->py scripts/contributions/[FILE_NAME].py -avg health bits cores
+>py scripts/contributions/get_results.py -avg health bits cores
 
 ----------------------------------------------------------------------------------------
 
-Lastly, if you install matplotlib you can graph (currently) health, bits, and cores for individual matches.
+You can install matplotlib by doing:
+>pip3 install matplotlib
+
+If you install matplotlib you can graph (currently) health, bits, and cores for individual matches.
 
 Simply do:
->py scripts/contributions/[FILE_NAME].py -g [PARAMETERS]
-Where PARAMETERS can be health, bits, or cores (you can do 2, or all 3 as well on one graph)
+>py scripts/contributions/get_results.py -g [PARAMETERS]
+Where PARAMETERS can be health, bits, cores, or wins (you can do 2, or all 3 as well on one graph)
 
 For example:
->py scripts/contributions/[FILE_NAME].py -g health
-
-
-All of the commands above can be combined in any order and way. For example, if I wanted to run the last 2 replay files and only output the average heath and graph the number of bits, I would run:
->py scripts/contributions/[FILE_NAME].py -n 2 -avg health -g bits
-
-If you forget you can also see the possible commands by:
->py scripts/contributions/[FILE_NAME].py -h
+>py scripts/contributions/get_results.py -g health
 
 ----------------------------------------------------------------------------------------
 
-There are essentially 2 decision paths possible, whether you are looking at 1 replay or many.
+All of the commands above can be combined in any order and way. For example, if I wanted to run the last replay file and output the average heath and graph the number of bits, I would run:
+>py scripts/contributions/get_results.py -avg health -g bits
+
+If you forget you can also see the possible commands by:
+>py scripts/contributions/get_results.py -h
+
+----------------------------------------------------------------------------------------
+
+There are essentially 2 paths this program takes, whether you are looking at 1 replay or many.
 If you are looking at 1, it prints out information for that replay.
-The moment you add more (through any arg) it then prints a summary for those replays.
-You can force the program to print information for each individual replay by using the -v flag.
+The moment you add more it then prints a summary for those replays.
+You can force the program to print information for each individual replay by using the -v (verbose) flag.
 
 For example:
->py scripts/contributions/[FILE_NAME].py -a -v -g health wins
+>py scripts/contributions/get_results.py -a -v -g health wins
 
 Will display and graph (health) for each individual replay, as well as display the summary
 information and graph the number of wins for each algo.
 
 In contrast:
->py scripts/contributions/[FILE_NAME].py -a -g health wins
+>py scripts/contributions/get_results.py -a -g health wins
 
 Will only display a summary and show the graph for wins (health graph parameter is simply
 ignored).
 
+----------------------------------------------------------------------------------------
+
+Everything is output using std.stderr.write, meaning it is safe to import and print
+this from your within game (although there is not really a reason to, since it looks at
+all the data after the replay is completed).
 
 I plan on adding more to this file, specifically the ability to graph much more
-data and get more broad statistics.
+data and get more useful statistics.
 
 If you have any suggestions/questions let me know :) - @Isaac
-
 '''
 
 pltInstalled = False
@@ -324,7 +344,7 @@ class Replay:
 			self.algo1.addEndStats(self.fname, self.turns[self.validTurns[-1]]['endStats']['player1'])
 			self.algo2.addEndStats(self.fname, self.turns[self.validTurns[-1]]['endStats']['player2'])
 		except Exception as e:
-			print (e)
+			sys.stderr.write(str(e))
 
 	# only creates a new algo class if that algo does not already exist. Otherwise data is added to the existing one
 	def createAlgos(self, algos):

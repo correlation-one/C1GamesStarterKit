@@ -1,6 +1,18 @@
+#!/usr/bin/env python
+
 '''
-This is a python script to run a bunch of games with a single command.
+------------------------------------------------------------------------------------------------
+Author: @Isaac
+Last Updated: 7 Nov 2018
+Contact: Message @Isaac at https://forum.c1games.com/
+Copyright: CC0 - completely open to edit, share, etc
+
+Short Description: 
+This is a python script to run a bunch of algos against each other with a single command.
 This is intended for when you have worked out all bugs and are testing to see if a new strategy really is better than an old one.
+------------------------------------------------------------------------------------------------
+
+README:
 
 This program assumes this file is in the contributions/scripts directory
 
@@ -52,7 +64,8 @@ DO NOT RUN WITH A LARGE BATCH SIZE (like >15, depending on your computer) or els
 At the end I also run the get_results.py script that outputs some data. I recommend having
 matplotlib installed for graphs, etc.
 
-You can do much more with the get_results.py script that is not shown here.
+You can do much more with the get_results.py script that is not shown here and I plan
+on expanding its capabilities.
 
 If you have questions just ask me on the forums - @Isaac
 '''
@@ -240,5 +253,5 @@ if __name__ == '__main__':
 				}
 		from get_results import main
 		main(args)
-	except:
-		pass
+	except Exception as e:
+		print (e)
