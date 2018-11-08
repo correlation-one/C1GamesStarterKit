@@ -3,12 +3,13 @@
 '''
 ------------------------------------------------------------------------------------------------
 Author: @Isaac
-Last Updated: 7 Nov 2018
+Last Updated: 8 Nov 2018
 Contact: Message @Isaac at https://forum.c1games.com/
 Copyright: CC0 - completely open to edit, share, etc
 
 Short Description: 
 This is a file to help display data about Terminal matches.
+(NOTE: currently views matches that end with the same health as a tie, does not track time spent)
 ------------------------------------------------------------------------------------------------
 
 README:
@@ -24,7 +25,7 @@ Just running this should output that looks something like this:
 Getting Results:
 
 -----------------------------------------------------------------------------------
-Showing replays\p1-18-10-2018-13-51-45-1539892305554--547739390.replay
+Showing p1-18-10-2018-13-51-45-1539892305554--547739375.replay
 -----------------------------------------------------------------------------------
 my-bot:
 |
@@ -53,58 +54,87 @@ starter-algo-ZIPME:
 By default, this will run the replay file that was created the most recently.
 
 ----------------------------------------------------------------------------------------
+-f: Run specific replay files
 
 You can specify which file you would like to run by:
 >py scripts/contributions/get_results.py -f [REPLAY_FILE].replay
+
 where REPLAY_FILE is the file you'd like to look at. You can list as many files as you would like and it will run on each file. For example:
 >py scripts/contributions/get_results.py -f [REPLAY_FILE].replay [REPLAY_FILE].replay [REPLAY_FILE].replay
 
-You can also specify how many replays back you would like to run (by date) using the -n parameter. Example:
+----------------------------------------------------------------------------------------
+-n: Run a number of replay files from most recent to olders (by date modified)
+
+You can specify how many replays back you would like to run (by date) using the -n parameter. Example:
 >py scripts/contributions/get_results.py -n 3
+
 would run the last 3 games you ran
 
 ----------------------------------------------------------------------------------------
+-avg: Print average data fro a single replay (not very useful right now)
 
-You can output the averages for health, bits, and cores for a single match by using the following:
+You can output the averages for health, bits, cores, etc for a single match by using the following:
 >py scripts/contributions/get_results.py -avg health
+
 The only (currently) accepted parameters for -avg are:
 	- health
 	- bits
 	- cores
-You can include 1, 2, or all 3 in your output. For example:
+	- cores_spent
+	- bits_spent
+	- cores_on_board
+
+You can include 1, 2, or all in your output. For example:
 >py scripts/contributions/get_results.py -avg health bits cores
 
 ----------------------------------------------------------------------------------------
+-g: Graphing (require matplotlib)
 
 You can install matplotlib by doing:
 >pip3 install matplotlib
 
-If you install matplotlib you can graph (currently) health, bits, and cores for individual matches.
+If you install matplotlib you can graph the following for individual matches:
+	- health
+	- bits
+	- cores
+	- cores_spent
+	- bits_spent
+	- cores_on_board
 
 Simply do:
 >py scripts/contributions/get_results.py -g [PARAMETERS]
-Where PARAMETERS can be health, bits, cores, or wins (you can do 2, or all 3 as well on one graph)
+Where PARAMETERS is a list of the above options you would like to graph
 
 For example:
 >py scripts/contributions/get_results.py -g health
 
+You can get more specfic and choose when you would like a new graph, using ':' as a delimiter.
+
+For example:
+>py scripts/contributions/get_results.py -g health : bits cores
+
+would show 2 graphs. The first would show health and the second would plot bits and cores on the same graph.
+
+(I recommend just trying a bunch of combinations with ':' to get familiar with this).
+
 ----------------------------------------------------------------------------------------
 
-All of the commands above can be combined in any order and way. For example, if I wanted to run the last replay file and output the average heath and graph the number of bits, I would run:
+All of the commands above can be combined in any order. For example, if I wanted to run the
+last replay file and output the average heath and graph the number of bits, I would run:
 >py scripts/contributions/get_results.py -avg health -g bits
 
-If you forget you can also see the possible commands by:
+If you forget anything you can see all possible commands by:
 >py scripts/contributions/get_results.py -h
 
 ----------------------------------------------------------------------------------------
 
 There are essentially 2 paths this program takes, whether you are looking at 1 replay or many.
 If you are looking at 1, it prints out information for that replay.
-The moment you add more it then prints a summary for those replays.
+The moment you add more it then prints a summary for those replays (currently only wins).
 You can force the program to print information for each individual replay by using the -v (verbose) flag.
 
 For example:
->py scripts/contributions/get_results.py -a -v -g health wins
+>py scripts/contributions/get_results.py -a -g health wins -v
 
 Will display and graph (health) for each individual replay, as well as display the summary
 information and graph the number of wins for each algo.
@@ -115,8 +145,14 @@ In contrast:
 Will only display a summary and show the graph for wins (health graph parameter is simply
 ignored).
 
-You can see all valid options by running:
->py scripts/contributions/get_results.py -h
+Note that the ':' still works for separating graphs when using the -v (verbose) flag.
+For example:
+>py scripts/contributions/get_results.py -a -g health : bits : cores wins -v
+
+The program also automatically formats the graph input so these run the same:
+>py scripts/contributions/get_results.py -n 2 -g health : bits : cores wins -v
+>py scripts/contributions/get_results.py -n 2 -g health : bits : cores : wins -v
+>py scripts/contributions/get_results.py -n 2 -g : : : :: typo health : : bits : cores : : wins : : : : -v
 
 ----------------------------------------------------------------------------------------
 
@@ -137,6 +173,7 @@ try:
 	import sys
 	import json
 	import glob
+	import math
 	import argparse
 except ImportError as e:
 	sys.stderr.write("WARNING: Module not found, full error:\n\n")
@@ -146,7 +183,17 @@ try:
 	import matplotlib.pyplot as plt
 	pltInstalled = True
 except ImportError:
-	pass
+	try:
+		usrIn = input('Matplotlib not found.\nWould you like this program to try and install matplotlib? (y/n) ')
+		if usrIn.lower() == 'y' or usrIn.lower() == 'yes':
+			import subprocess
+			subprocess.run(['python', '-m', 'pip', 'install', 'matplotlib'])
+
+			import matplotlib.pyplot as plt
+			pltInstalled = True
+			sys.stderr.write("\n\n")
+	except:
+		pltInstalled = False
 
 # handles all the arguments
 def ParseArgs():
@@ -181,6 +228,99 @@ def ParseArgs():
 		help="specify what data you would like to be graphed - you must have matplotlib installed\n\nValid Options For Single Game:\n\t- health\n\t- bits\n\t- cores\n\t- cores_spent\n\t- bits_spent\n\t- cores_on_board\n\nValid Options For Multiple Games:\n\t- wins\n\n")
 	return vars(ap.parse_args())
 
+
+class Graph:
+	numRows, numCols = 0,0
+	fig, ax, arg = None, None, None
+	pos = (0,0)
+	emptyPlots = []
+
+	verbose_options = ['health', 'bits', 'cores', 'cores_spent', 'bits_spent', 'cores_on_board']
+	summary_options = ['wins']
+
+	@staticmethod
+	def init(arg):
+		Graph.clear()
+
+		numSubPlots = arg.count(':') + 1
+		r = math.floor(math.sqrt(numSubPlots))
+		c = math.ceil(numSubPlots/r)
+
+		fig_size = [6.4, 4.8]
+		max_x, max_y = 15, 9
+		fig_size = [fig_size[0] * c, fig_size[1] * r]
+		if fig_size[0] > max_x: fig_size[0] = max_x
+		if fig_size[1] > max_y: fig_size[1] = max_y
+		plt.rcParams["figure.figsize"] = fig_size
+
+		Graph.fig, Graph.ax = plt.subplots(nrows=r, ncols=c)
+
+		if r == 1:
+			Graph.ax = [Graph.ax]
+		if c == 1:
+			Graph.ax = [Graph.ax]
+
+		Graph.emptyPlots = [(x, y) for y in range(r) for x in range(c)]
+
+	@staticmethod
+	def advance():
+		x,y = Graph.pos
+		try:
+			Graph.ax[y][x+1]
+			Graph.pos = (x+1 , y)
+		except IndexError:
+			Graph.ax[y+1][0]
+			Graph.pos = (0, y+1)
+
+	@staticmethod
+	def resetPos():
+		Graph.pos = (0,0)
+
+	@staticmethod
+	def addToPlot(data, lbl, xlabel, ylabel):
+		x,y = Graph.pos
+		Graph.ax[y][x].plot(data, label=lbl)
+
+		Graph.ax[y][x].set_xlabel(xlabel)
+		Graph.ax[y][x].set_ylabel(ylabel)
+		Graph.ax[y][x].legend(loc='best')
+
+		Graph.removePos()
+
+	@staticmethod
+	def addBar(y_pos, data, lbls, y_ticks, ylabel, title, rot=60):
+		x,y = Graph.pos
+		Graph.ax[y][x].bar(y_pos, data, align='center', width=0.65)
+
+		Graph.ax[y][x].set_xticks(y_pos)
+		Graph.ax[y][x].set_xticklabels(lbls, rotation=rot)
+		Graph.ax[y][x].set_yticks(y_ticks)
+		Graph.ax[y][x].set_ylabel(ylabel)
+		Graph.ax[y][x].set_title(title)
+
+		Graph.removePos()
+
+	@staticmethod
+	def removePos():
+		try:
+			Graph.emptyPlots.remove(Graph.pos)
+		except ValueError:
+			pass
+
+	@staticmethod
+	def removeEmpty():
+		for (x,y) in Graph.emptyPlots:
+			Graph.ax[y][x].axis('off')
+
+	@staticmethod
+	def show():
+		plt.tight_layout()
+		Graph.removeEmpty()
+		plt.show()
+
+	@staticmethod
+	def clear():
+		plt.close()
 
 # Stores data pertaining to an individual Algo
 class Algo:
@@ -279,14 +419,16 @@ class Algo:
 				self.printEndStats(replay)
 		sys.stderr.write('\n')
 
-	def addPlot(self, options, replay):
-		avalible = ['health', 'bits', 'cores', 'cores_spent', 'bits_spent', 'cores_on_board']
+	def addPlot(self, options, replay, xlabel='Turn #', ylabel='Value'):
 		disp = False
 		for lbl in options:
-			if lbl in avalible:
+			if lbl == ':':
+				Graph.advance()
+			else:
 				disp = True
 				data = [self.replays[replay][turn][lbl] for turn in self.replays[replay] if turn != 'endStats']
-				plt.plot(data, label='{}\'s {}'.format(self, lbl))
+				Graph.addToPlot(data, '{}\'s {}'.format(self, lbl), xlabel, ylabel)
+		Graph.resetPos()
 
 		return disp
 
@@ -462,8 +604,8 @@ class FileHandler:
 			for fName in self.__latestReplays(num, a):
 				self.replays.append(Replay(fName, self.algos))
 
-	def addPlot(self, options):
-		if 'wins' in options:
+	def addPlot(self, lbl):
+		if lbl == 'wins':
 			wins = []
 			lbls = []
 
@@ -476,86 +618,113 @@ class FileHandler:
 			while len(y_ticks) > 20:
 				y_ticks = [x for x in y_ticks if x % 2 == 0]
 
-			plt.bar(y_pos, wins, align='center', width=0.65)
-			plt.xticks(y_pos, lbls, rotation=60)
-			plt.yticks(y_ticks)
-			plt.ylabel('# of Wins')
-			plt.title('Number of Wins per Algo')
-			plt.tight_layout()
+			Graph.addBar(y_pos, wins, lbls, y_ticks, '# of Wins', 'Number of Wins per Algo')
+		elif lbl == ':':
+			Graph.advance()
 
 
 # displays detailed data for every replay stored in the fileManager fh.
 def run_every_replay_verbose(fh, graphingEnabled, options):
 	for replay in fh.getReplays():
-		sys.stderr.write('{:->90}\n'.format(''))
-		sys.stderr.write('Showing {}\n'.format(replay.fname.replace('replays/', '')))
-		sys.stderr.write('{:->90}\n'.format(''))
+		sys.stderr.write('{:->75}\n'.format(''))
+		sys.stderr.write('Showing {}\n'.format(replay.fname.split('\\')[-1]))
+		sys.stderr.write('{:->75}\n'.format(''))
 
-		disp = False
+		if graphingEnabled:
+			disp = False
+			Graph.init(options['graph_verbose'])
 
-		try:
-			for algo in replay.getAlgos():
-				algo.dispData(options, replay.fname)
+		# try:
+		for algo in replay.getAlgos():
+			algo.dispData(options, replay.fname)
 
-				if graphingEnabled:
-					if algo.addPlot(options['graph'], replay.fname):
-						disp = True
-		except Exception as e:
-			sys.stderr.write('Error parsing file\n')
-			sys.stderr.write(str(e)+'\n')
+			if graphingEnabled:
+				if algo.addPlot(options['graph_verbose'], replay.fname):
+					disp = True
+		# except Exception as e:
+		# 	sys.stderr.write('Error parsing file\n')
+		# 	sys.stderr.write(str(e)+'\n')
 
 
 		if graphingEnabled:
-			plt.ylabel('Value')
-			plt.xlabel('Turn #')
-			plt.legend(loc='best')
-			plt.tight_layout()
-
 			if disp:
-				plt.show()
-			else:
-				plt.clf()
+				Graph.show()
 
 		sys.stderr.write('\n')
 
 # displayed aggregate data over many matches and replay files
 def run_every_replay_agg(fh, graphingEnabled, options):
-	sys.stderr.write('{:->90}\n'.format(''))
+	sys.stderr.write('{:->75}\n'.format(''))
 	sys.stderr.write('Summary of {} matches:\n'.format(len(fh.getReplays())))
-	sys.stderr.write('{:->90}\n'.format(''))
+	sys.stderr.write('{:->75}\n'.format(''))
 	sys.stderr.write(fh.getAlgoWinSummary())
 
 	if graphingEnabled:
-		fh.addPlot(options)
-		plt.show()
+		Graph.init(options)
+		for option in options:
+			fh.addPlot(option)
+		Graph.show()
 
+def getGraphOptions(options):
+	v = []
+	s = []
+
+	vBreak = False
+	sBreak = False
+	for o in options:
+		if o in Graph.verbose_options:
+			v.append(o)
+			vBreak = True
+		elif o in Graph.summary_options:
+			s.append(o)
+			sBreak = True
+		elif o == ':':
+			if vBreak:
+				v.append(':')
+			if sBreak:
+				s.append(':')
+
+			vBreak = False
+			sBreak = False
+
+	if len(v) > 0:
+		if v[0] == ':': v.pop(0)
+		if v[-1] == ':': v.pop(-1)
+	if len(s) > 0:
+		if s[0] == ':': s.pop(0)
+		if s[-1] == ':': s.pop(-1)
+
+	return (v, s)
 
 def main(args):
+	verbose_options, summary_options = getGraphOptions(args['graph'])
+
 	fh = FileHandler()
 	fh.loadFiles(int(args['num']), args['all'], args['file']) #loads the files - all JSON reading is here
 
 	# check to see if matplotlib is installed
 	graphingEnabled = True if len(args['graph']) > 0 else False
 	if graphingEnabled and not pltInstalled:
-		sys.stderr.write("WARNING: matplotlib not installed - no graphs will be shown\n\n")
+		sys.stderr.write("\n\nWARNING: matplotlib not installed - no graphs will be shown\n\n")
 		graphingEnabled = False
 
 	# these options are passed to let the algo know what to display and add to the plots
 	options = {
-				'avg':		args['averages'],
-				'endStats':	None,
-				'graph':	args['graph']
+				'avg':				args['averages'],
+				'endStats':			None,
+				'graph_verbose':	verbose_options,
+				'graph_summary':	summary_options
 			  }
 
 	# checks the arguments to see what inforation should be displayed
 	if args['all']:
 		run_every_replay_verbose(fh, graphingEnabled, options) if args['verbose'] else ''
-		run_every_replay_agg(fh, graphingEnabled, options['graph'])
+		run_every_replay_agg(fh, graphingEnabled, options['graph_summary'])
 	elif int(args['num']) == 1:
 		run_every_replay_verbose(fh, graphingEnabled, options)
 	elif int(args['num']) > 1 or len(args['file']) > 0:
 		run_every_replay_verbose(fh, graphingEnabled, options) if args['verbose'] else ''
-		run_every_replay_agg(fh, graphingEnabled, options['graph'])
+		run_every_replay_agg(fh, graphingEnabled, options['graph_summary'])
 
 	sys.stderr.write('\n\n')
 
