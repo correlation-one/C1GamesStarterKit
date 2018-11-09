@@ -166,7 +166,7 @@ data and get more useful statistics.
 If you have any suggestions/questions let me know :) - @Isaac
 '''
 
-pltInstalled = False
+plt_installed = False
 
 try:
 	import os
@@ -181,7 +181,7 @@ except ImportError as e:
 
 try:
 	import matplotlib.pyplot as plt
-	pltInstalled = True
+	plt_installed = True
 except ImportError:
 	try:
 		usrIn = input('Matplotlib not found.\nWould you like this program to try and install matplotlib? (y/n) ')
@@ -190,10 +190,10 @@ except ImportError:
 			subprocess.run(['python', '-m', 'pip', 'install', 'matplotlib'])
 
 			import matplotlib.pyplot as plt
-			pltInstalled = True
+			plt_installed = True
 			sys.stderr.write("\n\n")
 	except:
-		pltInstalled = False
+		plt_installed = False
 
 # handles all the arguments
 def parse_args():
@@ -406,7 +406,10 @@ class Algo:
 			self.print_block('Averages', data)
 
 	def print_end_stats(self, replay):
-		del self.replays[replay]['endStats']['name']
+		try:
+			del self.replays[replay]['endStats']['name']
+		except KeyError:
+			pass
 		self.print_block('End Stats', self.replays[replay]['endStats'])
 
 	def disp_data(self, options, replay):
@@ -705,8 +708,8 @@ def main(args):
 	fh.load_files(int(args['num']), args['all'], args['file']) #loads the files - all JSON reading is here
 
 	# check to see if matplotlib is installed
-	graphing_enabled = True if len(args['graph']) > 0 else False
-	if graphing_enabled and not pltInstalled:
+	graphing_enabled = True if len(verbose_options) > 0 or len(summary_options) > 0 else False
+	if graphing_enabled and not plt_installed:
 		sys.stderr.write("\n\nWARNING: matplotlib not installed - no graphs will be shown\n\n")
 		graphing_enabled = False
 

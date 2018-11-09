@@ -248,7 +248,7 @@ if __name__ == '__main__':
 					'verbose':	False, 				\
 					'averages':	[], 				\
 					'file':		[],					\
-					'graph':	['wins', 'health'],	\
+					'graph':	['wins'],	\
 					'num':		len(list(tmp))		\
 				}
 		from get_results import main
