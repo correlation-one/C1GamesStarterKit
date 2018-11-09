@@ -196,7 +196,7 @@ except ImportError:
 		pltInstalled = False
 
 # handles all the arguments
-def ParseArgs():
+def parse_args():
 	ap = argparse.ArgumentParser(add_help=False, formatter_class=argparse.RawTextHelpFormatter)
 	ap.add_argument('-h', '--help', action='help', help='show this help message and exit\n\n')
 	ap.add_argument(
@@ -230,10 +230,9 @@ def ParseArgs():
 
 
 class Graph:
-	numRows, numCols = 0,0
 	fig, ax, arg = None, None, None
 	pos = (0,0)
-	emptyPlots = []
+	empty_plots = []
 
 	verbose_options = ['health', 'bits', 'cores', 'cores_spent', 'bits_spent', 'cores_on_board']
 	summary_options = ['wins']
@@ -242,9 +241,9 @@ class Graph:
 	def init(arg):
 		Graph.clear()
 
-		numSubPlots = arg.count(':') + 1
-		r = math.floor(math.sqrt(numSubPlots))
-		c = math.ceil(numSubPlots/r)
+		num_sub_plots = arg.count(':') + 1
+		r = math.floor(math.sqrt(num_sub_plots))
+		c = math.ceil(num_sub_plots/r)
 
 		fig_size = [6.4, 4.8]
 		max_x, max_y = 15, 9
@@ -260,7 +259,7 @@ class Graph:
 		if c == 1:
 			Graph.ax = [Graph.ax]
 
-		Graph.emptyPlots = [(x, y) for y in range(r) for x in range(c)]
+		Graph.empty_plots = [(x, y) for y in range(r) for x in range(c)]
 
 	@staticmethod
 	def advance():
@@ -273,49 +272,49 @@ class Graph:
 			Graph.pos = (0, y+1)
 
 	@staticmethod
-	def resetPos():
+	def reset_pos():
 		Graph.pos = (0,0)
 
 	@staticmethod
-	def addToPlot(data, lbl, xlabel, ylabel):
+	def add_to_plot(data, lbl, xlabel, y_label):
 		x,y = Graph.pos
 		Graph.ax[y][x].plot(data, label=lbl)
 
 		Graph.ax[y][x].set_xlabel(xlabel)
-		Graph.ax[y][x].set_ylabel(ylabel)
+		Graph.ax[y][x].set_ylabel(y_label)
 		Graph.ax[y][x].legend(loc='best')
 
-		Graph.removePos()
+		Graph.remove_pos()
 
 	@staticmethod
-	def addBar(y_pos, data, lbls, y_ticks, ylabel, title, rot=60):
+	def add_bar(y_pos, data, lbls, y_ticks, y_label, title, rot=60):
 		x,y = Graph.pos
 		Graph.ax[y][x].bar(y_pos, data, align='center', width=0.65)
 
 		Graph.ax[y][x].set_xticks(y_pos)
 		Graph.ax[y][x].set_xticklabels(lbls, rotation=rot)
 		Graph.ax[y][x].set_yticks(y_ticks)
-		Graph.ax[y][x].set_ylabel(ylabel)
+		Graph.ax[y][x].set_ylabel(y_label)
 		Graph.ax[y][x].set_title(title)
 
-		Graph.removePos()
+		Graph.remove_pos()
 
 	@staticmethod
-	def removePos():
+	def remove_pos():
 		try:
-			Graph.emptyPlots.remove(Graph.pos)
+			Graph.empty_plots.remove(Graph.pos)
 		except ValueError:
 			pass
 
 	@staticmethod
-	def removeEmpty():
-		for (x,y) in Graph.emptyPlots:
+	def remove_empty():
+		for (x,y) in Graph.empty_plots:
 			Graph.ax[y][x].axis('off')
 
 	@staticmethod
 	def show():
 		plt.tight_layout()
-		Graph.removeEmpty()
+		Graph.remove_empty()
 		plt.show()
 
 	@staticmethod
@@ -342,7 +341,7 @@ class Algo:
 	def __repr__(self):
 		return self.__toString()
 
-	def getAverage(self, arg, replay):
+	def get_average(self, arg, replay):
 		avg = 0.0
 		div = 0.0
 
@@ -358,7 +357,7 @@ class Algo:
 			sys.stderr.write("Error: Dividing by zero")
 			return -1
 
-	def addData(self, replay, turn, arg, data, cumulative=False):
+	def add_data(self, replay, turn, arg, data, cumulative=False):
 		if replay in self.replays:
 			if turn in self.replays[replay]:
 				pass
@@ -377,17 +376,17 @@ class Algo:
 			self.replays[replay][turn][arg] = data
 
 
-	def recordFinalData(self, replay, other):
-		selfHP = list(self.replays[replay].items())[-1][1]['health']
-		otherHP = list(other.replays[replay].items())[-1][1]['health']
+	def recored_final_data(self, replay, other):
+		self_hp = list(self.replays[replay].items())[-1][1]['health']
+		other_hp = list(other.replays[replay].items())[-1][1]['health']
 
-		if selfHP > otherHP:
+		if self_hp > other_hp:
 			self.wins += 1
 
-	def addEndStats(self, replay, endStats):
+	def add_end_stats(self, replay, endStats):
 		self.replays[replay]['endStats'] = endStats;
 
-	def printBlock(self, header, data):
+	def print_block(self, header, data):
 		hLen = 7
 
 		sys.stderr.write('|\n|{: >6}{}:\n'.format('', header))
@@ -395,31 +394,31 @@ class Algo:
 			val = round(data[arg], 1) if type(data[arg]) == int or type(data[arg]) == float else data[arg]
 			sys.stderr.write('|{: >{fill}}{: >40} : {}\n'.format('|', arg, val, fill=hLen))
 
-	def printAvgs(self, options, arg, replay):
+	def print_avgs(self, options, arg, replay):
 		data = {}
 		if len(options[arg]) > 0:
 			for lbl in options[arg]:
 				try:
-					data[lbl] = self.getAverage(lbl, replay)
+					data[lbl] = self.get_average(lbl, replay)
 				except KeyError:
 					sys.stderr.write('Invalid parameter \'{}\'\n'.format(lbl))
 
-			self.printBlock('Averages', data)
+			self.print_block('Averages', data)
 
-	def printEndStats(self, replay):
+	def print_end_stats(self, replay):
 		del self.replays[replay]['endStats']['name']
-		self.printBlock('End Stats', self.replays[replay]['endStats'])
+		self.print_block('End Stats', self.replays[replay]['endStats'])
 
-	def dispData(self, options, replay):
+	def disp_data(self, options, replay):
 		sys.stderr.write('{}:\n'.format(self))
 		for arg in options:
 			if arg == 'avg':
-				self.printAvgs(options, arg, replay)
+				self.print_avgs(options, arg, replay)
 			elif arg == 'endStats':
-				self.printEndStats(replay)
+				self.print_end_stats(replay)
 		sys.stderr.write('\n')
 
-	def addPlot(self, options, replay, xlabel='Turn #', ylabel='Value'):
+	def add_plot(self, options, replay, xlabel='Turn #', y_label='Value'):
 		disp = False
 		for lbl in options:
 			if lbl == ':':
@@ -427,22 +426,22 @@ class Algo:
 			else:
 				disp = True
 				data = [self.replays[replay][turn][lbl] for turn in self.replays[replay] if turn != 'endStats']
-				Graph.addToPlot(data, '{}\'s {}'.format(self, lbl), xlabel, ylabel)
-		Graph.resetPos()
+				Graph.add_to_plot(data, '{}\'s {}'.format(self, lbl), xlabel, y_label)
+		Graph.reset_pos()
 
 		return disp
 
 
 # Stores data from a single replay and creates the Algo classes
 class Replay:
-	def __init__(self, fName, algos):
-		self.fname = fName;
+	def __init__(self, f_name, algos):
+		self.fname = f_name;
 		self.ref = None
 		self.turns = {}
-		self.validTurns = []
+		self.valid_turns = []
 
 		self.loadData()				# handles loading all the data from file into python variables
-		self.unpackData(algos)		# stores relevant data after it has been loaded
+		self.unpack_data(algos)		# stores relevant data after it has been loaded
 
 	def __eq__(self, other):
 		return self.fname == other.fname
@@ -466,97 +465,97 @@ class Replay:
 						data['debug']
 						self.ref = data
 					except:
-						turnNum = data['turnInfo'][1]
-						frameNum = data['turnInfo'][2]
-						self.turns[(turnNum, frameNum)] = data
-						if (turnNum, frameNum) not in self.validTurns:
-							self.validTurns.append((turnNum, frameNum))
+						turn_num = data['turnInfo'][1]
+						frame_num = data['turnInfo'][2]
+						self.turns[(turn_num, frame_num)] = data
+						if (turn_num, frame_num) not in self.valid_turns:
+							self.valid_turns.append((turn_num, frame_num))
 
-	def getCoresOnBoard(self, filters, encryptors, destructors):
+	def get_cores_on_board(self, filters, encryptors, destructors):
 		return len(filters) + len(encryptors) * 4 + len(destructors) * 3
 
-	def getBitsSpent(self, algo, spawn):
+	def get_bits_spent(self, algo, spawn):
 		p_index = 1 if algo == self.algo1 else 2
 		pings = [x for x in spawn if x[3] == p_index and x[1] == 3]
 		emps = [x for x in spawn if x[3] == p_index and x[1] == 4]
 		scramblers = [x for x in spawn if x[3] == p_index and x[1] == 5]
 		return len(pings) + len(emps) * 3 + len(scramblers)
 
-	def getCoresSpent(self, algo, spawn):
+	def get_cores_spent(self, algo, spawn):
 		p_index = 1 if algo == self.algo1 else 2
 		filters = [x for x in spawn if x[3] == p_index and x[1] == 0]
 		encryptors = [x for x in spawn if x[3] == p_index and x[1] == 1]
 		destructors = [x for x in spawn if x[3] == p_index and x[1] == 2]
 		return len(filters) + len(encryptors) * 4 + len(destructors) * 3
 
-	def addDataToAlgo(self, algo, t, f, stats, units, spawn):
-		algo.addData(self.fname, t, 'health', stats[0])
-		algo.addData(self.fname, t, 'cores', stats[1])
-		algo.addData(self.fname, t, 'bits', stats[2])
+	def add_data_to_algo(self, algo, t, f, stats, units, spawn):
+		algo.add_data(self.fname, t, 'health', stats[0])
+		algo.add_data(self.fname, t, 'cores', stats[1])
+		algo.add_data(self.fname, t, 'bits', stats[2])
 
 		filters, encryptors, destructors, pings, emps, scramblers, removes = units
 
-		algo.addData(self.fname, t, 'cores_on_board', self.getCoresOnBoard(filters, encryptors, destructors))
+		algo.add_data(self.fname, t, 'cores_on_board', self.get_cores_on_board(filters, encryptors, destructors))
 
 		if f == 0:
-			algo.addData(self.fname, t, 'cores_spent', self.getCoresSpent(algo, spawn), True)
-			algo.addData(self.fname, t, 'bits_spent', self.getBitsSpent(algo, spawn), True)
+			algo.add_data(self.fname, t, 'cores_spent', self.get_cores_spent(algo, spawn), True)
+			algo.add_data(self.fname, t, 'bits_spent', self.get_bits_spent(algo, spawn), True)
 
-	def unpackData(self, algos):
+	def unpack_data(self, algos):
 		try:
-			self.algo1, self.algo2 = self.createAlgos(algos)
+			self.algo1, self.algo2 = self.create_algos(algos)
 
-			for t, f in self.getValidTurns():
-				turn = self.getTurn(t, f)
+			for t, f in self.get_valid_turns():
+				turn = self.get_turn(t, f)
 
-				turnInfo = turn['turnInfo']
+				turn_info = turn['turnInfo']
 				events = turn['events']
 				spawn = events['spawn']
 
-				p1Stats = turn['p1Stats']
-				p1Units = turn['p1Units']
+				p1_stats = turn['p1Stats']
+				p1_units = turn['p1Units']
 
-				p2Stats = turn['p2Stats']
-				p2Units = turn['p2Units']
+				p2_stats = turn['p2Stats']
+				p2_units = turn['p2Units']
 
-				self.addDataToAlgo(self.algo1, t, f, p1Stats, p1Units, spawn)
-				self.addDataToAlgo(self.algo2, t, f, p2Stats, p2Units, spawn)
+				self.add_data_to_algo(self.algo1, t, f, p1_stats, p1_units, spawn)
+				self.add_data_to_algo(self.algo2, t, f, p2_stats, p2_units, spawn)
 
-			self.algo1.recordFinalData(self.fname, self.algo2)
-			self.algo2.recordFinalData(self.fname, self.algo1)
-			self.algo1.addEndStats(self.fname, self.turns[self.validTurns[-1]]['endStats']['player1'])
-			self.algo2.addEndStats(self.fname, self.turns[self.validTurns[-1]]['endStats']['player2'])
+			self.algo1.recored_final_data(self.fname, self.algo2)
+			self.algo2.recored_final_data(self.fname, self.algo1)
+			self.algo1.add_end_stats(self.fname, self.turns[self.valid_turns[-1]]['endStats']['player1'])
+			self.algo2.add_end_stats(self.fname, self.turns[self.valid_turns[-1]]['endStats']['player2'])
 		except Exception as e:
 			sys.stderr.write(str(e))
 
 	# only creates a new algo class if that algo does not already exist. Otherwise data is added to the existing one
-	def createAlgos(self, algos):
-		endStats = self.turns[self.validTurns[-1]]['endStats']
-		p1Algo = endStats['player1']['name']
-		p2Algo = endStats['player2']['name']
+	def create_algos(self, algos):
+		end_stats = self.turns[self.valid_turns[-1]]['endStats']
+		p1_algo = end_stats['player1']['name']
+		p2_algo = end_stats['player2']['name']
 
-		if p1Algo not in algos:
-			algo1 = Algo(p1Algo)
+		if p1_algo not in algos:
+			algo1 = Algo(p1_algo)
 			algos.append(algo1)
 		else:
-			algo1 = algos[algos.index(p1Algo)]
+			algo1 = algos[algos.index(p1_algo)]
 
-		if p2Algo not in algos:
-			algo2 = Algo(p2Algo)
+		if p2_algo not in algos:
+			algo2 = Algo(p2_algo)
 			algos.append(algo2)
 		else:
-			algo2 = algos[algos.index(p2Algo)]
+			algo2 = algos[algos.index(p2_algo)]
 
 		return algo1, algo2
 
-	def getAlgos(self):
+	def get_algos(self):
 		return [self.algo1, self.algo2]
 
-	def getValidTurns(self):
-		return self.validTurns
-	def getTurns(self):
+	def get_valid_turns(self):
+		return self.valid_turns
+	def get_turns(self):
 		return self.turns
-	def getTurn(self, turn, frame=-1):
+	def get_turn(self, turn, frame=-1):
 		return self.turns[(turn, frame)]
 
 # handles opening multiple games (replays)
@@ -565,27 +564,27 @@ class FileHandler:
 		self.replays = []
 		self.algos = []
 
-	def getAlgoWinSummary(self):
-		fillLen = len(max(self.algos, key=lambda e:len(e.name)).name) + 9
+	def get_algo_win_summary(self):
+		fill_len = len(max(self.algos, key=lambda e:len(e.name)).name) + 9
 		rtn = 'Wins by algo:\n|\n'
 		for algo in sorted(self.algos, key=lambda e:-1*e.wins):
-			rtn += '|{: >{fill}} : {}\n'.format(algo.name, algo.wins, fill=fillLen)
+			rtn += '|{: >{fill}} : {}\n'.format(algo.name, algo.wins, fill=fill_len)
 
 		return rtn
 
-	def getReplays(self):
+	def get_replays(self):
 		return self.replays
 
-	def getLastReplay(self):
+	def get_last_replay(self):
 		return self.replays[0] if len(self.replays) > 0 else None
 
-	def getReplay(self, i=0):
+	def get_replay(self, i=0):
 		if i >= len(self.replays):
 			sys.stderr.write("Invalid replay")
 			return None
 		return self.replays[i]
 
-	def __latestReplays(self, num=1, a=False):
+	def __latest_replays(self, num=1, a=False):
 		replay_dir = os.path.dirname(os.path.realpath(__file__)).replace('scripts\\contributions', '')+'replays\\'
 		files = glob.glob('{}*.replay'.format(replay_dir))
 		files = sorted(files, key=os.path.getctime, reverse=True)
@@ -593,18 +592,18 @@ class FileHandler:
 			return files
 		return files[:num]
 
-	def loadFiles(self, num=1, a=False, fNames=[]):
-		if len(fNames) > 0:
-			for fName in fNames:
-				if fName.find('replays') == -1:
-					self.replays.append(Replay('replays/'+fName, self.algos))
+	def load_files(self, num=1, a=False, f_names=[]):
+		if len(f_names) > 0:
+			for f_name in f_names:
+				if f_name.find('replays') == -1:
+					self.replays.append(Replay('replays/'+f_name, self.algos))
 				else:
-					self.replays.append(Replay(fName, self.algos))
+					self.replays.append(Replay(f_name, self.algos))
 		else:
-			for fName in self.__latestReplays(num, a):
-				self.replays.append(Replay(fName, self.algos))
+			for f_name in self.__latest_replays(num, a):
+				self.replays.append(Replay(f_name, self.algos))
 
-	def addPlot(self, lbl):
+	def add_plot(self, lbl):
 		if lbl == 'wins':
 			wins = []
 			lbls = []
@@ -618,77 +617,77 @@ class FileHandler:
 			while len(y_ticks) > 20:
 				y_ticks = [x for x in y_ticks if x % 2 == 0]
 
-			Graph.addBar(y_pos, wins, lbls, y_ticks, '# of Wins', 'Number of Wins per Algo')
+			Graph.add_bar(y_pos, wins, lbls, y_ticks, '# of Wins', 'Number of Wins per Algo')
 		elif lbl == ':':
 			Graph.advance()
 
 
 # displays detailed data for every replay stored in the fileManager fh.
-def run_every_replay_verbose(fh, graphingEnabled, options):
-	for replay in fh.getReplays():
+def run_every_replay_verbose(fh, graphing_enabled, options):
+	for replay in fh.get_replays():
 		sys.stderr.write('{:->75}\n'.format(''))
 		sys.stderr.write('Showing {}\n'.format(replay.fname.split('\\')[-1]))
 		sys.stderr.write('{:->75}\n'.format(''))
 
-		if graphingEnabled:
+		if graphing_enabled:
 			disp = False
 			Graph.init(options['graph_verbose'])
 
 		try:
-			for algo in replay.getAlgos():
-				algo.dispData(options, replay.fname)
+			for algo in replay.get_algos():
+				algo.disp_data(options, replay.fname)
 
-				if graphingEnabled:
-					if algo.addPlot(options['graph_verbose'], replay.fname):
+				if graphing_enabled:
+					if algo.add_plot(options['graph_verbose'], replay.fname):
 						disp = True
 		except Exception as e:
 			sys.stderr.write('Error parsing file\n')
 			sys.stderr.write(str(e)+'\n')
 
 
-		if graphingEnabled:
+		if graphing_enabled:
 			if disp:
 				Graph.show()
 
 		sys.stderr.write('\n')
 
 # displayed aggregate data over many matches and replay files
-def run_every_replay_agg(fh, graphingEnabled, options):
+def run_every_replay_agg(fh, graphing_enabled, options):
 	sys.stderr.write('{:->75}\n'.format(''))
-	sys.stderr.write('Summary of {} matches:\n'.format(len(fh.getReplays())))
+	sys.stderr.write('Summary of {} matches:\n'.format(len(fh.get_replays())))
 	sys.stderr.write('{:->75}\n'.format(''))
-	sys.stderr.write(fh.getAlgoWinSummary())
+	sys.stderr.write(fh.get_algo_win_summary())
 
-	if graphingEnabled:
+	if graphing_enabled:
 		if len(options) == 0:
 			options = ['wins']
 		Graph.init(options)
 		for option in options:
-			fh.addPlot(option)
+			fh.add_plot(option)
 		Graph.show()
 
 # parses the graphing arguments, seperates them into single (v) or multiple (s) results with the ':' delimiter
-def getGraphOptions(options):
+def get_graph_options(options):
 	v = []
 	s = []
 
-	vBreak = False
-	sBreak = False
+	v_break = False
+	s_break = False
 	for o in options:
 		if o in Graph.verbose_options:
 			v.append(o)
-			vBreak = True
+			v_break = True
 		elif o in Graph.summary_options:
 			s.append(o)
-			sBreak = True
+			s_break = True
 		elif o == ':':
-			if vBreak:
+			if v_break:
 				v.append(':')
-			if sBreak:
+			if s_break:
 				s.append(':')
 
-			vBreak = False
-			sBreak = False
+			v_break = False
+			s_break = False
 
 	if len(v) > 0:
 		if v[0] == ':': v.pop(0)
@@ -700,16 +699,16 @@ def getGraphOptions(options):
 	return (v, s)
 
 def main(args):
-	verbose_options, summary_options = getGraphOptions(args['graph'])
+	verbose_options, summary_options = get_graph_options(args['graph'])
 
 	fh = FileHandler()
-	fh.loadFiles(int(args['num']), args['all'], args['file']) #loads the files - all JSON reading is here
+	fh.load_files(int(args['num']), args['all'], args['file']) #loads the files - all JSON reading is here
 
 	# check to see if matplotlib is installed
-	graphingEnabled = True if len(args['graph']) > 0 else False
-	if graphingEnabled and not pltInstalled:
+	graphing_enabled = True if len(args['graph']) > 0 else False
+	if graphing_enabled and not pltInstalled:
 		sys.stderr.write("\n\nWARNING: matplotlib not installed - no graphs will be shown\n\n")
-		graphingEnabled = False
+		graphing_enabled = False
 
 	# these options are passed to let the algo know what to display and add to the plots
 	options = {
@@ -721,17 +720,17 @@ def main(args):
 
 	# checks the arguments to see what inforation should be displayed
 	if args['all']:
-		run_every_replay_verbose(fh, graphingEnabled, options) if args['verbose'] else ''
-		run_every_replay_agg(fh, graphingEnabled, options['graph_summary'])
+		run_every_replay_verbose(fh, graphing_enabled, options) if args['verbose'] else ''
+		run_every_replay_agg(fh, graphing_enabled, options['graph_summary'])
 	elif int(args['num']) == 1:
-		run_every_replay_verbose(fh, graphingEnabled, options)
+		run_every_replay_verbose(fh, graphing_enabled, options)
 	elif int(args['num']) > 1 or len(args['file']) > 0:
-		run_every_replay_verbose(fh, graphingEnabled, options) if args['verbose'] else ''
-		run_every_replay_agg(fh, graphingEnabled, options['graph_summary'])
+		run_every_replay_verbose(fh, graphing_enabled, options) if args['verbose'] else ''
+		run_every_replay_agg(fh, graphing_enabled, options['graph_summary'])
 
 	sys.stderr.write('\n\n')
 
 
 if __name__ == '__main__':
-	args = ParseArgs() # get command line arguments
+	args = parse_args() # get command line arguments
 	main(args)

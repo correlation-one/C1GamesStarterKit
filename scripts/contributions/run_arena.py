@@ -86,7 +86,7 @@ except ImportError as e:
 
 
 # Runs a single game
-def run_single_game(process_command, algo1, algo2, maxNameLen):
+def run_single_game(process_command, algo1, algo2, max_name_len):
 	p = subprocess.Popen(
 		process_command,
 		shell=True,
@@ -97,13 +97,13 @@ def run_single_game(process_command, algo1, algo2, maxNameLen):
 	# daemon necessary so game shuts down if this script is shut down by user
 	p.daemon = 1
 	p.wait()
-	print("{: <30}{: <{fill}}   vs   {}".format('Finished running match:', algo1, algo2, fill=str(maxNameLen)))
+	print("{: <30}{: <{fill}}   vs   {}".format('Finished running match:', algo1, algo2, fill=str(max_name_len)))
 
 	# print (''.join(['{}\n'.format(x) for x in str(output).split('\\r\\n')])[1:])
 	if str(error) != "b''":
 		print ('Error with match - {} {}:\n\tError:\n{}'.format(algo1, algo2, error))
 
-def run_match(arg1='', arg2='', maxNameLen=0):
+def run_match(arg1='', arg2='', max_name_len=0):
 	# Get location of this run file
 	file_dir = os.path.dirname(os.path.realpath(__file__)).replace('\\contributions', '')
 	parent_dir = os.path.join(file_dir, os.pardir)
@@ -140,10 +140,10 @@ def run_match(arg1='', arg2='', maxNameLen=0):
 			trailing_char = "" if algo2.endswith('/') else "/"
 			algo2 = algo2 + trailing_char + "run.sh"
 
-	run_single_game("cd {} && java -jar engine.jar work {} {}".format(parent_dir, algo1, algo2), algo1.split('\\')[-2].replace('algos/',''),  algo2.split('\\')[-2].replace('algos/',''), maxNameLen)
+	run_single_game("cd {} && java -jar engine.jar work {} {}".format(parent_dir, algo1, algo2), algo1.split('\\')[-2].replace('algos/',''),  algo2.split('\\')[-2].replace('algos/',''), max_name_len)
 
 # handles all the arguments
-def ParseArgs():
+def parse_args():
 	ap = argparse.ArgumentParser(add_help=False, formatter_class=argparse.RawTextHelpFormatter)
 	ap.add_argument('-h', '--help', action='help', help='show this help message and exit\n\n')
 	ap.add_argument(
@@ -189,7 +189,7 @@ def run_from_file(filePath):
 		sys.exit()
 
 # returns the number of processess that are active
-def getNumRunning(processes):
+def get_num_running(processes):
 	c = 0
 	for i, proc in processes.items():
 		if proc.is_alive():
@@ -199,7 +199,7 @@ def getNumRunning(processes):
 # starts a subprocess for each match up to batch_size and then starts them as they finish
 def run_matches(matches, batch_size):
 	tmp = copy.deepcopy(matches)
-	maxNameLen = len(max(tmp, key=lambda e:len(e[0]))[0])
+	max_name_len = len(max(tmp, key=lambda e:len(e[0]))[0])
 
 	algos = []
 	processes = {}
@@ -208,17 +208,17 @@ def run_matches(matches, batch_size):
 		algos.append((match[0],match[1]))
 		algo1 = 'algos/{}'.format(match[0])
 		algo2 = 'algos/{}'.format(match[1])
-		processes[i] = mp.Process(target=run_match, args=(algo1, algo2, maxNameLen))
+		processes[i] = mp.Process(target=run_match, args=(algo1, algo2, max_name_len))
 		i += 1
 
 	for i in range(len(processes)):
-		print ('{: <30}{: <{fill}}   vs   {}'.format('Starting match:', algos[i][0], algos[i][1], fill=str(maxNameLen)))
+		print ('{: <30}{: <{fill}}   vs   {}'.format('Starting match:', algos[i][0], algos[i][1], fill=str(max_name_len)))
 		processes[i].start()
 		i += 1
-		while getNumRunning(processes) >= batch_size:
+		while get_num_running(processes) >= batch_size:
 			time.sleep(.1)
 
-	while getNumRunning(processes) > 0:
+	while get_num_running(processes) > 0:
 			time.sleep(.1)
 
 	print ()
@@ -226,7 +226,7 @@ def run_matches(matches, batch_size):
 	print ()
 
 if __name__ == '__main__':
-	args = ParseArgs() # get command line arguments
+	args = parse_args() # get command line arguments
 
 	if args['all']:
 		print ('Running all algos')
