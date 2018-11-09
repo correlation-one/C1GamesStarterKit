@@ -184,8 +184,8 @@ try:
 	plt_installed = True
 except ImportError:
 	try:
-		usrIn = input('Matplotlib not found.\nWould you like this program to try and install matplotlib? (y/n) ')
-		if usrIn.lower() == 'y' or usrIn.lower() == 'yes':
+		usr_in = input('Matplotlib not found.\nWould you like this program to try and install matplotlib? (y/n) ')
+		if usr_in.lower() == 'y' or usr_in.lower() == 'yes':
 			import subprocess
 			subprocess.run(['python', '-m', 'pip', 'install', 'matplotlib'])
 
@@ -334,12 +334,12 @@ class Algo:
 		if type(other) == str:
 			return self.name == other
 		return self.name == other.name
-	def __toString(self):
+	def __string(self):
 		return self.name
 	def __str__(self):
-		return self.__toString()
+		return self.__string()
 	def __repr__(self):
-		return self.__toString()
+		return self.__string()
 
 	def get_average(self, arg, replay):
 		avg = 0.0
@@ -443,19 +443,19 @@ class Replay:
 		self.turns = {}
 		self.valid_turns = []
 
-		self.loadData()				# handles loading all the data from file into python variables
+		self.load_data()				# handles loading all the data from file into python variables
 		self.unpack_data(algos)		# stores relevant data after it has been loaded
 
 	def __eq__(self, other):
 		return self.fname == other.fname
-	def __toString(self):
+	def __string(self):
 		return self.fname
 	def __str__(self):
-		return self.__toString()
+		return self.__string()
 	def __repr__(self):
-		return self.__toString()
+		return self.__string()
 
-	def loadData(self):
+	def load_data(self):
 		with open(self.fname) as f:
 			for line in f:
 				line = line.replace("\n", "")
@@ -698,6 +698,8 @@ def get_graph_options(options):
 	if len(s) > 0:
 		if s[0] == ':': s.pop(0)
 		if s[-1] == ':': s.pop(-1)
+
+	if len(v) > 0 and 'wins' not in s: s.append('wins')
 
 	return (v, s)
 
