@@ -667,12 +667,11 @@ def run_every_replay_agg(fh, graphing_enabled, options):
 	sys.stderr.write(fh.get_algo_win_summary())
 
 	if graphing_enabled:
-		if len(options) == 0:
-			options = ['wins']
 		Graph.init(options)
 		for option in options:
 			fh.add_plot(option)
-		Graph.show()
+		if len(options) > 0:
+			Graph.show()
 
 # parses the graphing arguments, seperates them into single (v) or multiple (s) results with the ':' delimiter
 def get_graph_options(options):
@@ -704,7 +703,7 @@ def get_graph_options(options):
 		if s[0] == ':': s.pop(0)
 		if s[-1] == ':': s.pop(-1)
 
-	if len(v) > 0 and len(s) == 0: s.append('wins')
+	if len(v) == 0 and len(s) == 0: s.append('wins')
 
 	return (v, s)
 
