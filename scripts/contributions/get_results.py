@@ -189,9 +189,14 @@ except ImportError:
 			import subprocess
 			subprocess.run(['python', '-m', 'pip', 'install', 'matplotlib'])
 
-			import matplotlib.pyplot as plt
-			plt_installed = True
-			sys.stderr.write("\n\n")
+			try:
+				import matplotlib.pyplot as plt
+				plt_installed = True
+				sys.stderr.write('\n\n')
+			except ImportError as e:
+				sys.stderr.write('\n\n{}\n\n'.format(str(e)))
+				sys.stderr.write('Failed: Check to make sure you have all dependencies installed.\n\n')
+				sys.exit()
 	except:
 		plt_installed = False
 
@@ -699,7 +704,7 @@ def get_graph_options(options):
 		if s[0] == ':': s.pop(0)
 		if s[-1] == ':': s.pop(-1)
 
-	if len(v) > 0 and 'wins' not in s: s.append('wins')
+	if len(v) > 0 and len(s) == 0: s.append('wins')
 
 	return (v, s)
 
