@@ -95,6 +95,7 @@ try:
 	import warnings
 	import argparse
 	import subprocess
+	import multiprocessing as mp
 except ImportError as e:
 	sys.stderr.write("WARNING: Module not found, full error:\n\n")
 	sys.stderr.write(e)
@@ -147,7 +148,7 @@ def ping_verts(x, y):
 	verts = [(-p2,p1),(-p3,p3),(p1,p2),(p3,p3),(p2,p1),(p3,-p3),(p1,-p2),(-p3,-p3)]
 	return [(a+x, b+y) for (a,b) in verts]
 
-# returns the vertice points to created around a center point x,y for an emp
+# returns the vertice points around a center point x,y for an emp
 def emp_verts(x,y):
 	p1 = 0
 	p2 = .5
@@ -155,7 +156,7 @@ def emp_verts(x,y):
 	verts = [(-p3,p1),(-p2,p2),(p1,p3),(p2,p2),(p3,p1),(p2,-p2),(p1,-p3),(-p2,-p2)]
 	return [(a+x, b+y) for (a,b) in verts]
 
-# returns the vertice points to created around a center point x,y for a scambler
+# returns the vertice points around a center point x,y for a scambler
 def scrambler_verts(x,y):
 	p1 = 0
 	p2 = .35
@@ -1038,7 +1039,8 @@ def run_single_game(process_command):
 		)
 	# daemon necessary so game shuts down if this script is shut down by user
 	p.daemon = 1
-	# don't wait, we need to continue to graph
+	p.wait()
+	print("Finished running match")
 
 def run_match(a1='', a2=''):
 	# Get location of this run file
@@ -1080,7 +1082,8 @@ def run_match(a1='', a2=''):
 	print("Algo 1: ", algo1)
 	print("Algo 2:", algo2)
 
-	run_single_game("cd {} && java -jar engine.jar work {} {}".format(parent_dir, algo1, algo2))
+	match = mp.Process(target=run_single_game, args=("cd {} && java -jar engine.jar work {} {}".format(parent_dir, algo1, algo2),))
+	match.start()
 
 def main(args):
 	global BLIT
@@ -1093,15 +1096,21 @@ def main(args):
 	if args['run_match'][0] != 'empty':
 		# inside here we are now running a match and displaying real-time data
 
-		if len(args['run_match']) > 1: run_match(args['run_match'][0], args['run_match'][1])	# run the match with both algos specified
-		else: run_match(args['run_match'][0])													# run the match with one algo specified
-		time.sleep(1)																			# wait for the replay file to be created
-
-		fh = FileHandler()																		# create a file handler object
-
 		# warn the user about run-time and saving
 		if save != '':
 			print ('\n\nWARNING: You specified a save file, but nothing will be saved since this is running real time. Wait for the match to end.')
+
+		fh = FileHandler()																		# create a file handler object
+		fh.load_files(1,False,args['file'])														# load latest replay
+		previous_replay = str(fh.get_last_replay())												# get the replay that was last created
+
+		if len(args['run_match']) > 1: run_match(args['run_match'][0], args['run_match'][1])	# run the match with both algos specified
+		else: run_match(args['run_match'][0])													# run the match with one algo specified
+
+		# wait to open visualizer until a new replay has been created
+		while str(fh.get_last_replay()) == previous_replay:
+			fh.load_files()
+			time.sleep(.5)
 
 		# keep trying to load the replay file until it is capable of getting data from it - then start the visualizer
 		while True:
