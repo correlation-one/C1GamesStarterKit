@@ -3,13 +3,14 @@
 '''
 ------------------------------------------------------------------------------------------------
 Author: @Isaac
-Last Updated: 12 Nov 2018
+Last Updated: 14 Nov 2018
 Contact: Message @Isaac at https://forum.c1games.com/
 Copyright: CC0 - completely open to edit, share, etc
 
 Short Description: 
 This is a python script to visualize replay files in a similar format to the online version.
 You can also run games and watch them as they play (this is slow).
+Lastly, it allows you to save these visualizations in video format.
 ------------------------------------------------------------------------------------------------
 
 README:
@@ -45,18 +46,6 @@ Blitting will improve the performance of the graphing, but comes at the cost of 
 - If you run the program in real-time the player names will not update (the winner name will be displayed correctly).
 
 ----------------------------------------------------------------------------------------
--s: Save
-
-You can specify if you would like to save the replay in video (.mp4) format.
-This saves a direct copy of what you would see if you ran the program normally.
-
-You must specify the name the file should be saved as (the two below are equivalent):
->py scripts/contributions/watch_replay.py -s awesome_video
->py scripts/contributions/watch_replay.py -s awesome_video.mp4
-
-This may take a while and seem to hang, but it has to go through the entire replay as if you were watching it.
-
-----------------------------------------------------------------------------------------
 -run: Real-time watching
 
 This means you will run and watch a game in real time.
@@ -68,6 +57,118 @@ You can specify the algos you would like to run like normal:
 You cannot save a game if you watch it in real-time.
 The slider will not appear until the game has completed (you can still use the keyboard commands).
 If you use blitting, the player names will not update.
+
+----------------------------------------------------------------------------------------
+-s: Save
+
+You can specify if you would like to save the replay.
+This saves a direct copy of what you would see if you ran the program normally.
+
+You must specify the name the file should be saved as. For example:
+>py scripts/contributions/watch_replay.py -s awesome_video
+
+This may take a while and seem to hang, but it has to go through the entire replay as if you were watching it.
+
+There are three possible file formats to save the replay in: .mp4, .gif, .html
+Two of these formats (.mp4, .gif) have dependencies outside of this script.
+This script will automatically detect the type of encoder (writer) depending on the extension you give unless
+you specify otherwise.
+
+.mp4:
+>py scripts/contributions/watch_replay.py -s awesome_video.mp4
+
+This will run the script and save the replay in .mp4 format, but require the installation of 3rd party software, ffmpeg.
+This runs on ffmpeg, which can be downloaded here: https://www.ffmpeg.org/download.html
+
+As long as you have ffmpeg installed and in your PATH, this format should work.
+This script will let you know if it cannot use it.
+
+
+.gif:
+>py scripts/contributions/watch_replay.py -s awesome_video.gif
+
+This will run the script and save the replay in .gif format, but requires the python module Pillow.
+If you ask for a .gif file this program will ask if you want to install Pillow.
+
+
+.html:
+>py scripts/contributions/watch_replay.py -s awesome_video.html
+
+This one is pretty cool, it will generate a folder (awesome_video_frames) with every single frame
+stored as an image and then generate an html file to view the files in video format.
+
+If you want the individual frames, use this option.
+This option also does not have any dependencies (as far as I know).
+
+
+There are two arguments specific to -s that you can use to specify more with the save option
+
+-------------
+-w: Writers
+
+This specifies the writer to use (which results in the output file format).
+You can specify more than one, and it will create a save for each of the parameters you provide.
+
+For example (these are the same):
+>py scripts/contributions/watch_replay.py -s awesome_video -w pillow
+>py scripts/contributions/watch_replay.py -s awesome_video.gif
+
+But if you wanted to also save it as a .mp4:
+>py scripts/contributions/watch_replay.py -s awesome_video -w pillow ffmpeg
+
+Valid inputs for this are:
+	Writer | File Type
+
+	ffmpeg | .mp4
+	pillow | .gif
+	html   | .html
+
+You can still supply an extension name when you do this, but it will be overwritten (you will be notified):
+For example:
+>py scripts/contributions/watch_replay.py -s awesome_video.mp4 -w pillow ffmpeg
+
+would output (assuming dependencies installed):
+>This may take a little while and seem to hang
+>
+>You used extension .mp4, but .gif is the valid type for pillow. Using .gif:
+>Saving file awesome_video.gif
+>Done saving file: awesome_video.gif
+>
+>Saving file awesome_video.mp4
+>Done saving file: awesome_video.mp4
+
+-------------
+-kt: Keep Trying
+
+This flag changes the behavior of the script if a dependency fails when saving.
+
+By default, if ffmpeg is not accessible the program simply skips it.
+However, if you add the -kt flag it will continue to try the other avalible options.
+
+For example, assuming ffmpeg is not installed:
+>py scripts/contributions/watch_replay.py -s awesome_video.mp4
+
+output:
+>This may take a little while and seem to hang
+>
+>ffmpeg not installed or in PATH, skipping
+
+But with -kt:
+>py scripts/contributions/watch_replay.py -s awesome_video.mp4 -kt
+
+output:
+>This may take a little while and seem to hang
+>
+>ffmpeg not installed or in PATH, skipping
+>
+>You used extension .mp4, but .gif is the valid type for pillow. Using .gif:
+>Saving file awesome_video.gif
+>Done saving file: awesome_video.gif
+
+The default priority order for checking next is ffmpeg, then pillow, and html last.
+If you want to change the order just:
+1. Ctrl-Find in this script:	this is the default order of priority for running a save
+2. Change the order of the list to be the priority you want
 
 ----------------------------------------------------------------------------------------
 
@@ -181,14 +282,23 @@ def parse_args():
 		action='store_true',
 		help="will tell the program to use blit - will improve performance, but you will not be able to see or use the slider and there will be minor text glitches when fast forwarding, etc (you can still use all the keyboard commands)\n\n")
 	ap.add_argument(
-		'-s', '--save',
-		default='',
-		help="specify whether to save replay as an .mp4 file - you must supply a file name (it may take a little while)\n\n")
-	ap.add_argument(
 		'-run', '--run_match',
 		nargs='+',
 		default=['empty'],
 		help="specify whether to watch a replay in real-time (runs a match) - you supply algo names as arguments just like when normally running a match\n\n")
+	ap.add_argument(
+		'-s', '--save',
+		default='',
+		help="specify whether to save replay as an .mp4 file - you must supply a file name (it may take a little while)\n\n")
+	ap.add_argument(
+		'-w', '--writers',
+		nargs='+',
+		default=['empty'],
+		help="specify the type of writer(s) to use (video save format) - flag only works if you are saving a replay\n\nValid Options:\n\t- ffmpeg\n\t- pillow\n\t- html\n\n")
+	ap.add_argument(
+		'-kt', '--keep_trying',
+		action='store_true',
+		help="forces the save file to keep trying different writers until one works - flag only works if you are saving a replay\n\n")
 	return vars(ap.parse_args())
 
 # stores all information for a single unit on the graph
@@ -453,7 +563,7 @@ class Info:
 
 	# adds a data value to the information page (health, cores, etc)
 	def add_data(self, d_dype, p_index, data, fontsize=14):
-		self.lbls.append(self.ax.text(self.x_pos[p_index]+.15, self.y_pos[d_dype], str(data), fontsize=fontsize))
+		self.lbls.append(self.ax.text(self.x_pos[p_index]+.15, self.y_pos[d_dype], str(data), fontsize=fontsize, verticalalignment='bottom', horizontalalignment='left'))
 
 	# clear all dynamic text
 	def clear_info(self):
@@ -566,7 +676,7 @@ class Plot:
 
 # this class contains all information regarding the entire window
 class Graph:
-	def __init__(self, data, frames_in_turn, healths, save='', fh=None):
+	def __init__(self, data, frames_in_turn, healths, writers, keep_trying, save='', fh=None):
 
 		# pretty clear, if no data, raise an Error
 		if len(data) < 1:
@@ -611,9 +721,99 @@ class Graph:
 		if save == '':
 			self.show()
 		else:
-			print ('This may take a little while\nSaving file...')
-			self.anim.save(save)
-			print ('Done saving file')
+			self.save_animation(save, writers, keep_trying)
+
+	# saves all animations passed from the command line
+	def save_animation(self, save_name, writers, keep_trying):
+		print ('This may take a little while and seem to hang')
+
+		# reference dictionaries to converte values based on input
+		ex_to_writer = {'gif':'pillow', 'mp4':'ffmpeg', 'html':'html'}
+		check_writer = {'ffmpeg':self.check_ffmpeg, 'pillow':self.check_pillow, 'html':lambda:True}
+
+		# seperate the file name from the extension
+		try: name, given_ext = save_name.split('.')
+		except ValueError: name, given_ext = save_name, ''
+
+		default = ['ffmpeg', 'pillow', 'html']		# this is the default order of priority for running a save
+
+		# when this block finishes, attempts is a list of possible attempts in order of priority
+		attempts = [ex_to_writer[given_ext]] if given_ext != '' and given_ext in ex_to_writer.keys() else default
+		attempts = attempts if 'empty' in writers else writers
+		attempts = attempts + [w for w in default if w not in attempts] if keep_trying else attempts
+
+		# loop through and save all attempts until input is complete
+		complete = 0
+		for i, writer in enumerate(attempts):
+			try:
+				# if we can create that type of writer, make it
+				print ()
+				if check_writer[writer]():
+					self.create_animation(writer, name, given_ext)
+					complete += 1
+
+				# check and make sure we haven't finished (based on whether we keep trying or not)
+				if len(writers) <= complete: keep_trying = False
+				else: keep_trying = True
+
+				if not keep_trying: break
+			except KeyError:
+				print ('{} is not a valid writer. Options are:\n\t- ffmpeg  (for .mp4 videos)\n\t- pillow  (for gifs)\n\t- html    (for browser view and individual frames)'.format(writer))
+
+	# creates an animation of a writer type
+	def create_animation(self, writer, name, given_ext):
+		extension = self.get_extension(writer, given_ext)
+		print ('Saving file {}.{}'.format(name, extension))
+		try:
+			# self.anim.save('{}.{}'.format(name, extension), writer=writer)
+			print ('Done saving file: {}.{}'.format(name, extension))
+		except Exception as e:
+			print ('Unknown error. Full Output:')
+			print (str(e))
+
+	# returns the extension that must be used for the appropriate writer
+	def get_extension(self, writer, given_ext):
+		extensions = {'pillow':'gif', 'ffmpeg':'mp4', 'html':'html'}
+		if given_ext != extensions[writer] and given_ext != '':
+			print ('You used extension .{0}, but .{2} is the valid type for {1}. Using .{2}:'.format(given_ext, writer, extensions[writer]))
+
+		return extensions[writer]
+
+	# confirms whether ffmpeg is avaliable as a writer
+	def check_ffmpeg(self):
+		ffmpeg_process = subprocess.Popen('ffmpeg', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+		_,err = ffmpeg_process.communicate()
+		err = str(err).replace("b'",'').replace('b"','').replace('"','').replace("'",'').replace('\\n','').replace('\\r','').replace('\\','').replace('"','')
+
+		# covers both Ubuntu and Windows users (fingers-crossed)
+		# if anyone knows a better way to check for ffmpeg let me know, or add it here :)
+		if err == 'ffmpeg is not recognized as an internal or external command,operable program or batch file.':
+			print ('ffmpeg not installed or in PATH, skipping')
+			return False
+		elif err.find('Command ffmpeg not found') != -1:
+			print ('ffmpeg not installed or in PATH, skipping')
+			return False
+		return True
+
+	# confirms whether pillow is avaliable as a writer and offers to import it if not
+	def check_pillow(self):
+		try:
+			import PIL
+			return True
+		except ImportError:
+			usr_in = input('Pillow not found.\nWould you like this program to try and install Pillow? (y/n) ')
+			if usr_in.lower() == 'y' or usr_in.lower() == 'yes':
+				subprocess.run(['python', '-m', 'pip', 'install', 'Pillow'])
+
+				try:
+					import PIL
+					print ()
+					return True
+				except ImportError as e:
+					sys.stderr.write('\n\n{}\n\n'.format(str(e)))
+					sys.stderr.write('Failed to import Pillow.\n\n')
+					return False
+			return False
 
 	# extension of __init__(), called every frame when real-time
 	def general_init(self, data, frames_in_turn, healths):
@@ -1089,9 +1289,8 @@ def main(args):
 	global BLIT
 	BLIT = args['blit']				# get whether blit is enabled
 	save = args['save']				# get whether  save is enabled
-	if save != '':
-		if save[-4:] != '.mp4':
-			save = save + '.mp4'	# check .mp4 file ending
+	writers = args['writers']		# get save modes
+	keep_trying = args['keep_trying']		# get whether to keep trying writer types
 
 	if args['run_match'][0] != 'empty':
 		# inside here we are now running a match and displaying real-time data
@@ -1099,6 +1298,10 @@ def main(args):
 		# warn the user about run-time and saving
 		if save != '':
 			print ('\n\nWARNING: You specified a save file, but nothing will be saved since this is running real time. Wait for the match to end.')
+		elif 'empty' not in writers:
+			print ('\n\nWARNING: You specified a writer mode, but nothing will be saved since this is running real time. Wait for the match to end.')
+		elif keep_trying:
+			print ('\n\nWARNING: You specified keep trying writers, but nothing will be saved since this is running real time. Wait for the match to end.')
 
 		fh = FileHandler()																		# create a file handler object
 		fh.load_files(1,False,args['file'])														# load latest replay
@@ -1117,20 +1320,28 @@ def main(args):
 			try:
 				fh.load_files(1,False,args['file'])
 				replay = fh.get_last_replay()
-				animatedReplay = Graph(replay.frames, replay.frames_in_turn, replay.healths, fh=fh)		# create our Graph object
+				animatedReplay = Graph(replay.frames, replay.frames_in_turn, replay.healths, writers, keep_trying, fh=fh)		# create our Graph object
 				break
 			except RuntimeError:																		# we raised this error when data was nothing in Graph init()
 				time.sleep(.5)
 	else:
 		# here we know the replay file is already created an finished
 
+		# warn the user about saving
+		if save == '' and 'empty' not in writers:
+			print ('You specified a writer type, but it will not be used since you are not saving the animation')
+		elif save == '' and keep_trying:
+			print ('You specified to keep trying writers, but it will not be used since you are not saving the animation')
+
 		fh = FileHandler()																			# create a file handler object
 		fh.load_files(1,False,args['file'])															# load latest replay
 		replay = fh.get_last_replay()																# get latest replay
 
-		animatedReplay = Graph(replay.frames, replay.frames_in_turn, replay.healths, save=save)		# create our Graph object
+		animatedReplay = Graph(replay.frames, replay.frames_in_turn, replay.healths, writers, keep_trying, save=save)		# create our Graph object
 
 
 if __name__ == '__main__':
 	args = parse_args() # get command line arguments
 	main(args)			# run program
+	# print (animation.writers.list())
+
