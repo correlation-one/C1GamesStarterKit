@@ -765,7 +765,7 @@ class Graph:
 		extension = self.get_extension(writer, given_ext)
 		print ('Saving file {}.{}'.format(name, extension))
 		try:
-			# self.anim.save('{}.{}'.format(name, extension), writer=writer)
+			self.anim.save('{}.{}'.format(name, extension), writer=writer)
 			print ('Done saving file: {}.{}'.format(name, extension))
 		except Exception as e:
 			print ('Unknown error. Full Output:')
