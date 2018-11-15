@@ -13,6 +13,9 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '2.0.4'
 }
 
+sourceCompatibility = JavaVersion.VERSION_1_10
+targetCompatibility = JavaVersion.VERSION_1_10
+
 // Define the main class for the application
 mainClassName = 'com.c1games.terminal.starteralgo.StarterAlgo'
 
@@ -33,7 +36,7 @@ shadowJar {
 // Copy the fat jar into the project root so that the terminal servers can find it
 task relocateJar(type: Copy, group: "Custom", description: "Copies algo.jar from build/libs to the project root") {
   from "build/libs/algo.jar"
-  into "algo"
+  into "algo-target"
 }
 build.finalizedBy(relocateJar)
 
