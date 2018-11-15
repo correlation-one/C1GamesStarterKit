@@ -1206,7 +1206,7 @@ class FileHandler:
 		return self.replays[i]
 
 	def __latest_replays(self, num=1, a=False):
-		replay_dir = os.path.dirname(os.path.realpath(__file__)).replace('scripts\\contributions', '')+'replays\\'
+		replay_dir = '{}/../../replays/'.format(os.path.dirname(os.path.realpath(__file__)))
 		files = glob.glob('{}*.replay'.format(replay_dir))
 		files = sorted(files, key=os.path.getctime, reverse=True)
 		if a:
@@ -1245,15 +1245,14 @@ def run_single_game(process_command):
 def run_match(a1='', a2=''):
 	# Get location of this run file
 	file_dir = os.path.dirname(os.path.realpath(__file__))
-	parent_dir = os.path.join(file_dir, os.pardir).replace('\\scripts', '')
-	parent_dir = os.path.abspath(parent_dir)
+	parent_dir = os.path.abspath('{}/..'.format(os.path.join(file_dir, os.pardir)))
 
 	# Get if running in windows OS
 	is_windows = sys.platform.startswith('win')
 	print("Is windows: {}".format(is_windows))
 
 	# Set default path for algos if script is run with no params
-	default_algo = parent_dir + "\\algos\\starter-algo-ZIPME\\run.ps1" if is_windows else parent_dir + "/algos/starter-algo-ZIPME/run.sh" 
+	default_algo = parent_dir + "/algos/starter-algo-ZIPME/run.ps1" if is_windows else parent_dir + "/algos/starter-algo-ZIPME/run.sh" 
 	algo1 = default_algo
 	algo2 = default_algo
 
@@ -1266,10 +1265,10 @@ def run_match(a1='', a2=''):
 	# trailing_char deals with if there is a trailing \ or / or not after the directory name
 	if is_windows:
 		if "run.ps1" not in algo1:
-			trailing_char = "" if algo1.endswith("\\") else "\\"
+			trailing_char = "" if algo1.endswith("\\") else "/"
 			algo1 = algo1 + trailing_char + "run.ps1"
 		if "run.ps1" not in algo2:
-			trailing_char = "" if algo2.endswith("\\") else "\\"
+			trailing_char = "" if algo2.endswith("\\") else "/"
 			algo2 = algo2 + trailing_char + "run.ps1"
 	else:
 		if "run.sh" not in algo1:
@@ -1344,4 +1343,3 @@ if __name__ == '__main__':
 	args = parse_args() # get command line arguments
 	main(args)			# run program
 	# print (animation.writers.list())
-
