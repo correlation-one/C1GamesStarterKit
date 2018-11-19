@@ -34,7 +34,7 @@ pub fn run_game_loop(mut game_loop: impl GameLoop) -> ! {
     let (config, atlas) = io.config().expect("Config error");
     game_loop.initialize(config.clone());
     loop {
-        let frame = io.next_turn_frame().expect("Frame error");
+        let frame = io.next_frame_any_type().expect("Frame error");
         match frame.turn_info.phase() {
             Phase::Deploy => {
                 let mut move_builder = Map::new(config.clone(), frame)
