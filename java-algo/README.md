@@ -127,6 +127,9 @@ your algo, you will have to modify the `mainClassName` in the `build.gradle` fil
 
     // Define the main class for the application
     mainClassName = 'com.c1games.terminal.starteralgo.StarterAlgo'
+    
+If you change your build process such that you are no longer building to the directory `algo-target`, you can
+configure the path which will be packaged with the `compile-target` field in `algo.json`.
 
 ### Unit tests
 
