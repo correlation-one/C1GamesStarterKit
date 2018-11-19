@@ -13,6 +13,10 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '2.0.4'
 }
 
+// This is necessary for successful compilation on our servers
+sourceCompatibility = JavaVersion.VERSION_1_10
+targetCompatibility = JavaVersion.VERSION_1_10
+
 // Define the main class for the application
 mainClassName = 'com.c1games.terminal.starteralgo.StarterAlgo'
 
