@@ -145,6 +145,9 @@ When you upload your algo to our servers, they will compile your code, and move 
 the name `algo`. Any file in the `algo-target` directory at that point, will be accessible when your algo runs. `algo-target`
 comes with a `run.sh` script, the entry point to all algos. You probably don't need to modify that.
 
+If you ever change your build process such that you wish to build to some other directory than `algo-target`, you can simply 
+change the target path in the `compile-target` field of `algo.json`.
+
 ### Code Patterns
 
 Idiomatic Rust code is often able to use the type system and borrow checker to minimize points of runtime failure, and then use 
