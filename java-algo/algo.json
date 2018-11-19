@@ -1,3 +1,6 @@
 {
-  "language": "java"
+  "language": "java",
+  "java-specific": {
+    "compile-target": "algo-target"
+  }
 }
