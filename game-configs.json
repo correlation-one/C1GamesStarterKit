@@ -4,8 +4,8 @@
     "printTStrings":false,
     "printActStrings":false,
     "printHitStrings":false,
-    "printPlayerInputStrings":true,
-    "printBotErrors":true,
+    "printPlayerInputStrings":false,
+    "printBotErrors":false,
     "printPlayerGetHitStrings":false
   },
   "unitInformation":[
@@ -14,7 +14,7 @@
       "cost":1.0,
       "getHitRadius":0.51,
       "display":"Filter",
-      "range":0.0,
+      "range":3.0,
       "shorthand":"FF",
       "stability":60.0
     },
@@ -87,7 +87,9 @@
     "playWaitTimeBotSoft":10000,
     "replaySave":1,
     "playReplaySave":0,
-    "storeBotTimes":true
+    "storeBotTimes":true,
+    "waitTimeStartGame":3000,
+    "waitTimeEndGame":3000
   },
   "resources":{
     "turnIntervalForBitCapSchedule":10,
