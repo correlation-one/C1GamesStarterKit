@@ -87,7 +87,9 @@
     "playWaitTimeBotSoft":10000,
     "replaySave":1,
     "playReplaySave":0,
-    "storeBotTimes":true
+    "storeBotTimes":true,
+    "waitTimeStartGame":3000,
+    "waitTimeEndGame":3000
   },
   "resources":{
     "turnIntervalForBitCapSchedule":10,
