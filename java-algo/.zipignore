@@ -1,0 +1,4 @@
+*.jar
+*/build/*
+*/out/*
+*/.git/*
