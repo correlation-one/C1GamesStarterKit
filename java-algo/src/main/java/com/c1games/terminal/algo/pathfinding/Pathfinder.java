@@ -2,7 +2,7 @@ package com.c1games.terminal.algo.pathfinding;
 
 import com.c1games.terminal.algo.Coords;
 import com.c1games.terminal.algo.map.MapBounds;
-import com.c1games.terminal.algo.map.MoveBuilder;
+import com.c1games.terminal.algo.map.GameState;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -36,12 +36,12 @@ public class Pathfinder {
     private static final int DIRECTION_HORIZONTAL = 1;
     private static final int DIRECTION_VERTICAL = 2;
 
-    private final MoveBuilder board;
+    private final GameState board;
     private final Coords start;
     private final int movementDirection;
     private final Node[][] grid;
 
-    public Pathfinder(MoveBuilder board, Coords start, int movementDirection) throws IllegalPathStartException {
+    public Pathfinder(GameState board, Coords start, int movementDirection) throws IllegalPathStartException {
         if (!MapBounds.inArena(start))
             throw new IllegalPathStartException(IllegalPathStart.OutsideOfArena);
         if (board.getWallAt(start) != null)

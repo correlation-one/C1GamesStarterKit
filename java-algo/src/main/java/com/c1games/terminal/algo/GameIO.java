@@ -1,6 +1,6 @@
 package com.c1games.terminal.algo;
 
-import com.c1games.terminal.algo.map.MoveBuilder;
+import com.c1games.terminal.algo.map.GameState;
 
 import java.io.PrintStream;
 
@@ -36,7 +36,7 @@ public interface GameIO {
     /**
      * Wait for the next turn frame, and then use it to construct a move builder.
      */
-    MoveBuilder nextMoveBuilder();
+    GameState nextMoveBuilder();
 
     /**
      * Wait for the next frame data from the engine for any type. There are several frames per turn. Many algos will prefer to call nextTurnFrame.
@@ -55,5 +55,5 @@ public interface GameIO {
     /**
      * Given a set of moves created by a move buider, submit those to the engine as our actions for this turn.
      */
-    void submitTurn(MoveBuilder builder);
+    void submitTurn(GameState builder);
 }
