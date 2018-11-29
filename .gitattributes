@@ -3,3 +3,5 @@
 *.jar binary
 
 *.exe binary
+
+* binary
