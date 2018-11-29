@@ -5,10 +5,9 @@ import com.c1games.terminal.algo.Coords;
 import com.c1games.terminal.algo.GameIO;
 import com.c1games.terminal.algo.io.GameLoop;
 import com.c1games.terminal.algo.io.GameLoopDriver;
+import com.c1games.terminal.algo.map.GameState;
 import com.c1games.terminal.algo.map.MapBounds;
-import com.c1games.terminal.algo.map.MoveBuilder;
 import com.c1games.terminal.algo.units.UnitType;
-import com.c1games.terminal.pathtest.PathTest;
 
 import java.util.*;
 
@@ -69,7 +68,7 @@ public class StarterAlgo implements GameLoop {
      * Make a move in the game.
      */
     @Override
-    public void makeMove(GameIO io, MoveBuilder move) {
+    public void onTurn(GameIO io, GameState move) {
         buildC1Logo(move);
         buildDefenses(move);
         deployAttackers(move);
@@ -78,7 +77,7 @@ public class StarterAlgo implements GameLoop {
     /**
      * Make the C1 logo.
      */
-    private void buildC1Logo(MoveBuilder move) {
+    private void buildC1Logo(GameState move) {
         move.attemptSpawnMultiple(Arrays.asList(firewallLocationsC), UnitType.Filter);
         move.attemptSpawnMultiple(Arrays.asList(firewallLocations1), UnitType.Filter);
         move.attemptSpawnMultiple(Arrays.asList(firewallLocationsDots), UnitType.Destructor);
@@ -87,7 +86,7 @@ public class StarterAlgo implements GameLoop {
     /**
      * Once the C1 logo is made, attempt to build some defenses.
      */
-    private void buildDefenses(MoveBuilder move) {
+    private void buildDefenses(GameState move) {
         /*
         First lets protect ourselves a little with destructors.
          */
@@ -127,7 +126,7 @@ public class StarterAlgo implements GameLoop {
     /**
      * Deploy offensive units.
      */
-    private void deployAttackers(MoveBuilder move) {
+    private void deployAttackers(GameState move) {
         /*
         First lets check if we have 10 bits, if we don't we lets wait for
         a turn where we do.

@@ -26,7 +26,7 @@ is_windows = sys.platform.startswith('win')
 print("Is windows: {}".format(is_windows))
 
 # Set default path for algos if script is run with no params
-default_algo = parent_dir + "\\algos\\starter-algo-ZIPME\\run.ps1" if is_windows else parent_dir + "/algos/starter-algo-ZIPME/run.sh" 
+default_algo = parent_dir + "\\python-algo\\run.ps1" if is_windows else parent_dir + "/python-algo/run.sh"
 algo1 = default_algo
 algo2 = default_algo
 

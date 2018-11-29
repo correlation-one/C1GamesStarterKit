@@ -3,7 +3,7 @@ package com.c1games.terminal.algo.io;
 import com.c1games.terminal.algo.Config;
 import com.c1games.terminal.algo.FrameData;
 import com.c1games.terminal.algo.GameIO;
-import com.c1games.terminal.algo.map.MoveBuilder;
+import com.c1games.terminal.algo.map.GameState;
 
 /**
  * Code that accepts some @code GameLoop object and runs it for the duration of the game.
@@ -27,12 +27,12 @@ public class GameLoopDriver implements Runnable {
             FrameData frame = io.nextFrameAnyType();
             if (frame.turnInfo.phase == FrameData.TurnInfo.Phase.Action) {
                 // invoke action frame handler
-                MoveBuilder move = new MoveBuilder(config, frame);
+                GameState move = new GameState(config, frame);
                 loop.onActionFrame(io, move);
             } else if (frame.turnInfo.phase == FrameData.TurnInfo.Phase.Deploy) {
                 // invoke the move handler and then submit the move builder
-                MoveBuilder move = new MoveBuilder(config, frame);
-                loop.makeMove(io, move);
+                GameState move = new GameState(config, frame);
+                loop.onTurn(io, move);
                 io.submitTurn(move);
             } else {
                 // game over, exit

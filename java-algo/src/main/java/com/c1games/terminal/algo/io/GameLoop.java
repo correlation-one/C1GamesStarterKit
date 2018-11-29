@@ -1,9 +1,8 @@
 package com.c1games.terminal.algo.io;
 
 import com.c1games.terminal.algo.Config;
-import com.c1games.terminal.algo.FrameData;
 import com.c1games.terminal.algo.GameIO;
-import com.c1games.terminal.algo.map.MoveBuilder;
+import com.c1games.terminal.algo.map.GameState;
 
 /**
  * An interface for a simple, single-threaded game loop, which the user can implement and then plug into a
@@ -21,11 +20,11 @@ public interface GameLoop {
      * to process this. This move builder is only used for random access to the map, and will not actually be
      * submitted.
      */
-    default void onActionFrame(GameIO io, MoveBuilder move) {}
+    default void onActionFrame(GameIO io, GameState move) {}
 
     /**
      * Callback for configuring a movebuilder each action frame, which the game loop driver will then submit as
      * a turn.
      */
-    void makeMove(GameIO io, MoveBuilder move);
+    void onTurn(GameIO io, GameState move);
 }

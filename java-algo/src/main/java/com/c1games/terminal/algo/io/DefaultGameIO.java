@@ -3,7 +3,7 @@ package com.c1games.terminal.algo.io;
 import com.c1games.terminal.algo.Config;
 import com.c1games.terminal.algo.FrameData;
 import com.c1games.terminal.algo.GameIO;
-import com.c1games.terminal.algo.map.MoveBuilder;
+import com.c1games.terminal.algo.map.GameState;
 import com.c1games.terminal.algo.map.SpawnCommand;
 import com.c1games.terminal.algo.units.UnitTypeAtlas;
 import com.google.gson.Gson;
@@ -78,8 +78,8 @@ public class DefaultGameIO implements GameIO {
     }
 
     @Override
-    public MoveBuilder nextMoveBuilder() {
-        return new MoveBuilder(config(), nextTurnFrame());
+    public GameState nextMoveBuilder() {
+        return new GameState(config(), nextTurnFrame());
     }
 
     @Override
@@ -88,7 +88,7 @@ public class DefaultGameIO implements GameIO {
     }
 
     @Override
-    public void submitTurn(MoveBuilder builder) {
+    public void submitTurn(GameState builder) {
         // serialize and send to stdout
         for (List<SpawnCommand> commands : builder.getSpawnCommands()) {
             String line = spawnCommandGson.toJson(commands);

@@ -1,11 +1,9 @@
 package com.c1games.terminal.pathtest;
 
 import com.c1games.terminal.algo.Coords;
-import com.c1games.terminal.algo.GameIO;
 import com.c1games.terminal.algo.io.DefaultGameIO;
-import com.c1games.terminal.algo.map.MoveBuilder;
+import com.c1games.terminal.algo.map.GameState;
 import com.c1games.terminal.algo.serialization.JsonDeserializeClassFromTuple;
-import com.c1games.terminal.algo.serialization.JsonSerializeClassToTuple;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -17,7 +15,7 @@ public class PathTest {
     public static void main(String[] args) throws IOException {
         DefaultGameIO io = new DefaultGameIO();
         while (true) {
-            MoveBuilder move = io.nextMoveBuilder();
+            GameState move = io.nextMoveBuilder();
             Gson gson = new GsonBuilder()
                     .registerTypeAdapter(Coords.class, new JsonDeserializeClassFromTuple<>(Coords.class, () -> new Coords(0, 0)))
                     .create();
