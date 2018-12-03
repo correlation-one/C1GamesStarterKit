@@ -31,7 +31,7 @@ The are three callbacks for `GameLoop` which you must implement:
 
     fn on_action_frame(&mut self, config: Arc<Config>, map: Map);
 
-    fn make_move(&mut self, config: Arc<Config>, move_builder: &mut MoveBuilder);
+    fn make_move(&mut self, config: Arc<Config>, state: &mut GameState);
 ```
 The `initialize` callback is called once, at the beginning of the game, with the `Config` data 
 that this algo has received and deserialized from the game engine.
@@ -41,13 +41,15 @@ and random-access representation of the state of the game that frame. The `Map` 
 the deserialized frame data for this frame, including player stats.
 
 The `make_move` callback is called every turn frame, and is given mutable access to a 
-`MoveBuilder`. The `MoveBuilder` contains a `Map`, and is able to mutate the `Map` by making valid
-moves, such as spawning and removing units. The `MoveBuilder` records each spawn command that is
+`GameState`. The `GameState` contains a `Map`, and is able to mutate the `Map` by making valid
+moves, such as spawning and removing units. The `GameState` records each spawn command that is
 used to mutate it, and when `make_move` returns, those spawn commands will be submitted to the engine.
 
 **The standard output is used to communicate with the game engine, and must not be printed to.**
 For this reason, debugging must be done through `eprintln!`, and never `println!`. The standard
 error messages are available on the playground.
+
+Some people may find the `stderrlog` logging backend crate useful for this purpose.
 
 ### Example algo
 ```rust
@@ -69,20 +71,20 @@ error messages are available on the playground.
         fn on_action_frame(&mut self, _: Arc<Config>, _: Map) {}
     
         // callback to make a move in the game
-        fn make_move(&mut self, _: Arc<Config>, move_builder: &mut MoveBuilder) {
+        fn make_move(&mut self, _: Arc<Config>, state: &mut GameState) {
             // try to place as many of four filters as possible
             let wall_locations = [xy(12, 5), xy(13, 5), xy(14, 5), xy(15, 5)];
-            move_builder.attempt_spawn_multiple(&wall_locations, FirewallUnitType::Filter).unwrap();
+            state.attempt_spawn_multiple(&wall_locations, FirewallUnitType::Filter).unwrap();
     
             // try to atomically place four pings in two locations
             {
-                let [mut cell1, mut cell2] = all_builder_cells!(move_builder, xy(6, 7), xy(21, 7)).unwrap();
-                if cell1.can_spawn(InfoUnitType::Ping, 2).affirmative() &&
-                    cell2.can_spawn(InfoUnitType::Ping, 2).affirmative() {
+                let [mut tile1, mut tile2] = all_state_tiles!(state, xy(6, 7), xy(21, 7)).unwrap();
+                if tile1.can_spawn(InfoUnitType::Ping, 2).affirmative() &&
+                    tile2.can_spawn(InfoUnitType::Ping, 2).affirmative() {
                     for _ in 0..2 {
-                        cell1.spawn(InfoUnitType::Ping)
+                        tile1.spawn(InfoUnitType::Ping)
                             .expect("Unexpected spawn failure");
-                        cell2.spawn(InfoUnitType::Ping)
+                        tile2.spawn(InfoUnitType::Ping)
                             .expect("Unexpected spawn failure");
                     }
                 }
@@ -90,15 +92,15 @@ error messages are available on the playground.
     
             // if our cores are low, try to delete a firewall
             {
-                if move_builder.map().data().p1_stats.cores() < 5.0 &&
-                    move_builder.cell(xy(5, 5)).unwrap().can_remove_firewall().affirmative() {
-                    move_builder.cell(xy(5, 5)).unwrap().remove_firewall().unwrap();
+                if state.map().data().p1_stats.cores() < 5.0 &&
+                    state.tile(xy(5, 5)).unwrap().can_remove_firewall().affirmative() {
+                    state.tile(xy(5, 5)).unwrap().remove_firewall().unwrap();
                 }
             }
     
             // print the path that an enemy unit would take if spawned at a particular location
             {
-                let move_from = move_builder.cell(xy(13, 27)).unwrap();
+                let move_from = state.tile(xy(13, 27)).unwrap();
                 if move_from.get_wall().is_none() {
                     let path = move_from.pathfind(MapEdge::BottomRight).unwrap();
                     eprintln!("Path from [13, 27] = {:?}", path);
@@ -128,9 +130,12 @@ Rust's `algo.json` file can have these fields:
 ```rust
 {
   "language": "rust",
-  "release": false,
-  "package": "starter-algo",
-  "toolchain": "stable"
+  "rust-specific": {
+    "release": false,
+    "package": "starter-algo",
+    "toolchain": "stable",
+    "compile-target": "algo-target"
+  }
 }
 ```
 
@@ -140,6 +145,7 @@ Rust's `algo.json` file can have these fields:
     - change this if you implement your strategy in a new package
 - toolchain: which rust toolchain to compile with
     - can be stable, beta, or nightly
+- compile-target: the directory which will be compiled to, then bundled
     
 When you upload your algo to our servers, they will compile your code, and move the binary into the `algo-target` directory with 
 the name `algo`. Any file in the `algo-target` directory at that point, will be accessible when your algo runs. `algo-target`
@@ -169,7 +175,7 @@ The `units` module contains several different types, each of which has variants 
 - `UnitType`: an enum over all unit types, including remove
 - `FirewallUnitType`: an enum over all firewall unit types
 - `InfoUnitType`: an enum over all info unit types
-- `RemoveUnitType`: a unit-like struct denoting the remove unit type
+- `RemoveUnitType`: a `()`-like struct denoting the remove unit type
 - `SpawnableUnitType`: a union of `FirewallUnitType` and `InfoUnitType`
 
 These types are convertible into each other, both fallibly and infallibly, through the `Into` trait. For example, 
@@ -182,27 +188,27 @@ any `InfoUnitType` or `FirewallUnitType`, but never a `RemoveUnitType`.
 
 #### Tile
 
-Any operation on a specific tile of a `Map` or `MoveBuilder` could potentially fail if the tile coordinates were invalid.
+Any operation on a specific tile of a `Map` or `GameState` could potentially fail if the tile coordinates were invalid.
 This failure isolated and handled up-front through use of the `MapTile` trait.
 
 ```rust
     trait MapTile
     ├--struct MapReadTile<'a>
-    └--struct BuilderTile<'a>
+    └--struct StateTile<'a>
 ```
 
-The `MapReadTile` and `BuilderTile` borrow from a `Map` and `MoveBuilder`, and also contain a valid coordinate. These structs 
+The `MapReadTile` and `StateTile` borrow from a `Map` and `GameState`, respectively, and also contain some valid coordinate. These structs 
 are borrowed out from the underlying structure, and the underlying structure will refuse to borrow out invalid tiles, by
-returning, for example, an `Option<BuilderTile<>`. Both tile types can be used to perform queries on the game state at that 
+returning, for example, an `Option<BuilderTile>`. Both tile types can be used to perform queries on the game state at that 
 tile, and the `BuilderTile` can additionally be used to place and remove units at that tile.
 
 An example use case:
 
 ```rust
-move_builder.tile(xy(14, 0)).unwrap().attempt_spawn(InfoUnitType::Ping);
+state.tile(xy(14, 0)).unwrap().attempt_spawn(InfoUnitType::Ping);
 ```
 
-The `MoveBuilder` is asked to borrow out a `BuilderTile` at the coordinate `14, 0`, which is constructed through the `xy` function.
+The `GameState` is asked to borrow out a `BuilderTile` at the coordinate `14, 0`, which is constructed through the `xy` function.
 The `Option<BuilderTile>` is unwrapped, explicitly and quickly panicking if that tile is not valid. Then, the `BuilderTile` 
 is used to attempt to spawn a ping, given a paramter of the type `impl Into<SpawnableUnitType>`. The `attempt_spawn` function 
 is okay with failing, so it returns a `bool`, unlike the `spawn` function, which returns a `Result<(), CanSpawn>`.
@@ -210,24 +216,24 @@ is okay with failing, so it returns a `bool`, unlike the `spawn` function, which
 ### Convenience functions
 
 Because this tile pattern can be verbose, there are convenience functions for spawning, or attempting to spawn, multiple units.
-These functions live in the `MoveBuilder` itself, not in a borrowed-out tile. For example, the `MoveBuilder` function:
+These functions live in the `GameState` itself, not in a borrowed-out tile. For example, the `GameState` function:
 
 ```rust
 pub fn attempt_spawn_multiple(&mut self, coords: &[Coords],
                               unit_type: impl Into<SpawnableUnitType>) -> Result<u32, InvalidTile>
 ```
 
-### Simultaneous `BuilderTile` borrowing
+### Simultaneous `StateTile` borrowing
 
-A `BuilderTile` mutably borrows from a `MoveBuilder`. As such, Rust will try to prevent you from simultaneously borrowing out
+A `StateTile` mutably borrows from a `GameState`. As such, Rust will try to prevent you from simultaneously borrowing out
 multiple `BuilderTile`s at a time, for fear of borrowing the same tile simultaneously, and causing a concurrent modification
 bug or a race condition.
 
-The `algo` package does have code which allows for the simultaneous borrowing of multiple `BuilderTile`s from a single `MoveBuilder`,
+The `algo` package does have code which allows for the simultaneous borrowing of multiple `BuilderTile`s from a single `GameState`,
 using a runtime check to prevent borrowing out the same tile twice simultaneously. The easiest way to access this API is through 
 two macros.
 
-The `multiple_builder_tiles!` macro accepts a move builder, then several coordinates, and expresses an
+The `multiple_state_tiles!` macro accepts a move builder, then several coordinates, and expresses an
 array of `Option<BuilderTile>`. The array is fixed-size, and equal in length to the number of coordinates given to the macro.
 A particular tile will be `None` if it is an invalid tile, or borrowed twice.
 
@@ -237,8 +243,8 @@ macro_rules! multiple_builder_tiles {
 }
 ```
 
-The `all_builder_tiles!` macro works similarly, and accepts the same types of parameters. However, it will fail if any of the 
-tile acquisitions fail. It expresses a `Result<[BuilderTile; N], GetMultipleBuilderTilesError>`.
+The `all_state_tiles!` macro works similarly, and accepts the same types of parameters. However, it will fail if any of the 
+tile acquisitions fail. It expresses a `Result<[BuilderTile; N], GetMultipleStateError>`.
 
 ```rust
 macro_rules! all_builder_tiles {
@@ -248,10 +254,10 @@ macro_rules! all_builder_tiles {
 
 An example use case:
 ```rust
-let [mut cell1, mut cell2] = all_builder_tiles!(move_builder, xy(6, 7), xy(21, 7)).unwrap();
+let [mut cell1, mut cell2] = all_builder_tiles!(state, xy(6, 7), xy(21, 7)).unwrap();
 ```
 
-The `MoveBuilder` is asked to borrow out two coordinates. The `Result` is unwrapped, explicitly and quickly panicking if 
-any tile is not valid. Then, the array of `BuilderTile`s is bound to an fixed size array pattern with a let binding.
+The `GameState` is asked to borrow out two coordinates. The `Result` is unwrapped, explicitly and quickly panicking if 
+any tile is not valid. Then, the array of `BuilderTile`s is bound to an fixed size array pattern with a `let` binding.
 As such, the two `BuilderCell`s are bound to the variables `cell1` and `cell2`. Further code can perform operations on these
 `BuilderCells`.

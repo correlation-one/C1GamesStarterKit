@@ -170,8 +170,8 @@ impl Map {
     }
 
     /// Combine self with a UnitTypeAtlas into a MoveBuilder.
-    pub fn builder(self, atlas: Arc<UnitTypeAtlas>) -> MoveBuilder {
-        MoveBuilder {
+    pub fn builder(self, atlas: Arc<UnitTypeAtlas>) -> GameState {
+        GameState {
             map: self,
             atlas,
             build_stack: Vec::new(),
@@ -361,23 +361,23 @@ impl Resource {
 
 /// A wrapper around a map which allows mutation of the map in the form of valid game moves, which
 /// can then be submitted to the game.
-pub struct MoveBuilder {
+pub struct GameState {
     map: Map,
     atlas: Arc<UnitTypeAtlas>,
     build_stack: Vec<SpawnCommand>,
     deploy_stack: Vec<SpawnCommand>,
 }
 
-impl MoveBuilder {
+impl GameState {
     /// Get the referenced map, which may be mutated by move builder operations.
     pub fn map(&self) -> &Map {
         &self.map
     }
 
     /// Get the builder tile at some coords.
-    pub fn tile(&mut self, coords: Coords) -> Option<BuilderTile> {
+    pub fn tile(&mut self, coords: Coords) -> Option<StateTile> {
         if MAP_BOUNDS.in_arena(coords) {
-            Some(BuilderTile {
+            Some(StateTile {
                 coords,
                 builder: self
             })
@@ -387,18 +387,18 @@ impl MoveBuilder {
     }
 
     /// Attempt to simultaneously borrow out multiple BuilderTiles.
-    pub fn multiple_tiles<'a>(&'a mut self, holders: &mut [BuilderTileOutputVar<'a>]) {
+    pub fn multiple_tiles<'a>(&'a mut self, holders: &mut [StateTileOutputVar<'a>]) {
         let mut gotten = Grid::new(|_| false);
         for holder in holders {
             if let Some(coord) = match holder {
-                &mut BuilderTileOutputVar::Get(coord) => Some(coord),
+                &mut StateTileOutputVar::Get(coord) => Some(coord),
                 _ => None
             } {
                 if *gotten.get(coord).unwrap() {
-                    *holder = BuilderTileOutputVar::Err(RequestedSameTileTwice(coord));
+                    *holder = StateTileOutputVar::Err(RequestedSameTileTwice(coord));
                 } else {
                     *gotten.get_mut(coord).unwrap() = true;
-                    *holder = BuilderTileOutputVar::Got(unsafe {
+                    *holder = StateTileOutputVar::Got(unsafe {
                         (&mut*(self as *mut Self)).tile(coord)
                     });
                 }
@@ -460,12 +460,12 @@ impl SpawnCommand {
 
 /// A mutable MoveBuilder tile, which has the functionality of a normal MapTile, but also
 /// the ability to mutate the Map in the form of valid moves.
-pub struct BuilderTile<'a> {
+pub struct StateTile<'a> {
     coords: Coords,
-    builder: &'a mut MoveBuilder,
+    builder: &'a mut GameState,
 }
 
-impl<'a> MapTile for BuilderTile<'a> {
+impl<'a> MapTile for StateTile<'a> {
     fn coords(&self) -> Coords {
         self.coords
     }
@@ -475,7 +475,7 @@ impl<'a> MapTile for BuilderTile<'a> {
     }
 }
 
-impl<'a> BuilderTile<'a> {
+impl<'a> StateTile<'a> {
     /// View this mutable tile as an immutable tile. This should be rarely necessary, as all
     /// MapTile ops are already implemented on BuilderTile.
     pub fn as_read_tile(&self) -> MapReadTile {
@@ -594,16 +594,16 @@ impl<'a> BuilderTile<'a> {
 }
 
 /// Enum used to retrieve multiple builder tiles on the same map simultaneously.
-pub enum BuilderTileOutputVar<'a> {
+pub enum StateTileOutputVar<'a> {
     Get(Coords),
-    Got(Option<BuilderTile<'a>>),
+    Got(Option<StateTile<'a>>),
     Err(RequestedSameTileTwice),
     Taken,
 }
 
 /// Error that occurs when retrieving multiple builder tiles on the same map simultaneously.
 #[derive(Debug, Copy, Clone)]
-pub enum GetMultipleBuilderTilesError {
+pub enum GetMultipleStateTilesError {
     RequestedSameTileTwice(Coords),
     InvalidCoord(Coords),
 }
@@ -647,11 +647,11 @@ macro_rules! multiple_builder_tiles {
     }}
 }
 
-/// The `all_builder_tiles!` macro works similarly to multiple_builder_tiles!, and accepts the same
+/// The `all_state_tiles!` macro works similarly to multiple_state_tiles!, and accepts the same
 /// types of parameters. However, it will fail if any of the tile acquisitions fail. It expresses a
-/// `Result<[BuilderTile; N], GetMultipleBuilderTilesError>`.
+/// `Result<[StateTile; N], GetMultipleStateTilesError>`.
 #[macro_export]
-macro_rules! all_builder_tiles {
+macro_rules! all_state_tiles {
     ($builder:expr, $( $coord:expr ),* ) => {unsafe {
         macro_rules! phantom_macro {
             ($e:expr) => { () }
@@ -661,12 +661,12 @@ macro_rules! all_builder_tiles {
         use std::ptr;
 
         let coords = [$( $coord, )*];
-        let mut gets = [$( BuilderTileOutputVar::Get($coord), )*];
+        let mut gets = [$( StateTileOutputVar::Get($coord), )*];
         $builder.multiple_tiles(&mut gets[..]);
         let mut out = [
             $({{
                 let _ = phantom_macro!($coord);
-                mem::uninitialized::<BuilderTile>()
+                mem::uninitialized::<StateTile>()
             }},)*
         ];
         let mut i = 0;
@@ -675,26 +675,26 @@ macro_rules! all_builder_tiles {
                 break Ok(out);
             }
 
-            match mem::replace(&mut gets[i], BuilderTileOutputVar::Taken) {
-                BuilderTileOutputVar::Got(Some(tile)) => {
+            match mem::replace(&mut gets[i], StateTileOutputVar::Taken) {
+                StateTileOutputVar::Got(Some(tile)) => {
                     ptr::write(&mut out[i], tile);
                 },
-                BuilderTileOutputVar::Got(None) => {
+                StateTileOutputVar::Got(None) => {
                     for j in 0..i {
                         ptr::drop_in_place(&mut out[j]);
                     }
                     mem::forget(out);
-                    break Err(GetMultipleBuilderTilesError::InvalidCoord(coords[i]));
+                    break Err(GetMultipleStateTilesError::InvalidCoord(coords[i]));
                 },
-                BuilderTileOutputVar::Err(RequestedSameTileTwice(c)) => {
+                StateTileOutputVar::Err(RequestedSameTileTwice(c)) => {
                     for j in 0..i {
                         ptr::drop_in_place(&mut out[j]);
                     }
                     mem::forget(out);
-                    break Err(GetMultipleBuilderTilesError::RequestedSameTileTwice(c));
+                    break Err(GetMultipleStateTilesError::RequestedSameTileTwice(c));
                 },
-                BuilderTileOutputVar::Taken => panic!("BuilderTileOutputVar::Taken"),
-                BuilderTileOutputVar::Get(c) => panic!("BuilderTileOutputVar::Get({:?})", c),
+                StateTileOutputVar::Taken => panic!("StateTileOutputVar::Taken"),
+                StateTileOutputVar::Get(c) => panic!("StateTileOutputVar::Get({:?})", c),
             };
 
             i += 1;

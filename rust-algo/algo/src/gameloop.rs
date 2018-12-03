@@ -2,7 +2,7 @@
 use super::messages::Config;
 use super::messages::frame::Phase;
 use super::io::GameDataReader;
-use super::map::{Map, MoveBuilder};
+use super::map::{Map, GameState};
 
 use std::process;
 use std::ptr;
@@ -24,7 +24,7 @@ pub trait GameLoop {
     /// `MoveBuilder`. The `MoveBuilder` contains a `Map`, and is able to mutate the `Map` by making valid
     /// moves, such as spawning and removing units. The `MoveBuilder` records each spawn command that is
     /// used to mutate it, and when `make_move` returns, those spawn commands will be submitted to the engine.
-    fn make_move(&mut self, config: Arc<Config>, move_builder: &mut MoveBuilder);
+    fn make_move(&mut self, config: Arc<Config>, state: &mut GameState);
 }
 
 

@@ -19,7 +19,7 @@ fn main() {
             let line = stdin.lock().lines().next().unwrap().unwrap();
             serde_json::from_str(line.as_ref()).unwrap()
         };
-        let start = [start[0] as i32, start[1] as i32];
+        let start = xy(start[0] as i32, start[1] as i32);
         let target: MapEdge = {
             let stdin = stdin();
             let line = stdin.lock().lines().next().unwrap().unwrap();

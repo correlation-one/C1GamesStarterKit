@@ -53,32 +53,32 @@ impl GameLoop for StarterAlgo {
 
     fn on_action_frame(&mut self, _: Arc<Config>, _: Map) {}
 
-    fn make_move(&mut self, _: Arc<Config>, move_builder: &mut MoveBuilder) {
-        build_c1_logo(move_builder);
-        build_defenses(move_builder);
-        deploy_attackers(move_builder);
+    fn make_move(&mut self, _: Arc<Config>, state: &mut GameState) {
+        build_c1_logo(state);
+        build_defenses(state);
+        deploy_attackers(state);
     }
 }
 
 /// Make the C1 logo.
-fn build_c1_logo(move_builder: &mut MoveBuilder) {
+fn build_c1_logo(state: &mut GameState) {
     for &coord in FIREWALL_LOCATIONS_C {
-        move_builder.tile(coord).unwrap().attempt_spawn(FirewallUnitType::Filter);
+        state.tile(coord).unwrap().attempt_spawn(FirewallUnitType::Filter);
     }
     for &coord in FIREWALL_LOCATIONS_1 {
-        move_builder.tile(coord).unwrap().attempt_spawn(FirewallUnitType::Filter);
+        state.tile(coord).unwrap().attempt_spawn(FirewallUnitType::Filter);
     }
     for &coord in FIREWALL_LOCATIONS_DOTS {
-        move_builder.tile(coord).unwrap().attempt_spawn(FirewallUnitType::Destructor);
+        state.tile(coord).unwrap().attempt_spawn(FirewallUnitType::Destructor);
     }
 }
 
 /// Once the C1 logo is made, attempt to build some defenses.
-fn build_defenses(move_builder: &mut MoveBuilder) {
+fn build_defenses(state: &mut GameState) {
     /*
     First lets protect ourselves a little with destructors.
      */
-    move_builder.attempt_spawn_multiple(DEFENSIVE_DESTRUCTOR_LOCATIONS,
+    state.attempt_spawn_multiple(DEFENSIVE_DESTRUCTOR_LOCATIONS,
                                         FirewallUnitType::Destructor).unwrap();
 
     /*
@@ -87,7 +87,7 @@ fn build_defenses(move_builder: &mut MoveBuilder) {
     shields decay over time, so shields closer to the action
     are more effective.
      */
-    move_builder.attempt_spawn_multiple(DEFENSIVE_ENCRYPTOR_LOCATIONS,
+    state.attempt_spawn_multiple(DEFENSIVE_ENCRYPTOR_LOCATIONS,
                                         FirewallUnitType::Encryptor).unwrap();
 
     /*
@@ -102,7 +102,7 @@ fn build_defenses(move_builder: &mut MoveBuilder) {
     for x in 0..BOARD_SIZE {
         for y in 0..BOARD_SIZE {
             let coords = Coords::from([x, y]);
-            if let Some(cell) = move_builder.tile(coords) {
+            if let Some(cell) = state.tile(coords) {
                 if cell.can_spawn(FirewallUnitType::Encryptor, 1).affirmative() {
                     possible_spawn_points.push(coords);
                 }
@@ -110,35 +110,35 @@ fn build_defenses(move_builder: &mut MoveBuilder) {
         }
     }
     thread_rng().shuffle(&mut possible_spawn_points);
-    while move_builder.map().number_affordable(FirewallUnitType::Encryptor) > 0 &&
+    while state.map().number_affordable(FirewallUnitType::Encryptor) > 0 &&
         possible_spawn_points.len() > 0 {
 
         let coords = possible_spawn_points.pop().unwrap();
-        move_builder.tile(coords).unwrap().attempt_spawn(FirewallUnitType::Encryptor);
+        state.tile(coords).unwrap().attempt_spawn(FirewallUnitType::Encryptor);
     }
 }
 
 /// Deploy offensive units.
-fn deploy_attackers(move_builder: &mut MoveBuilder) {
+fn deploy_attackers(state: &mut GameState) {
     /*
     First lets check if we have 10 bits, if we don't we lets wait for
     a turn where we do.
      */
-    if move_builder.map().data().p1_stats.bits() < 10.0 {
+    if state.map().data().p1_stats.bits() < 10.0 {
         return;
     }
 
     /*
     Then lets deploy an EMP long range unit to destroy firewalls for us.
      */
-    move_builder.tile(xy(3, 10)).unwrap().attempt_spawn(InfoUnitType::Emp);
+    state.tile(xy(3, 10)).unwrap().attempt_spawn(InfoUnitType::Emp);
 
     /*
     Now lets send out 3 Pings to hopefully score, we can spawn multiple
     information units in the same location.
     */
     for _ in 0..3 {
-        move_builder.tile(xy(14, 0)).unwrap().attempt_spawn(InfoUnitType::Ping);
+        state.tile(xy(14, 0)).unwrap().attempt_spawn(InfoUnitType::Ping);
     }
 
     /*
@@ -162,11 +162,11 @@ fn deploy_attackers(move_builder: &mut MoveBuilder) {
     While we have remaining bits to spend lets send out scramblers randomly.
     */
     while {
-        let affordable = move_builder.map().number_affordable(InfoUnitType::Scrambler);
+        let affordable = state.map().number_affordable(InfoUnitType::Scrambler);
         affordable >= 1
     } {
         let coords = friendly_edges[thread_rng().gen::<usize>() % friendly_edges.len()];
-        move_builder.tile(coords).unwrap().attempt_spawn(InfoUnitType::Scrambler);
+        state.tile(coords).unwrap().attempt_spawn(InfoUnitType::Scrambler);
     }
 }
 

@@ -1,6 +1,6 @@
 
 use super::messages::{FrameData, Config, frame};
-use super::map::{Map, MoveBuilder, MapParseError};
+use super::map::{Map, GameState, MapParseError};
 use super::units::UnitTypeAtlas;
 
 
@@ -10,8 +10,8 @@ use std::sync::Arc;
 
 use serde_json;
 
-/// A IO datum for receiving and storing the Config from the game engine, creating from the Config
-/// a UnitTypeAtlas, and then receiving all subsequent frames.
+/// A IO object for receiving and storing the Config from the game engine, creating from the Config
+/// and UnitTypeAtlas, and then receiving all subsequent frames.
 pub struct GameDataReader {
     config: Option<(Arc<Config>, Arc<UnitTypeAtlas>)>,
 }
@@ -64,7 +64,7 @@ impl GameDataReader {
 
     /// Get the next frame of the deploy phase, and then use it in conjunction with the Config
     /// and UnitTypeAtlas to attempt to parse a Map, then wrap that Map in a MoveBuilder.
-    pub fn next_move_builder(&mut self) -> Result<MoveBuilder, MapParseError> {
+    pub fn next_move_builder(&mut self) -> Result<GameState, MapParseError> {
         let (config, atlas) = self.config()
             .map_err(|e| MapParseError::DeserializeError(e))?;
         let frame = self.next_turn_frame()
