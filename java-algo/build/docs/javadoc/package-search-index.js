@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"com.c1games.terminal.algo"},{"l":"com.c1games.terminal.algo.io"},{"l":"com.c1games.terminal.algo.map"},{"l":"com.c1games.terminal.algo.pathfinding"},{"l":"com.c1games.terminal.algo.serialization"},{"l":"com.c1games.terminal.algo.units"},{"l":"com.c1games.terminal.pathtest"},{"l":"com.c1games.terminal.starteralgo"}]

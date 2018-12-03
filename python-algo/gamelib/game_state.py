@@ -124,7 +124,9 @@ class GameState:
                 hp = float(shp)
                 # This depends on RM always being the last type to be processed
                 if unit_type == REMOVE:
-                    self.game_map[x,y][0].pending_removal = True
+                    # Quick fix will deploy engine fix soon
+                    if self.contains_stationary_unit([x,y]):
+                        self.game_map[x,y][0].pending_removal = True
                 else:
                     unit = GameUnit(unit_type, self.config, player_number, hp, x, y)
                     self.game_map[x,y].append(unit)

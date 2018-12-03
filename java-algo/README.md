@@ -27,6 +27,9 @@
     
 ### Creating an algo
 
+For starters, simply modify the `starteralgo/StarterAlgo.java` file. You will be mostly using functions in the `GameState`
+and `FrameData` classes.
+
 All that is necessary to create an algo is to implement `GameLoop`, and create a main method 
 which wraps your `GameLoop` in a `GameLoopDriver` and `.run()`s it.
 
@@ -34,14 +37,14 @@ There are three callbacks for `GameLoop` which you can implement
 
     void initialize(GameIO io, Config config)
     
-    void onActionFrame(GameIO io, MoveBuilder move)
+    void onActionFrame(GameIO io, GameState move)
     
-    void makeMove(GameIO io, MoveBuilder move)
+    void onTurn(GameIO io, GameState move)
     
-However, it is only essential to implement `makeMove`. The `MoveBuilder` provides fast and 
+However, it is only essential to implement `onTurn`. The `GameState` provides fast and 
 convenient access to the game board, and the ability to perform actions, such as placing a 
-unit, which will mutate the `MoveBuilder` game state, as well as record that action. When 
-`makeMove` returns, the recorded actions will be submitted to the game.
+unit, which will mutate the `GameState` game state, as well as record that action. When 
+`onTurn` returns, the recorded actions will be submitted to the game.
 
 **The standard output is used to communicate with the game engine, and must not be printed to.**
 For this reason, debugging must be done with the standard error. The standard error messages are 
@@ -59,7 +62,7 @@ returns a `PrintStream` which can be safely used for logging.
     
         // callback to make a move in the game
         @Override
-        public void makeMove(GameIO io, MoveBuilder move) {
+        public void onTurn(GameIO io, GameState move) {
             // try to place as many of four filters as possible
             List<Coords> wallLocations = List.of(new Coords(12, 5), new Coords(13, 5),
                     new Coords(14, 5), new Coords(15, 5));
@@ -107,7 +110,7 @@ the four integer edge direction constants, `EDGE_TOP_LEFT`, `EDGE_BOTTOM_RIGHT`,
 
 ### Path Finding
 
-The `MoveBuilder` method `pathfind(Coords start, int targetEdge)` returns the path that a particular 
+The `GameState` method `pathfind(Coords start, int targetEdge)` returns the path that a particular 
 info unit will take through the current configuration of the board, where `targetEdge` is one 
 direction constant from `MapBounds`. This is guaranteed to produce accurate results, but is intentionally 
 left less than maximally optimized.

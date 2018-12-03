@@ -1,3 +1,11 @@
 * text eol=lf
 
 *.jar binary
+
+*.exe binary
+
+*scripts/zipalgo_mac binary
+
+*scripts/zipalgo_linux binary
+
+* binary

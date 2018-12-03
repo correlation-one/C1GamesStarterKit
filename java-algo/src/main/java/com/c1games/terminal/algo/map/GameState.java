@@ -19,7 +19,7 @@ import java.util.List;
  *
  * This object keeps a buffer of unit placements, which will be serialized and sent to the game engine upon making of the move.
  */
-public class MoveBuilder {
+public class GameState {
     private final class UnitList {
         final List<Unit> list = new ArrayList<>();
     }
@@ -34,7 +34,7 @@ public class MoveBuilder {
     private List<SpawnCommand> buildStack = new ArrayList<>();
     private List<SpawnCommand> deployStack = new ArrayList<>();
 
-    public MoveBuilder(Config config, FrameData data) {
+    public GameState(Config config, FrameData data) {
         this.config = config;
         this.data = data;
 
@@ -147,7 +147,7 @@ public class MoveBuilder {
     /**
      * Attempt to spawn a unit at a location, or throw an exception if unable.
      *
-     * This will alter the data within MoveBuilder and FrameData as if this operation proceeded (unless an exception is thrown) so that further
+     * This will alter the data within GameState and FrameData as if this operation proceeded (unless an exception is thrown) so that further
      * operations can be applied correctly.
      *
      * This should be paired with @code canSpawn to avoid the exception.
@@ -226,7 +226,7 @@ public class MoveBuilder {
     /**
      * Attempt to remove an existing firewall that we own, or throw an exception is unable.
      *
-     * This will alter the data within MoveBuilder and FrameData as if this operation proceeded (unless an exception is thrown) so that further
+     * This will alter the data within GameState and FrameData as if this operation proceeded (unless an exception is thrown) so that further
      * operations can be applied correctly.
      *
      * This should be paired with @code canRemove to avoid the exception.
