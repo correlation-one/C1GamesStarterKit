@@ -16,7 +16,7 @@ impl GameLoop for ExampleAlgo {
     fn on_action_frame(&mut self, _: Arc<Config>, _: Map) {}
 
     // callback to make a move in the game
-    fn make_move(&mut self, _: Arc<Config>, state: &mut GameState) {
+    fn on_turn(&mut self, _: Arc<Config>, state: &mut GameState) {
         // try to place as many of four filters as possible
         let wall_locations = [xy(12, 5), xy(13, 5), xy(14, 5), xy(15, 5)];
         state.attempt_spawn_multiple(&wall_locations, FirewallUnitType::Filter).unwrap();

@@ -24,7 +24,7 @@ pub trait GameLoop {
     /// `MoveBuilder`. The `MoveBuilder` contains a `Map`, and is able to mutate the `Map` by making valid
     /// moves, such as spawning and removing units. The `MoveBuilder` records each spawn command that is
     /// used to mutate it, and when `make_move` returns, those spawn commands will be submitted to the engine.
-    fn make_move(&mut self, config: Arc<Config>, state: &mut GameState);
+    fn on_turn(&mut self, config: Arc<Config>, state: &mut GameState);
 }
 
 
@@ -40,7 +40,7 @@ pub fn run_game_loop(mut game_loop: impl GameLoop) -> ! {
                 let mut move_builder = Map::new(config.clone(), frame)
                     .expect("Frame error")
                     .builder(atlas.clone());
-                game_loop.make_move(config.clone(), &mut move_builder);
+                game_loop.on_turn(config.clone(), &mut move_builder);
                 move_builder.submit();
             },
             Phase::Action => {

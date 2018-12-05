@@ -53,7 +53,7 @@ impl GameLoop for StarterAlgo {
 
     fn on_action_frame(&mut self, _: Arc<Config>, _: Map) {}
 
-    fn make_move(&mut self, _: Arc<Config>, state: &mut GameState) {
+    fn on_turn(&mut self, _: Arc<Config>, state: &mut GameState) {
         build_c1_logo(state);
         build_defenses(state);
         deploy_attackers(state);
