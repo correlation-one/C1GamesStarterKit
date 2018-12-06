@@ -131,7 +131,7 @@ public class StarterAlgo implements GameLoop {
         First lets check if we have 10 bits, if we don't we lets wait for
         a turn where we do.
          */
-        if (move.data.p1Stats.bits < 10)
+        if (move.data.p1Stats.bits < 9)
             return;
 
         /*
