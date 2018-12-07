@@ -1,0 +1,9 @@
+{
+  "language": "rust",
+  "rust-specific": {
+    "release": false,
+    "package": "starter-algo",
+    "toolchain": "stable",
+    "compile-target": "algo-target"
+  }
+}
