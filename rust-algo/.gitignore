@@ -1,0 +1,10 @@
+!.gitignore
+.idea/*
+*.lock
+target
+*.iml
+.DS_Store
+build.py
+game.sh
+algo-target/algo
+rust-algo.zip
