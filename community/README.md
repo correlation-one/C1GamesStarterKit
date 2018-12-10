@@ -37,7 +37,7 @@ Before we are ready to merge your algo into the master branch, we will likely ha
 or feedback on your PR which we will want you to address, in order to ensure that the
 algo functions and integrates smoothly into our platform.
 
-#### Step 4: Supporting compilation and merging into master
+### Step 4: Supporting compilation and merging into master
 
 At this point, if we find the algo acceptable, we will add support for our servers to
 compile and/or bundle your language. Eventually, we will merge into the master
