@@ -26,21 +26,21 @@ programming multiple starter algos for the same language.
 ### Step 2: Open a PR
 
 Once you have some code written -- whether it's finished, or you'd just like to check in --
-open a PR which adds your starter algo in a subdirectory of this community directory.
-For example, in `community/haskell-algo`. Make sure to leave an explanation of 
-noteworthy aspects of your code, such as design decision, the compiling process, and packages
-necessary for your algo to run on Ubuntu 18.
+you can open a PR which adds your starter algo in a subdirectory of this community directory.
+For example, in `community/haskell-algo`. You can help this stage progress smoother and faster by
+including explanations of noteworthy aspects of your code, such as design decisions, the 
+compilation process, and packages necessary for your algo to run on Ubuntu 18.
 
 ### Step 3: Respond to our feedback
 
 Before we are ready to merge your algo into the master branch, we will likely have questions 
-or feedback on your PR which we will want you to address, in order to ensure that the
+or feedback on your PR which we will want to discuss, in order to ensure that the
 algo functions and integrates smoothly into our platform.
 
 ### Step 4: Supporting compilation and merging into master
 
-At this point, if we find the algo acceptable, we will add support for our servers to
-compile and/or bundle your language. Eventually, we will merge into the master
-branch, and announce the new community language on the forums. We may need to continue
-communication with you through this phase, but it will be mostly an internal
-process.
+Once your algo is reviewed, stabilized, and usable to all types of Terminal users,
+we will add support for our servers to compile and/or bundle your language. 
+Eventually, we will merge into the master branch, and announce the new community 
+language on the forums. We may need to continue communication with you through this phase, 
+but it will be mostly an internal process.
