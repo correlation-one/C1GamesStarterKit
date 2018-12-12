@@ -1,0 +1,7 @@
+[workspace]
+members = [
+    "algo",
+    "starter-algo",
+    "pathtest",
+    "example",
+]
