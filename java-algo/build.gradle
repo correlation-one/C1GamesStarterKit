@@ -18,7 +18,6 @@ sourceCompatibility = JavaVersion.VERSION_1_10
 targetCompatibility = JavaVersion.VERSION_1_10
 
 // Define the main class for the application
-// This must be done before adding the shadow plugin.
 mainClassName = 'com.c1games.terminal.starteralgo.StarterAlgo'
 
 dependencies {
