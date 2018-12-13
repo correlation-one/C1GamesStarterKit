@@ -3,7 +3,7 @@
   "rust-specific": {
     "release": false,
     "package": "starter-algo",
-    "toolchain": "nightly",
+    "toolchain": "stable",
     "compile-target": "algo-target"
   }
 }
