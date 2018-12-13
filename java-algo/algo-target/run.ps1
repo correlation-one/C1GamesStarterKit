@@ -1,4 +1,4 @@
 $scriptPath = Split-Path -parent $PSCommandPath;
-$algoPath = "$scriptPath\algo_strategy.py"
+$algoPath = "$scriptPath\algo.jar"
 
 java -jar $algoPath

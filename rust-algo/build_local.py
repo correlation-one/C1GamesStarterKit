@@ -1,6 +1,6 @@
 import subprocess
 import json
-#import shutil
+import shutil
 import platform
 import os
 
@@ -69,9 +69,13 @@ def compile_rust():
         binary = os.path.join('target', 'release', executable)
     else:
         binary = os.path.join('target', 'debug', executable)
-    move_to = os.path.join(algo_target, 'algo')
+    if platform.system() == 'Windows':
+        destination_file = 'algo.exe'
+    else:
+        destination_file = 'algo.exe'
+    move_to = os.path.join(algo_target, destination_file)
     print("moving {} to {}".format(binary, move_to))
-    subprocess.check_output(['mv', str(binary), str(move_to)])
+    shutil.move(str(binary), str(move_to))
     print("moved")
 
     return True
