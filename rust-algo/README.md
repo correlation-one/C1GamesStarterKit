@@ -24,6 +24,12 @@
 For starters, simply modify the `starter-algo/src/main.rs` file. You will mostly be using
 methods of `GameState` and `FrameData`.
 
+The easiest way to test your algo locally is to run the `build_local.py` script with a Python
+interpreter, then run the engine with the path `rust-algo/algo-target`. The `build_local.py`
+script will build your algo based on the content in `algo.json`, then move the resultant
+binary to the algo target directory. Our servers will essentially do the same thing when you
+upload your algo.
+
 The simplest way to create an algo is to create a data type which stores your algo state, 
 implement `GameLoop` on it, and create a main function which calls `run_game_loop` on that 
 type.

@@ -60,7 +60,6 @@ def compile_rust():
     algo_target = metadata.get('compile-target', 'algo-target')
 
     # move the built binary into the algo target directory
-    algo_target = path.relpath('algo-target')
     if platform.system() == 'Windows':
         executable = package + ".exe"
     else:
