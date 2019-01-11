@@ -1,7 +1,7 @@
 
 use coords::Coords;
 use super::units::*;
-use super::messages::{PlayerId, FrameData, Config, frame};
+use super::messages::{PlayerId, FrameData, Config, frame, config::UnitInformation};
 use super::bounds::{MAP_BOUNDS, BOARD_SIZE, MapEdge};
 use super::grid::Grid;
 use super::pathfinding::StartedAtWall;
@@ -514,22 +514,26 @@ impl<'a> StateTile<'a> {
 
         match unit_type {
             SpawnableUnitType::Firewall(unit_type) => {
-                let unit = Unit {
-                    unit_type,
-                    stability: 1.0,
-                    id: None,
-                    owner: PlayerId::Player1
-                };
-                *self.builder.map.walls.get_mut(coords).unwrap() = Some(unit);
+                if let UnitInformation::Wall{stability,..} = self.builder.atlas.type_info(unit_type.into()) {
+                    let unit = Unit {
+                        unit_type,
+                        stability: *stability,
+                        id: None,
+                        owner: PlayerId::Player1
+                    };
+                    *self.builder.map.walls.get_mut(coords).unwrap() = Some(unit);
+                }
             },
             SpawnableUnitType::Info(unit_type) => {
-                let unit = Unit {
-                    unit_type,
-                    stability: 1.0,
-                    id: None,
-                    owner: PlayerId::Player1
-                };
-                self.builder.map.info.get_mut(coords).unwrap().push(unit);
+                if let UnitInformation::Data{stability,..} = self.builder.atlas.type_info(unit_type.into()) {
+                    let unit = Unit {
+                        unit_type,
+                        stability: *stability,
+                        id: None,
+                        owner: PlayerId::Player1
+                    };
+                    self.builder.map.info.get_mut(coords).unwrap().push(unit);
+                }
             }
         }
 
