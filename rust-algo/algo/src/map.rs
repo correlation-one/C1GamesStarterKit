@@ -369,6 +369,11 @@ pub struct GameState {
 }
 
 impl GameState {
+    /// Get the atlas, as a normal reference
+    pub fn atlas(&self) -> &UnitTypeAtlas {
+        &self.atlas
+    }
+
     /// Get the referenced map, which may be mutated by move builder operations.
     pub fn map(&self) -> &Map {
         &self.map
