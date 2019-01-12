@@ -181,7 +181,7 @@ impl UnitTypeAtlas {
         }
     }
 
-    // Get the UnitInformation from a unit type
+    /// Get the UnitInformation from a unit type
     pub fn type_info(&self, unit_type: UnitType) -> &UnitInformation {
         &self.unit_information[unit_type as u32 as usize]
     }
