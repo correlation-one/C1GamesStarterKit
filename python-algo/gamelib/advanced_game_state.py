@@ -65,10 +65,17 @@ class AdvancedGameState(GameState):
                 elif target_stability < unit_stability and not new_target:
                     continue
 
-                if target_y > unit_y:
-                    new_target = True
-                elif target_y < unit_y and not new_target:
-                    continue       
+                # Compare height heuristic relative to attacking unit's player index
+                if attacking_unit.player_index == 0:
+                    if target_y > unit_y:
+                        new_target = True
+                    elif target_y < unit_y and not new_target:
+                        continue
+                else:
+                    if target_y < unit_y:
+                        new_target = True
+                    elif target_y > unit_y and not new_target:
+                        continue
 
                 if target_x_distance < unit_x_distance:
                     new_target = True
