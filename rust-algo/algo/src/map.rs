@@ -519,7 +519,7 @@ impl<'a> StateTile<'a> {
 
         match unit_type {
             SpawnableUnitType::Firewall(unit_type) => {
-                if let UnitInformation::Wall{stability,..} = self.builder.atlas.type_info(unit_type.into()) {
+                if let UnitInformation::Wall { stability, .. } = self.builder.atlas.type_info(unit_type.into()) {
                     let unit = Unit {
                         unit_type,
                         stability: *stability,
@@ -527,10 +527,10 @@ impl<'a> StateTile<'a> {
                         owner: PlayerId::Player1
                     };
                     *self.builder.map.walls.get_mut(coords).unwrap() = Some(unit);
-                }
+                } else { panic!("A SpawnableUnitType::Firewall isn't a UnitInformation::Wall - is something wrong with the Atlas?") }
             },
             SpawnableUnitType::Info(unit_type) => {
-                if let UnitInformation::Data{stability,..} = self.builder.atlas.type_info(unit_type.into()) {
+                if let UnitInformation::Data { stability, .. } = self.builder.atlas.type_info(unit_type.into()) {
                     let unit = Unit {
                         unit_type,
                         stability: *stability,
@@ -538,7 +538,7 @@ impl<'a> StateTile<'a> {
                         owner: PlayerId::Player1
                     };
                     self.builder.map.info.get_mut(coords).unwrap().push(unit);
-                }
+                } else { panic!("A SpawnableUnitType::Info isn't a UnitInformation::Data - is something wrong with the Atlas?") }
             }
         }
 
