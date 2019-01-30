@@ -71,7 +71,7 @@ def compile_rust():
     if platform.system() == 'Windows':
         destination_file = 'algo.exe'
     else:
-        destination_file = 'algo.exe'
+        destination_file = 'algo'
     move_to = os.path.join(algo_target, destination_file)
     print("moving {} to {}".format(binary, move_to))
     shutil.move(str(binary), str(move_to))
