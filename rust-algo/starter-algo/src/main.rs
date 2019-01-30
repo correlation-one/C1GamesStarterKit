@@ -54,6 +54,7 @@ impl GameLoop for StarterAlgo {
     fn on_action_frame(&mut self, _: Arc<Config>, _: Map) {}
 
     fn on_turn(&mut self, _: Arc<Config>, state: &mut GameState) {
+        eprintln!("Performing turn {} of your custom algo strategy", state.map().data().turn_info.turn_number());     
         build_c1_logo(state);
         build_defenses(state);
         deploy_attackers(state);
