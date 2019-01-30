@@ -181,6 +181,11 @@ impl UnitTypeAtlas {
         }
     }
 
+    /// Get the UnitInformation from a unit type
+    pub fn type_info(&self, unit_type: UnitType) -> &UnitInformation {
+        &self.unit_information[unit_type as u32 as usize]
+    }
+
     /// Convert a unit type integer into a UnitType.
     pub fn type_from_u32(&self, n: u32) -> Option<UnitType> {
         UnitType::into_enum_iter().nth(n as usize)
