@@ -252,7 +252,7 @@ class GameState:
         unit_def = self.config["unitInformation"][UNIT_TYPE_TO_INDEX[unit_type]]
         return unit_def.get('cost')
 
-    def can_spawn(self, unit_type, location, num=1, warnings = False):
+    def can_spawn(self, unit_type, location, num=1):
         """Check if we can spawn a unit at a location. 
 
         To units, we need to be able to afford them, and the location must be
@@ -324,7 +324,7 @@ class GameState:
         spawned_units = 0
         for location in locations:
             for i in range(num):
-                if self.can_spawn(unit_type, location, 1, True):
+                if self.can_spawn(unit_type, location, 1):
                     x, y = map(int, location)
                     cost = self.type_cost(unit_type)
                     resource_type = self.__resource_required(unit_type)
