@@ -4,7 +4,7 @@
     "printTStrings":false,
     "printActStrings":false,
     "printHitStrings":false,
-    "printPlayerInputStrings":true,
+    "printPlayerInputStrings":false,
     "printBotErrors":true,
     "printPlayerGetHitStrings":false
   },
