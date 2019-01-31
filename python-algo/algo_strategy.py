@@ -11,7 +11,7 @@ modules yourself. Start by modifying the 'on_turn' function.
 Advanced strategy tips: 
 
 Additional functions are made available by importing the AdvancedGameState 
-class from gamelib/advanced.py as a replcement for the regular GameState class 
+class from gamelib/advanced.py as a replacement for the regular GameState class 
 in game.py.
 
 You can analyze action frames by modifying algocore.py.
@@ -59,7 +59,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 
     """
     NOTE: All the methods after this point are part of the sample starter-algo
-    strategy and can safey be replaced for your custom algo.
+    strategy and can safely be replaced for your custom algo.
     """
     def starter_strategy(self, game_state):
         """
