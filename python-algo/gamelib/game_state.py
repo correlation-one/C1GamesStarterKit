@@ -211,7 +211,7 @@ class GameState:
 
         Args:
             * turns_in_future: The number of turns in the future we want to look forward to predict
-            * player_index: The player whos bits we are tracking
+            * player_index: The player whose bits we are tracking
             * current_bits: If we pass a value here, we will use that value instead of the current bits of the given player.
 
         Returns:
