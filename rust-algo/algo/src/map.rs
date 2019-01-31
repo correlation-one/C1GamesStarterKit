@@ -1,7 +1,7 @@
 
 use coords::Coords;
 use super::units::*;
-use super::messages::{PlayerId, FrameData, Config, frame};
+use super::messages::{PlayerId, FrameData, Config, frame, config::UnitInformation};
 use super::bounds::{MAP_BOUNDS, BOARD_SIZE, MapEdge};
 use super::grid::Grid;
 use super::pathfinding::StartedAtWall;
@@ -369,6 +369,11 @@ pub struct GameState {
 }
 
 impl GameState {
+    /// Get the atlas, as a normal reference
+    pub fn atlas(&self) -> &UnitTypeAtlas {
+        &self.atlas
+    }
+
     /// Get the referenced map, which may be mutated by move builder operations.
     pub fn map(&self) -> &Map {
         &self.map
@@ -514,22 +519,26 @@ impl<'a> StateTile<'a> {
 
         match unit_type {
             SpawnableUnitType::Firewall(unit_type) => {
-                let unit = Unit {
-                    unit_type,
-                    stability: 1.0,
-                    id: None,
-                    owner: PlayerId::Player1
-                };
-                *self.builder.map.walls.get_mut(coords).unwrap() = Some(unit);
+                if let UnitInformation::Wall { stability, .. } = self.builder.atlas.type_info(unit_type.into()) {
+                    let unit = Unit {
+                        unit_type,
+                        stability: *stability,
+                        id: None,
+                        owner: PlayerId::Player1
+                    };
+                    *self.builder.map.walls.get_mut(coords).unwrap() = Some(unit);
+                } else { panic!("A SpawnableUnitType::Firewall isn't a UnitInformation::Wall - is something wrong with the Atlas?") }
             },
             SpawnableUnitType::Info(unit_type) => {
-                let unit = Unit {
-                    unit_type,
-                    stability: 1.0,
-                    id: None,
-                    owner: PlayerId::Player1
-                };
-                self.builder.map.info.get_mut(coords).unwrap().push(unit);
+                if let UnitInformation::Data { stability, .. } = self.builder.atlas.type_info(unit_type.into()) {
+                    let unit = Unit {
+                        unit_type,
+                        stability: *stability,
+                        id: None,
+                        owner: PlayerId::Player1
+                    };
+                    self.builder.map.info.get_mut(coords).unwrap().push(unit);
+                } else { panic!("A SpawnableUnitType::Info isn't a UnitInformation::Data - is something wrong with the Atlas?") }
             }
         }
 

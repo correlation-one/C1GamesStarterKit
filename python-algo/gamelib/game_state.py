@@ -252,7 +252,7 @@ class GameState:
         unit_def = self.config["unitInformation"][UNIT_TYPE_TO_INDEX[unit_type]]
         return unit_def.get('cost')
 
-    def can_spawn(self, unit_type, location, num=1, warnings = False):
+    def can_spawn(self, unit_type, location, num=1):
         """Check if we can spawn a unit at a location. 
 
         To units, we need to be able to afford them, and the location must be
@@ -290,10 +290,11 @@ class GameState:
             if blocked:
                 fail_reason = fail_reason + " Location is blocked."
             if not correct_territory:
-                fail_reason = fail_reason + " Location in enemy terretory."
+                fail_reason = fail_reason + " Location in enemy territory."
             if not (stationary or on_edge):
                 fail_reason = fail_reason + " Information units must be deployed on the edge."
-            self.warn("Could not spawn {} at location {}.{}".format(unit_type, location, fail_reason))
+            if len(fail_reason) > 0:
+                self.warn("Could not spawn {} at location {}.{}".format(unit_type, location, fail_reason))
 
         return (affordable and correct_territory and not blocked and
                 (stationary or on_edge) and
@@ -323,7 +324,7 @@ class GameState:
         spawned_units = 0
         for location in locations:
             for i in range(num):
-                if self.can_spawn(unit_type, location, 1, True):
+                if self.can_spawn(unit_type, location, 1):
                     x, y = map(int, location)
                     cost = self.type_cost(unit_type)
                     resource_type = self.__resource_required(unit_type)
