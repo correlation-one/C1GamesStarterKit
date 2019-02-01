@@ -16,18 +16,28 @@ This allows you to compare your algo to, and run your algo against, the original
 You can test your algo locally for simple syntax and semantic errors without having to run the game engine by using our new test_algo scripts: test_algo_mac test_algo_linux test_algo_windows depending on your operating system.
 
 To run the script simply follow this format: ./scripts/test_algo_mac {algo directory} {replay location (Optional)}
-The way the script works is that it runs your algo and feeds it test states from a replay file. Your algo will send its turns but the states won't change. So your algo may become strategically confused, but you should be able to quickly test for syntax and semantic errors before you upload to the website for detailed testing.
+The way the script works is that it runs your algo and feeds it test states from a replay file. Your algo will send its turns but the states will be based on the replay not what your algo does. So you should be able to quickly test for syntax and semantic errors before you upload to the website for detailed strategic testing.
+
+You can also use this script to test what your algo does given a specific state by pointing it to a replay that contains that state. So if your algo seems to crash in a specific replay, just download the replay and use this script to see the errors in your algo locally.
+
+Note if using a compiled language (java, rust) make sure the {algo directory} argument points to where the compiled algo lives that contains the run.sh, which defaults to the algo-target folder.
+
+Examples: 
 
 On Unix:
 ```
 $ ./scripts/test_algo_mac java-algo/algo-target/
+$ ./scripts/test_algo_mac java-algo/algo-target/ ~/Downloads/my_replay.replay
 ```
 On Windows:
 ```
-
+> .\scripts\test_algo_windows.exe .\rust-algo\algo-target\
+> .\scripts\test_algo_windows.exe .\rust-algo\algo-target\ C:\Users\Justin\Downloads\my_replay.replay
 ```
 
 #### Running local matches
+
+We recommend using the test_algo scripts to quickly test for errors and use the website to test your algo thoroughly however for advanced users they may wish to play matches locally. For example, to play your algo against itself when doing machine learning. This section describes how to do that.
 
 This repository includes the game engine, `engine.jar`, in which games are run. You can use this to run
 a game between two algos, which will create a .replay file that you can view on 
