@@ -15,7 +15,7 @@ class GameMap:
         * HALF_ARENA (int): Half of the size of the arena.
         * TOP_RIGHT (int): A constant that represents the top right edge
         * TOP_LEFT (int): A constant that represents the top left edge
-        * BOTTOM_LEFT (int): Hidden challange! Can you guess what this constant represents???
+        * BOTTOM_LEFT (int): Hidden challenge! Can you guess what this constant represents???
         * BOTTOM_RIGHT (int): A constant that represents the bottom right edge
 
     """
@@ -117,7 +117,7 @@ class GameMap:
 
         """
         if not quadrant_description in [self.TOP_LEFT, self.TOP_RIGHT, self.BOTTOM_LEFT, self.BOTTOM_RIGHT]:
-            self.warn("Passed invalid quadrent_description '{}'. See the documentation for valid inputs for get_edge_locations.".format(quadrant_description))
+            self.warn("Passed invalid quadrant_description '{}'. See the documentation for valid inputs for get_edge_locations.".format(quadrant_description))
             return
 
         edges = self.get_edges()

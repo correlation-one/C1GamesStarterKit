@@ -71,11 +71,11 @@ class AlgoCore(object):
                     break
                 else:
                     """
-                    Something is wrong? Recieved an incorrect or imporperly formatted string.
+                    Something is wrong? Received an incorrect or improperly formatted string.
                     """
                     debug_write("Got unexpected string with turnInfo: {}".format(game_state_string))
             else:
                 """
-                Something is wrong? Recieved an incorrect or imporperly formatted string.
+                Something is wrong? Received an incorrect or improperly formatted string.
                 """
                 debug_write("Got unexpected string : {}".format(game_state_string))

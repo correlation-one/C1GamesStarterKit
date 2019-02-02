@@ -21,9 +21,9 @@ class Node:
         self.pathlength = -1
 
 """
-This class helps with pathfinding. We guarentee the results will
+This class helps with pathfinding. We guarantee the results will
 be accurate, but top players may want to write their own pathfinding
-code to maximise time efficiancy
+code to maximise time efficiency
 """
 class ShortestPathFinder:
     """Handles pathfinding
