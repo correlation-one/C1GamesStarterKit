@@ -13,11 +13,14 @@ before you start your algo. Check out [the playground](https://terminal.c1games.
 
 ## Algo Development
 
-To run your game locally, you must install the 
-[Java Development Kit 10 or above](http://www.oracle.com/technetwork/java/javase/downloads/jdk10-downloads-4416644.html),
-as well as the toolchain for the algo language you will be using.
+To test your algo locally, you should use the new test_algo_[OS] scripts in the scripts folder. Details on its use is documented in the README.md file in the scripts folder. Using this script and the website features are enough for most users to play the game.
 
-If you are running Windows, you will need Window PowerShell installed. This comes pre-installed on Windows 10.
+For documentation on the all official algos check out [the doc server](https://docs.c1games.com). This site also details useful configuration settings, and advanced details on the input formatting under "Json Format".
+
+For advanced users you can install java and run the game engine locally, however its recommended to use the website for proper analysis as it has visualization features to help you understand.
+Java 10 or above is required: [Java Development Kit 10 or above](http://www.oracle.com/technetwork/java/javase/downloads/jdk10-downloads-4416644.html), if you cannot download java 10 just download the most recent java version.
+
+If you are running Windows, you will need Windows PowerShell installed. This comes pre-installed on Windows 10.
 Some windows users might need to run the following PowerShell commands in adminstrator mode (right-click the 
 PowerShell icon, and click "run as administrator"):
     
@@ -33,6 +36,10 @@ If that still doesn't work, try this:
     
 And don't forget to run the PowerShell as admin.
 
+## Troubleshooting
+
+For detailed troubleshooting help related to both website problems and local development check out [the troubleshooting section](https://terminal.c1games.com/rules#Troubleshooting).
+
 #### Python Requirements
 
 Python algos require Python 3 to run. If you are running Unix (Mac OS or Linux), the command `python3` must run on 
@@ -40,7 +47,7 @@ Bash or Terminal. If you are running Windows, the command `py -3` must run on Po
    
 #### Java Requirements
 
-Java algos require the Java Development Kit, as does all local development. Java algos also require [Gradle]
+Java algos require the Java Development Kit. Java algos also require [Gradle]
 (https://gradle.org/install/) for compilation.
    
 ## Running Algos

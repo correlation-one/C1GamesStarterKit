@@ -69,6 +69,7 @@ public class StarterAlgo implements GameLoop {
      */
     @Override
     public void onTurn(GameIO io, GameState move) {
+        io.debug().println("Performing turn " + move.data.turnInfo.turnNumber + " of your custom algo strategy");
         buildC1Logo(move);
         buildDefenses(move);
         deployAttackers(move);
