@@ -36,10 +36,6 @@ If that still doesn't work, try this:
     
 And don't forget to run the PowerShell as admin.
 
-## Troubleshooting
-
-For detailed troubleshooting help related to both website problems and local development check out [the troubleshooting section](https://terminal.c1games.com/rules#Troubleshooting).
-
 ## Uploading Algos
 
 Zip your algo with the platform-appropriate `zipalgo` binary, found in the `scripts` directory. This
@@ -48,6 +44,10 @@ will generate a deflated zip archive, details are provided in the [documentation
 For example, you can run:
 
 ./scripts/zipalgo_mac python-algo my-python-algo.zip
+
+## Troubleshooting
+
+For detailed troubleshooting help related to both website problems and local development check out [the troubleshooting section](https://terminal.c1games.com/rules#Troubleshooting).
 
 #### Python Requirements
 
