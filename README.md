@@ -40,6 +40,15 @@ And don't forget to run the PowerShell as admin.
 
 For detailed troubleshooting help related to both website problems and local development check out [the troubleshooting section](https://terminal.c1games.com/rules#Troubleshooting).
 
+## Uploading Algos
+
+Zip your algo with the platform-appropriate `zipalgo` binary, found in the `scripts` directory. This
+will generate a deflated zip archive, details are provided in the [documentation in the scripts directory](https://github.com/correlation-one/AIGamesStarterKit/tree/master/scripts). 
+
+For example, you can run:
+
+./scripts/zipalgo_mac python-algo my-python-algo.zip
+
 #### Python Requirements
 
 Python algos require Python 3 to run. If you are running Unix (Mac OS or Linux), the command `python3` must run on 
@@ -54,4 +63,3 @@ Java algos require the Java Development Kit. Java algos also require [Gradle]
 
 To run your algo locally or on our servers, or to enroll your algo in a competition, please see the [documentation 
 for the Terminal command line interface in the scripts directory](https://github.com/correlation-one/AIGamesStarterKit/tree/master/scripts)
-
