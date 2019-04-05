@@ -19,4 +19,14 @@ foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
     set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${out_dir} )
 endforeach( OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES )
 
-add_executable(StarterAlgo ../src/StarterAlgo.cpp)
+include_directories ("${PROJECT_SOURCE_DIR}/include/")
+set(HEADERS
+	${PROJECT_SOURCE_DIR}/include/SimpleJSON/src/JSON.h
+	${PROJECT_SOURCE_DIR}/include/SimpleJSON/src/JSONValue.h
+)
+set(HEADER_CPPS
+	${PROJECT_SOURCE_DIR}/include/SimpleJSON/src/JSON.cpp
+	${PROJECT_SOURCE_DIR}/include/SimpleJSON/src/JSONValue.cpp
+)
+
+add_executable(StarterAlgo ${PROJECT_SOURCE_DIR}/src/source.cpp ${HEADERS} ${HEADER_CPPS})
