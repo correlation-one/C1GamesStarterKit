@@ -1,11 +1,7 @@
 cmake_minimum_required (VERSION 2.6)
 project (StarterAlgo)
 
-# set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-# set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
-set(out_dir "${CMAKE_BINARY_DIR}/../algo-target")
+set(out_dir "${PROJECT_SOURCE_DIR}/algo-target")
 
 # First for the generic no-config case (e.g. with mingw)
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${out_dir} )
@@ -20,13 +16,10 @@ foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
 endforeach( OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES )
 
 include_directories ("${PROJECT_SOURCE_DIR}/include/")
-set(HEADERS
-	${PROJECT_SOURCE_DIR}/include/SimpleJSON/src/JSON.h
-	${PROJECT_SOURCE_DIR}/include/SimpleJSON/src/JSONValue.h
-)
-set(HEADER_CPPS
-	${PROJECT_SOURCE_DIR}/include/SimpleJSON/src/JSON.cpp
-	${PROJECT_SOURCE_DIR}/include/SimpleJSON/src/JSONValue.cpp
-)
 
-add_executable(StarterAlgo ${PROJECT_SOURCE_DIR}/src/source.cpp ${HEADERS} ${HEADER_CPPS})
+add_executable(StarterAlgo ${PROJECT_SOURCE_DIR}/src/source.cpp)
+
+add_subdirectory(include/SimpleJSON/)
+add_subdirectory(include/GameLib/)
+
+target_link_libraries(StarterAlgo SimpleJSON GameLib)
