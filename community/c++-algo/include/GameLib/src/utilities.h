@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-#include "SimpleJSON\src\JSON.h"
+#include "SimpleJSON/src/JSON.h"
 
 namespace terminal {
 
