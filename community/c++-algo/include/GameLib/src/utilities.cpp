@@ -15,6 +15,11 @@ namespace terminal {
 
 		Json state = Json::parse(stateStr, err);
 
+		if (err != "") {
+			string errorMsg = "Error parsing string from engine:\n\t" + err;
+			throw UtilException(errorMsg.c_str());
+		}
+
 		/*
 		for (auto entry : state.object_items()) {
 			cerr << entry.first << endl;
@@ -24,5 +29,14 @@ namespace terminal {
 		return state;
 	}
 
+	void Utilities::sendCommand(string command) {
+		command.erase(std::remove(command.begin(), command.end(), '\n'), command.end());
+		cout << command << endl;
+	}
+
+	void Utilities::debugWrite(string output, bool newline) {
+		cerr << output << (newline ? "\n" : "");
+		cerr.flush();
+	}
 
 }

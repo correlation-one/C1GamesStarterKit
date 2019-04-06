@@ -6,19 +6,22 @@
 
 int main(int argc, char * argv[]) {
 
-	using std::cout;
-	using std::cerr;
-	using std::endl;
 	using json11::Json;
 	using terminal::Utilities;
 
-    cerr << "Starting C++ Starter Algo" << endl;
+    std::cerr << "Starting C++ Starter Algo" << std::endl;
 
     for (int i = 0; i < 200; i++) {
-		Json state = Utilities::getCommand();
+		try {
+			Json state = Utilities::getCommand();
+		}
+		catch (terminal::UtilException e) {
+			Utilities::debugWrite(e.what());
+		}
 
-		cout << "[]\n";
-		cout << "[]\n";
+		Utilities::sendCommand("[]");
+		Utilities::sendCommand("[]");
+
     }
 
     return 0;
