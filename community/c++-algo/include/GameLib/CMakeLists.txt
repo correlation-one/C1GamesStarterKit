@@ -10,4 +10,4 @@ add_library(GameLib ${HEADERS})
 
 target_include_directories (GameLib PRIVATE "${CMAKE_SOURCE_DIR}/include")
 
-target_link_libraries(GameLib SimpleJSON)
+target_link_libraries(GameLib json11)

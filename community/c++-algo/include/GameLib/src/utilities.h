@@ -2,14 +2,16 @@
 #define UTILITIES_H
 
 #include <iostream>
+#include <string>
 
-#include "SimpleJSON/src/JSON.h"
+#include "json11/json11.hpp"
 
 namespace terminal {
 
 	class Utilities {
+
 	public:
-		static void test();
+		static json11::Json getCommand();
 
 	private:
 

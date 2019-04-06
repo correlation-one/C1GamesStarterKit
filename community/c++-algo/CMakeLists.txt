@@ -15,12 +15,11 @@ foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
     set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${out_dir}/lib )
 endforeach( OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES )
 
-
 add_executable(StarterAlgo ${CMAKE_SOURCE_DIR}/src/source.cpp)
 
 target_include_directories (StarterAlgo PRIVATE ${CMAKE_SOURCE_DIR}/include/)
 
-add_subdirectory(${CMAKE_SOURCE_DIR}/include/SimpleJSON/)
+add_subdirectory(${CMAKE_SOURCE_DIR}/include/json11/)
 add_subdirectory(${CMAKE_SOURCE_DIR}/include/GameLib/)
 
-target_link_libraries(StarterAlgo SimpleJSON GameLib)
+target_link_libraries(StarterAlgo json11 GameLib)
