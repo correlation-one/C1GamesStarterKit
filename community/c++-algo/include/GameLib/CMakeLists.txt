@@ -2,9 +2,9 @@ cmake_minimum_required (VERSION 2.6)
 project (GameLib)
 
 set(HEADERS
-	src/customExceptions.h
-	src/utilities.h
-	src/utilities.cpp
+    src/customExceptions.h
+    src/utilities.h
+    src/utilities.cpp
 )
 
 add_library(GameLib ${HEADERS})

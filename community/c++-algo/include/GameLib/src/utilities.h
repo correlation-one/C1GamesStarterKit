@@ -1,3 +1,9 @@
+/*
+Description: A header to handle basic utility functions like communicating with the engine.
+Last Modified: 06 Apr 2019
+Author: Isaac Draper
+*/
+
 #ifndef UTILITIES_H
 #define UTILITIES_H
 
@@ -10,15 +16,17 @@
 
 namespace terminal {
 
-	using std::string;
+    using std::string;
 
-	class Utilities {
-	public:
-		static json11::Json getCommand();
-		static void sendCommand(string command);
-		static void debugWrite(string output, bool newline=true);
+    /// Handles communication with the engine and other basic functions.
+    /// All functions are static and should not be restricted.
+    class Utilities {
+    public:
+        static json11::Json getCommand();
+        static void sendCommand(string command);
+        static void debugWrite(string output, bool newline=true);
 
-	};
+    };
 
 }
 
