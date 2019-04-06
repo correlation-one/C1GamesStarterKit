@@ -5,6 +5,8 @@ set(HEADERS
     src/customExceptions.h
     src/utilities.h
     src/utilities.cpp
+    src/algoCore.h
+    src/algoCore.cpp
 )
 
 add_library(GameLib ${HEADERS})

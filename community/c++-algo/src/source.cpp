@@ -7,28 +7,12 @@ Author: Isaac Draper
 #include <iostream>
 #include <string>
 
-#include "json11/json11.hpp"
-#include "GameLib/src/utilities.h"
+#include "algoStrategy.h"
 
 int main(int argc, char * argv[]) {
 
-    using json11::Json;
-    using terminal::Utilities;
-
-    std::cerr << "Starting C++ Starter Algo" << std::endl;
-
-    for (int i = 0; i < 200; i++) {
-        try {
-            Json state = Utilities::getCommand();
-        }
-        catch (terminal::UtilException e) {
-            Utilities::debugWrite(e.what());
-        }
-
-        Utilities::sendCommand("[]");
-        Utilities::sendCommand("[]");
-
-    }
+    terminal::AlgoStrategy algoStrategy = terminal::AlgoStrategy();
+    algoStrategy.start();
 
     return 0;
 }

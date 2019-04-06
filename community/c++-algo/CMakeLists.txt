@@ -15,7 +15,13 @@ foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
     set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${out_dir}/lib )
 endforeach( OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES )
 
-add_executable(StarterAlgo ${CMAKE_SOURCE_DIR}/src/source.cpp)
+set(HEADERS
+    src/algoStrategy.h
+    src/algoStrategy.cpp
+    src/source.cpp
+)
+
+add_executable(StarterAlgo ${HEADERS})
 
 target_include_directories (StarterAlgo PRIVATE ${CMAKE_SOURCE_DIR}/include/)
 
