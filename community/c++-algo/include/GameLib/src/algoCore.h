@@ -11,7 +11,7 @@ Author: Isaac Draper
 
 #include "json11/json11.hpp"
 #include "customExceptions.h"
-#include "utilities.h"
+#include "util.h"
 
 namespace terminal {
 

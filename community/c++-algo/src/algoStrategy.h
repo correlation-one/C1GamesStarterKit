@@ -8,7 +8,7 @@ Author: Isaac Draper
 #define ALGO_STRATEGY_H
 
 #include "json11/json11.hpp"
-#include "GameLib/src/utilities.h"
+#include "GameLib/src/util.h"
 #include "GameLib/src/algoCore.h"
 
 namespace terminal {

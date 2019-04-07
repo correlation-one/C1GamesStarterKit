@@ -4,8 +4,8 @@ Last Modified: 06 Apr 2019
 Author: Isaac Draper
 */
 
-#ifndef UTILITIES_H
-#define UTILITIES_H
+#ifndef UTIL_H
+#define UTIL_H
 
 #include <algorithm>
 #include <iostream>
@@ -20,7 +20,7 @@ namespace terminal {
 
     /// Handles communication with the engine and other basic functions.
     /// All functions are static and should not be restricted.
-    class Utilities {
+    class Util {
     public:
         static json11::Json getCommand();
         static void sendCommand(string command);

@@ -1,10 +1,10 @@
 /*
-Description: Implmentations for the Utilities.h header.
+Description: Implmentations for the Util.h header.
 Last Modified: 06 Apr 2019
 Author: Isaac Draper
 */
 
-#include "utilities.h"
+#include "util.h"
 
 namespace terminal {
 
@@ -18,7 +18,7 @@ namespace terminal {
     /// This gets the next command from the terminal engine through cin.
     /// It then attempts to parse the command to return a Json object.
     /// @return Json object of command from the engine.
-    Json Utilities::getCommand() {
+    Json Util::getCommand() {
         string stateStr, err;
         cin >> stateStr;
 
@@ -34,14 +34,15 @@ namespace terminal {
 
     /// This sends a command to the terminal engine through cout.
     /// It also removes all newline characters already inside the string.
-    void Utilities::sendCommand(string command) {
+    void Util::sendCommand(string command) {
         command.erase(std::remove(command.begin(), command.end(), '\n'), command.end());
         cout << command << endl;
+        cout.flush();
     }
 
     /// This prints a message to the game's debug console using cerr.
     /// @param newline 
-    void Utilities::debugWrite(string output, bool newline) {
+    void Util::debugWrite(string output, bool newline) {
         cerr << output << (newline ? "\n" : "");
         cerr.flush();
     }

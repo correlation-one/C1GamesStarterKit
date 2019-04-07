@@ -44,7 +44,7 @@ namespace terminal {
     /// This is overridden from AlgoCore.
     /// @param gameState A Json object containing the current game state.
     void AlgoStrategy::onTurn(Json gameState) {
-        Utilities::debugWrite("sending from AlgoStrategy");
+        Util::debugWrite("sending from AlgoStrategy");
         AlgoCore::submitDefaultTurn();
     }
 

@@ -31,7 +31,7 @@ namespace terminal {
     /// A Custom Exception to be thrown by any utility critical errors.
     class UtilException : public CustomException {
     public:
-        UtilException(const string errorMsg = "Utilities Exception") : CustomException(errorMsg) {}
+        UtilException(const string errorMsg = "Util Exception") : CustomException(errorMsg) {}
     };
 
 }

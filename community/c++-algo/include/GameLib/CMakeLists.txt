@@ -3,8 +3,8 @@ project (GameLib)
 
 set(HEADERS
     src/customExceptions.h
-    src/utilities.h
-    src/utilities.cpp
+    src/util.h
+    src/util.cpp
     src/algoCore.h
     src/algoCore.cpp
 )

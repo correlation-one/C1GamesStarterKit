@@ -34,8 +34,8 @@ namespace terminal {
 
     /// Submits a turn that does nothing.
     void AlgoCore::submitDefaultTurn() const {
-        Utilities::sendCommand("[]");
-        Utilities::sendCommand("[]");
+        Util::sendCommand("[]");
+        Util::sendCommand("[]");
     }
 
     /// Starts the main loop of the program.
@@ -44,11 +44,11 @@ namespace terminal {
     /// to wait until it recieves input from the engine.
     /// If this happens it must be killed manually.
     void AlgoCore::start() {
-        Utilities::debugWrite("Starting C++ Starter Algo");
+        Util::debugWrite("Starting C++ Starter Algo");
 
         while (true) {
             try {
-                Json gameState = Utilities::getCommand();
+                Json gameState = Util::getCommand();
 
                 if (gameState["turnInfo"] == nullptr) {
                     // Here we know it is the first turn, and the gameState object
@@ -82,7 +82,7 @@ namespace terminal {
                             // Since break simply takes us out of the switch,
                             // we use a variable to quite the while loop.
 
-                            Utilities::debugWrite("GOT END OF STATE");
+                            Util::debugWrite("GOT END OF STATE");
                             endOfGame = true;
                             break;
                         }
@@ -91,7 +91,7 @@ namespace terminal {
                             // This technically should never happen since it would
                             // be caught by the Json parser.
 
-                            Utilities::debugWrite("Unexpected state recieved: " + stateType);
+                            Util::debugWrite("Unexpected state recieved: " + stateType);
                             break;
                         }
                     }
@@ -102,7 +102,7 @@ namespace terminal {
                 }
             }
             catch (UtilException e) {
-                Utilities::debugWrite(e.what());
+                Util::debugWrite(e.what());
                 continue;
             }
         }
