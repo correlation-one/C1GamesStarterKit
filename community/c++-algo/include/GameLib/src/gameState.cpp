@@ -109,7 +109,7 @@ namespace terminal {
 
         double range = typeConfig["range"].number_value();
         double maxHealth = typeConfig["stability"].number_value();
-        double cost = typeConfig["cost"].int_value();
+        double cost = typeConfig["cost"].number_value();
 
         // Create the struct to return.
         Unit unit = {
@@ -119,7 +119,7 @@ namespace terminal {
                 unitRaw.at(0).int_value(),      // x position
                 unitRaw.at(1).int_value()       // y position
             },
-            unitRaw.at(2).int_value(),          // health
+            unitRaw.at(2).number_value(),       // health
             unitRaw.at(3).int_value(),          // unique id
             stationary,                         // is stationary
             speed,                              // speed
@@ -163,7 +163,7 @@ namespace terminal {
     /// Returns the type of resource based on the unit type.
     /// @param uType the UNIT_TYPE to get the resource.
     /// @return The type of resource the given unit requires.
-    double GameState::resourceRequired(UNIT_TYPE uType) {
+    RESOURCE GameState::resourceRequired(UNIT_TYPE uType) {
         return uType < 3 ? CORES : BITS;
     }
 
@@ -174,5 +174,43 @@ namespace terminal {
         Util::sendCommand(Json(deployStack).dump());
     }
 
+    /// The number of units a player can afford.
+    /// @param uType The type of unit to check.
+    /// @param player The player to use.
+    /// @return The number of units that player can afford.
+    int GameState::numberAffordable(UNIT_TYPE uType, Player& player) {
+        double cost = typeCost(uType);
+        RESOURCE rType = resourceRequired(uType);
+        double playerHeld = getResource(rType, player);
+        return (int)(playerHeld / cost);
+    }
+
+    /// Predicts the number of bits a player will have in a future turn.
+    /// @param turnsInFuture The number of turns to look ahead.
+    /// @param currentBits Will use this value instead of player's if passed. Also if it is negative.
+    /// @param player The player to use.
+    double GameState::projectFutureBits(int turnsInFuture, double currentBits, Player& player) {
+        if (turnsInFuture < 1 || turnsInFuture > 99) {
+            // TODO: Create warning here.
+        }
+
+        double bits = currentBits >= 0 ? currentBits : getResource(BITS, player);
+        for (int i = 1; i < turnsInFuture + 1; ++i) {
+            int currentTurn = turnNumber + i;
+            bits *= (1 - config["resources"]["bitDecayPerRound"].number_value());
+            double bitsGained = config["resources"]["bitsPerRound"].number_value() + (int)(currentTurn / config["resources"]["turnIntervalForBitSchedule"].number_value());
+            bits += bitsGained;
+            bits = std::trunc(bits * 10) / 10;
+        }
+
+        return bits;
+    }
+
+    /// Gets the cost of a unit based on it's type.
+    /// @param uType The type of unit.
+    /// @return The cost of the unit.
+    double GameState::typeCost(UNIT_TYPE uType) {
+        return config["unitInformation"].array_items().at(uType)["cost"].number_value();
+    }
 
 }

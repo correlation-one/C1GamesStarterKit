@@ -26,6 +26,8 @@ namespace terminal {
     public:
         GameState(Json configuration, Json jsonState);
         double getResource(RESOURCE rType, Player& player);
+        double projectFutureBits(int turnsInFuture, double currentBits, Player& player);
+        int numberAffordable(UNIT_TYPE uType, Player& player);
         void submitTurn();
 
     private:
@@ -35,7 +37,8 @@ namespace terminal {
         Unit createUnit(Player& player, int uType, Json::array unitRaw);
 
         void setResource(RESOURCE rType, double amount, Player& player);
-        double resourceRequired(UNIT_TYPE uType);
+        RESOURCE resourceRequired(UNIT_TYPE uType);
+        double typeCost(UNIT_TYPE uType);
 
 
         Json config;
