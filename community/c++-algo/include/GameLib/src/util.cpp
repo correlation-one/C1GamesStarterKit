@@ -34,6 +34,7 @@ namespace terminal {
 
     /// This sends a command to the terminal engine through cout.
     /// It also removes all newline characters already inside the string.
+    /// @param command A Json formatted string to send to the engine.
     void Util::sendCommand(string command) {
         command.erase(std::remove(command.begin(), command.end(), '\n'), command.end());
         cout << command << endl;
@@ -41,10 +42,10 @@ namespace terminal {
     }
 
     /// This prints a message to the game's debug console using cerr.
-    /// @param newline 
+    /// @param newline Whether or not to print a newline at the end of the message.
     void Util::debugWrite(string output, bool newline) {
         cerr << output << (newline ? "\n" : "");
         cerr.flush();
     }
-
+    
 }

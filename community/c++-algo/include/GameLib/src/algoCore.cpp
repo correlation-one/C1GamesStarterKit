@@ -55,7 +55,7 @@ namespace terminal {
                     // is information about the game, not an actual game state.
                     // Thus, we run the setup for the game.
                     
-                    AlgoCore::onGameStart(gameState);
+                    onGameStart(gameState);
                 }
                 else if (gameState["turnInfo"] != nullptr) {
                     int stateType = gameState["turnInfo"].array_items().at(0).int_value();

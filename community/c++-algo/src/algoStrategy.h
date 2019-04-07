@@ -1,11 +1,13 @@
 /*
 Description: A header to contain the components and logic of one's strategy.
-Last Modified: 06 Apr 2019
+Last Modified: 07 Apr 2019
 Author: Isaac Draper
 */
 
 #ifndef ALGO_STRATEGY_H
 #define ALGO_STRATEGY_H
+
+#include <unordered_map>
 
 #include "json11/json11.hpp"
 #include "GameLib/src/util.h"
@@ -25,7 +27,7 @@ namespace terminal {
     private:
         void onGameStart(Json configuration) override;
         void onTurn(Json gameState) override;
-
+        
     };
 
 }

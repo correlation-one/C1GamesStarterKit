@@ -1,6 +1,6 @@
 /*
 Description: Implementations for the algoStrategy header.
-Last Modified: 06 Apr 2019
+Last Modified: 07 Apr 2019
 Author: Isaac Draper
 */
 
@@ -9,6 +9,7 @@ Author: Isaac Draper
 namespace terminal {
 
     using json11::Json;
+    using std::string;
 
     /*
         Most of the algo code you write will be in this file unless you create new
@@ -35,7 +36,8 @@ namespace terminal {
     /// at the start of the game, based on the configuration.
     /// @param configuration A Json object containing information about the game.
     void AlgoStrategy::onGameStart(Json configuration) {
-
+        Util::debugWrite("Configuring your custom algo strategy...");
+        config = configuration;
     }
 
     /// Called when the engine expects input from the algo.
@@ -44,9 +46,7 @@ namespace terminal {
     /// This is overridden from AlgoCore.
     /// @param gameState A Json object containing the current game state.
     void AlgoStrategy::onTurn(Json gameState) {
-        Util::debugWrite("sending from AlgoStrategy");
         AlgoCore::submitDefaultTurn();
     }
 
-    
 }
