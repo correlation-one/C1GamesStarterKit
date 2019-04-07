@@ -31,7 +31,7 @@ namespace terminal {
         double projectFutureBits(int turnsInFuture, double currentBits, Player& player);
         int numberAffordable(UNIT_TYPE uType);
         int numberAffordable(UNIT_TYPE uType, Player& player);
-        bool GameState::canSpawn(UNIT_TYPE uType, Pos pos, int num = 1);
+        bool canSpawn(UNIT_TYPE uType, Pos pos, int num = 1);
         Player getPlayer(int id);
         void submitTurn();
 

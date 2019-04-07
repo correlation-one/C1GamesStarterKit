@@ -226,7 +226,7 @@ namespace terminal {
             bits *= (1 - config["resources"]["bitDecayPerRound"].number_value());
             double bitsGained = config["resources"]["bitsPerRound"].number_value() + (int)(currentTurn / config["resources"]["turnIntervalForBitSchedule"].number_value());
             bits += bitsGained;
-            bits = std::trunc(bits * 10) / 10;
+            bits = ((int)(bits * 100 + 0.5)) / 100.0;
         }
 
         return bits;
