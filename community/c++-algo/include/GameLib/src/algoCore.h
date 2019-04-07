@@ -17,16 +17,21 @@ namespace terminal {
 
     using json11::Json;
 
+    /// This is the super class to contain the basic essentials.
+    /// You should inherit from this class when developing your strategy.
     class AlgoCore {
     public:
         AlgoCore();
-        void onGameStart(Json configuration);
-        void onTurn(Json gameState);
-        void submitDefaultTurn();
-        void start();
+        virtual void start();
+
+    protected:
+        virtual void onGameStart(Json configuration);
+        virtual void onTurn(Json gameState);
+        void submitDefaultTurn() const;
+
+        Json config;
 
     private:
-        Json config;
         bool endOfGame;
 
     };

@@ -33,7 +33,7 @@ namespace terminal {
     }
 
     /// Submits a turn that does nothing.
-    void AlgoCore::submitDefaultTurn() {
+    void AlgoCore::submitDefaultTurn() const {
         Utilities::sendCommand("[]");
         Utilities::sendCommand("[]");
     }
@@ -62,11 +62,10 @@ namespace terminal {
 
                     // We now make decisions based on what turn state it is.
                     switch (stateType) {
-
                         case 0: {
-                        // This is when the engine expects to recieve what we are
-                        // building for this turn.
-                        // So we run the onTurn function.
+                            // This is when the engine expects to recieve what we are
+                            // building for this turn.
+                            // So we run the onTurn function.
 
                             onTurn(gameState);
                             break;

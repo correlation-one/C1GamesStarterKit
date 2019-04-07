@@ -8,6 +8,8 @@ Author: Isaac Draper
 
 namespace terminal {
 
+    using json11::Json;
+
     /*
         Most of the algo code you write will be in this file unless you create new
         modules yourself. Start by modifying the 'on_turn' function.
@@ -28,4 +30,23 @@ namespace terminal {
     
     }
 
+    /// A function that runs at the start of every game.
+    /// This is overridden from AlgoCore to perform initial setup
+    /// at the start of the game, based on the configuration.
+    /// @param configuration A Json object containing information about the game.
+    void AlgoStrategy::onGameStart(Json configuration) {
+
+    }
+
+    /// Called when the engine expects input from the algo.
+    /// It is called every turn and is passed a Json object containing
+    /// the current game state, which can be used to initialize a new gameState.
+    /// This is overridden from AlgoCore.
+    /// @param gameState A Json object containing the current game state.
+    void AlgoStrategy::onTurn(Json gameState) {
+        Utilities::debugWrite("sending from AlgoStrategy");
+        AlgoCore::submitDefaultTurn();
+    }
+
+    
 }
