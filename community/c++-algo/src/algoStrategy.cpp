@@ -47,8 +47,7 @@ namespace terminal {
     /// @param jsonState A Json object containing the current game state.
     void AlgoStrategy::onTurn(Json jsonState) {
         GameState gameState = GameState(config, jsonState);
-
-        AlgoCore::submitDefaultTurn();
+        gameState.submitTurn();
     }
 
 }

@@ -22,10 +22,10 @@ namespace terminal {
                 config["unitInformation"].array_items().at(i)["shorthand"].string_value();
         }
 
-        buildStack = Json::object();
-        deployStack = Json::object();
+        buildStack = Json::array();
+        deployStack = Json::array();
 
-        GameState::parseState(jsonState);
+        parseState(jsonState);
     }
 
     /// Fill in the rest of the required data from the engine.
@@ -36,14 +36,14 @@ namespace terminal {
         Json::array p1Stats = jsonState["p1Stats"].array_items();
         Json::array p2Stats = jsonState["p2Stats"].array_items();
 
-        GameState::parsePlayerStats(player1, 1, p1Stats);
-        GameState::parsePlayerStats(player2, 2, p2Stats);
+        parsePlayerStats(player1, 1, p1Stats);
+        parsePlayerStats(player2, 2, p2Stats);
 
         Json::array p1Units = jsonState["p1Units"].array_items();
         Json::array p2Units = jsonState["p2Units"].array_items();
 
-        GameState::parseUnits(player1, p1Units);
-        GameState::parseUnits(player2, p2Units);
+        parseUnits(player1, p1Units);
+        parseUnits(player2, p2Units);
     }
 
     /// Fills in the appropriate information for a player by reference.
@@ -76,7 +76,13 @@ namespace terminal {
         }
     }
 
+    /// Creates a unit struct based on a Json object.
+    /// @param player The player the units belong to (by reference).
+    /// @param uType The type of unit it is in integer format.
+    /// @param unitRaw A Json object containing the information for the current unit.
+    /// @return A Unit struct with data filled in from the state and config.
     Unit GameState::createUnit(Player& player, int uType, Json::array unitRaw) {
+        // Get the config information for this type of unit
         Json typeConfig = config["unitInformation"].array_items().at(uType);
 
         UNIT_TYPE unitType = static_cast<UNIT_TYPE>(uType);
@@ -105,6 +111,7 @@ namespace terminal {
         double maxHealth = typeConfig["stability"].number_value();
         double cost = typeConfig["cost"].int_value();
 
+        // Create the struct to return.
         Unit unit = {
             unitType,                           // unit type
             player,                             // owner
@@ -125,5 +132,47 @@ namespace terminal {
 
         return unit;
     }
+
+    /// Sets a resource for a player. This is called internally.
+    /// @param rType The resource type to set.
+    /// @param amount The new amount to set.
+    /// @param player The player whos resource to update.
+    void GameState::setResource(RESOURCE rType, double amount, Player& player) {
+        double heldResource = getResource(rType, player);
+        if (rType == BITS) {
+            player.bits = heldResource + amount;
+        }
+        else if (rType == CORES) {
+            player.cores = heldResource + amount;
+        }
+    }
+
+    /// Gets the amount of a resource held by a player.
+    /// @param rType The resource type to get.
+    /// @param player The player whos resource to get.
+    /// @return The amount of a resouce a player has.
+    double GameState::getResource(RESOURCE rType, Player& player) {
+        if (rType != BITS && rType != CORES) {
+            // TODO: create warn function and warn about unit type
+            return -1;
+        }
+
+        return rType == BITS ? player.bits : player.cores;
+    }
+
+    /// Returns the type of resource based on the unit type.
+    /// @param uType the UNIT_TYPE to get the resource.
+    /// @return The type of resource the given unit requires.
+    double GameState::resourceRequired(UNIT_TYPE uType) {
+        return uType < 3 ? CORES : BITS;
+    }
+
+    /// Submits and ends your turn, sending all changes to the engine.
+    /// Must be called at the end of your turn.
+    void GameState::submitTurn() {
+        Util::sendCommand(Json(buildStack).dump());
+        Util::sendCommand(Json(deployStack).dump());
+    }
+
 
 }

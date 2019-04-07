@@ -19,9 +19,12 @@ namespace terminal {
         REMOVE
     };
 
-    enum STATS {
+    enum RESOURCE {
         BITS,
-        CORES,
+        CORES
+    };
+
+    enum STATS {
         HEALTH,
         TIME
     };

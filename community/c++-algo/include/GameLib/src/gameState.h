@@ -25,6 +25,8 @@ namespace terminal {
     class GameState {
     public:
         GameState(Json configuration, Json jsonState);
+        double getResource(RESOURCE rType, Player& player);
+        void submitTurn();
 
     private:
         void parseState(Json jsonState);
@@ -32,11 +34,15 @@ namespace terminal {
         void parseUnits(Player& player, Json::array jsonUnits);
         Unit createUnit(Player& player, int uType, Json::array unitRaw);
 
+        void setResource(RESOURCE rType, double amount, Player& player);
+        double resourceRequired(UNIT_TYPE uType);
+
+
         Json config;
         Player player1;
         Player player2;
-        Json buildStack;
-        Json deployStack;
+        Json::array buildStack;
+        Json::array deployStack;
         int turnNumber;
         // TODO: Add GameMap
         // TODO: Add pathfinding
