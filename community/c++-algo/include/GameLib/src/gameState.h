@@ -7,6 +7,8 @@ Author: Isaac Draper
 #ifndef GAME_STATE_H
 #define GAME_STATE_H
 
+#include <unordered_map>
+
 #include "json11/json11.hpp"
 #include "GameLib/src/structs.h"
 #include "GameLib/src/enums.h"
@@ -25,6 +27,10 @@ namespace terminal {
         GameState(Json configuration, Json jsonState);
 
     private:
+        void parseState(Json jsonState);
+        void parsePlayerStats(Player& player, int id, Json::array stats);
+        void parseUnits(Player& player, Json::array jsonUnits);
+
         Json config;
         Player player1;
         Player player2;
@@ -33,6 +39,8 @@ namespace terminal {
         int turnNumber;
         // TODO: Add GameMap
         // TODO: Add pathfinding
+
+        std::unordered_map<UNIT_TYPE, string> unitStr;
 
     };
 

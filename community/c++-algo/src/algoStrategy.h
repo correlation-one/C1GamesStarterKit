@@ -12,6 +12,7 @@ Author: Isaac Draper
 #include "json11/json11.hpp"
 #include "GameLib/src/util.h"
 #include "GameLib/src/algoCore.h"
+#include "GameLib/src/gameState.h"
 
 namespace terminal {
 
@@ -26,7 +27,7 @@ namespace terminal {
 
     private:
         void onGameStart(Json configuration) override;
-        void onTurn(Json gameState) override;
+        void onTurn(Json jsonState) override;
         
     };
 

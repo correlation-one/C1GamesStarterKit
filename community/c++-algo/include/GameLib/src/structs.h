@@ -11,11 +11,25 @@ Author: Isaac Draper
 
 namespace terminal {
 
+    struct Pos {
+        int x;
+        int y;
+    };
+
     struct Player {
-        double BITS;
-        double CORES;
-        int HEALTH;
-        int TIME;
+        double bits;
+        double cores;
+        int health;
+        int time;
+        int id;
+    };
+
+    struct Unit {
+        UNIT_TYPE unitType;
+        Player owner;
+        Pos pos;
+        double health;
+        int id;
     };
 
 }
