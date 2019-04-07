@@ -30,6 +30,7 @@ namespace terminal {
         void parseState(Json jsonState);
         void parsePlayerStats(Player& player, int id, Json::array stats);
         void parseUnits(Player& player, Json::array jsonUnits);
+        Unit createUnit(Player& player, int uType, Json::array unitRaw);
 
         Json config;
         Player player1;

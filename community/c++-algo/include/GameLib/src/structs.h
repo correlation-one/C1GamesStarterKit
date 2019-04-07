@@ -30,6 +30,13 @@ namespace terminal {
         Pos pos;
         double health;
         int id;
+        bool stationary;
+        double speed;
+        double damageStatic;
+        double damageMobile;
+        double range;
+        double maxHealth;
+        double cost;
     };
 
 }

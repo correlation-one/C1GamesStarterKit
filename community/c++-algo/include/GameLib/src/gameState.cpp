@@ -67,23 +67,63 @@ namespace terminal {
             for (Json unitObj : unitsRaw) {
                 Json::array unitRaw = unitObj.array_items();
 
-                unitRaw.at(0).int_value();
                 // Create a unit from the raw data
-                Unit unit = {
-                    static_cast<UNIT_TYPE>(i),          // unit type
-                    player,                             // owner
-                    Pos {
-                        unitRaw.at(0).int_value(),      // x position
-                        unitRaw.at(1).int_value()       // y position
-                    },
-                    unitRaw.at(2).int_value(),          // health
-                    unitRaw.at(3).int_value()           // unique id
-                };
+                Unit unit = createUnit(player, i, unitRaw);
 
                 // TODO: Add the unit to the GameMap
             }
             ++i;
         }
+    }
+
+    Unit GameState::createUnit(Player& player, int uType, Json::array unitRaw) {
+        Json typeConfig = config["unitInformation"].array_items().at(uType);
+
+        UNIT_TYPE unitType = static_cast<UNIT_TYPE>(uType);
+        bool stationary = uType < 3;
+        double speed;
+        double damageStatic;
+        double damageMobile;
+
+        if (stationary) {
+            speed = 0;
+            if (unitType == ENCRYPTOR) {
+                damageMobile = typeConfig["shieldAmount"].number_value();
+            }
+            else {
+                damageMobile = typeConfig["damage"].number_value();
+            }
+            damageStatic = 0;
+        }
+        else {
+            speed = typeConfig["speed"].number_value();
+            damageStatic = typeConfig["damageF"].number_value();
+            damageMobile = typeConfig["damageI"].number_value();
+        }
+
+        double range = typeConfig["range"].number_value();
+        double maxHealth = typeConfig["stability"].number_value();
+        double cost = typeConfig["cost"].int_value();
+
+        Unit unit = {
+            unitType,                           // unit type
+            player,                             // owner
+            Pos {
+                unitRaw.at(0).int_value(),      // x position
+                unitRaw.at(1).int_value()       // y position
+            },
+            unitRaw.at(2).int_value(),          // health
+            unitRaw.at(3).int_value(),          // unique id
+            stationary,                         // is stationary
+            speed,                              // speed
+            damageStatic,                       // damage done to static units
+            damageMobile,                       // damage done to mobile units
+            range,                              // attack (or heal) range
+            maxHealth,                          // maximum health
+            cost                                // cost to build
+        };
+
+        return unit;
     }
 
 }
