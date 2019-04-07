@@ -25,9 +25,14 @@ namespace terminal {
     class GameState {
     public:
         GameState(Json configuration, Json jsonState);
+        double getResource(RESOURCE rType);
         double getResource(RESOURCE rType, Player& player);
+        double projectFutureBits(int turnsInFuture = 1, double currentBits = -1);
         double projectFutureBits(int turnsInFuture, double currentBits, Player& player);
+        int numberAffordable(UNIT_TYPE uType);
         int numberAffordable(UNIT_TYPE uType, Player& player);
+        bool GameState::canSpawn(UNIT_TYPE uType, Pos pos, int num = 1);
+        Player getPlayer(int id);
         void submitTurn();
 
     private:
@@ -39,7 +44,7 @@ namespace terminal {
         void setResource(RESOURCE rType, double amount, Player& player);
         RESOURCE resourceRequired(UNIT_TYPE uType);
         double typeCost(UNIT_TYPE uType);
-
+        bool isStationary(UNIT_TYPE uType);
 
         Json config;
         Player player1;

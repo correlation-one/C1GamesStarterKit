@@ -86,7 +86,7 @@ namespace terminal {
         Json typeConfig = config["unitInformation"].array_items().at(uType);
 
         UNIT_TYPE unitType = static_cast<UNIT_TYPE>(uType);
-        bool stationary = uType < 3;
+        bool stationary = isStationary(unitType);
         double speed;
         double damageStatic;
         double damageMobile;
@@ -160,11 +160,18 @@ namespace terminal {
         return rType == BITS ? player.bits : player.cores;
     }
 
+    /// Gets the amount of a resource held by a player.
+    /// @param rType The resource type to get.
+    /// @return The amount of a resouce player1 has.
+    double GameState::getResource(RESOURCE rType) {
+        return getResource(rType, player1);
+    }
+
     /// Returns the type of resource based on the unit type.
     /// @param uType the UNIT_TYPE to get the resource.
     /// @return The type of resource the given unit requires.
     RESOURCE GameState::resourceRequired(UNIT_TYPE uType) {
-        return uType < 3 ? CORES : BITS;
+        return isStationary(uType) ? CORES : BITS;
     }
 
     /// Submits and ends your turn, sending all changes to the engine.
@@ -172,6 +179,17 @@ namespace terminal {
     void GameState::submitTurn() {
         Util::sendCommand(Json(buildStack).dump());
         Util::sendCommand(Json(deployStack).dump());
+    }
+
+    /// Checks if a unit type is stationary.
+    /// @param uType The unit type to check.
+    /// @return A bool saying whether it is stationary
+    bool GameState::isStationary(UNIT_TYPE uType) {
+        return uType < 3;
+    }
+
+    Player GameState::getPlayer(int id) {
+        return id == 1 ? player1 : player2;
     }
 
     /// The number of units a player can afford.
@@ -185,10 +203,18 @@ namespace terminal {
         return (int)(playerHeld / cost);
     }
 
+    /// The number of units a player can afford.
+    /// @param uType The type of unit to check.
+    /// @return The number of units that player can afford.
+    int GameState::numberAffordable(UNIT_TYPE uType) {
+        return numberAffordable(uType, player1);
+    }
+
     /// Predicts the number of bits a player will have in a future turn.
     /// @param turnsInFuture The number of turns to look ahead.
     /// @param currentBits Will use this value instead of player's if passed. Also if it is negative.
     /// @param player The player to use.
+    /// @return The number of bits after so many turns.
     double GameState::projectFutureBits(int turnsInFuture, double currentBits, Player& player) {
         if (turnsInFuture < 1 || turnsInFuture > 99) {
             // TODO: Create warning here.
@@ -205,12 +231,37 @@ namespace terminal {
 
         return bits;
     }
+    
+    /// Predicts the number of bits a player will have in a future turn.
+    /// @param turnsInFuture The number of turns to look ahead.
+    /// @param currentBits Will use this value instead of player's if passed. Also if it is negative.
+    /// @return The number of bits after so many turns.
+    double GameState::projectFutureBits(int turnsInFuture, double currentBits) {
+        return projectFutureBits(turnsInFuture, currentBits, player1);
+    }
+
 
     /// Gets the cost of a unit based on it's type.
     /// @param uType The type of unit.
     /// @return The cost of the unit.
     double GameState::typeCost(UNIT_TYPE uType) {
         return config["unitInformation"].array_items().at(uType)["cost"].number_value();
+    }
+
+    /// Checks if we can spawn a unit at a given location.
+    /// @param uType The type of unit to check.
+    /// @param pos The position to check.
+    /// @param num The number of units to check, default is 1.
+    /// @return A bool, true if can spawn.
+    bool GameState::canSpawn(UNIT_TYPE uType, Pos pos, int num) {
+        // TODO: Add inside map check here.
+
+        int affordable = numberAffordable(uType, player1);
+        bool stationary = isStationary(uType);
+
+        // TODO: Add map
+
+        return false;
     }
 
 }
