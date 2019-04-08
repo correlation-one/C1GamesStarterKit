@@ -56,7 +56,7 @@ namespace terminal {
         // TODO: Add GameMap
         // TODO: Add pathfinding
 
-        std::unordered_map<UNIT_TYPE, string> unitStr;
+        std::unordered_map<UNIT_TYPE, string, std::hash<int>> unitStr;
 
     };
 
