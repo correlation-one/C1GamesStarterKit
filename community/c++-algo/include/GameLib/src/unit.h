@@ -7,6 +7,7 @@ Author: Ryan Draves
 #ifndef UNIT_H
 #define UNIT_H
 
+#include <iostream>
 #include <string>
 #include "enums.h"
 #include "customExceptions.h"
@@ -86,7 +87,7 @@ namespace terminal {
     public:
         GameUnit(UNIT_TYPE unitType, const Json &config, double stability, int playerIndex = 0,
             int x = -1, int y = -1);
-        string toString();
+        string toString() const;
         string str() { return toString(); };
         string repr() { return toString(); };
     private:
@@ -110,6 +111,13 @@ namespace terminal {
         int cost;
         bool pendingRemoval;
     };
+
+    /// This sends a representation of the GameState object to a stream.
+    /// @return The stream passed to the function.
+    inline std::ostream& operator<<(std::ostream& os, GameUnit const& gameUnit) {
+        os << gameUnit.toString();
+        return os;
+    }
 
 }
 
