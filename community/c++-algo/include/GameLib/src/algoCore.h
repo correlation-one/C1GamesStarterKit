@@ -1,6 +1,6 @@
 /*
 Description: A header to contain the core components necessary for an algo.
-Last Modified: 06 Apr 2019
+Last Modified: 08 Apr 2019
 Author: Isaac Draper
 */
 
@@ -23,6 +23,7 @@ namespace terminal {
     public:
         AlgoCore();
         virtual void start();
+        virtual std::string toString() const;
 
     protected:
         virtual void onGameStart(Json configuration);
@@ -35,6 +36,13 @@ namespace terminal {
         bool endOfGame;
 
     };
+
+    /// This sends a representation of the AlgoCore object to a stream.
+    /// @return The stream passed to the function.
+    inline std::ostream& operator<<(std::ostream& os, AlgoCore const& algoCore) {
+        os << algoCore.toString();
+        return os;
+    }
 
 }
 

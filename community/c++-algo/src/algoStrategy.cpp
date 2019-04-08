@@ -28,7 +28,7 @@ namespace terminal {
 
     /// Basic constructor for algoCore which calls it's superclass, AlgoCore.
     AlgoStrategy::AlgoStrategy() : AlgoCore::AlgoCore() {
-    
+
     }
 
     /// A function that runs at the start of every game.
@@ -44,9 +44,10 @@ namespace terminal {
     /// It is called every turn and is passed a Json object containing
     /// the current game state, which can be used to initialize a new gameState.
     /// This is overridden from AlgoCore.
-    /// @param gameState A Json object containing the current game state.
-    void AlgoStrategy::onTurn(Json gameState) {
-        AlgoCore::submitDefaultTurn();
+    /// @param jsonState A Json object containing the current game state.
+    void AlgoStrategy::onTurn(Json jsonState) {
+        GameState gameState = GameState(config, jsonState);
+        gameState.submitTurn();
     }
 
 }
