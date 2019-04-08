@@ -105,6 +105,13 @@ namespace terminal {
     /// @param pos The position to add the unit at.
     /// @param playerIndex The player to add the unit for.
     void GameMap::addUnit(UNIT_TYPE unitType, Pos pos, int playerIndex) {
+        if (inArenaBounds(pos)) {
+            // TODO: Create out of bounds exception.
+        }
+        if (playerIndex < 0 || playerIndex > 1) {
+            // TODO: Create player index error.
+        }
 
+        // GameUnit newUnit = GameUnit(unitType, config, playerIndex, -1, )
     }
 }

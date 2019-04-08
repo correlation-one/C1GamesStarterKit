@@ -7,17 +7,16 @@ Author: Isaac Draper
 #ifndef ALGO_MAP_H
 #define ALGO_MAP_H
 
+#include <iostream>
 #include <vector>
 
 #include "json11/json11.hpp"
 #include "structs.h"
 #include "enums.h"
 #include "util.h"
+#include "unit.h"
 
 namespace terminal {
-
-    // TEMPORARY UNIT SO CODE WILL COMPILE
-    struct GameUnit {};
 
     using json11::Json;
     using std::vector;
