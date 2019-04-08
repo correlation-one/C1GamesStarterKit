@@ -39,7 +39,6 @@ namespace terminal {
         void parseState(Json jsonState);
         void parsePlayerStats(Player& player, int id, Json::array stats);
         void parseUnits(Player& player, Json::array jsonUnits);
-        Unit createUnit(Player& player, int uType, Json::array unitRaw);
 
         void setResource(RESOURCE rType, double amount, Player& player);
         RESOURCE resourceRequired(UNIT_TYPE uType);

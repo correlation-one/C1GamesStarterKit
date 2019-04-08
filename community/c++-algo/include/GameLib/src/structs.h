@@ -24,21 +24,6 @@ namespace terminal {
         int id;
     };
 
-    struct Unit {
-        UNIT_TYPE unitType;
-        Player owner;
-        Pos pos;
-        double health;
-        int id;
-        bool stationary;
-        double speed;
-        double damageStatic;
-        double damageMobile;
-        double range;
-        double maxHealth;
-        double cost;
-    };
-
 }
 
 #endif
