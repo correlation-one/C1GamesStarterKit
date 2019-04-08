@@ -13,51 +13,57 @@ namespace terminal {
     using std::stoi;
     using std::stof;
     using json11::Json;
-    typedef enum UNIT_TYPE UnitType;
 
-    // Init the passed in params and pass off config initialization to serialize_type()
-    GameUnit::GameUnit(UnitType unit_type, const Json &config, float stability, int player_index,
-        int x, int y) : unit_type(unit_type), config(config), player_index(player_index),
-        stability(stability), x(x), y(y), pending_removal(false) {
-        serialize_type();
+    /// Init the passed in params and pass off config initialization to serializeType()
+    /// @param unitType Unit type of the game unit.
+    /// @param config JSON game configuration passed in upon startup.
+    /// @param stability Health of the game unit.
+    /// @param playerIndex 0 for ally unit (you), 1 for enemy unit.
+    /// @param x X coordinate of the game unit's location.
+    /// @param y Y coordinate of the game unit's location.
+    GameUnit::GameUnit(UNIT_TYPE unitType, const Json &config, double stability, int playerIndex,
+        int x, int y) : unitType(unitType), config(config), playerIndex(playerIndex),
+        stability(stability), x(x), y(y), pendingRemoval(false) {
+        serializeType();
     }
 
-    // Finish the game unit initialization based on the config
-    void GameUnit::serialize_type() {
-        stationary = is_stationary(unit_type);
-        Json type_config = config["unitInformation"][(int)unit_type];
+    /// Finish the game unit initialization based on the config
+    void GameUnit::serializeType() {
+        stationary = is_stationary(unitType);
+        Json type_config = config["unitInformation"][(int)unitType];
         if (stationary) {
             speed = 0;
-            if (unit_type == REMOVE) {
-                pending_removal = true;
+            if (unitType == REMOVE) {
+                pendingRemoval = true;
                 // Initialize these in case someone decides to access them...
-                damage = damage_f = damage_i = max_stability = range = cost = 0;
+                damage = damageF = damageI = maxStability = range = cost = 0;
                 return;
             }
-            else if (unit_type == ENCRYPTOR) {
-                damage = stoi(type_config["shieldAmount"].string_value());
+            else if (unitType == ENCRYPTOR) {
+                damage = type_config["shieldAmount"].int_value();
             }
             else {
-                damage = stoi(type_config["damage"].string_value());
+                damage = type_config["damage"].int_value();
             }
-            damage_f = damage;
-            damage_i = damage;
+            damageF = damage;
+            damageI = damage;
         }
         else {
-            speed = stof(type_config["speed"].string_value());
-            damage_f = stoi(type_config["damageF"].string_value());
-            damage_i = stoi(type_config["damageI"].string_value());
+            speed = type_config["speed"].number_value();
+            damageF = type_config["damageF"].int_value();
+            damageI = type_config["damageI"].int_value();
         }
-        range = stof(type_config["range"].string_value());
-        max_stability = stof(type_config["stability"].string_value());
-        cost = stoi(type_config["cost"].string_value());
+        range = type_config["range"].number_value();
+        maxStability = type_config["stability"].number_value();
+        cost = type_config["cost"].int_value();
     }
 
-    // Get a string representation of the game unit
+    /// Get a string representation of the game unit
+    /// @return Elegant string representation of the game unit
     string GameUnit::toString() {
-        string owner = player_index == 0 ? "Friendly" : "Enemy";
-        string removal = pending_removal ? ", pending removal" : "";
-        return owner + " " + unit_type_str(unit_type) + ", stability: " +
+        string owner = playerIndex == 0 ? "Friendly" : "Enemy";
+        string removal = pendingRemoval ? ", pending removal" : "";
+        return owner + " " + unitType_str(unitType) + ", stability: " +
             to_string(stability) + " location: [" + to_string(x) + ", " +
             to_string(y) + "]" + removal;
     }
