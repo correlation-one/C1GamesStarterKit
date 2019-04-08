@@ -1,5 +1,6 @@
 cmake_minimum_required (VERSION 2.6)
 project (StarterAlgo)
+set(CMAKE_CXX_STANDARD 11)
 
 set(out_dir ${CMAKE_SOURCE_DIR}/algo-target)
 
