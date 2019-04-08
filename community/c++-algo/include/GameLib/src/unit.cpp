@@ -30,7 +30,7 @@ namespace terminal {
     /// Finish the game unit initialization based on the config
     void GameUnit::serializeType() {
         stationary = is_stationary(unitType);
-        Json type_config = config["unitInformation"][(int)unitType];
+        Json type_config = config["unitInformation"].array_items().at((int)unitType);
         if (stationary) {
             speed = 0;
             if (unitType == REMOVE) {
