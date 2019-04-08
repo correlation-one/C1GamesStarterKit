@@ -29,6 +29,12 @@ namespace terminal {
         TIME
     };
 
+    enum MOVE_DIRECTION {
+        NONE,
+        HORIZONTAL,
+        VERTICAL
+    };
+
 }
 
 #endif

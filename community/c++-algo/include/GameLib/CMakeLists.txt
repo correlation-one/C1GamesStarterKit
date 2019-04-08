@@ -13,6 +13,8 @@ set(HEADERS
     src/gameState.cpp
     src/unit.h
     src/unit.cpp
+    src/navigation.h
+    src/navigation.cpp
 )
 
 add_library(GameLib ${HEADERS})
