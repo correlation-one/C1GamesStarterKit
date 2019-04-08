@@ -10,8 +10,6 @@ namespace terminal {
     
     using std::string;
     using std::to_string;
-    using std::stoi;
-    using std::stof;
     using json11::Json;
 
     /// Init the passed in params and pass off config initialization to serializeType()
