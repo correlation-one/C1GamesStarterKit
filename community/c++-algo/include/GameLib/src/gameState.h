@@ -8,6 +8,7 @@ Author: Isaac Draper
 #define GAME_STATE_H
 
 #include <unordered_map>
+#include <sstream>
 
 #include "json11/json11.hpp"
 #include "GameLib/src/structs.h"
@@ -34,6 +35,7 @@ namespace terminal {
         bool canSpawn(UNIT_TYPE uType, Pos pos, int num = 1);
         Player getPlayer(int id);
         void submitTurn();
+        virtual string toString() const;
 
     private:
         void parseState(Json jsonState);
@@ -57,6 +59,13 @@ namespace terminal {
         std::unordered_map<UNIT_TYPE, string> unitStr;
 
     };
+
+    /// This sends a representation of the GameState object to a stream.
+    /// @return The stream passed to the function.
+    inline std::ostream& operator<<(std::ostream& os, GameState const& gameState) {
+        os << gameState.toString();
+        return os;
+    }
 
 }
 

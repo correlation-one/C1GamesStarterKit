@@ -9,6 +9,8 @@ Author: Isaac Draper
 namespace terminal {
 
     using json11::Json;
+    using std::to_string;
+    using std::string;
 
     /// Constructor for GameState which requires a configuration Json object
     /// and a Json object representing the current state of the game.
@@ -203,6 +205,24 @@ namespace terminal {
         // TODO: Add map
 
         return false;
+    }
+
+    /// This returns a string representation of the GameState object.
+    /// @return A string to represent this object.
+    string GameState::toString() const {
+        std::stringstream ss;
+        ss.precision(1);
+        ss << std::fixed;
+        ss << "GameState:\n\t\t\tBits\tCores\tHealth\n\t" <<
+            "Player 1:\t" <<
+            player1.bits  << "\t" <<
+            player1.cores << "\t" <<
+            player1.health << "\n\t" <<
+            "Player 2:\t" <<
+            player2.bits  << "\t" <<
+            player2.cores << "\t" <<
+            player2.health << "\n";
+        return ss.str();
     }
 
 }
