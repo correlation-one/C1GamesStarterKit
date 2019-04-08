@@ -7,6 +7,7 @@ Author: Isaac Draper
 #ifndef ALGO_CORE_H
 #define ALGO_CORE_H
 
+#include <iostream>
 #include <string>
 
 #include "json11/json11.hpp"
