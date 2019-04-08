@@ -1,4 +1,4 @@
-# Starter Algo Java
+# Starter Algo C++
 
 #### NOTE: This project is currently being developed, and is NOT supported by C1's servers yet.
 This means you currently cannot upload this algo to their servers, it will not work.
@@ -23,6 +23,8 @@ community/c++-algo
 │   │           structs.h
 │   │           util.cpp
 │   │           util.h
+│   │           unit.cpp
+│   │           unit.h
 │   │
 │   └───json11
 │
