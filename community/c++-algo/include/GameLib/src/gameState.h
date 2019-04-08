@@ -56,8 +56,6 @@ namespace terminal {
         // TODO: Add GameMap
         // TODO: Add pathfinding
 
-        std::unordered_map<UNIT_TYPE, string> unitStr;
-
     };
 
     /// This sends a representation of the GameState object to a stream.
