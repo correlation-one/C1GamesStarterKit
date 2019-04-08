@@ -19,11 +19,6 @@ namespace terminal {
     GameState::GameState(Json configuration, Json jsonState) {
         config = configuration;
 
-        for (int i = 0; i < 7; ++i) {
-            unitStr[static_cast<UNIT_TYPE>(i)] =
-                config["unitInformation"].array_items().at(i)["shorthand"].string_value();
-        }
-
         buildStack = Json::array();
         deployStack = Json::array();
 
