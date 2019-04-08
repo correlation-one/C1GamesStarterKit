@@ -29,7 +29,7 @@ namespace terminal {
 
     /// Finish the game unit initialization based on the config
     void GameUnit::serializeType() {
-        stationary = is_stationary(unitType);
+        stationary = isStationary(unitType);
         Json type_config = config["unitInformation"].array_items().at((int)unitType);
         if (stationary) {
             speed = 0;
@@ -63,7 +63,7 @@ namespace terminal {
     string GameUnit::toString() {
         string owner = playerIndex == 0 ? "Friendly" : "Enemy";
         string removal = pendingRemoval ? ", pending removal" : "";
-        return owner + " " + unitType_str(unitType) + ", stability: " +
+        return owner + " " + unitTypeStr(unitType) + ", stability: " +
             to_string(stability) + " location: [" + to_string(x) + ", " +
             to_string(y) + "]" + removal;
     }
