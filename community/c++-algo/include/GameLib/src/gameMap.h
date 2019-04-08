@@ -1,7 +1,7 @@
 /*
 Description: A header to contain a representation of the current game map.
 Last Modified: 08 Apr 2019
-Author: Isaac Draper
+Author: Isaac Draper, Ryan Draves
 */
 
 #ifndef ALGO_MAP_H
@@ -13,11 +13,10 @@ Author: Isaac Draper
 #include "structs.h"
 #include "enums.h"
 #include "util.h"
+#include "unit.h"
+#include "customExceptions.h"
 
 namespace terminal {
-
-    // TEMPORARY UNIT SO CODE WILL COMPILE
-    struct GameUnit {};
 
     using json11::Json;
     using std::vector;
@@ -31,6 +30,8 @@ namespace terminal {
         bool inArenaBounds(Pos pos) const;
         void getEdgeLocations(vector<Pos>& vec, EDGE edge);
         void addUnit(UNIT_TYPE unitType, Pos pos, int playerIndex);
+        vector<GameUnit>& operator[](Pos pos);
+        vector<vector<GameUnit> >& operator[](int x);
 
     private:
         void createEmptyGrid();
@@ -38,7 +39,7 @@ namespace terminal {
         Json config;
         const int ARENA_SIZE = 28;
         const int HALF_ARENA = 14;
-        vector<vector<vector<GameUnit>>> map;
+        vector<vector<vector<GameUnit> > > map;
 
     };
 

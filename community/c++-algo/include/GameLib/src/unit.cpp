@@ -15,7 +15,7 @@ namespace terminal {
     /// Init the passed in params and pass off config initialization to serializeType()
     /// @param unitType Unit type of the game unit.
     /// @param config JSON game configuration passed in upon startup.
-    /// @param stability Health of the game unit.
+    /// @param stability Health of the game unit. 0 defaults it to max_stability.
     /// @param playerIndex 0 for ally unit (you), 1 for enemy unit.
     /// @param x X coordinate of the game unit's location.
     /// @param y Y coordinate of the game unit's location.
@@ -23,6 +23,7 @@ namespace terminal {
         int x, int y) : unitType(unitType), config(config), playerIndex(playerIndex),
         stability(stability), x(x), y(y), pendingRemoval(false) {
         serializeType();
+        stability = stability == 0 ? max_stability : stability;
     }
 
     /// Finish the game unit initialization based on the config
