@@ -1,6 +1,6 @@
 /*
 Description: Contains useful structs for storing game data.
-Last Modified: 07 Apr 2019
+Last Modified: 08 Apr 2019
 Author: Isaac Draper
 */
 
@@ -11,11 +11,17 @@ Author: Isaac Draper
 
 namespace terminal {
 
+    struct Pos {
+        int x;
+        int y;
+    };
+
     struct Player {
-        double BITS;
-        double CORES;
-        int HEALTH;
-        int TIME;
+        double bits;
+        double cores;
+        int health;
+        int time;
+        int id;
     };
 
 }
