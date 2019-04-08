@@ -34,6 +34,11 @@ namespace terminal {
         UtilException(const string errorMsg = "Util Exception") : CustomException(errorMsg) {}
     };
 
+    class UnitTypeException : public CustomException {
+    public:
+        UnitTypeException(const string errorMsg = "Unit Type Exception") : CustomException(errorMsg) {}
+    };
+
 }
 
 
