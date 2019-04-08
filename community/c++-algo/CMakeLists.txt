@@ -2,6 +2,7 @@ cmake_minimum_required (VERSION 2.6)
 project (StarterAlgo)
 
 set(out_dir ${CMAKE_SOURCE_DIR}/algo-target)
+set(CMAKE_CXX_STANDARD 11)
 
 # First for the generic no-config case (e.g. with mingw)
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${out_dir} )
