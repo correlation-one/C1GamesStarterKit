@@ -7,6 +7,8 @@ Author: Isaac Draper
 #ifndef STRUCTS_H
 #define STRUCTS_H
 
+#include <iostream>
+
 #include "enums.h"
 
 namespace terminal {

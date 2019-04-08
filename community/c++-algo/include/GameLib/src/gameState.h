@@ -8,6 +8,7 @@ Author: Isaac Draper
 #define GAME_STATE_H
 
 #include <unordered_map>
+#include <iostream>
 #include <sstream>
 
 #include "json11/json11.hpp"

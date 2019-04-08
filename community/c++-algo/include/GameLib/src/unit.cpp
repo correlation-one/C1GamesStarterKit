@@ -58,7 +58,7 @@ namespace terminal {
 
     /// Get a string representation of the game unit
     /// @return Elegant string representation of the game unit
-    string GameUnit::toString() {
+    string GameUnit::toString() const {
         string owner = playerIndex == 0 ? "Friendly" : "Enemy";
         string removal = pendingRemoval ? ", pending removal" : "";
         return owner + " " + unitTypeStr(unitType) + ", stability: " +
