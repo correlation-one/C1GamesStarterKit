@@ -21,7 +21,7 @@ namespace terminal {
     /// Static function regarding whether a game unit is stationary
     /// @param unitType Unit type to check
     /// @return boolean result of if the unit is stationary
-    static bool is_stationary(const UNIT_TYPE &unitType) {
+    static bool isStationary(const UNIT_TYPE &unitType) {
         if (unitType == FILTER ||
             unitType == ENCRYPTOR ||
             unitType == DESTRUCTOR)
@@ -32,7 +32,7 @@ namespace terminal {
     /// Static function to get the string shorthand of a game unit
     /// @param unitType unit type to check
     /// @return string shorthand of the unit, used for print outs
-    static string unitType_str(const UNIT_TYPE &unitType) {
+    static string unitTypeStr(const UNIT_TYPE &unitType) {
         switch (unitType) {
             case FILTER:
                 return "FF";
