@@ -114,6 +114,8 @@ namespace terminal {
     }
 
     /// Add a single GameUnit to the map at the given location.
+    /// This does not send it to the engine, it simply lets you create any
+    /// map position you want to experiment with.
     /// @param unitType The type of unit to add. Stationary units will replace 
     /// @param pos The position to add the unit at.
     /// @param playerIndex The player to add the unit for.

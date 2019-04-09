@@ -11,8 +11,10 @@ set(HEADERS
     src/algoCore.cpp
     src/gameState.h
     src/gameState.cpp
-    src/gameMap.cpp
     src/gameMap.h
+    src/gameMap.cpp
+    src/unit.h
+    src/unit.cpp
 )
 
 add_library(GameLib ${HEADERS})
