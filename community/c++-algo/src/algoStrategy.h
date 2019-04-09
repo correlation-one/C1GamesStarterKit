@@ -8,6 +8,7 @@ Author: Isaac Draper
 #define ALGO_STRATEGY_H
 
 #include <unordered_map>
+#include <vector>
 
 #include "json11/json11.hpp"
 #include "GameLib/src/util.h"
@@ -28,6 +29,11 @@ namespace terminal {
     private:
         void onGameStart(Json configuration) override;
         void onTurn(Json jsonState) override;
+        void starterStrategy(GameState& gameState);
+        void buildC1Logo(GameState& gameState);
+        void buildDefences(GameState& gameState);
+        void deployAttackers(GameState& gameState);
+        void filterBlockedLocations(vector<Pos>& locations, GameState& gameState);
         
     };
 
