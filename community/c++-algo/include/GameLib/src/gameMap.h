@@ -8,6 +8,7 @@ Author: Isaac Draper, Ryan Draves
 #define ALGO_MAP_H
 
 #include <vector>
+#include <math.h>
 
 #include "json11/json11.hpp"
 #include "structs.h"
@@ -29,13 +30,21 @@ namespace terminal {
         bool inArenaBounds(int x, int y) const;
         bool inArenaBounds(Pos pos) const;
         void getEdgeLocations(vector<Pos>& vec, EDGE edge);
+        void getEdges(vector<vector<Pos> >& vec);
         void addUnit(UNIT_TYPE unitType, Pos pos, int playerIndex);
-        vector<GameUnit>& operator[](Pos pos);
+        void removeUnit(Pos pos);
+        void getLocationsInRange(vector<Pos>& locations, Pos pos, double radius);
+        vector<GameUnit>& operator[](const Pos &pos);
+        const vector<GameUnit>& operator[](const Pos &pos) const;
         vector<vector<GameUnit> >& operator[](int x);
+        vector<vector<vector<GameUnit> > >::iterator begin();
+        vector<vector<vector<GameUnit> > >::iterator end();
 
     private:
         void createEmptyGrid();
+        double distanceBetweenLocations(Pos pos_1, Pos pos_2);
 
+    public:
         Json config;
         const int ARENA_SIZE = 28;
         const int HALF_ARENA = 14;
