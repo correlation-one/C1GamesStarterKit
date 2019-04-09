@@ -33,26 +33,25 @@ namespace terminal {
         GameState(Json configuration, Json jsonState);
         void submitTurn() const;
 
-        double getResource(RESOURCE rType) const;
-        double getResource(RESOURCE rType, const Player& player) const;
-        
-        double projectFutureBits(int turnsInFuture = 1, double currentBits = -1) const;
-        double projectFutureBits(int turnsInFuture, double currentBits, const Player& player) const;
+        int numberAffordable(UNIT_TYPE unitType) const;
+        int numberAffordable(UNIT_TYPE unitType, const Player& player) const;
 
-        int numberAffordable(UNIT_TYPE uType) const;
-        int numberAffordable(UNIT_TYPE uType, const Player& player) const;
+        bool canSpawn(UNIT_TYPE unitType, int x, int y, int num = 1) const;
+        bool canSpawn(UNIT_TYPE unitType, const Pos pos, int num = 1) const;
 
-        bool canSpawn(UNIT_TYPE uType, int x, int y, int num = 1) const;
-        bool canSpawn(UNIT_TYPE uType, const Pos pos, int num = 1) const;
-
-        int attemptSpawn(UNIT_TYPE uType, int x, int y);
-        int attemptSpawn(UNIT_TYPE uType, Pos pos);
-        int attemptSpawn(UNIT_TYPE uType, vector<Pos> locations, int num = 1);
+        int attemptSpawn(UNIT_TYPE unitType, int x, int y);
+        int attemptSpawn(UNIT_TYPE unitType, Pos pos);
+        int attemptSpawn(UNIT_TYPE unitType, vector<Pos> locations, int num = 1);
 
         int attemptRemove(Pos pos);
         int attemptRemove(int x, int y);
         int attemptRemove(vector<Pos> locations);
 
+        double projectFutureBits(int turnsInFuture = 1, double currentBits = -1) const;
+        double projectFutureBits(int turnsInFuture, double currentBits, const Player& player) const;
+
+        double getResource(RESOURCE resourceType) const;
+        double getResource(RESOURCE resourceType, const Player& player) const;
         Player getPlayer(int id) const;
         int getTurn() const;
 
@@ -63,11 +62,12 @@ namespace terminal {
         void parsePlayerStats(Player& player, int id, Json::array stats);
         void parseUnits(Player& player, Json::array jsonUnits);
 
-        void setResource(RESOURCE rType, double amount);
-        void setResource(RESOURCE rType, double amount, Player& player);
-        RESOURCE resourceRequired(UNIT_TYPE uType) const;
-        double typeCost(UNIT_TYPE uType) const;
-        bool isStationary(UNIT_TYPE uType) const;
+        void setResource(RESOURCE resourceType, double amount);
+        void setResource(RESOURCE resourceType, double amount, Player& player);
+
+        RESOURCE resourceRequired(UNIT_TYPE unitType) const;
+        double typeCost(UNIT_TYPE unitType) const;
+        bool isStationary(UNIT_TYPE unitType) const;
 
         Json config;
         Player player1;

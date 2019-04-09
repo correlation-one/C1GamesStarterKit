@@ -78,51 +78,51 @@ namespace terminal {
     }
 
     /// Sets a resource for a player. This is called internally.
-    /// @param rType The resource type to set.
+    /// @param resourceType The resource type to set.
     /// @param amount The new amount to set.
     /// @param player The player whos resource to update.
-    void GameState::setResource(RESOURCE rType, double amount, Player& player) {
-        double heldResource = getResource(rType, player);
-        if (rType == BITS) {
+    void GameState::setResource(RESOURCE resourceType, double amount, Player& player) {
+        double heldResource = getResource(resourceType, player);
+        if (resourceType == BITS) {
             player.bits = heldResource + amount;
         }
-        else if (rType == CORES) {
+        else if (resourceType == CORES) {
             player.cores = heldResource + amount;
         }
     }
 
     /// Sets a resource for a player. This is called internally.
-    /// @param rType The resource type to set.
+    /// @param resourceType The resource type to set.
     /// @param amount The new amount to set.
-    void GameState::setResource(RESOURCE rType, double amount) {
-        setResource(rType, amount, player1);
+    void GameState::setResource(RESOURCE resourceType, double amount) {
+        setResource(resourceType, amount, player1);
     }
 
     /// Gets the amount of a resource held by a player.
-    /// @param rType The resource type to get.
+    /// @param resourceType The resource type to get.
     /// @param player The player whos resource to get.
     /// @return The amount of a resouce a player has.
-    double GameState::getResource(RESOURCE rType, const Player& player) const {
-        if (rType != BITS && rType != CORES) {
+    double GameState::getResource(RESOURCE resourceType, const Player& player) const {
+        if (resourceType != BITS && resourceType != CORES) {
             // TODO: create warn function and warn about unit type
             return -1;
         }
 
-        return rType == BITS ? player.bits : player.cores;
+        return resourceType == BITS ? player.bits : player.cores;
     }
 
     /// Gets the amount of a resource held by a player.
-    /// @param rType The resource type to get.
+    /// @param resourceType The resource type to get.
     /// @return The amount of a resouce player1 has.
-    double GameState::getResource(RESOURCE rType) const {
-        return getResource(rType, player1);
+    double GameState::getResource(RESOURCE resourceType) const {
+        return getResource(resourceType, player1);
     }
 
     /// Returns the type of resource based on the unit type.
-    /// @param uType the UNIT_TYPE to get the resource.
+    /// @param unitType the UNIT_TYPE to get the resource.
     /// @return The type of resource the given unit requires.
-    RESOURCE GameState::resourceRequired(UNIT_TYPE uType) const {
-        return isStationary(uType) ? CORES : BITS;
+    RESOURCE GameState::resourceRequired(UNIT_TYPE unitType) const {
+        return isStationary(unitType) ? CORES : BITS;
     }
 
     /// Submits and ends your turn, sending all changes to the engine.
@@ -133,10 +133,10 @@ namespace terminal {
     }
 
     /// Checks if a unit type is stationary.
-    /// @param uType The unit type to check.
+    /// @param unitType The unit type to check.
     /// @return A bool saying whether it is stationary
-    bool GameState::isStationary(UNIT_TYPE uType) const {
-        return uType < 3;
+    bool GameState::isStationary(UNIT_TYPE unitType) const {
+        return unitType < 3;
     }
 
     /// Returns a player struct based on the player number passed.
@@ -153,21 +153,21 @@ namespace terminal {
     }
 
     /// The number of units a player can afford.
-    /// @param uType The type of unit to check.
+    /// @param unitType The type of unit to check.
     /// @param player The player to use.
     /// @return The number of units that player can afford.
-    int GameState::numberAffordable(UNIT_TYPE uType, const Player& player) const {
-        double cost = typeCost(uType);
-        RESOURCE rType = resourceRequired(uType);
-        double playerHeld = getResource(rType, player);
+    int GameState::numberAffordable(UNIT_TYPE unitType, const Player& player) const {
+        double cost = typeCost(unitType);
+        RESOURCE resourceType = resourceRequired(unitType);
+        double playerHeld = getResource(resourceType, player);
         return (int)(playerHeld / cost);
     }
 
     /// The number of units a player can afford.
-    /// @param uType The type of unit to check.
+    /// @param unitType The type of unit to check.
     /// @return The number of units that player can afford.
-    int GameState::numberAffordable(UNIT_TYPE uType) const {
-        return numberAffordable(uType, player1);
+    int GameState::numberAffordable(UNIT_TYPE unitType) const {
+        return numberAffordable(unitType, player1);
     }
 
     /// Predicts the number of bits a player will have in a future turn.
@@ -202,26 +202,26 @@ namespace terminal {
 
 
     /// Gets the cost of a unit based on it's type.
-    /// @param uType The type of unit.
+    /// @param unitType The type of unit.
     /// @return The cost of the unit.
-    double GameState::typeCost(UNIT_TYPE uType) const {
-        return config["unitInformation"].array_items().at(uType)["cost"].number_value();
+    double GameState::typeCost(UNIT_TYPE unitType) const {
+        return config["unitInformation"].array_items().at(unitType)["cost"].number_value();
     }
 
     /// Checks if we can spawn a unit at a given location.
-    /// @param uType The type of unit to check.
+    /// @param unitType The type of unit to check.
     /// @param x The x position to check.
     /// @param y The y position to check.
     /// @param num The number of units to check, default is 1.
     /// @return A bool, true if can spawn.
-    bool GameState::canSpawn(UNIT_TYPE uType, int x, int y, int num) const {
+    bool GameState::canSpawn(UNIT_TYPE unitType, int x, int y, int num) const {
         if (!gameMap.inArenaBounds(x, y)) {
             // TODO: Add warning
             return false;
         }
 
-        const int affordable = numberAffordable(uType, player1);
-        const bool stationary = isStationary(uType);
+        const int affordable = numberAffordable(unitType, player1);
+        const bool stationary = isStationary(unitType);
         const bool blocked = false; // TODO: Add containsStationaryUnit to gameMap
         const bool correctTerritory = y < gameMap.HALF_ARENA;
 
@@ -236,12 +236,12 @@ namespace terminal {
     }
 
     /// Checks if we can spawn a unit at a given location.
-    /// @param uType The type of unit to check.
+    /// @param unitType The type of unit to check.
     /// @param pos The position to check.
     /// @param num The number of units to check, default is 1.
     /// @return A bool, true if can spawn.
-    bool GameState::canSpawn(UNIT_TYPE uType, Pos pos, int num) const {
-        return canSpawn(uType, pos.x, pos.y, num);
+    bool GameState::canSpawn(UNIT_TYPE unitType, Pos pos, int num) const {
+        return canSpawn(unitType, pos.x, pos.y, num);
     }
 
     /// Attempts to spawn new units with the type give at a single location;
@@ -279,14 +279,14 @@ namespace terminal {
     /// @param locations The location to spawn the unit.
     /// @param num The numer of units to spawn at each location (default is 1).
     /// @return Returns the number of units spawned.
-    int GameState::attemptSpawn(UNIT_TYPE uType, vector<Pos> locations, int num) {
+    int GameState::attemptSpawn(UNIT_TYPE unitType, vector<Pos> locations, int num) {
         if (num < 1) {
             // TODO: warn user
         }
 
         int numSpawned = 0;
         for (Pos pos : locations) {
-            numSpawned += attemptSpawn(uType, pos);
+            numSpawned += attemptSpawn(unitType, pos);
         }
         return numSpawned;
     }
