@@ -12,9 +12,9 @@ Author: Patrik Dobias
 #include <vector>
 #include <queue>
 
-#include "GameLib/src/util.h"
-#include "GameLib/src/structs.h"
-#include "GameLib/src/gameState.h"
+#include "util.h"
+#include "structs.h"
+#include "gameState.h"
 
 namespace terminal {
 
@@ -22,10 +22,12 @@ namespace terminal {
 
     /// Structure representating each location in gameMap.
     struct Node {
-        bool visitedIdealness = false;
-        bool visitedValidate = false;
-        bool blocked = false;
-        int pathLength = -1;
+        bool visitedIdealness;
+        bool visitedValidate;
+        bool blocked;
+        int pathLength;
+
+        Node(): visitedIdealness(false), visitedValidate(false), blocked(false), pathLength(-1) {  }
     };
     
     /// This class handles pathfinding.
