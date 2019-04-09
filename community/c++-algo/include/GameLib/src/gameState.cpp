@@ -141,13 +141,13 @@ namespace terminal {
 
     /// Returns a player struct based on the player number passed.
     /// @param id The player number.
-    /// return A player struct containing information about the player.
+    /// @return A player struct containing information about the player.
     Player GameState::getPlayer(int id) const {
         return id == 1 ? player1 : player2;
     }
 
     /// Returns the current turn number of the game.
-    /// return The current turn number.
+    /// @return The current turn number.
     int GameState::getTurn() const {
         return turnNumber;
     }
@@ -220,7 +220,7 @@ namespace terminal {
             return false;
         }
 
-        const int affordable = numberAffordable(unitType, player1);
+        const bool affordable = numberAffordable(unitType, player1) >= num;
         const bool stationary = isStationary(unitType);
         const bool blocked = false; // TODO: Add containsStationaryUnit to gameMap
         const bool correctTerritory = y < gameMap.HALF_ARENA;
@@ -247,8 +247,9 @@ namespace terminal {
     /// Attempts to spawn new units with the type give at a single location;
     /// @param unitType The type of unit to spawn.
     /// @param pos The location to spawn the unit.
+    /// @param num The number of units to spawn.
     /// @return Returns the number of units spawned (0 or 1).
-    int GameState::attemptSpawn(UNIT_TYPE unitType, int x, int y) {
+    int GameState::attemptSpawn(UNIT_TYPE unitType, int x, int y, int num) {
         if (canSpawn(unitType, x, y)) {
             int cost = (int)typeCost(unitType);
             RESOURCE resourceType = resourceRequired(unitType);
@@ -269,8 +270,9 @@ namespace terminal {
     /// Attempts to spawn new units with the type give at a single location;
     /// @param unitType The type of unit to spawn.
     /// @param pos The location to spawn the unit.
+    /// @param num The number of units to spawn.
     /// @return Returns the number of units spawned (0 or 1).
-    int GameState::attemptSpawn(UNIT_TYPE unitType, Pos pos) {
+    int GameState::attemptSpawn(UNIT_TYPE unitType, Pos pos, int num) {
         return attemptSpawn(unitType, pos.x, pos.y);
     }
 

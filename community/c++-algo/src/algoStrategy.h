@@ -11,9 +11,11 @@ Author: Isaac Draper
 #include <vector>
 
 #include "json11/json11.hpp"
-#include "GameLib/src/util.h"
-#include "GameLib/src/algoCore.h"
 #include "GameLib/src/gameState.h"
+#include "GameLib/src/algoCore.h"
+#include "GameLib/src/structs.h"
+#include "GameLib/src/enums.h"
+#include "GameLib/src/util.h"
 
 namespace terminal {
 
@@ -33,7 +35,7 @@ namespace terminal {
         void buildC1Logo(GameState& gameState);
         void buildDefences(GameState& gameState);
         void deployAttackers(GameState& gameState);
-        void filterBlockedLocations(vector<Pos>& locations, GameState& gameState);
+        vector<Pos> filterBlockedLocations(vector<Pos>& locations, GameState& gameState);
         
     };
 
