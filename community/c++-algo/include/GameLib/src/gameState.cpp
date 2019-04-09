@@ -1,6 +1,6 @@
 /*
 Description: Implementations for the gameState header.
-Last Modified: 08 Apr 2019
+Last Modified: 09 Apr 2019
 Author: Isaac Draper
 */
 
@@ -11,12 +11,13 @@ namespace terminal {
     using json11::Json;
     using std::to_string;
     using std::string;
+    using std::vector;
 
     /// Constructor for GameState which requires a configuration Json object
     /// and a Json object representing the current state of the game.
     /// @param configuration A Json object containing information about the game.
     /// @param currentState A Json object containing information about the current state.
-    GameState::GameState(Json configuration, Json jsonState) {
+    GameState::GameState(Json configuration, Json jsonState) : gameMap(configuration) {
         config = configuration;
 
         buildStack = Json::array();
@@ -64,8 +65,13 @@ namespace terminal {
             for (Json unitObj : unitsRaw) {
                 Json::array unitRaw = unitObj.array_items();
 
-                // TODO: Create a unit from the raw data using Unit class (not merged yet)
-                // TODO: Add the unit to the GameMap
+                UNIT_TYPE unitType = static_cast<UNIT_TYPE>(i);
+                int x = unitRaw.at(0).int_value();
+                int y = unitRaw.at(1).int_value();
+                double hp = unitRaw.at(2).number_value();
+
+                GameUnit unit = GameUnit(unitType, config, hp, player.id, x, y);
+                gameMap.addUnit(unit);
             }
             ++i;
         }
@@ -83,6 +89,13 @@ namespace terminal {
         else if (rType == CORES) {
             player.cores = heldResource + amount;
         }
+    }
+
+    /// Sets a resource for a player. This is called internally.
+    /// @param rType The resource type to set.
+    /// @param amount The new amount to set.
+    void GameState::setResource(RESOURCE rType, double amount) {
+        setResource(rType, amount, player1);
     }
 
     /// Gets the amount of a resource held by a player.
@@ -192,14 +205,89 @@ namespace terminal {
     /// @param num The number of units to check, default is 1.
     /// @return A bool, true if can spawn.
     bool GameState::canSpawn(UNIT_TYPE uType, Pos pos, int num) {
-        // TODO: Add inside map check here.
+        if (!gameMap.inArenaBounds(pos)) {
+            // TODO: Add warning
+            return false;
+        }
 
-        int affordable = numberAffordable(uType, player1);
-        bool stationary = isStationary(uType);
+        const int affordable = numberAffordable(uType, player1);
+        const bool stationary = isStationary(uType);
+        const bool blocked = false; // TODO: Add containsStationaryUnit to gameMap
+        const bool correctTerritory = pos.y < gameMap.HALF_ARENA;
 
-        // TODO: Add map
+        vector<Pos> edges;
+        gameMap.getEdgeLocations(edges, BOTTOM_LEFT);
+        gameMap.getEdgeLocations(edges, BOTTOM_RIGHT);
+        const bool onEdge = std::find(edges.begin(), edges.end(), pos) != edges.end();
 
-        return false;
+        // TODO: Add all of the warnings
+
+        return (affordable && correctTerritory && !blocked && (stationary || onEdge) && (!stationary || num == 1);
+    }
+
+    /// Attempts to spawn new units with the type give at a single location;
+    /// @param unitType The type of unit to spawn.
+    /// @param pos The location to spawn the unit.
+    /// @return Returns the number of units spawned (0 or 1).
+    int GameState::attemptSpawn(UNIT_TYPE unitType, Pos pos) {
+        if (canSpawn(unitType, pos)) {
+            int cost = typeCost(unitType);
+            RESOURCE resourceType = resourceRequired(unitType);
+            setResource(resourceType, 0 - cost);
+            // TODO: Add unit (waiting for merge)
+            if (isStationary(unitType))
+                buildStack.push_back(Json::array({ (int)unitType, pos.x, pos.y }));
+            else
+                deployStack.push_back(Json::array({ (int)unitType, pos.x, pos.y }));
+            return 1;
+        }
+        else {
+            // TODO: let user know couldn't spawn unit
+        }
+        return 0;
+    }
+
+    /// Attempts to spawn units with the type give at a list of locations;
+    /// @param unitType The type of unit to spawn.
+    /// @param locations The location to spawn the unit.
+    /// @param num The numer of units to spawn at each location (default is 1).
+    /// @return Returns the number of units spawned.
+    int GameState::attemptSpawn(UNIT_TYPE uType, vector<Pos> locations, int num) {
+        if (num < 1) {
+            // TODO: warn user
+        }
+
+        int numSpawned = 0;
+        for (Pos pos : locations) {
+            numSpawned += attemptSpawn(uType, pos);
+        }
+        return numSpawned;
+    }
+
+    /// Attempts to remove existing friendly firewalls in a given location.
+    /// @param pos The location to try and remove.
+    /// @return Returns the number of units removed (0 or 1).
+    int GameState::attemptRemove(Pos pos) {
+        if (pos.y < gameMap.HALF_ARENA) // TODO: add `&& gameMap.containsStationaryUnit(pos)`
+        {
+            buildStack.push_back(Json::array({ (int)REMOVE, pos.x, pos.y }));
+            return 1;
+        }
+        else {
+            // TODO: warn the user couldn't remove
+        }
+        return 0;
+    }
+
+    /// Attempts to remove existing friendly firewalls at each position in a vector.
+    /// @param locations The locations to try and remove.
+    /// @return Returns the number of units removed.
+    int GameState::attemptRemove(vector<Pos> locations) {
+        int numRemoved = 0;
+        for (Pos pos : locations) {
+            numRemoved += attemptRemove(pos);
+        }
+        return numRemoved;
     }
 
     /// This returns a string representation of the GameState object.

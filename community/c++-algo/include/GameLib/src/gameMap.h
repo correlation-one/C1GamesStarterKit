@@ -1,6 +1,6 @@
 /*
 Description: A header to contain a representation of the current game map.
-Last Modified: 08 Apr 2019
+Last Modified: 09 Apr 2019
 Author: Isaac Draper
 */
 
@@ -29,14 +29,15 @@ namespace terminal {
         bool inArenaBounds(int x, int y) const;
         bool inArenaBounds(Pos pos) const;
         void getEdgeLocations(vector<Pos>& vec, EDGE edge);
-        void addUnit(UNIT_TYPE unitType, Pos pos, int playerIndex);
+        void addUnit(GameUnit unit);
+
+        const int ARENA_SIZE = 28;
+        const int HALF_ARENA = 14;
 
     private:
         void createEmptyGrid();
 
         Json config;
-        const int ARENA_SIZE = 28;
-        const int HALF_ARENA = 14;
         vector<vector<vector<GameUnit>>> map;
 
     };

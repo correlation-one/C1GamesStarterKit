@@ -1,6 +1,6 @@
 /*
 Description: A header for the current game state of the class.
-Last Modified: 08 Apr 2019
+Last Modified: 09 Apr 2019
 Author: Isaac Draper
 */
 
@@ -8,18 +8,21 @@ Author: Isaac Draper
 #define GAME_STATE_H
 
 #include <unordered_map>
+#include <algorithm>
 #include <iostream>
 #include <sstream>
 
 #include "json11/json11.hpp"
-#include "GameLib/src/structs.h"
-#include "GameLib/src/enums.h"
-#include "GameLib/src/util.h"
+#include "gameMap.h"
+#include "structs.h"
+#include "enums.h"
+#include "util.h"
 
 namespace terminal {
 
     using json11::Json;
     using std::string;
+    using std::vector;
 
     /// This represents everything about a current state of the game.
     /// It provides a convienent way to add/remove units and
@@ -34,6 +37,10 @@ namespace terminal {
         int numberAffordable(UNIT_TYPE uType);
         int numberAffordable(UNIT_TYPE uType, Player& player);
         bool canSpawn(UNIT_TYPE uType, Pos pos, int num = 1);
+        int attemptSpawn(UNIT_TYPE uType, Pos pos);
+        int attemptSpawn(UNIT_TYPE uType, vector<Pos> locations, int num = 1);
+        int attemptRemove(Pos pos);
+        int attemptRemove(vector<Pos> locations);
         Player getPlayer(int id);
         void submitTurn();
         virtual string toString() const;
@@ -43,6 +50,7 @@ namespace terminal {
         void parsePlayerStats(Player& player, int id, Json::array stats);
         void parseUnits(Player& player, Json::array jsonUnits);
 
+        void setResource(RESOURCE rType, double amount);
         void setResource(RESOURCE rType, double amount, Player& player);
         RESOURCE resourceRequired(UNIT_TYPE uType);
         double typeCost(UNIT_TYPE uType);
@@ -54,7 +62,8 @@ namespace terminal {
         Json::array buildStack;
         Json::array deployStack;
         int turnNumber;
-        // TODO: Add GameMap
+        GameMap gameMap;
+
         // TODO: Add pathfinding
 
     };

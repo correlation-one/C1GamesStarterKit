@@ -1,6 +1,6 @@
 /*
 Description: Implementations for the algoMap header.
-Last Modified: 08 Apr 2019
+Last Modified: 09 Apr 2019
 Author: Isaac Draper
 */
 
@@ -53,65 +53,57 @@ namespace terminal {
     bool GameMap::inArenaBounds(Pos pos) const {
         return inArenaBounds(pos.x, pos.y);
     }
-    
+
     /// Takes an edge and fills a vector with a list of locations.
     /// @param vec A vector passed by reference you would like to fill.
     /// @param edge The edge to get units for.
     void GameMap::getEdgeLocations(vector<Pos>& vec, EDGE edge) {
         int x, y;
         switch (edge) {
-            case TOP_RIGHT: {
-                for (int i = 0; i < HALF_ARENA; ++i) {
-                    x = HALF_ARENA + i;
-                    y = ARENA_SIZE - 1 - i;
-                    vec.push_back(Pos{ x, y});
-                }
-                break;
+        case TOP_RIGHT: {
+            for (int i = 0; i < HALF_ARENA; ++i) {
+                x = HALF_ARENA + i;
+                y = ARENA_SIZE - 1 - i;
+                vec.push_back(Pos{ x, y });
             }
-            case TOP_LEFT: {
-                for (int i = 0; i < HALF_ARENA; ++i) {
-                    x = HALF_ARENA - 1 - i;
-                    y = ARENA_SIZE - 1 - i;
-                    vec.push_back(Pos{ x, y });
-                }
-                break;
+            break;
+        }
+        case TOP_LEFT: {
+            for (int i = 0; i < HALF_ARENA; ++i) {
+                x = HALF_ARENA - 1 - i;
+                y = ARENA_SIZE - 1 - i;
+                vec.push_back(Pos{ x, y });
             }
-            case BOTTOM_LEFT: {
-                for (int i = 0; i < HALF_ARENA; ++i) {
-                    x = HALF_ARENA - 1 - i;
-                    y = i;
-                    vec.push_back(Pos{ x, y });
-                }
-                break;
+            break;
+        }
+        case BOTTOM_LEFT: {
+            for (int i = 0; i < HALF_ARENA; ++i) {
+                x = HALF_ARENA - 1 - i;
+                y = i;
+                vec.push_back(Pos{ x, y });
             }
-            case BOTTOM_RIGHT: {
-                for (int i = 0; i < HALF_ARENA; ++i) {
-                    x = HALF_ARENA + i;
-                    y = i;
-                    vec.push_back(Pos{ x, y });
-                }
-                break;
+            break;
+        }
+        case BOTTOM_RIGHT: {
+            for (int i = 0; i < HALF_ARENA; ++i) {
+                x = HALF_ARENA + i;
+                y = i;
+                vec.push_back(Pos{ x, y });
             }
-            default: {
-                // TODO: throw gameMap error
-            }
+            break;
+        }
+        default: {
+            // TODO: throw gameMap error
+        }
         }
     }
 
-    /// Add a single GameUnit to the map at the given location.
+    /// Add an existing GameUnit to the map at the given location.
     /// This does not send it to the engine, it simply lets you create any
     /// map position you want.
     /// @param unitType The type of unit to add.
-    /// @param pos The position to add the unit at.
-    /// @param playerIndex The player to add the unit for.
-    void GameMap::addUnit(UNIT_TYPE unitType, Pos pos, int playerIndex) {
-        if (inArenaBounds(pos)) {
-            // TODO: Create out of bounds exception.
-        }
-        if (playerIndex < 0 || playerIndex > 1) {
-            // TODO: Create player index error.
-        }
-
-        // GameUnit newUnit = GameUnit(unitType, config, playerIndex, -1, )
+    void GameMap::addUnit(GameUnit unit) {
+        // TODO: add the unit (waiting for merge)
     }
+
 }
