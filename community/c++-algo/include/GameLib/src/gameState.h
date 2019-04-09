@@ -11,6 +11,7 @@ Author: Isaac Draper
 #include <algorithm>
 #include <iostream>
 #include <sstream>
+#include <vector>
 
 #include "json11/json11.hpp"
 #include "gameMap.h"
@@ -30,19 +31,31 @@ namespace terminal {
     class GameState {
     public:
         GameState(Json configuration, Json jsonState);
-        double getResource(RESOURCE rType);
-        double getResource(RESOURCE rType, Player& player);
-        double projectFutureBits(int turnsInFuture = 1, double currentBits = -1);
-        double projectFutureBits(int turnsInFuture, double currentBits, Player& player);
-        int numberAffordable(UNIT_TYPE uType);
-        int numberAffordable(UNIT_TYPE uType, Player& player);
-        bool canSpawn(UNIT_TYPE uType, Pos pos, int num = 1);
+        void submitTurn() const;
+
+        double getResource(RESOURCE rType) const;
+        double getResource(RESOURCE rType, const Player& player) const;
+        
+        double projectFutureBits(int turnsInFuture = 1, double currentBits = -1) const;
+        double projectFutureBits(int turnsInFuture, double currentBits, const Player& player) const;
+
+        int numberAffordable(UNIT_TYPE uType) const;
+        int numberAffordable(UNIT_TYPE uType, const Player& player) const;
+
+        bool canSpawn(UNIT_TYPE uType, int x, int y, int num = 1) const;
+        bool canSpawn(UNIT_TYPE uType, const Pos pos, int num = 1) const;
+
+        int attemptSpawn(UNIT_TYPE uType, int x, int y);
         int attemptSpawn(UNIT_TYPE uType, Pos pos);
         int attemptSpawn(UNIT_TYPE uType, vector<Pos> locations, int num = 1);
+
         int attemptRemove(Pos pos);
+        int attemptRemove(int x, int y);
         int attemptRemove(vector<Pos> locations);
-        Player getPlayer(int id);
-        void submitTurn();
+
+        Player getPlayer(int id) const;
+        int getTurn() const;
+
         virtual string toString() const;
 
     private:
@@ -52,9 +65,9 @@ namespace terminal {
 
         void setResource(RESOURCE rType, double amount);
         void setResource(RESOURCE rType, double amount, Player& player);
-        RESOURCE resourceRequired(UNIT_TYPE uType);
-        double typeCost(UNIT_TYPE uType);
-        bool isStationary(UNIT_TYPE uType);
+        RESOURCE resourceRequired(UNIT_TYPE uType) const;
+        double typeCost(UNIT_TYPE uType) const;
+        bool isStationary(UNIT_TYPE uType) const;
 
         Json config;
         Player player1;

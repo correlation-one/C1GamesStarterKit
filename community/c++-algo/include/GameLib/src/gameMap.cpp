@@ -19,16 +19,9 @@ namespace terminal {
 
     /// Fills map with an emtpy grid of dimensions AREA_SIZE.
     void GameMap::createEmptyGrid() {
-        map.reserve(ARENA_SIZE);
-
-        for (int x = 0; x < ARENA_SIZE; ++x) {
-            map.at(x).reserve(ARENA_SIZE);
-            map.push_back(vector<vector<GameUnit>>());
-
-            for (int y = 0; y < ARENA_SIZE; ++y) {
-                map.at(x).at(y) = vector<GameUnit>();
-            }
-        }
+        map.resize(ARENA_SIZE);
+        for (int x = 0; x < ARENA_SIZE; ++x)
+            map.at(x).resize(ARENA_SIZE);
     }
 
     /// Checks if a position is inside the diamond shaped game board.
@@ -57,7 +50,7 @@ namespace terminal {
     /// Takes an edge and fills a vector with a list of locations.
     /// @param vec A vector passed by reference you would like to fill.
     /// @param edge The edge to get units for.
-    void GameMap::getEdgeLocations(vector<Pos>& vec, EDGE edge) {
+    void GameMap::getEdgeLocations(vector<Pos>& vec, EDGE edge) const {
         int x, y;
         switch (edge) {
         case TOP_RIGHT: {

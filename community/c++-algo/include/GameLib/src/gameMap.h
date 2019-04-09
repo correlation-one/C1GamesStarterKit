@@ -28,7 +28,7 @@ namespace terminal {
         GameMap(Json config);
         bool inArenaBounds(int x, int y) const;
         bool inArenaBounds(Pos pos) const;
-        void getEdgeLocations(vector<Pos>& vec, EDGE edge);
+        void getEdgeLocations(vector<Pos>& vec, EDGE edge) const;
         void addUnit(GameUnit unit);
 
         const int ARENA_SIZE = 28;

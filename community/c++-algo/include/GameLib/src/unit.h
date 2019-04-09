@@ -54,7 +54,7 @@ namespace terminal {
                 return "SI";
                 break;
             case REMOVE:
-                return "RF";
+                return "RM";
                 break;
             default:
                 throw UnitTypeException();
