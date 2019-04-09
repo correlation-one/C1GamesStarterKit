@@ -27,9 +27,9 @@ namespace terminal {
 
         for (size_t i = 0; i < gameState.ARENA_SIZE; i++) {
             gameMap.push_back(vector<Node>());
-            gameMap[i].reserve(gameState.ARENA_SIZE);
+            gameMap.at(i).reserve(gameState.ARENA_SIZE);
             for (size_t j = 0; j < gameState.ARENA_SIZE; j++) {
-                gameMap[i].push_back(Node());
+                gameMap.at(i).push_back(Node());
             }
         }
     }
@@ -47,7 +47,7 @@ namespace terminal {
 
         for (auto location: gameState.gameMap)
             if (gameState.containsStationaryUnit(location))
-                gameMap[location.x][location.y].blocked = true;
+                gameMap.at(location.x).at(location.y).blocked = true;
 
         Pos idealEndpoint = idealnessSearch(startPoint, endPoints);
 
@@ -65,7 +65,7 @@ namespace terminal {
         queue<Pos> current;
         current.push(startPoint);
         int bestIdealness = getIdealness(startPoint, endPoints);
-        gameMap[startPoint.x][startPoint.y].visitedIdealness = true;
+        gameMap.at(startPoint.x).at(startPoint.y).visitedIdealness = true;
         Pos mostIdeal = startPoint;
 
         while(!current.empty()) {
@@ -78,7 +78,7 @@ namespace terminal {
                 int x = neighbor.x;
                 int y = neighbor.y;
 
-                if(!gameState.gameMap.inArenaBounds(neighbor) || gameMap[x][y].blocked)
+                if(!gameState.gameMap.inArenaBounds(neighbor) || gameMap.at(x).at(y).blocked)
                     continue;
                 
                 int currentIdealness = getIdealness(neighbor, endPoints);
@@ -88,8 +88,8 @@ namespace terminal {
                     mostIdeal = neighbor;
                 }
 
-                if(!gameMap[x][y].visitedIdealness) {
-                    gameMap[x][y].visitedIdealness = true;
+                if(!gameMap.at(x).at(y).visitedIdealness) {
+                    gameMap.at(x).at(y).visitedIdealness = true;
                     current.push(neighbor);
                 }
             }
@@ -158,19 +158,19 @@ namespace terminal {
         if(find(endPoints.begin(), endPoints.end(), idealTile) != endPoints.end()) {
             for(auto location: endPoints) {
                 current.push(location);
-                gameMap[location.x][location.y].pathLength = 0;
-                gameMap[location.x][location.y].visitedValidate = true;
+                gameMap.at(location.x).at(location.y).pathLength = 0;
+                gameMap.at(location.x).at(location.y).visitedValidate = true;
             }
         } else {
             current.push(idealTile);
-            gameMap[idealTile.x][idealTile.y].pathLength = 0;
-            gameMap[idealTile.x][idealTile.y].visitedValidate = true;
+            gameMap.at(idealTile.x).at(idealTile.y).pathLength = 0;
+            gameMap.at(idealTile.x).at(idealTile.y).visitedValidate = true;
         }
 
         while(!current.empty()) {
             Pos currentLocation = current.front();
             current.pop();
-            Node currentNode = gameMap[currentLocation.x][currentLocation.y];
+            Node currentNode = gameMap.at(currentLocation.x).at(currentLocation.y);
             
             vector<Pos> neighbors;
             getNeighbors(currentLocation, neighbors);
@@ -178,10 +178,10 @@ namespace terminal {
                 int x = neighbor.x;
                 int y = neighbor.y;
 
-                if(!gameState.gameMap.inArenaBounds(neighbor) || gameMap[x][y].blocked)
+                if(!gameState.gameMap.inArenaBounds(neighbor) || gameMap.at(x).at(y).blocked)
                     continue;
 
-                Node neighborNode = gameMap[x][y];
+                Node neighborNode = gameMap.at(x).at(y);
                 if(!neighborNode.visitedValidate && !currentNode.blocked) {
                     neighborNode.pathLength = currentNode.pathLength + 1;
                     neighborNode.visitedValidate = true;
@@ -200,7 +200,7 @@ namespace terminal {
         Pos current = startPoint;
         MOVE_DIRECTION moveDirection = NONE;
 
-        while(gameMap[current.x][current.y].pathLength != 0) {
+        while(gameMap.at(current.x).at(current.y).pathLength != 0) {
             Pos nextMove = chooseNextMove(current, moveDirection, endPoints);
 
             if(current.x == nextMove.x)
@@ -223,17 +223,17 @@ namespace terminal {
         getNeighbors(currentPoint, neighbors);
 
         Pos idealNeighbor = currentPoint;
-        int bestPathLength = gameMap[currentPoint.x][currentPoint.y].pathLength;
+        int bestPathLength = gameMap.at(currentPoint.x).at(currentPoint.y).pathLength;
 
         for(auto neighbor: neighbors) {
             int x = neighbor.x;
             int y = neighbor.y;
 
-            if(!gameState.gameMap.inArenaBounds(neighbor) || gameMap[x][y].blocked)
+            if(!gameState.gameMap.inArenaBounds(neighbor) || gameMap.at(x).at(y).blocked)
                 continue;
 
             bool newBest = false;
-            int currentPathLength = gameMap[x][y].pathLength;
+            int currentPathLength = gameMap.at(x).at(y).pathLength;
 
             if(currentPathLength > bestPathLength)
                 continue;
@@ -302,8 +302,8 @@ namespace terminal {
 
         for(size_t y = 0; y < 28; y++) {
             for(size_t x = 0; x < 28; x++) {
-                Node node = gameMap[x][28 - y - 1];
-                if(!node.blocked and !node.pathLength == -1)
+                Node node = gameMap.at(x).at(28 - y - 1);
+                if(!node.blocked && !node.pathLength == -1)
                     printJustified(node.pathLength);
                 else
                     cerr << "   ";
