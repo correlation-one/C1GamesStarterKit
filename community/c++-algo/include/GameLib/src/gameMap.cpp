@@ -18,15 +18,11 @@ namespace terminal {
         createEmptyGrid();
     }
 
-    // Fills map with an emtpy grid of dimensions AREA_SIZE.
+    /// Fills map with an emtpy grid of dimensions AREA_SIZE.
     void GameMap::createEmptyGrid() {
-        for (int x = 0; x < ARENA_SIZE; ++x) {
-            map.resize(ARENA_SIZE);
-
-            for (int y = 0; y < ARENA_SIZE; ++y) {
-                map.at(x).resize(ARENA_SIZE);
-            }
-        }
+        map.resize(ARENA_SIZE);
+        for (int x = 0; x < ARENA_SIZE; ++x)
+            map.at(x).resize(ARENA_SIZE);
     }
 
     /// Checks if a position is inside the diamond shaped game board.
