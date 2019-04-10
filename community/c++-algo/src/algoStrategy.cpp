@@ -1,6 +1,6 @@
 /*
 Description: Implementations for the algoStrategy header.
-Last Modified: 07 Apr 2019
+Last Modified: 09 Apr 2019
 Author: Isaac Draper
 */
 

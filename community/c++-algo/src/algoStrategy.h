@@ -1,6 +1,6 @@
 /*
 Description: A header to contain the components and logic of one's strategy.
-Last Modified: 07 Apr 2019
+Last Modified: 09 Apr 2019
 Author: Isaac Draper
 */
 
