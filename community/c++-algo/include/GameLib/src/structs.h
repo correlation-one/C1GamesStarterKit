@@ -18,6 +18,12 @@ namespace terminal {
     struct Pos {
         int x;
         int y;
+
+        /// Simple constructor to set the position
+        /// @param x X coordinate to set.
+        /// @param y Y coordinate to set.
+        Pos(int x, int y) : x(x), y(y) {}
+
         /// This allows for python location indexing to be transferrable
         /// @param index The index of the position coordinate
         /// @return The value of the coordinate
@@ -27,6 +33,7 @@ namespace terminal {
             throw PosException("Invalid position index (0 or 1)");
             return 0;
         }
+        
         /// This allows for comparison between positions
         /// @param rhs Right hand side position
         /// @return The boolean answer to whether two positions are the same.

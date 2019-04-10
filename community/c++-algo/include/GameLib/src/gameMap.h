@@ -32,7 +32,7 @@ namespace terminal {
         void getEdgeLocations(vector<Pos>& vec, EDGE edge);
         void getEdges(vector<vector<Pos> >& vec);
         void addUnit(UNIT_TYPE unitType, Pos pos, int playerIndex);
-        void removeUnit(Pos pos);
+        void removeUnits(Pos pos);
         void getLocationsInRange(vector<Pos>& locations, Pos pos, double radius);
         vector<GameUnit>& operator[](const Pos &pos);
         const vector<GameUnit>& operator[](const Pos &pos) const;

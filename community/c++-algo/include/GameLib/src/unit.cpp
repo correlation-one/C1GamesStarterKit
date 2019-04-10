@@ -23,7 +23,7 @@ namespace terminal {
         int x, int y) : unitType(unitType), config(config), playerIndex(playerIndex),
         stability(stability), x(x), y(y), pendingRemoval(false) {
         serializeType();
-        stability = stability == 0 ? maxStability : stability;
+        this->stability = stability == 0 ? maxStability : stability;
     }
 
     /// Finish the game unit initialization based on the config

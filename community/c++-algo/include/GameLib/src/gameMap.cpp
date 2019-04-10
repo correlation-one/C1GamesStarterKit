@@ -18,16 +18,13 @@ namespace terminal {
         createEmptyGrid();
     }
 
-    /// Fills map with an emtpy grid of dimensions AREA_SIZE.
+    // Fills map with an emtpy grid of dimensions AREA_SIZE.
     void GameMap::createEmptyGrid() {
-        map.reserve(ARENA_SIZE);
-
         for (int x = 0; x < ARENA_SIZE; ++x) {
-            map.at(x).reserve(ARENA_SIZE);
-            map.push_back(vector<vector<GameUnit>>());
+            map.resize(ARENA_SIZE);
 
             for (int y = 0; y < ARENA_SIZE; ++y) {
-                map.at(x).at(y) = vector<GameUnit>();
+                map.at(x).resize(ARENA_SIZE);
             }
         }
     }
@@ -128,7 +125,7 @@ namespace terminal {
             map.at(pos.x).at(pos.y).push_back(newUnit);
         }
         else {
-            uint size = map.at(pos.x).at(pos.y).size();
+            size_t size = map.at(pos.x).at(pos.y).size();
             if (size > 0 && newUnit.unitType != REMOVE)
                 throw GameMapException("Error placing a stationary unit in an occupied location");
             else if ((size != 1 || (size > 0 && !map.at(pos.x).at(pos.y).at(0).stationary))
@@ -141,7 +138,7 @@ namespace terminal {
 
     /// Remove all GameUnits from the game map at the location. Throw an error if it's empty.
     /// @param pos Position to clear from the game map
-    void GameMap::removeUnit(Pos pos) {
+    void GameMap::removeUnits(Pos pos) {
         if (!inArenaBounds(pos)) throw PosException("Out of bounds exception");
         if (map.at(pos.x).at(pos.y).size() == 0) throw GameMapException("Error trying to remove 0 units");
         map.at(pos.x).at(pos.y).clear();
@@ -152,7 +149,7 @@ namespace terminal {
     /// @param pos The position to find locatins in range from.
     /// @param radius The radius of the circle to get locations from.
     void GameMap::getLocationsInRange(vector<Pos>& locations, Pos pos, double radius) {
-        if (radius < 0 or radius > ARENA_SIZE)
+        if (radius < 0 || radius > ARENA_SIZE)
             throw GameMapException("Error getting locations in range with that radius");
         if (!inArenaBounds(pos)) throw PosException("Out of bounds exception");
         for (int i = (int)(pos.x - radius); i < (int)(pos.x + radius + 1); i++) {
@@ -169,7 +166,7 @@ namespace terminal {
     /// @param pos_1 First position.
     /// @param pos_2 Second position.
     /// @return Euclidean distance between two positions.
-    double distanceBetweenLocations(Pos pos_1, Pos pos_2) {
+    double GameMap::distanceBetweenLocations(Pos pos_1, Pos pos_2) {
         return sqrt(pow(pos_1.x - pos_2.x, 2) + pow(pos_1.y - pos_2.y, 2));
     }
 
@@ -177,6 +174,7 @@ namespace terminal {
     /// @param pos Position to index into the map.
     /// @return A reference to the vector of GameUnits at the location.
     vector<GameUnit>& GameMap::operator[](const Pos &pos) {
+        if (!inArenaBounds(pos)) throw PosException("Out of bounds exception");
         return map.at(pos.x).at(pos.y);
     }
 
@@ -184,6 +182,7 @@ namespace terminal {
     /// @param pos Position to index into the map.
     /// @return A reference to the vector of GameUnits at the location.
     const vector<GameUnit>& GameMap::operator[](const Pos &pos) const {
+        if (!inArenaBounds(pos)) throw PosException("Out of bounds exception");
         return map.at(pos.x).at(pos.y);
     }
 
@@ -191,6 +190,8 @@ namespace terminal {
     /// @param x X coordinate to index into the map.
     /// @return A reference to the column of the game map at coordinate X.
     vector<vector<GameUnit> >& GameMap::operator[](int x) {
+        // y = 13 and 14 are true to any valid x value
+        if (!inArenaBounds(Pos(x, 13))) throw PosException("Out of bounds exception");
         return map.at(x);
     }
 
