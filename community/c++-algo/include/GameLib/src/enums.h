@@ -29,6 +29,13 @@ namespace terminal {
         TIME
     };
 
+    enum VERBOSITY {
+        SUPPRESS,
+        WARNING,
+        INVARIENT,
+        CRASH,
+    };
+
 }
 
 #endif
