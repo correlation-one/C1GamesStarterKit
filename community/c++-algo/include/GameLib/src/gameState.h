@@ -41,8 +41,8 @@ namespace terminal {
         bool canSpawn(UNIT_TYPE unitType, int x, int y, int num = 1) const;
         bool canSpawn(UNIT_TYPE unitType, const Pos pos, int num = 1) const;
 
-        int attemptSpawn(UNIT_TYPE unitType, int x, int y);
-        int attemptSpawn(UNIT_TYPE unitType, Pos pos);
+        int attemptSpawn(UNIT_TYPE unitType, int x, int y, int num = 1);
+        int attemptSpawn(UNIT_TYPE unitType, Pos pos, int num = 1);
         int attemptSpawn(UNIT_TYPE unitType, vector<Pos> locations, int num = 1);
 
         int attemptRemove(Pos pos);
@@ -52,8 +52,11 @@ namespace terminal {
         double projectFutureBits(int turnsInFuture = 1, double currentBits = -1) const;
         double projectFutureBits(int turnsInFuture, double currentBits, const Player& player) const;
 
+        double typeCost(UNIT_TYPE unitType) const;
+        RESOURCE resourceRequired(UNIT_TYPE unitType) const;
         double getResource(RESOURCE resourceType) const;
         double getResource(RESOURCE resourceType, const Player& player) const;
+        bool isStationary(UNIT_TYPE unitType) const;
         Player getPlayer(int id) const;
         int getTurn() const;
 
@@ -61,6 +64,9 @@ namespace terminal {
         void suppressWarnings();
 
         virtual string toString() const;
+
+        // public members
+        GameMap gameMap;
 
     private:
         void parseState(Json jsonState);
@@ -70,10 +76,6 @@ namespace terminal {
         void setResource(RESOURCE resourceType, double amount);
         void setResource(RESOURCE resourceType, double amount, Player& player);
 
-        RESOURCE resourceRequired(UNIT_TYPE unitType) const;
-        double typeCost(UNIT_TYPE unitType) const;
-        bool isStationary(UNIT_TYPE unitType) const;
-
         Json config;
         Player player1;
         Player player2;
@@ -81,7 +83,6 @@ namespace terminal {
         Json::array deployStack;
         int turnNumber;
         VERBOSITY verbosity;
-        GameMap gameMap;
 
         // TODO: Add pathfinding
 
