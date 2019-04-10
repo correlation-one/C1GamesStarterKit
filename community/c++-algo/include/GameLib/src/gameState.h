@@ -19,6 +19,7 @@ Author: Isaac Draper
 #include "structs.h"
 #include "enums.h"
 #include "util.h"
+
 namespace terminal {
 
     using json11::Json;
@@ -58,6 +59,9 @@ namespace terminal {
         Player getPlayer(int id) const;
         int getTurn() const;
 
+        void setVerbosity(VERBOSITY newErrorLevel);
+        void suppressWarnings();
+
         virtual string toString() const;
 
         // public members
@@ -77,7 +81,9 @@ namespace terminal {
         Json::array buildStack;
         Json::array deployStack;
         int turnNumber;
-
+        GameMap gameMap;
+        VERBOSITY errorLevel;
+        GameMap gameMap;
         // TODO: Add pathfinding
 
     };

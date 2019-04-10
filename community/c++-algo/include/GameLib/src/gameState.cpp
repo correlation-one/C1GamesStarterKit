@@ -19,6 +19,7 @@ namespace terminal {
     /// @param currentState A Json object containing information about the current state.
     GameState::GameState(Json configuration, Json jsonState) : gameMap(configuration) {
         config = configuration;
+        errorLevel = WARNING;
 
         buildStack = Json::array();
         deployStack = Json::array();
@@ -103,11 +104,6 @@ namespace terminal {
     /// @param player The player whos resource to get.
     /// @return The amount of a resouce a player has.
     double GameState::getResource(RESOURCE resourceType, const Player& player) const {
-        if (resourceType != BITS && resourceType != CORES) {
-            // TODO: create warn function and warn about unit type
-            return -1;
-        }
-
         return resourceType == BITS ? player.bits : player.cores;
     }
 
@@ -177,7 +173,7 @@ namespace terminal {
     /// @return The number of bits after so many turns.
     double GameState::projectFutureBits(int turnsInFuture, double currentBits, const Player& player) const {
         if (turnsInFuture < 1 || turnsInFuture > 99) {
-            // TODO: Create warning here.
+            Util::printError<CustomException>("Invalid turns in future used (" + std::to_string(turnsInFuture) + "). Turns in future should be betweeen 1 and 99.", WARNING, errorLevel);
         }
 
         double bits = currentBits >= 0 ? currentBits : getResource(BITS, player);
@@ -216,7 +212,7 @@ namespace terminal {
     /// @return A bool, true if can spawn.
     bool GameState::canSpawn(UNIT_TYPE unitType, int x, int y, int num) const {
         if (!gameMap.inArenaBounds(x, y)) {
-            // TODO: Add warning
+            // TODO: Check inArenaBounds handles error
             return false;
         }
 
@@ -262,7 +258,7 @@ namespace terminal {
             return 1;
         }
         else {
-            // TODO: let user know couldn't spawn unit
+            Util::printError<UnitSpawnException>("Tried to spawn unit at (" + to_string(x) + ", " + to_string(y) + ") but could not", WARNING, errorLevel);
         }
         return 0;
     }
@@ -283,7 +279,7 @@ namespace terminal {
     /// @return Returns the number of units spawned.
     int GameState::attemptSpawn(UNIT_TYPE unitType, vector<Pos> locations, int num) {
         if (num < 1) {
-            // TODO: warn user
+            Util::printError<UnitSpawnException>("Attempted to spawn fewer than one unit.", WARNING, errorLevel);
         }
 
         int numSpawned = 0;
@@ -304,7 +300,7 @@ namespace terminal {
             return 1;
         }
         else {
-            // TODO: warn the user couldn't remove
+            Util::printError<UnitRemoveException>("Could not remove a unit from (" + to_string(x) + ", " + to_string(y) + "). Location has no firewall or is in enemy territory", WARNING, errorLevel);
         }
         return 0;
     }
@@ -325,6 +321,23 @@ namespace terminal {
             numRemoved += attemptRemove(pos);
         }
         return numRemoved;
+    }
+
+    /// Sets a new verbosity level. This determines whether errors will
+    /// be ignored, printed, or throw exceptions.
+    /// This also sets the verbosity of the GameMap.
+    /// @param newErrorLevel The new error level.
+    void GameState::setVerbosity(VERBOSITY newErrorLevel) {
+        errorLevel = newErrorLevel;
+        // TODO: set gameMap error level here.
+    }
+
+    /// Sets the verbosity level to SUPPRESS.
+    /// This causes all errors to be ignored.
+    /// This also sets the verbosity of the GameMap.
+    void GameState::suppressWarnings() {
+        errorLevel = SUPPRESS;
+        // TODO: set gameMap error level here.
     }
 
     /// This returns a string representation of the GameState object.
