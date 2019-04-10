@@ -55,6 +55,8 @@ namespace terminal {
         Util::debugWrite(gameState.getTurn(), false);
         Util::debugWrite(" of your C++ starter strategy");
 
+        // gameState.suppressWarnings(); // Uncomment this to suppress warnings.
+
         // Run our strategy.
         starterStrategy(gameState);
 
