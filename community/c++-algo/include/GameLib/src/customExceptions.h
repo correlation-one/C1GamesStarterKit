@@ -41,12 +41,12 @@ namespace terminal {
 
     class UnitSpawnException : public CustomException {
     public:
-        UnitSpawnException::UnitSpawnException(const string errorMsg = "Unit Spawn Exception") : CustomException(errorMsg) {}
+        UnitSpawnException(const string errorMsg = "Unit Spawn Exception") : CustomException(errorMsg) {}
     };
 
     class UnitRemoveException : public CustomException {
     public:
-        UnitRemoveException::UnitRemoveException(const string errorMsg = "Unit Remove Exception") : CustomException(errorMsg) {}
+        UnitRemoveException(const string errorMsg = "Unit Remove Exception") : CustomException(errorMsg) {}
     };
 
     class PosException : public CustomException {
