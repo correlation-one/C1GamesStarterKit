@@ -51,7 +51,7 @@ class AlgoStrategy(gamelib.AlgoCore):
         """
         game_state = gamelib.GameState(self.config, turn_state)
         gamelib.debug_write('Performing turn {} of your custom algo strategy'.format(game_state.turn_number))
-        #game_state.suppress_warnings(True)  #Uncomment this line to suppress warnings.
+        game_state.suppress_warnings(True)  #Uncomment this line to suppress warnings.
 
         self.starter_strategy(game_state)
 

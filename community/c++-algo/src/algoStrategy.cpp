@@ -47,7 +47,18 @@ namespace terminal {
     /// This is overridden from AlgoCore.
     /// @param jsonState A Json object containing the current game state.
     void AlgoStrategy::onTurn(Json jsonState) {
+        // Create a gamestate object that will help execute our strategy.
         GameState gameState = GameState(config, jsonState);
+
+        // Print so we know we started our strategy.
+        Util::debugWrite("Performing turn ", false);
+        Util::debugWrite(gameState.getTurn(), false);
+        Util::debugWrite(" of your C++ starter strategy");
+
+        // Run our strategy.
+        starterStrategy(gameState);
+
+        // Submit our turn to the engine.
         gameState.submitTurn();
     }
 
@@ -81,7 +92,7 @@ namespace terminal {
                 gameState.attemptSpawn(FILTER, pos);
 
         // Build the number 1.
-        vector<Pos> number1 = { Pos {17, 11}, Pos {18, 11}, Pos {18, 9}, Pos {18, 8}, Pos {17, 7}, Pos {18, 7}, Pos {19, 7} };
+        vector<Pos> number1 = { Pos {17, 11}, Pos {18, 11}, Pos {18, 10}, Pos {18, 9}, Pos {18, 8}, Pos {17, 7}, Pos {18, 7}, Pos {19, 7} };
         for (Pos pos : number1)
             if (gameState.canSpawn(FILTER, pos))
                 gameState.attemptSpawn(FILTER, pos);
@@ -133,6 +144,7 @@ namespace terminal {
             // Choose a random location.
             int randomIndex = rand() % possibleLocations.size();
             Pos buildLocation = possibleLocations.at(randomIndex);
+
 
             // Build at that location and remove it from our vector.
             gameState.attemptSpawn(ENCRYPTOR, buildLocation);
