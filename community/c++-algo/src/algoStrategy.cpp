@@ -169,13 +169,15 @@ namespace terminal {
         if (gameState.canSpawn(PING, 3, 10, 3))
             gameState.attemptSpawn(PING, 3, 10, 3);
 
-        // NOTE: the locations we used above to spawn information units may become
-        // blocked by our own firewalls. We'll leave it to you to fix that issue yourselves.
-        //
-        // Lastly lets send out Scramblers to help destroy enemy information units.
-        // A complex algo would predict where the enemy is going to send units and
-        // develop its strategy around that. But this algo is simple so lets just
-        // send out scramblers in random locations and hope for the best.
+        /*
+            NOTE: the locations we used above to spawn information units may become
+            blocked by our own firewalls. We'll leave it to you to fix that issue yourselves.
+            
+            Lastly, lets send out Scramblers to help destroy enemy information units.
+            A complex algo would predict where the enemy is going to send units and
+            develop its strategy around that. But this algo is simple so lets just
+            send out scramblers in random locations and hope for the best.
+        */
 
         // Firstly, information units can only deploy on our edges.
         // So lets get a list of those locations.
