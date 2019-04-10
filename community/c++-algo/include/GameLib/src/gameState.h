@@ -80,7 +80,7 @@ namespace terminal {
         Json::array buildStack;
         Json::array deployStack;
         int turnNumber;
-        VERBOSITY errorLevel;
+        VERBOSITY verbosity;
         GameMap gameMap;
 
         // TODO: Add pathfinding

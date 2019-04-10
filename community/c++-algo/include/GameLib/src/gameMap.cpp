@@ -15,7 +15,7 @@ namespace terminal {
     /// @param configuration A Json object containing information about the game.
     GameMap::GameMap(Json config) {
         this->config = config;
-        this->verbosity = SUPPRESS; // TODO: Switch to warning
+        this->verbosity = WARNING;
         createEmptyGrid();
     }
 
@@ -135,6 +135,18 @@ namespace terminal {
     }
 
 
+    /// Add a single GameUnit to the map at the given location.
+    /// This does not send it to the engine, it simply lets you create any
+    /// map position you want to experiment with.
+    /// @param unitType The type of unit to add. Stationary units will replace 
+    /// @param x The x position to add the unit at.
+    /// @param y The y position to add the unit at.
+    /// @param playerIndex The player to add the unit for.
+    /// @param hp The health of the unit (default is max health).
+    void GameMap::addUnit(UNIT_TYPE unitType, int x, int y, int playerIndex, int hp) {
+        addUnit(unitType, Pos(x, y), playerIndex, hp);
+    }
+
     /// Remove all GameUnits from the game map at the location. Throw an error if it's empty.
     /// @param pos Position to clear from the game map
     void GameMap::removeUnits(Pos pos) {
@@ -164,7 +176,7 @@ namespace terminal {
     /// Boolean return of a stationary unit located at the position.
     /// @param pos Position to check on the map.
     /// @return Boolean answer to a stationary unit at the location.
-    bool GameMap::containsStationaryUnit(Pos pos) {
+    bool GameMap::containsStationaryUnit(Pos pos) const {
         if (!inArenaBounds(pos)) Util::printError<PosException>("Out of bounds exception", CRASH, verbosity);
         if (map.at(pos.x).at(pos.y).size() > 1) {
             switch (map.at(pos.x).at(pos.y).at(0).unitType) {
@@ -184,8 +196,8 @@ namespace terminal {
     /// @param x X coordinate to check on the map.
     /// @param y Y coordinate to check on the map.
     /// @return Boolean answer to a stationary unit at the location.
-    bool GameMap::containsStationaryUnit(int x, int y) {
-        return containsStationaryUnit({x, y});
+    bool GameMap::containsStationaryUnit(int x, int y) const {
+        return containsStationaryUnit(Pos(x, y));
     }
 
     /// Helper function to get the euclidean distance between two locations
