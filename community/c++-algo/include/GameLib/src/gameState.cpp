@@ -1,6 +1,6 @@
 /*
 Description: Implementations for the gameState header.
-Last Modified: 09 Apr 2019
+Last Modified: 10 Apr 2019
 Author: Isaac Draper
 */
 
@@ -19,7 +19,7 @@ namespace terminal {
     /// @param currentState A Json object containing information about the current state.
     GameState::GameState(Json configuration, Json jsonState) : gameMap(configuration) {
         config = configuration;
-        errorLevel = WARNING;
+        verbosity = WARNING;
 
         buildStack = Json::array();
         deployStack = Json::array();
@@ -35,8 +35,8 @@ namespace terminal {
         Json::array p1Stats = jsonState["p1Stats"].array_items();
         Json::array p2Stats = jsonState["p2Stats"].array_items();
 
-        parsePlayerStats(player1, 1, p1Stats);
-        parsePlayerStats(player2, 2, p2Stats);
+        parsePlayerStats(player1, 0, p1Stats);
+        parsePlayerStats(player2, 1, p2Stats);
 
         Json::array p1Units = jsonState["p1Units"].array_items();
         Json::array p2Units = jsonState["p2Units"].array_items();
@@ -71,8 +71,7 @@ namespace terminal {
                 int y = unitRaw.at(1).int_value();
                 double hp = unitRaw.at(2).number_value();
 
-                GameUnit unit = GameUnit(unitType, config, hp, player.id, x, y);
-                gameMap.addUnit(unit);
+                gameMap.addUnit(unitType, x, y, player.id, hp);
             }
             ++i;
         }
@@ -173,7 +172,7 @@ namespace terminal {
     /// @return The number of bits after so many turns.
     double GameState::projectFutureBits(int turnsInFuture, double currentBits, const Player& player) const {
         if (turnsInFuture < 1 || turnsInFuture > 99) {
-            Util::printError<CustomException>("Invalid turns in future used (" + std::to_string(turnsInFuture) + "). Turns in future should be betweeen 1 and 99.", WARNING, errorLevel);
+            Util::printError<CustomException>("Invalid turns in future used (" + std::to_string(turnsInFuture) + "). Turns in future should be betweeen 1 and 99.", WARNING, verbosity);
         }
 
         double bits = currentBits >= 0 ? currentBits : getResource(BITS, player);
@@ -212,21 +211,36 @@ namespace terminal {
     /// @return A bool, true if can spawn.
     bool GameState::canSpawn(UNIT_TYPE unitType, int x, int y, int num) const {
         if (!gameMap.inArenaBounds(x, y)) {
-            // TODO: Check inArenaBounds handles error
+            Util::printError<PosException>("Out of bounds exception", CRASH, verbosity);
             return false;
         }
 
         const bool affordable = numberAffordable(unitType, player1) >= num;
         const bool stationary = isStationary(unitType);
-        const bool blocked = false; // TODO: Add containsStationaryUnit to gameMap
+        const bool blocked = gameMap.containsStationaryUnit(x, y) ||
+            (stationary && gameMap[Pos(x, y)].size() > 0);
         const bool correctTerritory = y < gameMap.HALF_ARENA;
 
         vector<Pos> edges;
         gameMap.getEdgeLocations(edges, BOTTOM_LEFT);
         gameMap.getEdgeLocations(edges, BOTTOM_RIGHT);
-        const bool onEdge = true; // equal override in next game_map merge TODO: replace with: std::find(edges.begin(), edges.end(), pos) != edges.end();
+        const bool onEdge = std::find(edges.begin(), edges.end(), Pos(x, y)) != edges.end();
 
-                                  // TODO: Add all of the warnings
+        string failReason = "";
+        if (!affordable)
+            failReason += " Not enough resources.";
+        if (blocked)
+            failReason += " Location is blocked.";
+        if (!correctTerritory)
+            failReason += " Location in enemy territory.";
+        if (!(stationary || onEdge))
+            failReason += " Information units must be deployed on the edge.";
+        if (failReason.length > 0)
+            Util::printError<UnitSpawnException>("Could not spawn " +
+                unitTypeStr(unitType) + " at location " +
+                "(" + to_string(x) + ", " + to_string(y) + "). " +
+                failReason, 
+                WARNING, verbosity);
 
         return (affordable && correctTerritory && !blocked && (stationary || onEdge) && (!stationary || num == 1));
     }
@@ -250,7 +264,8 @@ namespace terminal {
             int cost = (int)typeCost(unitType);
             RESOURCE resourceType = resourceRequired(unitType);
             setResource(resourceType, 0 - cost);
-            // TODO: Add unit (waiting for merge)
+
+            gameMap.addUnit(unitType, x, y, 0);
             if (isStationary(unitType))
                 buildStack.push_back({ Json::array({ unitTypeStr(unitType), x, y }) });
             else
@@ -258,7 +273,7 @@ namespace terminal {
             return 1;
         }
         else {
-            Util::printError<UnitSpawnException>("Tried to spawn unit at (" + to_string(x) + ", " + to_string(y) + ") but could not", WARNING, errorLevel);
+            Util::printError<UnitSpawnException>("Tried to spawn unit at (" + to_string(x) + ", " + to_string(y) + ") but could not", WARNING, verbosity);
         }
         return 0;
     }
@@ -279,7 +294,7 @@ namespace terminal {
     /// @return Returns the number of units spawned.
     int GameState::attemptSpawn(UNIT_TYPE unitType, vector<Pos> locations, int num) {
         if (num < 1) {
-            Util::printError<UnitSpawnException>("Attempted to spawn fewer than one unit.", WARNING, errorLevel);
+            Util::printError<UnitSpawnException>("Attempted to spawn fewer than one unit.", WARNING, verbosity);
         }
 
         int numSpawned = 0;
@@ -294,13 +309,13 @@ namespace terminal {
     /// @param y The y location to try and remove.
     /// @return Returns the number of units removed (0 or 1).
     int GameState::attemptRemove(int x, int y) {
-        if (y < gameMap.HALF_ARENA) // TODO: add `&& gameMap.containsStationaryUnit(Pos { x, y } )`
-        {
+        if (y < gameMap.HALF_ARENA &&
+            gameMap.containsStationaryUnit(Pos(x, y))) {
             buildStack.push_back({ Json::array({ unitTypeStr(REMOVE), x, y}) });
             return 1;
         }
         else {
-            Util::printError<UnitRemoveException>("Could not remove a unit from (" + to_string(x) + ", " + to_string(y) + "). Location has no firewall or is in enemy territory", WARNING, errorLevel);
+            Util::printError<UnitRemoveException>("Could not remove a unit from (" + to_string(x) + ", " + to_string(y) + "). Location has no firewall or is in enemy territory", WARNING, verbosity);
         }
         return 0;
     }
@@ -326,18 +341,18 @@ namespace terminal {
     /// Sets a new verbosity level. This determines whether errors will
     /// be ignored, printed, or throw exceptions.
     /// This also sets the verbosity of the GameMap.
-    /// @param newErrorLevel The new error level.
-    void GameState::setVerbosity(VERBOSITY newErrorLevel) {
-        errorLevel = newErrorLevel;
-        // TODO: set gameMap error level here.
+    /// @param newVerbosity The new error level.
+    void GameState::setVerbosity(VERBOSITY newVerbosity) {
+        verbosity = newVerbosity;
+        gameMap.setVerbosity(newVerbosity);
     }
 
     /// Sets the verbosity level to SUPPRESS.
     /// This causes all errors to be ignored.
     /// This also sets the verbosity of the GameMap.
     void GameState::suppressWarnings() {
-        errorLevel = SUPPRESS;
-        // TODO: set gameMap error level here.
+        verbosity = SUPPRESS;
+        gameMap.setVerbosity(SUPPRESS);
     }
 
     /// This returns a string representation of the GameState object.

@@ -49,7 +49,20 @@ namespace terminal {
         UnitRemoveException::UnitRemoveException(const string errorMsg = "Unit Remove Exception") : CustomException(errorMsg) {}
     };
 
-}
+    class PosException : public CustomException {
+    public:
+        PosException(const string errorMsg = "Pos Exception") : CustomException(errorMsg) {}
+    };
 
+    class PlayerIndexException : public CustomException {
+    public:
+        PlayerIndexException(const string errorMsg = "Player Index Exception") : CustomException(errorMsg) {}
+    };
+
+    class GameMapException : public CustomException {
+    public:
+        GameMapException(const string errorMsg = "Game Map Exception") : CustomException(errorMsg) {}
+    };
+}
 
 #endif

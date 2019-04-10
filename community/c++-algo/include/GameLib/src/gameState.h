@@ -14,6 +14,7 @@ Author: Isaac Draper
 #include <vector>
 
 #include "json11/json11.hpp"
+#include "customExceptions.h"
 #include "structs.h"
 #include "gameMap.h"
 #include "structs.h"
@@ -81,8 +82,7 @@ namespace terminal {
         Json::array buildStack;
         Json::array deployStack;
         int turnNumber;
-        GameMap gameMap;
-        VERBOSITY errorLevel;
+        VERBOSITY verbosity;
         GameMap gameMap;
         // TODO: Add pathfinding
 
