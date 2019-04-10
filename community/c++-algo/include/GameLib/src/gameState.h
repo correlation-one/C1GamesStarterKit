@@ -14,6 +14,7 @@ Author: Isaac Draper
 #include <vector>
 
 #include "json11/json11.hpp"
+#include "customExceptions.h"
 #include "structs.h"
 #include "gameMap.h"
 #include "structs.h"

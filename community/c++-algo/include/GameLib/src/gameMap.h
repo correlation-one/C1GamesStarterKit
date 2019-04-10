@@ -29,9 +29,9 @@ namespace terminal {
         GameMap(Json config);
         bool inArenaBounds(int x, int y) const;
         bool inArenaBounds(Pos pos) const;
-        void getEdgeLocations(vector<Pos>& vec, EDGE edge);
+        void getEdgeLocations(vector<Pos>& vec, const EDGE edge) const;
         void getEdges(vector<vector<Pos> >& vec);
-        void addUnit(UNIT_TYPE unitType, Pos pos, int playerIndex);
+        void addUnit(UNIT_TYPE unitType, Pos pos, int playerIndex, int hp = 0);
         void removeUnits(Pos pos);
         void getLocationsInRange(vector<Pos>& locations, Pos pos, double radius);
         bool containsStationaryUnit(Pos pos);

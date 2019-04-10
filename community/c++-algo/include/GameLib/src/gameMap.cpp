@@ -1,6 +1,6 @@
 /*
 Description: Implementations for the algoMap header.
-Last Modified: 09 Apr 2019
+Last Modified: 10 Apr 2019
 Author: Isaac Draper, Ryan Draves
 */
 
@@ -15,6 +15,7 @@ namespace terminal {
     /// @param configuration A Json object containing information about the game.
     GameMap::GameMap(Json config) {
         this->config = config;
+        this->verbosity = SUPPRESS; // TODO: Switch to warning
         createEmptyGrid();
     }
 
@@ -51,7 +52,7 @@ namespace terminal {
     /// Takes an edge and fills a vector with a list of locations.
     /// @param vec A vector passed by reference you would like to fill.
     /// @param edge The edge to get units for.
-    void GameMap::getEdgeLocations(vector<Pos>& vec, EDGE edge) const {
+    void GameMap::getEdgeLocations(vector<Pos>& vec, const EDGE edge) const {
         int x, y;
         switch (edge) {
         case TOP_RIGHT: {
@@ -112,14 +113,15 @@ namespace terminal {
     /// @param unitType The type of unit to add. Stationary units will replace 
     /// @param pos The position to add the unit at.
     /// @param playerIndex The player to add the unit for.
-    void GameMap::addUnit(UNIT_TYPE unitType, Pos pos, int playerIndex) {
+    /// @param hp The health of the unit (default is max health).
+    void GameMap::addUnit(UNIT_TYPE unitType, Pos pos, int playerIndex, int hp) {
         if (!inArenaBounds(pos)) Util::printError<PosException>("Out of bounds exception", CRASH, verbosity);
         if (playerIndex < 0 || playerIndex > 1) throw PlayerIndexException();
         // Stability of 0 will default the unit to max_stability
-        GameUnit newUnit = GameUnit(unitType, config, 0, playerIndex, pos[0], pos[1]);
+        GameUnit newUnit = GameUnit(unitType, config, hp, playerIndex, pos[0], pos[1]);
         if (!newUnit.stationary) {
             map.at(pos.x).at(pos.y).push_back(newUnit);
-    }
+        }
         else {
             size_t size = map.at(pos.x).at(pos.y).size();
             if (size > 0 && newUnit.unitType != REMOVE)

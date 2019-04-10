@@ -1,6 +1,6 @@
 /*
 Description: Implementations for the gameState header.
-Last Modified: 09 Apr 2019
+Last Modified: 10 Apr 2019
 Author: Isaac Draper
 */
 
@@ -35,8 +35,8 @@ namespace terminal {
         Json::array p1Stats = jsonState["p1Stats"].array_items();
         Json::array p2Stats = jsonState["p2Stats"].array_items();
 
-        parsePlayerStats(player1, 1, p1Stats);
-        parsePlayerStats(player2, 2, p2Stats);
+        parsePlayerStats(player1, 0, p1Stats);
+        parsePlayerStats(player2, 1, p2Stats);
 
         Json::array p1Units = jsonState["p1Units"].array_items();
         Json::array p2Units = jsonState["p2Units"].array_items();
@@ -71,8 +71,7 @@ namespace terminal {
                 int y = unitRaw.at(1).int_value();
                 double hp = unitRaw.at(2).number_value();
 
-                GameUnit unit = GameUnit(unitType, config, hp, player.id, x, y);
-                gameMap.addUnit(unit);
+                gameMap.addUnit(unitType, Pos(x, y), player.id, hp);
             }
             ++i;
         }
