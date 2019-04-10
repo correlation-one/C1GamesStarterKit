@@ -112,7 +112,7 @@ namespace terminal {
         bool pendingRemoval;
     };
 
-    /// This sends a representation of the GameState object to a stream.
+    /// This sends a representation of the GameUnit object to a stream.
     /// @return The stream passed to the function.
     inline std::ostream& operator<<(std::ostream& os, GameUnit const& gameUnit) {
         os << gameUnit.toString();
