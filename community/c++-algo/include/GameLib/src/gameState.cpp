@@ -235,7 +235,7 @@ namespace terminal {
             failReason += " Location in enemy territory.";
         if (!(stationary || onEdge))
             failReason += " Information units must be deployed on the edge.";
-        if (failReason.length > 0)
+        if (failReason.length() > 0)
             Util::printError<UnitSpawnException>("Could not spawn " +
                 unitTypeStr(unitType) + " at location " +
                 "(" + to_string(x) + ", " + to_string(y) + "). " +
@@ -273,7 +273,7 @@ namespace terminal {
             return 1;
         }
         else {
-            Util::printError<UnitSpawnException>("Tried to spawn unit at (" + to_string(x) + ", " + to_string(y) + ") but could not", WARNING, verbosity);
+            Util::printError<UnitSpawnException>("Tried to spawn unit at (" + to_string(x) + ", " + to_string(y) + ") but could not.", WARNING, verbosity);
         }
         return 0;
     }
