@@ -14,11 +14,11 @@ Author: Isaac Draper
 #include <vector>
 
 #include "json11/json11.hpp"
+#include "structs.h"
 #include "gameMap.h"
 #include "structs.h"
 #include "enums.h"
 #include "util.h"
-
 namespace terminal {
 
     using json11::Json;

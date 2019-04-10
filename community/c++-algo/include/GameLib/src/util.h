@@ -13,6 +13,7 @@ Author: Isaac Draper
 
 #include "json11/json11.hpp"
 #include "customExceptions.h"
+#include "enums.h"
 
 namespace terminal {
 
@@ -33,6 +34,25 @@ namespace terminal {
         static void debugWrite(T obj, bool newline=true) {
             cerr << obj << (newline ? "\n" : "");
             cerr.flush();
+        }
+
+        /// This prints or thows an error depending on the level you set it at.
+        /// INVARIENT and CRASH levels will throw an exception,
+        /// WARNING simply prints the error, and 
+        /// SUPPRESS hides all errors.
+        /// This is a template function where you specify the type
+        /// of exception (must inhert from CustomException) to throw.
+        /// @param warning The warning to either print or throw.
+        /// @param warningLevel The level to throw this type of warning.
+        /// @param currentLevel The level the user currently has it set at.
+        template <typename CE>
+        static void printError(std::string warning, VERBOSITY warningLevel, VERBOSITY currentLevel) {
+            if (currentLevel >= warningLevel) {
+                if (currentLevel >= INVARIENT)
+                    throw CE(warning);
+                else
+                    debugWrite(warning);
+            }
         }
     };
 
