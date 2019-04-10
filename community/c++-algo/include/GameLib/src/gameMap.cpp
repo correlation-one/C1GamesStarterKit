@@ -1,6 +1,6 @@
 /*
 Description: Implementations for the algoMap header.
-Last Modified: 08 Apr 2019
+Last Modified: 10 Apr 2019
 Author: Isaac Draper, Ryan Draves
 */
 
@@ -15,6 +15,7 @@ namespace terminal {
     /// @param configuration A Json object containing information about the game.
     GameMap::GameMap(Json config) {
         this->config = config;
+        this->verbosity = WARNING;
         createEmptyGrid();
     }
 
@@ -47,48 +48,48 @@ namespace terminal {
     bool GameMap::inArenaBounds(Pos pos) const {
         return inArenaBounds(pos.x, pos.y);
     }
-    
+
     /// Takes an edge and fills a vector with a list of locations.
     /// @param vec A vector passed by reference you would like to fill.
     /// @param edge The edge to get units for.
-    void GameMap::getEdgeLocations(vector<Pos>& vec, EDGE edge) {
+    void GameMap::getEdgeLocations(vector<Pos>& vec, const EDGE edge) const {
         int x, y;
         switch (edge) {
-            case TOP_RIGHT: {
-                for (int i = 0; i < HALF_ARENA; ++i) {
-                    x = HALF_ARENA + i;
-                    y = ARENA_SIZE - 1 - i;
-                    vec.push_back(Pos{ x, y });
-                }
-                break;
+        case TOP_RIGHT: {
+            for (int i = 0; i < HALF_ARENA; ++i) {
+                x = HALF_ARENA + i;
+                y = ARENA_SIZE - 1 - i;
+                vec.push_back(Pos{ x, y });
             }
-            case TOP_LEFT: {
-                for (int i = 0; i < HALF_ARENA; ++i) {
-                    x = HALF_ARENA - 1 - i;
-                    y = ARENA_SIZE - 1 - i;
-                    vec.push_back(Pos{ x, y });
-                }
-                break;
+            break;
+        }
+        case TOP_LEFT: {
+            for (int i = 0; i < HALF_ARENA; ++i) {
+                x = HALF_ARENA - 1 - i;
+                y = ARENA_SIZE - 1 - i;
+                vec.push_back(Pos{ x, y });
             }
-            case BOTTOM_LEFT: {
-                for (int i = 0; i < HALF_ARENA; ++i) {
-                    x = HALF_ARENA - 1 - i;
-                    y = i;
-                    vec.push_back(Pos{ x, y });
-                }
-                break;
+            break;
+        }
+        case BOTTOM_LEFT: {
+            for (int i = 0; i < HALF_ARENA; ++i) {
+                x = HALF_ARENA - 1 - i;
+                y = i;
+                vec.push_back(Pos{ x, y });
             }
-            case BOTTOM_RIGHT: {
-                for (int i = 0; i < HALF_ARENA; ++i) {
-                    x = HALF_ARENA + i;
-                    y = i;
-                    vec.push_back(Pos{ x, y });
-                }
-                break;
+            break;
+        }
+        case BOTTOM_RIGHT: {
+            for (int i = 0; i < HALF_ARENA; ++i) {
+                x = HALF_ARENA + i;
+                y = i;
+                vec.push_back(Pos{ x, y });
             }
-            default: {
+            break;
+        }
+        default: {
                 Util::printError<GameMapException>("Invalid edge requested", INVARIANT, verbosity);
-            }
+        }
         }
     }
 
@@ -112,11 +113,12 @@ namespace terminal {
     /// @param unitType The type of unit to add. Stationary units will replace 
     /// @param pos The position to add the unit at.
     /// @param playerIndex The player to add the unit for.
-    void GameMap::addUnit(UNIT_TYPE unitType, Pos pos, int playerIndex) {
+    /// @param hp The health of the unit (default is max health).
+    void GameMap::addUnit(UNIT_TYPE unitType, Pos pos, int playerIndex, int hp) {
         if (!inArenaBounds(pos)) Util::printError<PosException>("Out of bounds exception", CRASH, verbosity);
         if (playerIndex < 0 || playerIndex > 1) throw PlayerIndexException();
         // Stability of 0 will default the unit to max_stability
-        GameUnit newUnit = GameUnit(unitType, config, 0, playerIndex, pos[0], pos[1]);
+        GameUnit newUnit = GameUnit(unitType, config, hp, playerIndex, pos[0], pos[1]);
         if (!newUnit.stationary) {
             map.at(pos.x).at(pos.y).push_back(newUnit);
         }
@@ -130,6 +132,19 @@ namespace terminal {
             // Clearing the vector for firewalls is not necessary, as we verified above
             map.at(pos.x).at(pos.y).push_back(newUnit);
         }
+    }
+
+
+    /// Add a single GameUnit to the map at the given location.
+    /// This does not send it to the engine, it simply lets you create any
+    /// map position you want to experiment with.
+    /// @param unitType The type of unit to add. Stationary units will replace 
+    /// @param x The x position to add the unit at.
+    /// @param y The y position to add the unit at.
+    /// @param playerIndex The player to add the unit for.
+    /// @param hp The health of the unit (default is max health).
+    void GameMap::addUnit(UNIT_TYPE unitType, int x, int y, int playerIndex, int hp) {
+        addUnit(unitType, Pos(x, y), playerIndex, hp);
     }
 
     /// Remove all GameUnits from the game map at the location. Throw an error if it's empty.
@@ -161,7 +176,7 @@ namespace terminal {
     /// Boolean return of a stationary unit located at the position.
     /// @param pos Position to check on the map.
     /// @return Boolean answer to a stationary unit at the location.
-    bool GameMap::containsStationaryUnit(Pos pos) {
+    bool GameMap::containsStationaryUnit(Pos pos) const {
         if (!inArenaBounds(pos)) Util::printError<PosException>("Out of bounds exception", CRASH, verbosity);
         if (map.at(pos.x).at(pos.y).size() > 1) {
             switch (map.at(pos.x).at(pos.y).at(0).unitType) {
@@ -181,8 +196,8 @@ namespace terminal {
     /// @param x X coordinate to check on the map.
     /// @param y Y coordinate to check on the map.
     /// @return Boolean answer to a stationary unit at the location.
-    bool GameMap::containsStationaryUnit(int x, int y) {
-        return containsStationaryUnit({x, y});
+    bool GameMap::containsStationaryUnit(int x, int y) const {
+        return containsStationaryUnit(Pos(x, y));
     }
 
     /// Helper function to get the euclidean distance between two locations

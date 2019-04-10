@@ -1,6 +1,6 @@
 /*
 Description: A header to contain a representation of the current game map.
-Last Modified: 08 Apr 2019
+Last Modified: 09 Apr 2019
 Author: Isaac Draper, Ryan Draves
 */
 
@@ -29,13 +29,14 @@ namespace terminal {
         GameMap(Json config);
         bool inArenaBounds(int x, int y) const;
         bool inArenaBounds(Pos pos) const;
-        void getEdgeLocations(vector<Pos>& vec, EDGE edge);
+        void getEdgeLocations(vector<Pos>& vec, const EDGE edge) const;
         void getEdges(vector<vector<Pos> >& vec);
-        void addUnit(UNIT_TYPE unitType, Pos pos, int playerIndex);
+        void addUnit(UNIT_TYPE unitType, int x, int y, int playerIndex, int hp = 0);
+        void addUnit(UNIT_TYPE unitType, Pos pos, int playerIndex, int hp = 0);
         void removeUnits(Pos pos);
         void getLocationsInRange(vector<Pos>& locations, Pos pos, double radius);
-        bool containsStationaryUnit(Pos pos);
-        bool containsStationaryUnit(int x, int y);
+        bool containsStationaryUnit(Pos pos) const;
+        bool containsStationaryUnit(int x, int y) const;
         vector<GameUnit>& operator[](const Pos &pos);
         const vector<GameUnit>& operator[](const Pos &pos) const;
         vector<vector<GameUnit> >& operator[](int x);
@@ -47,14 +48,15 @@ namespace terminal {
         string repr() { return toString(); };
         string printMap() { return toString(); };
 
+        const int ARENA_SIZE = 28;
+        const int HALF_ARENA = 14;
+
     private:
         void createEmptyGrid();
         double distanceBetweenLocations(Pos pos_1, Pos pos_2);
 
     public:
         Json config;
-        const int ARENA_SIZE = 28;
-        const int HALF_ARENA = 14;
         vector<vector<vector<GameUnit> > > map;
         VERBOSITY verbosity;
     };

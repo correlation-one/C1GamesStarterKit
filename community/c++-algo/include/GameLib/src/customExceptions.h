@@ -39,6 +39,16 @@ namespace terminal {
         UnitTypeException(const string errorMsg = "Unit Type Exception") : CustomException(errorMsg) {}
     };
 
+    class UnitSpawnException : public CustomException {
+    public:
+        UnitSpawnException::UnitSpawnException(const string errorMsg = "Unit Spawn Exception") : CustomException(errorMsg) {}
+    };
+
+    class UnitRemoveException : public CustomException {
+    public:
+        UnitRemoveException::UnitRemoveException(const string errorMsg = "Unit Remove Exception") : CustomException(errorMsg) {}
+    };
+
     class PosException : public CustomException {
     public:
         PosException(const string errorMsg = "Pos Exception") : CustomException(errorMsg) {}
@@ -53,8 +63,6 @@ namespace terminal {
     public:
         GameMapException(const string errorMsg = "Game Map Exception") : CustomException(errorMsg) {}
     };
-
 }
-
 
 #endif
