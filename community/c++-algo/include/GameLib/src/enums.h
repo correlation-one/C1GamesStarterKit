@@ -35,7 +35,11 @@ namespace terminal {
         BOTTOM_LEFT,
         BOTTOM_RIGHT
     };
-
-}
+    enum VERBOSITY {
+        SUPPRESS,
+        WARNING,
+        INVARIENT,
+        CRASH,
+    };}
 
 #endif

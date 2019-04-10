@@ -12,6 +12,7 @@ Author: Isaac Draper
 #include <sstream>
 
 #include "json11/json11.hpp"
+#include "customExceptions.h"
 #include "GameLib/src/structs.h"
 #include "GameLib/src/enums.h"
 #include "GameLib/src/util.h"
