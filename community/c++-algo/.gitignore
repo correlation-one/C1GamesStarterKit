@@ -914,5 +914,5 @@ _deps
 # errorFiles from Terminal engine
 /*/errorFile*.txt
 
-# the starter kit binaries
+# compiled starter kit binaries
 algo-target/StarterAlgo
