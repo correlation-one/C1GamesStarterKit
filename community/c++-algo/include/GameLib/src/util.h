@@ -48,7 +48,7 @@ namespace terminal {
         template <typename CE>
         static void printError(std::string warning, VERBOSITY warningLevel, VERBOSITY currentLevel) {
             if (currentLevel >= warningLevel) {
-                if (currentLevel >= INVARIENT)
+                if (currentLevel >= INVARIANT)
                     throw CE(warning);
                 else
                     debugWrite(warning);

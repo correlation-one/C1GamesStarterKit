@@ -10,6 +10,7 @@ Author: Isaac Draper
 #include <iostream>
 
 #include "enums.h"
+#include "customExceptions.h"
 
 namespace terminal {
 
@@ -17,6 +18,28 @@ namespace terminal {
     struct Pos {
         int x;
         int y;
+
+        /// Simple constructor to set the position
+        /// @param x X coordinate to set.
+        /// @param y Y coordinate to set.
+        Pos(int x, int y) : x(x), y(y) {}
+
+        /// This allows for python location indexing to be transferrable
+        /// @param index The index of the position coordinate
+        /// @return The value of the coordinate
+        inline int operator[](int index) {
+            if (index == 0) return x;
+            if (index == 1) return y;
+            throw PosException("Invalid position index (0 or 1)");
+            return 0;
+        }
+        
+        /// This allows for comparison between positions
+        /// @param rhs Right hand side position
+        /// @return The boolean answer to whether two positions are the same.
+        inline bool operator==(const Pos &rhs) {
+            return x == rhs.x && y == rhs.y;
+        }
     };
 
     /// This represents a player and stores its data.

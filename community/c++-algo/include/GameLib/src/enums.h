@@ -29,6 +29,7 @@ namespace terminal {
         TIME
     };
 
+
     enum EDGE {
         TOP_RIGHT,
         TOP_LEFT,
@@ -39,9 +40,9 @@ namespace terminal {
     enum VERBOSITY {
         SUPPRESS,
         WARNING,
-        INVARIENT,
+        INVARIANT,
         CRASH,
     };
-}
 
+}
 #endif
