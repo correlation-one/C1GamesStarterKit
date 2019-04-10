@@ -87,7 +87,7 @@ namespace terminal {
                 break;
             }
             default: {
-                throw GameMapException("Invalid edge requested");
+                Util::printError<GameMapException>("Invalid edge requested", INVARIANT, verbosity);
             }
         }
     }
@@ -113,7 +113,7 @@ namespace terminal {
     /// @param pos The position to add the unit at.
     /// @param playerIndex The player to add the unit for.
     void GameMap::addUnit(UNIT_TYPE unitType, Pos pos, int playerIndex) {
-        if (!inArenaBounds(pos)) throw PosException("Out of bounds exception");
+        if (!inArenaBounds(pos)) Util::printError<PosException>("Out of bounds exception", CRASH, verbosity);
         if (playerIndex < 0 || playerIndex > 1) throw PlayerIndexException();
         // Stability of 0 will default the unit to max_stability
         GameUnit newUnit = GameUnit(unitType, config, 0, playerIndex, pos[0], pos[1]);
@@ -123,10 +123,10 @@ namespace terminal {
         else {
             size_t size = map.at(pos.x).at(pos.y).size();
             if (size > 0 && newUnit.unitType != REMOVE)
-                throw GameMapException("Error placing a stationary unit in an occupied location");
+                Util::printError<GameMapException>("Error placing a stationary unit in an occupied location", INVARIANT, verbosity);
             else if ((size != 1 || (size > 0 && !map.at(pos.x).at(pos.y).at(0).stationary))
                 && newUnit.unitType == REMOVE)
-                throw GameMapException("Error placing remove; 1 stationary unit not found");
+                Util::printError<GameMapException>("Error placing remove; 1 stationary unit not found", INVARIANT, verbosity);
             // Clearing the vector for firewalls is not necessary, as we verified above
             map.at(pos.x).at(pos.y).push_back(newUnit);
         }
@@ -135,8 +135,8 @@ namespace terminal {
     /// Remove all GameUnits from the game map at the location. Throw an error if it's empty.
     /// @param pos Position to clear from the game map
     void GameMap::removeUnits(Pos pos) {
-        if (!inArenaBounds(pos)) throw PosException("Out of bounds exception");
-        if (map.at(pos.x).at(pos.y).size() == 0) throw GameMapException("Error trying to remove 0 units");
+        if (!inArenaBounds(pos)) Util::printError<PosException>("Out of bounds exception", CRASH, verbosity);
+        if (map.at(pos.x).at(pos.y).size() == 0) Util::printError<GameMapException>("Error trying to remove 0 units", WARNING, verbosity);
         map.at(pos.x).at(pos.y).clear();
     }
 
@@ -146,8 +146,8 @@ namespace terminal {
     /// @param radius The radius of the circle to get locations from.
     void GameMap::getLocationsInRange(vector<Pos>& locations, Pos pos, double radius) {
         if (radius < 0 || radius > ARENA_SIZE)
-            throw GameMapException("Error getting locations in range with that radius");
-        if (!inArenaBounds(pos)) throw PosException("Out of bounds exception");
+            Util::printError<GameMapException>("Error getting locations in range with that radius", INVARIANT, verbosity);
+        if (!inArenaBounds(pos)) Util::printError<PosException>("Out of bounds exception", CRASH, verbosity);
         for (int i = (int)(pos.x - radius); i < (int)(pos.x + radius + 1); i++) {
             for (int j = (int)(pos.y - radius); j < (int)(pos.y + radius + 1); j++) {
                 Pos new_pos = { i, j };
@@ -156,6 +156,33 @@ namespace terminal {
                 }
             }
         }
+    }
+
+    /// Boolean return of a stationary unit located at the position.
+    /// @param pos Position to check on the map.
+    /// @return Boolean answer to a stationary unit at the location.
+    bool GameMap::containsStationaryUnit(Pos pos) {
+        if (!inArenaBounds(pos)) Util::printError<PosException>("Out of bounds exception", CRASH, verbosity);
+        if (map.at(pos.x).at(pos.y).size() > 1) {
+            switch (map.at(pos.x).at(pos.y).at(0).unitType) {
+                case FILTER:
+                case ENCRYPTOR:
+                case DESTRUCTOR:
+                    return true;
+                    break;
+                default:
+                    return false;
+            }
+        }
+        return false;
+    }
+
+    /// Boolean return of a stationary unit located at the position.
+    /// @param x X coordinate to check on the map.
+    /// @param y Y coordinate to check on the map.
+    /// @return Boolean answer to a stationary unit at the location.
+    bool GameMap::containsStationaryUnit(int x, int y) {
+        return containsStationaryUnit({x, y});
     }
 
     /// Helper function to get the euclidean distance between two locations
@@ -170,7 +197,7 @@ namespace terminal {
     /// @param pos Position to index into the map.
     /// @return A reference to the vector of GameUnits at the location.
     vector<GameUnit>& GameMap::operator[](const Pos &pos) {
-        if (!inArenaBounds(pos)) throw PosException("Out of bounds exception");
+        if (!inArenaBounds(pos)) Util::printError<PosException>("Out of bounds exception", CRASH, verbosity);
         return map.at(pos.x).at(pos.y);
     }
 
@@ -178,7 +205,7 @@ namespace terminal {
     /// @param pos Position to index into the map.
     /// @return A reference to the vector of GameUnits at the location.
     const vector<GameUnit>& GameMap::operator[](const Pos &pos) const {
-        if (!inArenaBounds(pos)) throw PosException("Out of bounds exception");
+        if (!inArenaBounds(pos)) Util::printError<PosException>("Out of bounds exception", CRASH, verbosity);
         return map.at(pos.x).at(pos.y);
     }
 
@@ -187,7 +214,7 @@ namespace terminal {
     /// @return A reference to the column of the game map at coordinate X.
     vector<vector<GameUnit> >& GameMap::operator[](int x) {
         // y = 13 and 14 are true to any valid x value
-        if (!inArenaBounds(Pos(x, 13))) throw PosException("Out of bounds exception");
+        if (!inArenaBounds(Pos(x, 13))) Util::printError<PosException>("Out of bounds exception", CRASH, verbosity);
         return map.at(x);
     }
 
@@ -202,4 +229,26 @@ namespace terminal {
     vector<vector<vector<GameUnit> > >::iterator GameMap::end() {
         return map.end();
     }
+
+    /// Prints an ACSII version of the current game map for debug purposes
+    /// @return A very large string that represents the GameMap.
+    string GameMap::toString() const {
+        string ret = "";
+        for (int y = 0; y < ARENA_SIZE; y++) {
+            for (int x = 0; x < ARENA_SIZE; x++) {
+                Pos location = { x, ARENA_SIZE - y - 1 };
+                const vector<GameUnit> &stack = map.at(location.x).at(location.y);
+                if (!inArenaBounds(location))
+                    ret += " - ";
+                else if (stack.size() == 0)
+                    ret += " + ";
+                else {
+                    ret += stack.at(0).toString() + " ";
+                }
+            }
+            ret += "\n";
+        }
+        return ret;
+    }
+
 }

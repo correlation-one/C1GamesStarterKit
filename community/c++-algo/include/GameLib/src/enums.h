@@ -38,7 +38,7 @@ namespace terminal {
     enum VERBOSITY {
         SUPPRESS,
         WARNING,
-        INVARIENT,
+        INVARIANT,
         CRASH,
     };}
 

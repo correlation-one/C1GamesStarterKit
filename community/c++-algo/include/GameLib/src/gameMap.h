@@ -34,11 +34,18 @@ namespace terminal {
         void addUnit(UNIT_TYPE unitType, Pos pos, int playerIndex);
         void removeUnits(Pos pos);
         void getLocationsInRange(vector<Pos>& locations, Pos pos, double radius);
+        bool containsStationaryUnit(Pos pos);
+        bool containsStationaryUnit(int x, int y);
         vector<GameUnit>& operator[](const Pos &pos);
         const vector<GameUnit>& operator[](const Pos &pos) const;
         vector<vector<GameUnit> >& operator[](int x);
         vector<vector<vector<GameUnit> > >::iterator begin();
         vector<vector<vector<GameUnit> > >::iterator end();
+        void setVerbosity(VERBOSITY verbosityIn) { verbosity = verbosityIn; };
+        string toString() const;
+        string str() { return toString(); };
+        string repr() { return toString(); };
+        string printMap() { return toString(); };
 
     private:
         void createEmptyGrid();
@@ -49,8 +56,15 @@ namespace terminal {
         const int ARENA_SIZE = 28;
         const int HALF_ARENA = 14;
         vector<vector<vector<GameUnit> > > map;
-
+        VERBOSITY verbosity;
     };
+
+    /// This sends a representation of the GameMap object to a stream.
+    /// @return The stream passed to the function.
+    inline std::ostream& operator<<(std::ostream& os, GameMap const& gameMap) {
+        os << gameMap.toString();
+        return os;
+    }
 
 }
 
