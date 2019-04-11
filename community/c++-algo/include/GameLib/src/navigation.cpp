@@ -25,10 +25,10 @@ namespace terminal {
         initialized = true;
         nodeMap.reserve(gameMap.ARENA_SIZE);
 
-        for (int i = 0; i < gameMap.ARENA_SIZE; i++) {
+        for (unsigned int i = 0; i < gameMap.ARENA_SIZE; i++) {
             nodeMap.push_back(vector<Node>());
             nodeMap.at(i).reserve(gameMap.ARENA_SIZE);
-            for (int j = 0; j < gameMap.ARENA_SIZE; j++) {
+            for (unsigned int j = 0; j < gameMap.ARENA_SIZE; j++) {
                 nodeMap.at(i).push_back(Node());
             }
         }
@@ -44,8 +44,8 @@ namespace terminal {
 
         initializeMap();
 
-        for (int x = 0; x < gameMap.ARENA_SIZE; x++) 
-            for (int y = 0; y < gameMap.ARENA_SIZE; y++) 
+        for (unsigned int x = 0; x < gameMap.ARENA_SIZE; x++) 
+            for (unsigned int y = 0; y < gameMap.ARENA_SIZE; y++) 
                 if (gameMap.containsStationaryUnit(x, y)) 
                     nodeMap.at(x).at(y).blocked = true;
 
@@ -296,8 +296,8 @@ namespace terminal {
             return;
         }
 
-        for(int y = 0; y < gameMap.ARENA_SIZE; y++) {
-            for(int x = 0; x < gameMap.ARENA_SIZE; x++) {
+        for(unsigned int y = 0; y < gameMap.ARENA_SIZE; y++) {
+            for(unsigned int x = 0; x < gameMap.ARENA_SIZE; x++) {
                 Node node = nodeMap.at(x).at(28 - y - 1);
                 if(!node.blocked && node.pathLength != -1)
                     printJustified(node.pathLength);
