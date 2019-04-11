@@ -35,30 +35,32 @@ namespace terminal {
         GameState(Json configuration, Json jsonState);
         void submitTurn() const;
 
-        int numberAffordable(UNIT_TYPE unitType) const;
-        int numberAffordable(UNIT_TYPE unitType, const Player& player) const;
+        unsigned int attemptSpawn(UNIT_TYPE unitType, int x, int y, int num = 1);
+        unsigned int attemptSpawn(UNIT_TYPE unitType, Pos pos, int num = 1);
+        unsigned int attemptSpawn(UNIT_TYPE unitType, vector<Pos> locations, int num = 1);
+
+        unsigned int attemptRemove(Pos pos);
+        unsigned int attemptRemove(int x, int y);
+        unsigned int attemptRemove(vector<Pos> locations);
 
         bool canSpawn(UNIT_TYPE unitType, int x, int y, int num = 1) const;
         bool canSpawn(UNIT_TYPE unitType, const Pos pos, int num = 1) const;
 
-        int attemptSpawn(UNIT_TYPE unitType, int x, int y, int num = 1);
-        int attemptSpawn(UNIT_TYPE unitType, Pos pos, int num = 1);
-        int attemptSpawn(UNIT_TYPE unitType, vector<Pos> locations, int num = 1);
-
-        int attemptRemove(Pos pos);
-        int attemptRemove(int x, int y);
-        int attemptRemove(vector<Pos> locations);
+        unsigned int numberAffordable(UNIT_TYPE unitType) const;
+        unsigned int numberAffordable(UNIT_TYPE unitType, const Player& player) const;
 
         double projectFutureBits(int turnsInFuture = 1, double currentBits = -1) const;
         double projectFutureBits(int turnsInFuture, double currentBits, const Player& player) const;
 
-        double typeCost(UNIT_TYPE unitType) const;
-        RESOURCE resourceRequired(UNIT_TYPE unitType) const;
         double getResource(RESOURCE resourceType) const;
         double getResource(RESOURCE resourceType, const Player& player) const;
+
+        double typeCost(UNIT_TYPE unitType) const;
+        RESOURCE resourceRequired(UNIT_TYPE unitType) const;
+
         bool isStationary(UNIT_TYPE unitType) const;
         Player getPlayer(int id) const;
-        int getTurn() const;
+        unsigned int getTurn() const;
 
         void setVerbosity(VERBOSITY newErrorLevel);
         void suppressWarnings();
@@ -70,18 +72,21 @@ namespace terminal {
 
     private:
         void parseState(Json jsonState);
-        void parsePlayerStats(Player& player, int id, Json::array stats);
         void parseUnits(Player& player, Json::array jsonUnits);
+        void parsePlayerStats(Player& player, int id, Json::array stats);
 
         void setResource(RESOURCE resourceType, double amount);
         void setResource(RESOURCE resourceType, double amount, Player& player);
 
         Json config;
+
         Player player1;
         Player player2;
+
         Json::array buildStack;
         Json::array deployStack;
-        int turnNumber;
+
+        unsigned int turnNumber;
         VERBOSITY verbosity;
 
         // TODO: Add pathfinding

@@ -63,6 +63,7 @@ namespace terminal {
     public:
         GameMapException(const string errorMsg = "Game Map Exception") : CustomException(errorMsg) {}
     };
+
 }
 
 #endif

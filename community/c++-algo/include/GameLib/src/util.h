@@ -37,7 +37,7 @@ namespace terminal {
         }
 
         /// This prints or thows an error depending on the level you set it at.
-        /// INVARIENT and CRASH levels will throw an exception,
+        /// INVARIANT and CRASH levels will throw an exception,
         /// WARNING simply prints the error, and 
         /// SUPPRESS hides all errors.
         /// This is a template function where you specify the type

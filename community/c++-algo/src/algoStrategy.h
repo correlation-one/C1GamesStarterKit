@@ -35,7 +35,7 @@ namespace terminal {
         void buildC1Logo(GameState& gameState);
         void buildDefences(GameState& gameState);
         void deployAttackers(GameState& gameState);
-        vector<Pos> filterBlockedLocations(vector<Pos>& locations, GameState& gameState);
+        vector<Pos> filterBlockedLocations(vector<Pos>& locations, GameState& gameState) const;
         
     };
 

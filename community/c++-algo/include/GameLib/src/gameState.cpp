@@ -63,6 +63,7 @@ namespace terminal {
         int i = 0;
         for (Json unitsObj : jsonUnits) {
             Json::array unitsRaw = unitsObj.array_items();
+
             for (Json unitObj : unitsRaw) {
                 Json::array unitRaw = unitObj.array_items();
 
@@ -143,7 +144,7 @@ namespace terminal {
 
     /// Returns the current turn number of the game.
     /// @return The current turn number.
-    int GameState::getTurn() const {
+    unsigned int GameState::getTurn() const {
         return turnNumber;
     }
 
@@ -151,17 +152,18 @@ namespace terminal {
     /// @param unitType The type of unit to check.
     /// @param player The player to use.
     /// @return The number of units that player can afford.
-    int GameState::numberAffordable(UNIT_TYPE unitType, const Player& player) const {
+    unsigned int GameState::numberAffordable(UNIT_TYPE unitType, const Player& player) const {
         double cost = typeCost(unitType);
         RESOURCE resourceType = resourceRequired(unitType);
         double playerHeld = getResource(resourceType, player);
-        return (int)(playerHeld / cost);
+
+        return (unsigned int)(playerHeld / cost);
     }
 
     /// The number of units a player can afford.
     /// @param unitType The type of unit to check.
     /// @return The number of units that player can afford.
-    int GameState::numberAffordable(UNIT_TYPE unitType) const {
+    unsigned int GameState::numberAffordable(UNIT_TYPE unitType) const {
         return numberAffordable(unitType, player1);
     }
 
@@ -259,22 +261,25 @@ namespace terminal {
     /// @param pos The location to spawn the unit.
     /// @param num The number of units to spawn.
     /// @return Returns the number of units spawned (0 or 1).
-    int GameState::attemptSpawn(UNIT_TYPE unitType, int x, int y, int num) {
+    unsigned int GameState::attemptSpawn(UNIT_TYPE unitType, int x, int y, int num) {
         if (canSpawn(unitType, x, y)) {
             int cost = (int)typeCost(unitType);
             RESOURCE resourceType = resourceRequired(unitType);
             setResource(resourceType, 0 - cost);
 
             gameMap.addUnit(unitType, x, y, 0);
+
             if (isStationary(unitType))
                 buildStack.push_back({ Json::array({ unitTypeStr(unitType), x, y }) });
             else
                 deployStack.push_back({ Json::array({ unitTypeStr(unitType), x, y }) });
+
             return 1;
         }
         else {
             Util::printError<UnitSpawnException>("Tried to spawn unit at (" + to_string(x) + ", " + to_string(y) + ") but could not.", WARNING, verbosity);
         }
+
         return 0;
     }
 
@@ -283,7 +288,7 @@ namespace terminal {
     /// @param pos The location to spawn the unit.
     /// @param num The number of units to spawn.
     /// @return Returns the number of units spawned (0 or 1).
-    int GameState::attemptSpawn(UNIT_TYPE unitType, Pos pos, int num) {
+    unsigned int GameState::attemptSpawn(UNIT_TYPE unitType, Pos pos, int num) {
         return attemptSpawn(unitType, pos.x, pos.y);
     }
 
@@ -292,15 +297,16 @@ namespace terminal {
     /// @param locations The location to spawn the unit.
     /// @param num The numer of units to spawn at each location (default is 1).
     /// @return Returns the number of units spawned.
-    int GameState::attemptSpawn(UNIT_TYPE unitType, vector<Pos> locations, int num) {
+    unsigned int GameState::attemptSpawn(UNIT_TYPE unitType, vector<Pos> locations, int num) {
         if (num < 1) {
             Util::printError<UnitSpawnException>("Attempted to spawn fewer than one unit.", WARNING, verbosity);
         }
 
-        int numSpawned = 0;
+        unsigned int numSpawned = 0;
         for (Pos pos : locations) {
             numSpawned += attemptSpawn(unitType, pos);
         }
+
         return numSpawned;
     }
 
@@ -308,33 +314,36 @@ namespace terminal {
     /// @param x The x location to try and remove.
     /// @param y The y location to try and remove.
     /// @return Returns the number of units removed (0 or 1).
-    int GameState::attemptRemove(int x, int y) {
+    unsigned int GameState::attemptRemove(int x, int y) {
         if (y < gameMap.HALF_ARENA &&
             gameMap.containsStationaryUnit(Pos(x, y))) {
             buildStack.push_back({ Json::array({ unitTypeStr(REMOVE), x, y}) });
+
             return 1;
         }
         else {
             Util::printError<UnitRemoveException>("Could not remove a unit from (" + to_string(x) + ", " + to_string(y) + "). Location has no firewall or is in enemy territory", WARNING, verbosity);
         }
+
         return 0;
     }
 
     /// Attempts to remove existing friendly firewalls in a given location.
     /// @param pos The location to try and remove.
     /// @return Returns the number of units removed (0 or 1).
-    int GameState::attemptRemove(Pos pos) {
+    unsigned int GameState::attemptRemove(Pos pos) {
         return attemptRemove(pos.x, pos.y);
     }
 
     /// Attempts to remove existing friendly firewalls at each position in a vector.
     /// @param locations The locations to try and remove.
     /// @return Returns the number of units removed.
-    int GameState::attemptRemove(vector<Pos> locations) {
-        int numRemoved = 0;
+    unsigned int GameState::attemptRemove(vector<Pos> locations) {
+        unsigned int numRemoved = 0;
         for (Pos pos : locations) {
             numRemoved += attemptRemove(pos);
         }
+
         return numRemoved;
     }
 
@@ -361,6 +370,7 @@ namespace terminal {
         std::stringstream ss;
         ss.precision(1);
         ss << std::fixed;
+
         ss << "GameState:\n\t\t\tBits\tCores\tHealth\n\t" <<
             "Player 1:\t" <<
             player1.bits  << "\t" <<
@@ -370,6 +380,7 @@ namespace terminal {
             player2.bits  << "\t" <<
             player2.cores << "\t" <<
             player2.health << "\n";
+
         return ss.str();
     }
 

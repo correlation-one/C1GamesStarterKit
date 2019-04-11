@@ -40,6 +40,7 @@ namespace terminal {
         inline bool operator==(const Pos &rhs) {
             return x == rhs.x && y == rhs.y;
         }
+
     };
 
     /// This represents a player and stores its data.

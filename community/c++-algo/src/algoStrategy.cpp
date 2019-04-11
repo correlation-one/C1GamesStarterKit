@@ -47,6 +47,7 @@ namespace terminal {
     /// This is overridden from AlgoCore.
     /// @param jsonState A Json object containing the current game state.
     void AlgoStrategy::onTurn(Json jsonState) {
+
         // Create a gamestate object that will help execute our strategy.
         GameState gameState = GameState(config, jsonState);
 
@@ -72,6 +73,7 @@ namespace terminal {
     /// This starts using the gameState to run our strategy.
     /// @param gameState The current game state of the board (by reference).
     void AlgoStrategy::starterStrategy(GameState& gameState) {
+
         // Builds the C1 Logo.
         // Calling this first prioritizes repairing the logo before all else.
         buildC1Logo(gameState);
@@ -87,6 +89,7 @@ namespace terminal {
     /// We use Filter firewalls because they are cheap.
     /// @param gameState The current game state of the board (by reference).
     void AlgoStrategy::buildC1Logo(GameState& gameState) {
+
         // Build the letter C. 
         vector<Pos> letterC = { Pos {8, 11}, Pos {9, 11}, Pos {7, 10}, Pos {7, 9}, Pos {7, 8}, Pos {8, 7}, Pos {9, 7} };
         for (Pos pos : letterC)
@@ -109,6 +112,7 @@ namespace terminal {
     /// Builds some extra defences.
     /// @param gameState The current game state of the board (by reference).
     void AlgoStrategy::buildDefences(GameState& gameState) {
+
         // First we protect ourselves with some destructors.
         vector<Pos> destructorLocations = { Pos {0, 13}, Pos {27, 13} };
         for (Pos pos : destructorLocations)
@@ -157,6 +161,7 @@ namespace terminal {
     /// Deploys attackers to the edges of the map.
     /// @param gameState The current game state of the board (by reference).
     void AlgoStrategy::deployAttackers(GameState& gameState) {
+
         // First lets check if we have 10 bits, if we don't lets
         // wait for a turn that we do.
         if (gameState.getResource(BITS) < 10)
@@ -207,11 +212,10 @@ namespace terminal {
     /// This returns a vector of positions not already occupied.
     /// @param locations A vector of locations to check.
     /// @return A new vector with no positions that are blocked.
-    vector<Pos> AlgoStrategy::filterBlockedLocations(vector<Pos>& locations, GameState& gameState) {
+    vector<Pos> AlgoStrategy::filterBlockedLocations(vector<Pos>& locations, GameState& gameState) const {
         vector<Pos> filtered;
         for (Pos pos : locations) {
-            // if (!gameState.gameMap.containsStationaryUnit(pos)) { TODO: uncomment after merge with game_map PR.
-            if (true) {
+            if (!gameState.gameMap.containsStationaryUnit(pos)) {
                 filtered.push_back(pos);
             }
         }

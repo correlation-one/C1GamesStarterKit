@@ -88,18 +88,16 @@ namespace terminal {
         GameUnit(UNIT_TYPE unitType, const Json &config, double stability, int playerIndex = 0,
             int x = -1, int y = -1);
         string toString() const;
-        string str() { return toString(); };
-        string repr() { return toString(); };
-    private:
-        void serializeType();
-    public:
+
         // To be initialized
-        UNIT_TYPE unitType;
         Json config;
+
+        UNIT_TYPE unitType;
         int playerIndex;
         double stability;
         int x;
         int y;
+
         // To be read in by config
         bool stationary;
         double speed;
@@ -110,6 +108,10 @@ namespace terminal {
         double maxStability;
         int cost;
         bool pendingRemoval;
+
+    private:
+        void serializeType();
+
     };
 
     /// This sends a representation of the GameUnit object to a stream.

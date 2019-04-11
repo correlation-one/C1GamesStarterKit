@@ -30,6 +30,7 @@ namespace terminal {
     void GameUnit::serializeType() {
         stationary = isStationary(unitType);
         Json type_config = config["unitInformation"].array_items().at((int)unitType);
+
         if (stationary) {
             speed = 0;
             if (unitType == REMOVE) {
@@ -52,6 +53,7 @@ namespace terminal {
             damageF = type_config["damageF"].int_value();
             damageI = type_config["damageI"].int_value();
         }
+
         range = type_config["range"].number_value();
         maxStability = type_config["stability"].number_value();
         cost = type_config["cost"].int_value();

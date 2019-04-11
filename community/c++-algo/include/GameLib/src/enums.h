@@ -29,7 +29,6 @@ namespace terminal {
         TIME
     };
 
-
     enum EDGE {
         TOP_RIGHT,
         TOP_LEFT,
@@ -45,4 +44,5 @@ namespace terminal {
     };
 
 }
+
 #endif

@@ -27,37 +27,41 @@ namespace terminal {
     class GameMap {
     public:
         GameMap(Json config);
-        bool inArenaBounds(int x, int y) const;
-        bool inArenaBounds(Pos pos) const;
-        void getEdgeLocations(vector<Pos>& vec, const EDGE edge) const;
-        void getEdges(vector<vector<Pos> >& vec);
+
         void addUnit(UNIT_TYPE unitType, int x, int y, int playerIndex, double hp = 0);
         void addUnit(UNIT_TYPE unitType, Pos pos, int playerIndex, double hp = 0);
         void removeUnits(Pos pos);
-        void getLocationsInRange(vector<Pos>& locations, Pos pos, double radius);
+
+        void getEdges(vector<vector<Pos> >& vec) const;
+        void getEdgeLocations(vector<Pos>& vec, const EDGE edge) const;
+        void getLocationsInRange(vector<Pos>& locations, Pos pos, double radius) const;
+
+        bool inArenaBounds(Pos pos) const;
+        bool inArenaBounds(int x, int y) const;
+
         bool containsStationaryUnit(Pos pos) const;
         bool containsStationaryUnit(int x, int y) const;
+
+        vector<vector<GameUnit>>& operator[](int x);
         vector<GameUnit>& operator[](const Pos &pos);
         const vector<GameUnit>& operator[](const Pos &pos) const;
-        vector<vector<GameUnit> >& operator[](int x);
-        vector<vector<vector<GameUnit> > >::iterator begin();
-        vector<vector<vector<GameUnit> > >::iterator end();
-        void setVerbosity(VERBOSITY verbosityIn) { verbosity = verbosityIn; };
+
+        vector<vector<vector<GameUnit>>>::iterator begin();
+        vector<vector<vector<GameUnit>>>::iterator end();
+        
+        void setVerbosity(VERBOSITY verbosityIn);
         string toString() const;
-        string str() { return toString(); };
-        string repr() { return toString(); };
-        string printMap() { return toString(); };
 
         const int ARENA_SIZE = 28;
         const int HALF_ARENA = 14;
 
     private:
         void createEmptyGrid();
-        double distanceBetweenLocations(Pos pos_1, Pos pos_2);
+        double distanceBetweenLocations(Pos pos_1, Pos pos_2) const;
 
     public:
         Json config;
-        vector<vector<vector<GameUnit> > > map;
+        vector<vector<vector<GameUnit>>> map;
         VERBOSITY verbosity;
     };
 
