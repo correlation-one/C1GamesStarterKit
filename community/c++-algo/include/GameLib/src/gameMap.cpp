@@ -114,7 +114,7 @@ namespace terminal {
     /// @param pos The position to add the unit at.
     /// @param playerIndex The player to add the unit for.
     /// @param hp The health of the unit (default is max health).
-    void GameMap::addUnit(UNIT_TYPE unitType, Pos pos, int playerIndex, int hp) {
+    void GameMap::addUnit(UNIT_TYPE unitType, Pos pos, int playerIndex, double hp) {
         if (!inArenaBounds(pos)) Util::printError<PosException>("Out of bounds exception", CRASH, verbosity);
         if (playerIndex < 0 || playerIndex > 1) throw PlayerIndexException();
         // Stability of 0 will default the unit to max_stability
@@ -143,7 +143,7 @@ namespace terminal {
     /// @param y The y position to add the unit at.
     /// @param playerIndex The player to add the unit for.
     /// @param hp The health of the unit (default is max health).
-    void GameMap::addUnit(UNIT_TYPE unitType, int x, int y, int playerIndex, int hp) {
+    void GameMap::addUnit(UNIT_TYPE unitType, int x, int y, int playerIndex, double hp) {
         addUnit(unitType, Pos(x, y), playerIndex, hp);
     }
 
