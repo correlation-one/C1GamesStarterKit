@@ -44,10 +44,14 @@ namespace terminal {
 
         initializeMap();
 
-        for (int x = 0; x < gameMap.ARENA_SIZE; x++)
-            for (int y = 0; y < gameMap.ARENA_SIZE; y++)
-                if (gameMap.containsStationaryUnit(x, y))
+        for (int x = 0; x < gameMap.ARENA_SIZE; x++) {
+            for (int y = 0; y < gameMap.ARENA_SIZE; y++) {
+                if (gameMap.containsStationaryUnit(x, y)) {
+                    Util::debugWrite(Pos(x, y));
                     nodeMap.at(x).at(y).blocked = true;
+                }
+            }
+        }
 
         Pos idealEndpoint = idealnessSearch(startPoint, endPoints);
 
@@ -255,17 +259,17 @@ namespace terminal {
     /// @param endPoints A vector of end locations for the unit, should be a list of edge locations (by reference).
     /// @return Whether the unit would rather move to the new one.
     bool ShortestPathFinder::betterDirection(Pos prevTile, Pos newTile, Pos prevBest, MOVE_DIRECTION previousMoveDirection, const vector<Pos>& endPoints) {
-        if(previousMoveDirection == HORIZONTAL && newTile.x == prevBest.x) {
+        if(previousMoveDirection == HORIZONTAL && newTile.x != prevBest.x) {
             if(prevTile.y == newTile.y)
                 return false;
             return true;
         }
-        if(previousMoveDirection == VERTICAL && newTile.y == prevBest.y) {
+        if(previousMoveDirection == VERTICAL && newTile.y != prevBest.y) {
             if(prevTile.x == newTile.x)
                 return false;
             return true;
         }
-        if(previousMoveDirection == 0) {
+        if(previousMoveDirection == NONE) {
             if(prevTile.y == newTile.y)
                 return false;
             return true;
