@@ -43,11 +43,5 @@ namespace terminal {
         INVARIANT,
         CRASH,
     };
-
-    enum MOVE_DIRECTION {
-        NONE,
-        HORIZONTAL,
-        VERTICAL
-    };
 }
 #endif

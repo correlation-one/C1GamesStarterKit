@@ -17,6 +17,13 @@ Author: Patrik Dobias
 #include "gameMap.h"
 
 namespace terminal {
+    
+    /// Enum representing last direction
+    enum MOVE_DIRECTION {
+        NONE,
+        HORIZONTAL,
+        VERTICAL
+    };
 
     using std::vector;
 
