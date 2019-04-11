@@ -33,7 +33,7 @@ namespace terminal {
     /// This class handles pathfinding.
     class ShortestPathFinder {
     public:
-        ShortestPathFinder(const GameMap& gameMap);
+        ShortestPathFinder(GameMap& gameMap);
         void initializeMap();
         void navigate_multiple_endpoints(Pos startPoint, const vector<Pos>& endPoints, vector<Pos>& path);
         void printMap();
@@ -48,7 +48,7 @@ namespace terminal {
         bool betterDirection(Pos prevTile, Pos newTile, Pos prevBest, MOVE_DIRECTION previousMoveDirection, const vector<Pos>& endPoints);
         void printJustified(int number);
 
-        const GameMap gameMap;
+        GameMap gameMap;
         bool initialized;
         vector<vector<Node>> nodeMap;
     };

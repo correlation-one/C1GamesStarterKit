@@ -16,11 +16,11 @@ namespace terminal {
 
     /// Constructor for ShortestPathFinder.
     /// @param gameMap A GameMap object representing the current game map (by reference).
-    ShortestPathFinder::ShortestPathFinder(const GameMap& gameMap) : gameMap(gameMap) { 
+    ShortestPathFinder::ShortestPathFinder(GameMap& gameMap) : gameMap(gameMap) { 
         initialized = false;
     }
 
-    /// Initializes the map.
+    /// Initializes the map with nodes.
     void ShortestPathFinder::initializeMap() {
         initialized = true;
         nodeMap.reserve(gameMap.ARENA_SIZE);
@@ -44,9 +44,10 @@ namespace terminal {
 
         initializeMap();
 
-        for (auto location: gameMap)
-            if (gameMap.containsStationaryUnit(location))
-                nodeMap.at(location.x).at(location.y).blocked = true;
+        for (size_t x = 0; x < gameMap.ARENA_SIZE; x++)
+            for (size_t y = 0; y < gameMap.ARENA_SIZE; y++)
+                if (gameMap.containsStationaryUnit(x, y))
+                    nodeMap.at(x).at(y).blocked = true;
 
         Pos idealEndpoint = idealnessSearch(startPoint, endPoints);
 
@@ -76,7 +77,7 @@ namespace terminal {
                 int x = neighbor.x;
                 int y = neighbor.y;
 
-                if(!gameMap.nodeMap.inArenaBounds(neighbor) || nodeMap.at(x).at(y).blocked)
+                if(!gameMap.inArenaBounds(neighbor) || nodeMap.at(x).at(y).blocked)
                     continue;
                 
                 int currentIdealness = getIdealness(neighbor, endPoints);
@@ -174,7 +175,7 @@ namespace terminal {
                 int x = neighbor.x;
                 int y = neighbor.y;
 
-                if(!gameMap.nodeMap.inArenaBounds(neighbor) || nodeMap.at(x).at(y).blocked)
+                if(!gameMap.inArenaBounds(neighbor) || nodeMap.at(x).at(y).blocked)
                     continue;
 
                 Node neighborNode = nodeMap.at(x).at(y);
@@ -225,7 +226,7 @@ namespace terminal {
             int x = neighbor.x;
             int y = neighbor.y;
 
-            if(!gameMap.nodeMap.inArenaBounds(neighbor) || nodeMap.at(x).at(y).blocked)
+            if(!gameMap.inArenaBounds(neighbor) || nodeMap.at(x).at(y).blocked)
                 continue;
 
             bool newBest = false;
@@ -299,7 +300,7 @@ namespace terminal {
         for(size_t y = 0; y < 28; y++) {
             for(size_t x = 0; x < 28; x++) {
                 Node node = nodeMap.at(x).at(28 - y - 1);
-                if(!node.blocked && !node.pathLength == -1)
+                if(!node.blocked && node.pathLength != -1)
                     printJustified(node.pathLength);
                 else
                     cerr << "   ";
