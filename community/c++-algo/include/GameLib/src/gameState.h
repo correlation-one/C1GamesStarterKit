@@ -38,7 +38,7 @@ namespace terminal {
         int numberAffordable(UNIT_TYPE unitType) const;
         int numberAffordable(UNIT_TYPE unitType, const Player& player) const;
 
-        bool canSpawn(UNIT_TYPE unitType, int x, int y, int num = 1) const;
+        bool canSpawn(UNIT_TYPE unitType, unsigned int x, unsigned int y, int num = 1) const;
         bool canSpawn(UNIT_TYPE unitType, const Pos pos, int num = 1) const;
 
         int attemptSpawn(UNIT_TYPE unitType, int x, int y, int num = 1);
@@ -57,7 +57,7 @@ namespace terminal {
         double getResource(RESOURCE resourceType) const;
         double getResource(RESOURCE resourceType, const Player& player) const;
         bool isStationary(UNIT_TYPE unitType) const;
-        Player getPlayer(int id) const;
+        Player getPlayer(unsigned int id) const;
         int getTurn() const;
 
         void setVerbosity(VERBOSITY newErrorLevel);
@@ -70,7 +70,7 @@ namespace terminal {
 
     private:
         void parseState(Json jsonState);
-        void parsePlayerStats(Player& player, int id, Json::array stats);
+        void parsePlayerStats(Player& player, unsigned int id, Json::array stats);
         void parseUnits(Player& player, Json::array jsonUnits);
 
         void setResource(RESOURCE resourceType, double amount);

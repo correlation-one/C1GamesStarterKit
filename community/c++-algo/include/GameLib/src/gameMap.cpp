@@ -22,14 +22,14 @@ namespace terminal {
     /// Fills map with an emtpy grid of dimensions AREA_SIZE.
     void GameMap::createEmptyGrid() {
         map.resize(ARENA_SIZE);
-        for (int x = 0; x < ARENA_SIZE; ++x)
+        for (unsigned int x = 0; x < ARENA_SIZE; ++x)
             map.at(x).resize(ARENA_SIZE);
     }
 
     /// Checks if a position is inside the diamond shaped game board.
     /// @param x The x position.
     /// @param y The y position.
-    bool GameMap::inArenaBounds(int x, int y) const {
+    bool GameMap::inArenaBounds(unsigned int x, unsigned int y) const {
         int rowSize = y + 1;
         int startX = HALF_ARENA - rowSize;
         int endX = startX + (2 * rowSize) - 1;
@@ -56,7 +56,7 @@ namespace terminal {
         int x, y;
         switch (edge) {
         case TOP_RIGHT: {
-            for (int i = 0; i < HALF_ARENA; ++i) {
+            for (unsigned int i = 0; i < HALF_ARENA; ++i) {
                 x = HALF_ARENA + i;
                 y = ARENA_SIZE - 1 - i;
                 vec.push_back(Pos{ x, y });
@@ -64,7 +64,7 @@ namespace terminal {
             break;
         }
         case TOP_LEFT: {
-            for (int i = 0; i < HALF_ARENA; ++i) {
+            for (unsigned int i = 0; i < HALF_ARENA; ++i) {
                 x = HALF_ARENA - 1 - i;
                 y = ARENA_SIZE - 1 - i;
                 vec.push_back(Pos{ x, y });
@@ -72,7 +72,7 @@ namespace terminal {
             break;
         }
         case BOTTOM_LEFT: {
-            for (int i = 0; i < HALF_ARENA; ++i) {
+            for (unsigned int i = 0; i < HALF_ARENA; ++i) {
                 x = HALF_ARENA - 1 - i;
                 y = i;
                 vec.push_back(Pos{ x, y });
@@ -80,7 +80,7 @@ namespace terminal {
             break;
         }
         case BOTTOM_RIGHT: {
-            for (int i = 0; i < HALF_ARENA; ++i) {
+            for (unsigned int i = 0; i < HALF_ARENA; ++i) {
                 x = HALF_ARENA + i;
                 y = i;
                 vec.push_back(Pos{ x, y });
@@ -114,7 +114,7 @@ namespace terminal {
     /// @param pos The position to add the unit at.
     /// @param playerIndex The player to add the unit for.
     /// @param hp The health of the unit (default is max health).
-    void GameMap::addUnit(UNIT_TYPE unitType, Pos pos, int playerIndex, double hp) {
+    void GameMap::addUnit(UNIT_TYPE unitType, Pos pos, unsigned int playerIndex, double hp) {
         if (!inArenaBounds(pos)) Util::printError<PosException>("Out of bounds exception", CRASH, verbosity);
         if (playerIndex < 0 || playerIndex > 1) throw PlayerIndexException();
         // Stability of 0 will default the unit to max_stability
@@ -143,7 +143,7 @@ namespace terminal {
     /// @param y The y position to add the unit at.
     /// @param playerIndex The player to add the unit for.
     /// @param hp The health of the unit (default is max health).
-    void GameMap::addUnit(UNIT_TYPE unitType, int x, int y, int playerIndex, double hp) {
+    void GameMap::addUnit(UNIT_TYPE unitType, unsigned int x, unsigned int y, unsigned int playerIndex, double hp) {
         addUnit(unitType, Pos(x, y), playerIndex, hp);
     }
 
@@ -249,8 +249,8 @@ namespace terminal {
     /// @return A very large string that represents the GameMap.
     string GameMap::toString() const {
         string ret = "";
-        for (int y = 0; y < ARENA_SIZE; y++) {
-            for (int x = 0; x < ARENA_SIZE; x++) {
+        for (unsigned int y = 0; y < ARENA_SIZE; y++) {
+            for (unsigned int x = 0; x < ARENA_SIZE; x++) {
                 Pos location = { x, ARENA_SIZE - y - 1 };
                 const vector<GameUnit> &stack = map.at(location.x).at(location.y);
                 if (!inArenaBounds(location))

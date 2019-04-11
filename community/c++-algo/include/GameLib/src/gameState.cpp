@@ -48,7 +48,7 @@ namespace terminal {
     /// Fills in the appropriate information for a player by reference.
     /// @param player The player to parse the stats for (by reference).
     /// @param stats A Json array containing the stats for the player.
-    void GameState::parsePlayerStats(Player& player, int id, Json::array stats) {
+    void GameState::parsePlayerStats(Player& player, unsigned int id, Json::array stats) {
         player.health = stats.at(0).int_value();
         player.cores = stats.at(1).number_value();
         player.bits = stats.at(2).number_value();
@@ -137,7 +137,7 @@ namespace terminal {
     /// Returns a player struct based on the player number passed.
     /// @param id The player number.
     /// @return A player struct containing information about the player.
-    Player GameState::getPlayer(int id) const {
+    Player GameState::getPlayer(unsigned int id) const {
         return id == 1 ? player1 : player2;
     }
 
@@ -209,7 +209,7 @@ namespace terminal {
     /// @param y The y position to check.
     /// @param num The number of units to check, default is 1.
     /// @return A bool, true if can spawn.
-    bool GameState::canSpawn(UNIT_TYPE unitType, int x, int y, int num) const {
+    bool GameState::canSpawn(UNIT_TYPE unitType, unsigned int x, unsigned int y, int num) const {
         if (!gameMap.inArenaBounds(x, y)) {
             Util::printError<PosException>("Out of bounds exception", CRASH, verbosity);
             return false;
@@ -308,7 +308,7 @@ namespace terminal {
     /// @param x The x location to try and remove.
     /// @param y The y location to try and remove.
     /// @return Returns the number of units removed (0 or 1).
-    int GameState::attemptRemove(int x, int y) {
+    int GameState::attemptRemove(unsigned int x, unsigned int y) {
         if (y < gameMap.HALF_ARENA &&
             gameMap.containsStationaryUnit(Pos(x, y))) {
             buildStack.push_back({ Json::array({ unitTypeStr(REMOVE), x, y}) });
