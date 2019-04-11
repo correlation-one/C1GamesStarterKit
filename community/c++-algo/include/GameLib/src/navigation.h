@@ -14,7 +14,7 @@ Author: Patrik Dobias
 
 #include "util.h"
 #include "structs.h"
-#include "gameState.h"
+#include "gameMap.h"
 
 namespace terminal {
 
@@ -33,7 +33,7 @@ namespace terminal {
     /// This class handles pathfinding.
     class ShortestPathFinder {
     public:
-        ShortestPathFinder(const GameState& gameState);
+        ShortestPathFinder(const GameMap& gameMap);
         void initializeMap();
         void navigate_multiple_endpoints(Pos startPoint, const vector<Pos>& endPoints, vector<Pos>& path);
         void printMap();
@@ -48,9 +48,9 @@ namespace terminal {
         bool betterDirection(Pos prevTile, Pos newTile, Pos prevBest, MOVE_DIRECTION previousMoveDirection, const vector<Pos>& endPoints);
         void printJustified(int number);
 
-        const GameState gameState;
+        const GameMap gameMap;
         bool initialized;
-        vector<vector<Node>> gameMap;
+        vector<vector<Node>> nodeMap;
     };
 
 }

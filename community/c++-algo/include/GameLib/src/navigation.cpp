@@ -15,21 +15,21 @@ namespace terminal {
     using std::cerr;
 
     /// Constructor for ShortestPathFinder.
-    ShortestPathFinder::ShortestPathFinder(const GameState& gameState) : gameState(gameState) { 
+    /// @param gameMap A GameMap object representing the current game map (by reference).
+    ShortestPathFinder::ShortestPathFinder(const GameMap& gameMap) : gameMap(gameMap) { 
         initialized = false;
     }
 
     /// Initializes the map.
-    /// @param gameState A GameState object representing the gamestate we want to find path for (by reference).
     void ShortestPathFinder::initializeMap() {
         initialized = true;
-        gameMap.reserve(gameState.ARENA_SIZE);
+        nodeMap.reserve(gameMap.ARENA_SIZE);
 
-        for (size_t i = 0; i < gameState.ARENA_SIZE; i++) {
-            gameMap.push_back(vector<Node>());
-            gameMap.at(i).reserve(gameState.ARENA_SIZE);
-            for (size_t j = 0; j < gameState.ARENA_SIZE; j++) {
-                gameMap.at(i).push_back(Node());
+        for (size_t i = 0; i < gameMap.ARENA_SIZE; i++) {
+            nodeMap.push_back(vector<Node>());
+            nodeMap.at(i).reserve(gameMap.ARENA_SIZE);
+            for (size_t j = 0; j < gameMap.ARENA_SIZE; j++) {
+                nodeMap.at(i).push_back(Node());
             }
         }
     }
@@ -37,17 +37,16 @@ namespace terminal {
     /// Finds the path a unit would take to reach a set of endpoints.
     /// @param startPoint The starting location of the unit.
     /// @param endPoints A vector of end locations for the unit, should be a list of edge locations (by reference).
-    /// @param gameState A GameState object representing the current game state (by reference).
     /// @param path An empty vector, which will be filled with path (by reference).
     void ShortestPathFinder::navigate_multiple_endpoints(Pos startPoint, const vector<Pos>& endPoints, vector<Pos>& path) {
-        if (gameState.containsStationaryUnit(startPoint))
+        if (gameMap.containsStationaryUnit(startPoint))
             return;
 
         initializeMap();
 
-        for (auto location: gameState.gameMap)
-            if (gameState.containsStationaryUnit(location))
-                gameMap.at(location.x).at(location.y).blocked = true;
+        for (auto location: gameMap)
+            if (gameMap.containsStationaryUnit(location))
+                nodeMap.at(location.x).at(location.y).blocked = true;
 
         Pos idealEndpoint = idealnessSearch(startPoint, endPoints);
 
@@ -59,13 +58,12 @@ namespace terminal {
     /// Finds the most ideal endPoints.
     /// @param startPoint The starting location of the Unit.
     /// @param endPoints A vector of end locations for the unit, should be a list of edge locations (by reference).
-    /// @param gameState A GameState object representing the current game state.
-    /// @return Most ideal end point.
+    /// @return Most ideal end point (location at target edge or self destruct location).
     Pos ShortestPathFinder::idealnessSearch(Pos startPoint, const vector<Pos>& endPoints) {
         queue<Pos> current;
         current.push(startPoint);
         int bestIdealness = getIdealness(startPoint, endPoints);
-        gameMap.at(startPoint.x).at(startPoint.y).visitedIdealness = true;
+        nodeMap.at(startPoint.x).at(startPoint.y).visitedIdealness = true;
         Pos mostIdeal = startPoint;
 
         while(!current.empty()) {
@@ -78,7 +76,7 @@ namespace terminal {
                 int x = neighbor.x;
                 int y = neighbor.y;
 
-                if(!gameState.gameMap.inArenaBounds(neighbor) || gameMap.at(x).at(y).blocked)
+                if(!gameMap.nodeMap.inArenaBounds(neighbor) || nodeMap.at(x).at(y).blocked)
                     continue;
                 
                 int currentIdealness = getIdealness(neighbor, endPoints);
@@ -88,8 +86,8 @@ namespace terminal {
                     mostIdeal = neighbor;
                 }
 
-                if(!gameMap.at(x).at(y).visitedIdealness) {
-                    gameMap.at(x).at(y).visitedIdealness = true;
+                if(!nodeMap.at(x).at(y).visitedIdealness) {
+                    nodeMap.at(x).at(y).visitedIdealness = true;
                     current.push(neighbor);
                 }
             }
@@ -110,15 +108,14 @@ namespace terminal {
 
     /// Gets direction for given endPoints
     /// @param endPoints A vector of end locations for the unit, should be a list of edge locations (by reference).
-    /// @param gameState A GameState object representing the current game state (by reference).
-    /// @return A direction [x,y] representing the edge.
+    /// @return A direction [x, y] representing the edge.
     Pos ShortestPathFinder::getDirectionFromEndPoints(const vector<Pos>& endPoints) {
         Pos direction = {1, 1};
         Pos point = endPoints[0];
 
-        if(point.x < gameState.HALF_ARENA)
+        if(point.x < gameMap.HALF_ARENA)
             direction.x = -1;
-        if(point.y < gameState.HALF_ARENA)
+        if(point.y < gameMap.HALF_ARENA)
             direction.y = -1;
         
         return direction;
@@ -128,7 +125,6 @@ namespace terminal {
     /// Better self destruct locations are more ideal. The endpoints are perfectly ideal.
     /// @param location A location of the tile.
     /// @param endPoints A vector of end locations for the unit, should be a list of edge locations (by reference).
-    /// @param gameState A GameState object representing the current game state (by reference).
     /// @return Value of the location. 
     int ShortestPathFinder::getIdealness(Pos location, const vector<Pos>& endPoints) {
         if(find(endPoints.begin(), endPoints.end(), location) == endPoints.end())
@@ -158,19 +154,19 @@ namespace terminal {
         if(find(endPoints.begin(), endPoints.end(), idealTile) != endPoints.end()) {
             for(auto location: endPoints) {
                 current.push(location);
-                gameMap.at(location.x).at(location.y).pathLength = 0;
-                gameMap.at(location.x).at(location.y).visitedValidate = true;
+                nodeMap.at(location.x).at(location.y).pathLength = 0;
+                nodeMap.at(location.x).at(location.y).visitedValidate = true;
             }
         } else {
             current.push(idealTile);
-            gameMap.at(idealTile.x).at(idealTile.y).pathLength = 0;
-            gameMap.at(idealTile.x).at(idealTile.y).visitedValidate = true;
+            nodeMap.at(idealTile.x).at(idealTile.y).pathLength = 0;
+            nodeMap.at(idealTile.x).at(idealTile.y).visitedValidate = true;
         }
 
         while(!current.empty()) {
             Pos currentLocation = current.front();
             current.pop();
-            Node currentNode = gameMap.at(currentLocation.x).at(currentLocation.y);
+            Node currentNode = nodeMap.at(currentLocation.x).at(currentLocation.y);
             
             vector<Pos> neighbors;
             getNeighbors(currentLocation, neighbors);
@@ -178,10 +174,10 @@ namespace terminal {
                 int x = neighbor.x;
                 int y = neighbor.y;
 
-                if(!gameState.gameMap.inArenaBounds(neighbor) || gameMap.at(x).at(y).blocked)
+                if(!gameMap.nodeMap.inArenaBounds(neighbor) || nodeMap.at(x).at(y).blocked)
                     continue;
 
-                Node neighborNode = gameMap.at(x).at(y);
+                Node neighborNode = nodeMap.at(x).at(y);
                 if(!neighborNode.visitedValidate && !currentNode.blocked) {
                     neighborNode.pathLength = currentNode.pathLength + 1;
                     neighborNode.visitedValidate = true;
@@ -200,7 +196,7 @@ namespace terminal {
         Pos current = startPoint;
         MOVE_DIRECTION moveDirection = NONE;
 
-        while(gameMap.at(current.x).at(current.y).pathLength != 0) {
+        while(nodeMap.at(current.x).at(current.y).pathLength != 0) {
             Pos nextMove = chooseNextMove(current, moveDirection, endPoints);
 
             if(current.x == nextMove.x)
@@ -223,17 +219,17 @@ namespace terminal {
         getNeighbors(currentPoint, neighbors);
 
         Pos idealNeighbor = currentPoint;
-        int bestPathLength = gameMap.at(currentPoint.x).at(currentPoint.y).pathLength;
+        int bestPathLength = nodeMap.at(currentPoint.x).at(currentPoint.y).pathLength;
 
         for(auto neighbor: neighbors) {
             int x = neighbor.x;
             int y = neighbor.y;
 
-            if(!gameState.gameMap.inArenaBounds(neighbor) || gameMap.at(x).at(y).blocked)
+            if(!gameMap.nodeMap.inArenaBounds(neighbor) || nodeMap.at(x).at(y).blocked)
                 continue;
 
             bool newBest = false;
-            int currentPathLength = gameMap.at(x).at(y).pathLength;
+            int currentPathLength = nodeMap.at(x).at(y).pathLength;
 
             if(currentPathLength > bestPathLength)
                 continue;
@@ -257,7 +253,7 @@ namespace terminal {
     /// @param prevBest Possible previous best next location.
     /// @param previousMoveDirection Represents wheter previous move was vertical or horizontal.
     /// @param endPoints A vector of end locations for the unit, should be a list of edge locations (by reference).
-    /// @return Whether the unit would rather move to the new one
+    /// @return Whether the unit would rather move to the new one.
     bool ShortestPathFinder::betterDirection(Pos prevTile, Pos newTile, Pos prevBest, MOVE_DIRECTION previousMoveDirection, const vector<Pos>& endPoints) {
         if(previousMoveDirection == HORIZONTAL && newTile.x == prevBest.x) {
             if(prevTile.y == newTile.y)
@@ -302,7 +298,7 @@ namespace terminal {
 
         for(size_t y = 0; y < 28; y++) {
             for(size_t x = 0; x < 28; x++) {
-                Node node = gameMap.at(x).at(28 - y - 1);
+                Node node = nodeMap.at(x).at(28 - y - 1);
                 if(!node.blocked && !node.pathLength == -1)
                     printJustified(node.pathLength);
                 else
