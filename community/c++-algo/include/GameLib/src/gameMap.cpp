@@ -178,7 +178,7 @@ namespace terminal {
     /// @return Boolean answer to a stationary unit at the location.
     bool GameMap::containsStationaryUnit(Pos pos) const {
         if (!inArenaBounds(pos)) Util::printError<PosException>("Out of bounds exception", CRASH, verbosity);
-        if (map.at(pos.x).at(pos.y).size() > 1) {
+        if (map.at(pos.x).at(pos.y).size() > 0) {
             switch (map.at(pos.x).at(pos.y).at(0).unitType) {
                 case FILTER:
                 case ENCRYPTOR:
