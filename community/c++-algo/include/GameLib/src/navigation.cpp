@@ -128,7 +128,7 @@ namespace terminal {
     /// @param endPoints A vector of end locations for the unit, should be a list of edge locations (by reference).
     /// @return Value of the location. 
     int ShortestPathFinder::getIdealness(Pos location, const vector<Pos>& endPoints) {
-        if(find(endPoints.begin(), endPoints.end(), location) == endPoints.end())
+        if(find(endPoints.begin(), endPoints.end(), location) != endPoints.end())
             return numeric_limits<int>::max();
 
         Pos direction = getDirectionFromEndPoints(endPoints);
@@ -178,10 +178,9 @@ namespace terminal {
                 if(!gameMap.inArenaBounds(neighbor) || nodeMap.at(x).at(y).blocked)
                     continue;
 
-                Node neighborNode = nodeMap.at(x).at(y);
-                if(!neighborNode.visitedValidate && !currentNode.blocked) {
-                    neighborNode.pathLength = currentNode.pathLength + 1;
-                    neighborNode.visitedValidate = true;
+                if(!nodeMap.at(x).at(y).visitedValidate && !currentNode.blocked) {
+                    nodeMap.at(x).at(y).pathLength = currentNode.pathLength + 1;
+                    nodeMap.at(x).at(y).visitedValidate = true;
                     current.push(neighbor);
                 }
             }
