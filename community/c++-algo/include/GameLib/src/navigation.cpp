@@ -44,14 +44,10 @@ namespace terminal {
 
         initializeMap();
 
-        for (int x = 0; x < gameMap.ARENA_SIZE; x++) {
-            for (int y = 0; y < gameMap.ARENA_SIZE; y++) {
-                if (gameMap.containsStationaryUnit(x, y)) {
-                    Util::debugWrite(Pos(x, y));
+        for (int x = 0; x < gameMap.ARENA_SIZE; x++) 
+            for (int y = 0; y < gameMap.ARENA_SIZE; y++) 
+                if (gameMap.containsStationaryUnit(x, y)) 
                     nodeMap.at(x).at(y).blocked = true;
-                }
-            }
-        }
 
         Pos idealEndpoint = idealnessSearch(startPoint, endPoints);
 
