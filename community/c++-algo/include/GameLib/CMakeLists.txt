@@ -15,6 +15,8 @@ set(HEADERS
     src/gameMap.cpp
     src/unit.h
     src/unit.cpp
+    src/navigation.h
+    src/navigation.cpp
 )
 
 add_library(GameLib ${HEADERS})
