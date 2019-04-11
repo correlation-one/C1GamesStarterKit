@@ -25,10 +25,10 @@ namespace terminal {
         initialized = true;
         nodeMap.reserve(gameMap.ARENA_SIZE);
 
-        for (size_t i = 0; i < gameMap.ARENA_SIZE; i++) {
+        for (int i = 0; i < gameMap.ARENA_SIZE; i++) {
             nodeMap.push_back(vector<Node>());
             nodeMap.at(i).reserve(gameMap.ARENA_SIZE);
-            for (size_t j = 0; j < gameMap.ARENA_SIZE; j++) {
+            for (int j = 0; j < gameMap.ARENA_SIZE; j++) {
                 nodeMap.at(i).push_back(Node());
             }
         }
