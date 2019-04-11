@@ -27,12 +27,12 @@ namespace terminal {
     class GameMap {
     public:
         GameMap(Json config);
-        bool inArenaBounds(unsigned int x, unsigned int y) const;
+        bool inArenaBounds(int x, int y) const;
         bool inArenaBounds(Pos pos) const;
         void getEdgeLocations(vector<Pos>& vec, const EDGE edge) const;
         void getEdges(vector<vector<Pos> >& vec);
-        void addUnit(UNIT_TYPE unitType, unsigned int x, unsigned int y, unsigned int playerIndex, double hp = 0);
-        void addUnit(UNIT_TYPE unitType, Pos pos, unsigned int playerIndex, double hp = 0);
+        void addUnit(UNIT_TYPE unitType, int x, int y, int playerIndex, double hp = 0);
+        void addUnit(UNIT_TYPE unitType, Pos pos, int playerIndex, double hp = 0);
         void removeUnits(Pos pos);
         void getLocationsInRange(vector<Pos>& locations, Pos pos, double radius);
         bool containsStationaryUnit(Pos pos) const;
@@ -48,8 +48,8 @@ namespace terminal {
         string repr() { return toString(); };
         string printMap() { return toString(); };
 
-        const unsigned int ARENA_SIZE = 28;
-        const unsigned int HALF_ARENA = 14;
+        const int ARENA_SIZE = 28;
+        const int HALF_ARENA = 14;
 
     private:
         void createEmptyGrid();
