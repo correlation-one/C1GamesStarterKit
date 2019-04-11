@@ -34,10 +34,10 @@ namespace terminal {
     class ShortestPathFinder {
     public:
         ShortestPathFinder(GameMap& gameMap);
-        void initializeMap();
-        void navigate_multiple_endpoints(Pos startPoint, const vector<Pos>& endPoints, vector<Pos>& path);
+        void navigateMultipleEndpoints(Pos startPoint, const vector<Pos>& endPoints, vector<Pos>& path);
         void printMap();
     private:
+        void initializeMap();
         Pos idealnessSearch(Pos startPoint, const vector<Pos>& endPoints);
         void getNeighbors(Pos location, vector<Pos>& neighbors);
         Pos getDirectionFromEndPoints(const vector<Pos>& endPoints);

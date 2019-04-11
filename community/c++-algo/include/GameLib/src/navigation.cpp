@@ -38,14 +38,14 @@ namespace terminal {
     /// @param startPoint The starting location of the unit.
     /// @param endPoints A vector of end locations for the unit, should be a list of edge locations (by reference).
     /// @param path An empty vector, which will be filled with path (by reference).
-    void ShortestPathFinder::navigate_multiple_endpoints(Pos startPoint, const vector<Pos>& endPoints, vector<Pos>& path) {
+    void ShortestPathFinder::navigateMultipleEndpoints(Pos startPoint, const vector<Pos>& endPoints, vector<Pos>& path) {
         if (gameMap.containsStationaryUnit(startPoint))
             return;
 
         initializeMap();
 
-        for (size_t x = 0; x < gameMap.ARENA_SIZE; x++)
-            for (size_t y = 0; y < gameMap.ARENA_SIZE; y++)
+        for (int x = 0; x < gameMap.ARENA_SIZE; x++)
+            for (int y = 0; y < gameMap.ARENA_SIZE; y++)
                 if (gameMap.containsStationaryUnit(x, y))
                     nodeMap.at(x).at(y).blocked = true;
 
@@ -297,8 +297,8 @@ namespace terminal {
             return;
         }
 
-        for(size_t y = 0; y < 28; y++) {
-            for(size_t x = 0; x < 28; x++) {
+        for(int y = 0; y < gameMap.ARENA_SIZE; y++) {
+            for(int x = 0; x < gameMap.ARENA_SIZE; x++) {
                 Node node = nodeMap.at(x).at(28 - y - 1);
                 if(!node.blocked && node.pathLength != -1)
                     printJustified(node.pathLength);
