@@ -91,7 +91,7 @@ namespace terminal {
                             // This technically should never happen since it would
                             // be caught by the Json parser.
 
-                            Util::debugWrite("Unexpected state recieved: " + stateType);
+                            Util::debugWrite("Unexpected state recieved: " + std::to_string(stateType));
                             break;
                         }
                     }
