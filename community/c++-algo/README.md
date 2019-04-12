@@ -16,6 +16,8 @@ community/c++-algo
 │
 ├───build
 │
+├───documentation
+│
 ├───include
 │   ├───GameLib
 │   │   │
@@ -82,6 +84,11 @@ make
 In all cases, the target for your executable is inside `c++-algo\algo-target`.
 
 Thus, to run a local game, you would give it the directory `community\c++-algo\algo-target`.
+
+Building this project has been tested using:
+- Visual Studio 2017
+- Ubuntu 16.04.5 LTS
+- Ubuntu 18.04.1 LTS
 
 ### Contributing
 
