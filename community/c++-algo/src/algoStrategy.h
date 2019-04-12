@@ -29,13 +29,18 @@ namespace terminal {
         AlgoStrategy();
 
     private:
+        // Functions
+        // These two should always be part of your algo.
         void onGameStart(Json configuration) override;
         void onTurn(Json jsonState) override;
+
+        // These are functions that can be modified/removed.
+        // They are used to build the C1 logo and send attacks.
         void starterStrategy(GameState& gameState);
         void buildC1Logo(GameState& gameState);
         void buildDefences(GameState& gameState);
         void deployAttackers(GameState& gameState);
-        vector<Pos> filterBlockedLocations(vector<Pos>& locations, GameState& gameState);
+        vector<Pos> filterBlockedLocations(vector<Pos>& locations, GameState& gameState) const;
         
     };
 

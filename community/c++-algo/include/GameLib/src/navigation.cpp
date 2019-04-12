@@ -20,7 +20,8 @@ namespace terminal {
         initialized = false;
     }
 
-    /// Initializes the map with nodes.
+    /// Initializes the navigation map with nodes.
+    /// We cannot run pathfinding without this being called first.
     void ShortestPathFinder::initializeMap() {
         initialized = true;
         nodeMap.reserve(gameMap.ARENA_SIZE);
@@ -97,17 +98,21 @@ namespace terminal {
         return mostIdeal;
     }
 
-    /// Gets locations adjacent to a location
-    /// @param location
+    /// Gets locations adjacent to a location.
+    /// @param location The location to get it's neighbors.
     /// @param neighbors An empty vector, which will be filled with neighbor locations (by reference).
     void ShortestPathFinder::getNeighbors(Pos location, vector<Pos>& neighbors) {
-        neighbors.push_back({location.x    , location.y + 1});
-        neighbors.push_back({location.x    , location.y - 1});
-        neighbors.push_back({location.x + 1, location.y    });
-        neighbors.push_back({location.x - 1, location.y    });
+        if (location.y < gameMap.ARENA_SIZE)
+            neighbors.push_back({location.x    , location.y + 1});
+        if (location.y > 0)
+            neighbors.push_back({location.x    , location.y - 1});
+        if (location.x < gameMap.ARENA_SIZE)
+            neighbors.push_back({location.x + 1, location.y    });
+        if (location.x > 0)
+            neighbors.push_back({ location.x - 1, location.y });
     }
 
-    /// Gets direction for given endPoints
+    /// Gets direction for given endPoints.
     /// @param endPoints A vector of end locations for the unit, should be a list of edge locations (by reference).
     /// @return A direction [x, y] representing the edge.
     Pos ShortestPathFinder::getDirectionFromEndPoints(const vector<Pos>& endPoints) {
@@ -126,7 +131,7 @@ namespace terminal {
     /// Better self destruct locations are more ideal. The endpoints are perfectly ideal.
     /// @param location A location of the tile.
     /// @param endPoints A vector of end locations for the unit, should be a list of edge locations (by reference).
-    /// @return Value of the location. 
+    /// @return Idealness value of the location. 
     int ShortestPathFinder::getIdealness(Pos location, const vector<Pos>& endPoints) {
         if(find(endPoints.begin(), endPoints.end(), location) != endPoints.end())
             return numeric_limits<int>::max();
@@ -246,8 +251,8 @@ namespace terminal {
         return idealNeighbor;
     }
 
-    /// Check whether newTile should be used in path or prevBest according to previou move. 
-    /// Should prioritize zig zag path 
+    /// Check whether newTile should be used in path or prevBest according to previou move.
+    /// Should prioritize zig zag path.
     /// @param prevTile Current location of path.
     /// @param newTile Possible next location.
     /// @param prevBest Possible previous best next location.
@@ -289,7 +294,8 @@ namespace terminal {
         return true;
     }
     
-    /// Prints an ASCII version of the current game map for debug purposes
+    /// Prints an ASCII version of the current node map for debug purposes.
+    /// It prints the length of each node from the start position.
     void ShortestPathFinder::printMap() {
         if(!initialized) {
             Util::debugWrite("Attempted to print_map before pathfinder initialization. Use 'this_object.initialize_map(game_state)' to initialize the map first");
@@ -308,7 +314,7 @@ namespace terminal {
         }
     }
     
-    /// Prints a number between 100 and -10 in 3 spaces
+    /// Prints a number between 100 and -10 in 3 spaces.
     void ShortestPathFinder::printJustified(int number) {
         if(number < 10 && number > -1)
             cerr << " ";

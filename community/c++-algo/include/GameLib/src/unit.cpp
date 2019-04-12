@@ -1,5 +1,5 @@
 /*
-Description: Implmentations for the unit.h header.
+Description: Implmentations for the unit header.
 Last Modified: 07 Apr 2019
 Author: Ryan Draves
 */
@@ -12,7 +12,7 @@ namespace terminal {
     using std::to_string;
     using json11::Json;
 
-    /// Init the passed in params and pass off config initialization to serializeType()
+    /// Init the passed in params and pass off config initialization to serializeType().
     /// @param unitType Unit type of the game unit.
     /// @param config JSON game configuration passed in upon startup.
     /// @param stability Health of the game unit. 0 defaults it to maxStability.
@@ -26,16 +26,18 @@ namespace terminal {
         this->stability = stability == 0 ? maxStability : stability;
     }
 
-    /// Finish the game unit initialization based on the config
+    /// Finish the game unit initialization based on the config.
     void GameUnit::serializeType() {
         stationary = isStationary(unitType);
         Json type_config = config["unitInformation"].array_items().at((int)unitType);
+
         if (stationary) {
             speed = 0;
             if (unitType == REMOVE) {
                 pendingRemoval = true;
-                // Initialize these in case someone decides to access them...
-                damage = damageF = damageI = maxStability = range = cost = 0;
+                // Initialize these in case someone decides to access them.
+                damage = damageF = damageI = cost = 0;
+                maxStability = range = 0.0;
                 return;
             }
             else if (unitType == ENCRYPTOR) {
@@ -52,13 +54,14 @@ namespace terminal {
             damageF = type_config["damageF"].int_value();
             damageI = type_config["damageI"].int_value();
         }
+
         range = type_config["range"].number_value();
         maxStability = type_config["stability"].number_value();
         cost = type_config["cost"].int_value();
     }
 
-    /// Get a string representation of the game unit
-    /// @return Elegant string representation of the game unit
+    /// Get a string representation of the game unit.
+    /// @return Elegant string representation of the game unit.
     string GameUnit::toString() const {
         string owner = playerIndex == 0 ? "Friendly" : "Enemy";
         string removal = pendingRemoval ? ", pending removal" : "";

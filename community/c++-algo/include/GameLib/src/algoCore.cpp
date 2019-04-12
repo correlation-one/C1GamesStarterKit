@@ -1,5 +1,5 @@
 /*
-Description: Implementations for the algoCore header.
+Description: The default object to override for your strategy.
 Last Modified: 08 Apr 2019
 Author: Isaac Draper
 */
@@ -12,8 +12,6 @@ namespace terminal {
 
     /// Basic constructor for algoCore.
     AlgoCore::AlgoCore() {
-        std::string error;
-        config = Json::parse("{}", error);
         endOfGame = false;
     }
 
@@ -26,7 +24,7 @@ namespace terminal {
 
     /// Called when the engine expects input from the algo.
     /// It is called every turn and is passed a Json object containing
-    /// the current game state, which can be used to initialize a new gameState.
+    /// the current game state, which can be used to initialize a new gameState object.
     /// @param gameState A Json object containing the current game state.
     void AlgoCore::onTurn(Json gameState) {
         AlgoCore::submitDefaultTurn();
@@ -57,7 +55,7 @@ namespace terminal {
                     
                     onGameStart(gameState);
                 }
-                else if (gameState["turnInfo"] != nullptr) {
+                else {
                     int stateType = gameState["turnInfo"].array_items().at(0).int_value();
 
                     // We now make decisions based on what turn state it is.
