@@ -22,7 +22,7 @@ namespace terminal {
     /// Fills map with an emtpy grid of dimensions AREA_SIZE.
     void GameMap::createEmptyGrid() {
         map.resize(ARENA_SIZE);
-        for (int x = 0; x < ARENA_SIZE; ++x)
+        for (unsigned int x = 0; x < ARENA_SIZE; ++x)
             map.at(x).resize(ARENA_SIZE);
     }
 
@@ -53,10 +53,10 @@ namespace terminal {
     /// @param vec A vector passed by reference you would like to fill.
     /// @param edge The edge to get units for.
     void GameMap::getEdgeLocations(vector<Pos>& vec, const EDGE edge) const {
-        int x, y;
+        unsigned int x, y;
         switch (edge) {
             case TOP_RIGHT: {
-                for (int i = 0; i < HALF_ARENA; ++i) {
+                for (unsigned int i = 0; i < HALF_ARENA; ++i) {
                     x = HALF_ARENA + i;
                     y = ARENA_SIZE - 1 - i;
                     vec.push_back(Pos{ x, y });
@@ -64,7 +64,7 @@ namespace terminal {
                 break;
             }
             case TOP_LEFT: {
-                for (int i = 0; i < HALF_ARENA; ++i) {
+                for (unsigned int i = 0; i < HALF_ARENA; ++i) {
                     x = HALF_ARENA - 1 - i;
                     y = ARENA_SIZE - 1 - i;
                     vec.push_back(Pos{ x, y });
@@ -72,7 +72,7 @@ namespace terminal {
                 break;
             }
             case BOTTOM_LEFT: {
-                for (int i = 0; i < HALF_ARENA; ++i) {
+                for (unsigned int i = 0; i < HALF_ARENA; ++i) {
                     x = HALF_ARENA - 1 - i;
                     y = i;
                     vec.push_back(Pos{ x, y });
@@ -80,7 +80,7 @@ namespace terminal {
                 break;
             }
             case BOTTOM_RIGHT: {
-                for (int i = 0; i < HALF_ARENA; ++i) {
+                for (unsigned int i = 0; i < HALF_ARENA; ++i) {
                     x = HALF_ARENA + i;
                     y = i;
                     vec.push_back(Pos{ x, y });
@@ -177,7 +177,8 @@ namespace terminal {
 
         for (int i = (int)(pos.x - radius); i < (int)(pos.x + radius + 1); i++) {
             for (int j = (int)(pos.y - radius); j < (int)(pos.y + radius + 1); j++) {
-                Pos new_pos = { i, j };
+                if (i < 0 || j < 0) continue;
+                Pos new_pos = { (unsigned int)i, (unsigned int)j };
                 if (inArenaBounds(new_pos) &&
                     distanceBetweenLocations(pos, new_pos) < radius + 0.51) {
                     locations.push_back(new_pos);
@@ -277,8 +278,8 @@ namespace terminal {
     /// @return A very large string that represents the GameMap.
     string GameMap::toString() const {
         string ret = "";
-        for (int y = 0; y < ARENA_SIZE; y++) {
-            for (int x = 0; x < ARENA_SIZE; x++) {
+        for (unsigned int y = 0; y < ARENA_SIZE; y++) {
+            for (unsigned int x = 0; x < ARENA_SIZE; x++) {
                 Pos location = { x, ARENA_SIZE - y - 1 };
                 const vector<GameUnit> &stack = map.at(location.x).at(location.y);
                 if (!inArenaBounds(location))

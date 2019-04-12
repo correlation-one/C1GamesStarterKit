@@ -52,8 +52,8 @@ namespace terminal {
         void setVerbosity(VERBOSITY verbosityIn);
         string toString() const;
 
-        const int ARENA_SIZE = 28;
-        const int HALF_ARENA = 14;
+        const unsigned int ARENA_SIZE = 28;
+        const unsigned int HALF_ARENA = 14;
 
     private:
         void createEmptyGrid();

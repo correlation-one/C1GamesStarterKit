@@ -35,16 +35,16 @@ namespace terminal {
         GameState(Json configuration, Json jsonState);
         void submitTurn() const;
 
-        unsigned int attemptSpawn(UNIT_TYPE unitType, int x, int y, int num = 1);
         unsigned int attemptSpawn(UNIT_TYPE unitType, Pos pos, int num = 1);
         unsigned int attemptSpawn(UNIT_TYPE unitType, vector<Pos> locations, int num = 1);
+        unsigned int attemptSpawn(UNIT_TYPE unitType, unsigned int x, unsigned int y, int num = 1);
 
         unsigned int attemptRemove(Pos pos);
-        unsigned int attemptRemove(int x, int y);
+        unsigned int attemptRemove(unsigned int x, unsigned int y);
         unsigned int attemptRemove(vector<Pos> locations);
 
-        bool canSpawn(UNIT_TYPE unitType, int x, int y, int num = 1) const;
         bool canSpawn(UNIT_TYPE unitType, const Pos pos, int num = 1) const;
+        bool canSpawn(UNIT_TYPE unitType, unsigned int x, unsigned int y, int num = 1) const;
 
         unsigned int numberAffordable(UNIT_TYPE unitType) const;
         unsigned int numberAffordable(UNIT_TYPE unitType, const Player& player) const;
@@ -73,7 +73,7 @@ namespace terminal {
     private:
         void parseState(Json jsonState);
         void parseUnits(Player& player, Json::array jsonUnits);
-        void parsePlayerStats(Player& player, int id, Json::array stats);
+        void parsePlayerStats(Player& player, unsigned int id, Json::array stats);
 
         void setResource(RESOURCE resourceType, double amount);
         void setResource(RESOURCE resourceType, double amount, Player& player);

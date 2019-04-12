@@ -16,18 +16,18 @@ namespace terminal {
 
     /// This represents a position on the board.
     struct Pos {
-        int x;
-        int y;
+        unsigned int x;
+        unsigned int y;
 
         /// Simple constructor to set the position
         /// @param x X coordinate to set.
         /// @param y Y coordinate to set.
-        Pos(int x, int y) : x(x), y(y) {}
+        Pos(unsigned int x, unsigned int y) : x(x), y(y) {}
 
         /// This allows for python location indexing to be transferrable
         /// @param index The index of the position coordinate
         /// @return The value of the coordinate
-        inline int operator[](int index) {
+        inline int operator[](unsigned int index) {
             if (index == 0) return x;
             if (index == 1) return y;
             throw PosException("Invalid position index (0 or 1)");

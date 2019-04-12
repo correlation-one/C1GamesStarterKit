@@ -134,8 +134,8 @@ namespace terminal {
         // First we get all locations on the bottom half of the map
         // that are in the arena bounds.
         vector<Pos> allLocations;
-        for (int i = 0; i < gameState.gameMap.ARENA_SIZE; ++i) {
-            for (int j = 0; j < gameState.gameMap.HALF_ARENA; ++j) {
+        for (unsigned int i = 0; i < gameState.gameMap.ARENA_SIZE; ++i) {
+            for (unsigned int j = 0; j < gameState.gameMap.HALF_ARENA; ++j) {
                 if (gameState.gameMap.inArenaBounds(i, j)) {
                     allLocations.push_back(Pos{ i, j });
                 }

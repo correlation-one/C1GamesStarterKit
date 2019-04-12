@@ -1,6 +1,6 @@
 /*
 Description: Contains useful enums describing game data.
-Last Modified: 07 Apr 2019
+Last Modified: 11 Apr 2019
 Author: Isaac Draper
 */
 
@@ -22,11 +22,6 @@ namespace terminal {
     enum RESOURCE {
         BITS,
         CORES
-    };
-
-    enum STATS {
-        HEALTH,
-        TIME
     };
 
     enum EDGE {
