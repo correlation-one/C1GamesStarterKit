@@ -1,12 +1,13 @@
 /*
-Description: A header to contain the core components necessary for an algo.
-Last Modified: 06 Apr 2019
+Description: This contains the core components necessary for an algo to run.
+Last Modified: 08 Apr 2019
 Author: Isaac Draper
 */
 
 #ifndef ALGO_CORE_H
 #define ALGO_CORE_H
 
+#include <iostream>
 #include <string>
 
 #include "json11/json11.hpp"
@@ -21,20 +22,32 @@ namespace terminal {
     /// You should inherit from this class when developing your strategy.
     class AlgoCore {
     public:
+        // Functions
         AlgoCore();
         virtual void start();
+        virtual std::string toString() const;
 
     protected:
+        // Functions
         virtual void onGameStart(Json configuration);
         virtual void onTurn(Json gameState);
         void submitDefaultTurn() const;
 
-        Json config;
+        // Members
+        Json config; ///< Holds information about the game.
 
     private:
-        bool endOfGame;
+        // Members
+        bool endOfGame; ///< Keeps track of whether the game has ended.
 
     };
+
+    /// This sends a representation of the AlgoCore object to a stream.
+    /// @return The stream passed to the function.
+    inline std::ostream& operator<<(std::ostream& os, AlgoCore const& algoCore) {
+        os << algoCore.toString();
+        return os;
+    }
 
 }
 

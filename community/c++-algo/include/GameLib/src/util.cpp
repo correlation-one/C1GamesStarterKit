@@ -1,6 +1,6 @@
 /*
-Description: Implmentations for the Util.h header.
-Last Modified: 06 Apr 2019
+Description: Implmentations for the util header.
+Last Modified: 08 Apr 2019
 Author: Isaac Draper
 */
 
@@ -41,11 +41,4 @@ namespace terminal {
         cout.flush();
     }
 
-    /// This prints a message to the game's debug console using cerr.
-    /// @param newline Whether or not to print a newline at the end of the message.
-    void Util::debugWrite(string output, bool newline) {
-        cerr << output << (newline ? "\n" : "");
-        cerr.flush();
-    }
-    
 }

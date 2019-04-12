@@ -913,3 +913,6 @@ _deps
 
 # errorFiles from Terminal engine
 /*/errorFile*.txt
+
+# compiled starter kit binaries
+algo-target/StarterAlgo
