@@ -42,7 +42,6 @@ namespace terminal {
         INVARIANT,
         CRASH,
     };
-
 }
 
 #endif

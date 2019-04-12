@@ -37,7 +37,7 @@ namespace terminal {
         /// This allows for comparison between positions
         /// @param rhs Right hand side position
         /// @return The boolean answer to whether two positions are the same.
-        inline bool operator==(const Pos &rhs) {
+        inline bool operator==(const Pos &rhs) const {
             return x == rhs.x && y == rhs.y;
         }
 
