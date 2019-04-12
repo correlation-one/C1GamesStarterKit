@@ -15,6 +15,7 @@ Author: Isaac Draper
 
 #include "json11/json11.hpp"
 #include "customExceptions.h"
+#include "navigation.h"
 #include "structs.h"
 #include "gameMap.h"
 #include "structs.h"
@@ -59,6 +60,9 @@ namespace terminal {
         double typeCost(UNIT_TYPE unitType) const;
         RESOURCE resourceRequired(UNIT_TYPE unitType) const;
 
+        void findPathToEdge(vector<Pos>& path, Pos startLocation, EDGE targetEdge);
+        void findPathToEdge(vector<Pos>& path, unsigned int x, unsigned int y, EDGE targetEdge);
+
         bool isStationary(UNIT_TYPE unitType) const;
         Player getPlayer(int id) const;
         unsigned int getTurn() const;
@@ -92,8 +96,7 @@ namespace terminal {
         unsigned int turnNumber;    ///< The current turn number.
         VERBOSITY verbosity;        ///< The level at which to print and throw errors.
 
-        // TODO: Add pathfinding
-
+        ShortestPathFinder shortestPathFinder;
     };
 
     /// This sends a representation of the GameState object to a stream.

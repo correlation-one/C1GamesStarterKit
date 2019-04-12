@@ -1,6 +1,6 @@
 /*
 Description: Implementations for the gameState header.
-Last Modified: 10 Apr 2019
+Last Modified: 12 Apr 2019
 Author: Isaac Draper
 */
 
@@ -17,7 +17,7 @@ namespace terminal {
     /// and a Json object representing the current state of the game.
     /// @param configuration A Json object containing information about the game.
     /// @param currentState A Json object containing information about the current state.
-    GameState::GameState(Json configuration, Json jsonState) : gameMap(configuration) {
+    GameState::GameState(Json configuration, Json jsonState) : gameMap(configuration), shortestPathFinder(gameMap) {
         config = configuration;
         verbosity = WARNING;
 
@@ -362,6 +362,30 @@ namespace terminal {
         }
 
         return numRemoved;
+    }
+
+    /// Gets the path a unit would take.
+    /// Fills a given vector with the positions of a path.
+    /// @param path The vector to fill with the path.
+    /// @param startLocation The start position for the unit.
+    /// @param targetEdge The edge to try and reach.
+    void GameState::findPathToEdge(vector<Pos>& path, Pos startLocation, EDGE targetEdge) {
+        if (gameMap.containsStationaryUnit(startLocation))
+            Util::printError<GameMapException>("Attempted to perform pathing from blocked starting location (" + to_string(startLocation.x) + ", " + to_string(startLocation.y) + ").", WARNING, verbosity);
+
+        vector<Pos> endPoints;
+        gameMap.getEdgeLocations(endPoints, targetEdge);
+        shortestPathFinder.navigateMultipleEndpoints(startLocation, endPoints, path);
+    }
+
+    /// Gets the path a unit would take.
+    /// Fills a given vector with the positions of a path.
+    /// @param path The vector to fill with the path.
+    /// @param x The x position for the unit.
+    /// @param y The y position for the unit.
+    /// @param targetEdge The edge to try and reach.
+    void GameState::findPathToEdge(vector<Pos>& path, unsigned int x, unsigned int y, EDGE targetEdge) {
+        return findPathToEdge(path, Pos(x, y), targetEdge);
     }
 
     /// Sets a new verbosity level. This determines whether errors will
