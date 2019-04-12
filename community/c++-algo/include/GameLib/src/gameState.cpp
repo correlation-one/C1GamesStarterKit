@@ -17,7 +17,7 @@ namespace terminal {
     /// and a Json object representing the current state of the game.
     /// @param configuration A Json object containing information about the game.
     /// @param currentState A Json object containing information about the current state.
-    GameState::GameState(Json configuration, Json jsonState) : gameMap(configuration), shortestPathFinder(gameMap) {
+    GameState::GameState(Json configuration, Json jsonState) : gameMap(configuration) {
         config = configuration;
         verbosity = WARNING;
 
@@ -373,6 +373,7 @@ namespace terminal {
         if (gameMap.containsStationaryUnit(startLocation))
             Util::printError<GameMapException>("Attempted to perform pathing from blocked starting location (" + to_string(startLocation.x) + ", " + to_string(startLocation.y) + ").", WARNING, verbosity);
 
+        ShortestPathFinder shortestPathFinder = ShortestPathFinder(gameMap);
         vector<Pos> endPoints;
         gameMap.getEdgeLocations(endPoints, targetEdge);
         shortestPathFinder.navigateMultipleEndpoints(startLocation, endPoints, path);

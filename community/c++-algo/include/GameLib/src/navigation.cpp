@@ -102,10 +102,14 @@ namespace terminal {
     /// @param location The location to get it's neighbors.
     /// @param neighbors An empty vector, which will be filled with neighbor locations (by reference).
     void ShortestPathFinder::getNeighbors(Pos location, vector<Pos>& neighbors) {
-        neighbors.push_back({location.x    , location.y + 1});
-        neighbors.push_back({location.x    , location.y - 1});
-        neighbors.push_back({location.x + 1, location.y    });
-        neighbors.push_back({location.x - 1, location.y    });
+        if (location.y < gameMap.ARENA_SIZE)
+            neighbors.push_back({location.x    , location.y + 1});
+        if (location.y > 0)
+            neighbors.push_back({location.x    , location.y - 1});
+        if (location.x < gameMap.ARENA_SIZE)
+            neighbors.push_back({location.x + 1, location.y    });
+        if (location.x > 0)
+            neighbors.push_back({ location.x - 1, location.y });
     }
 
     /// Gets direction for given endPoints.

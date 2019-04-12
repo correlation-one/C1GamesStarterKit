@@ -88,7 +88,7 @@ namespace terminal {
                 break;
             }
             default: {
-                    Util::printError<GameMapException>("Invalid edge requested", INVARIANT, verbosity);
+                Util::printError<GameMapException>("Invalid edge requested", INVARIANT, verbosity);
             }
         }
     }

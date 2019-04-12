@@ -95,8 +95,6 @@ namespace terminal {
 
         unsigned int turnNumber;    ///< The current turn number.
         VERBOSITY verbosity;        ///< The level at which to print and throw errors.
-
-        ShortestPathFinder shortestPathFinder;
     };
 
     /// This sends a representation of the GameState object to a stream.
