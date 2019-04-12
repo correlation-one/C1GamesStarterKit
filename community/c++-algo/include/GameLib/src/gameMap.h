@@ -1,5 +1,5 @@
 /*
-Description: A header to contain a representation of the current game map.
+Description: Contains a representation of the current game map provided by the engine.
 Last Modified: 09 Apr 2019
 Author: Isaac Draper, Ryan Draves
 */
@@ -25,14 +25,20 @@ namespace terminal {
     /// Holds data about the current game map and provides functions
     /// useful for getting information related to the map.
     class GameMap {
+    private:
+        // Functions
+        void createEmptyGrid();
+        double distanceBetweenLocations(Pos pos_1, Pos pos_2) const;
+
     public:
+        // Functions
         GameMap(Json config);
 
         void addUnit(UNIT_TYPE unitType, int x, int y, int playerIndex, double hp = 0);
         void addUnit(UNIT_TYPE unitType, Pos pos, int playerIndex, double hp = 0);
         void removeUnits(Pos pos);
 
-        void getEdges(vector<vector<Pos> >& vec) const;
+        void getEdges(vector<vector<Pos>>& vec) const;
         void getEdgeLocations(vector<Pos>& vec, const EDGE edge) const;
         void getLocationsInRange(vector<Pos>& locations, Pos pos, double radius) const;
 
@@ -52,17 +58,13 @@ namespace terminal {
         void setVerbosity(VERBOSITY verbosityIn);
         string toString() const;
 
-        const unsigned int ARENA_SIZE = 28;
-        const unsigned int HALF_ARENA = 14;
+        // Members
+        const unsigned int ARENA_SIZE = 28;     ///< The size of the map.
+        const unsigned int HALF_ARENA = 14;     ///< Half the size of the map.
 
-    private:
-        void createEmptyGrid();
-        double distanceBetweenLocations(Pos pos_1, Pos pos_2) const;
-
-    public:
-        Json config;
-        vector<vector<vector<GameUnit>>> map;
-        VERBOSITY verbosity;
+        Json config;                            ///< Holds information about the game.
+        vector<vector<vector<GameUnit>>> map;   ///< Keeps track of the units at each individual position.
+        VERBOSITY verbosity;                    ///< The level at which to print and throw errors.
     };
 
     /// This sends a representation of the GameMap object to a stream.

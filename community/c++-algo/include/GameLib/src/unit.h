@@ -1,5 +1,5 @@
 /*
-Description: This is a header for GameUnits
+Description: Holds the representation of a GameUnit.
 Last Modified: 07 Apr 2019
 Author: Ryan Draves
 */
@@ -19,9 +19,9 @@ namespace terminal {
     using std::string;
     using json11::Json;
 
-    /// Static function regarding whether a game unit is stationary
-    /// @param unitType Unit type to check
-    /// @return boolean result of if the unit is stationary
+    /// Static function to say whether a unit type is stationary.
+    /// @param unitType Unit type to check.
+    /// @return boolean Whether the unit type is stationary.
     static bool isStationary(const UNIT_TYPE &unitType) {
         if (unitType == FILTER ||
             unitType == ENCRYPTOR ||
@@ -30,9 +30,9 @@ namespace terminal {
         return false;
     }
 
-    /// Static function to get the string shorthand of a game unit
-    /// @param unitType unit type to check
-    /// @return string shorthand of the unit, used for print outs
+    /// Static function to get the string shorthand of a game unit.
+    /// @param unitType Unit type to check.
+    /// @return string Shorthand of the unit in string form.
     static string unitTypeStr(const UNIT_TYPE &unitType) {
         switch (unitType) {
             case FILTER:
@@ -63,53 +63,38 @@ namespace terminal {
         return "";
     }
 
-    /// A class to represent game units
+    /// A class to represent a unit from terminal.
+    /// This keeps track of that units health, type,
+    /// etc as given by the engine.
     class GameUnit {
-        /*Holds information about a Unit. 
-
-        Attributes:
-            * unitType (UNIT_TYPE): This unit's type
-            * config (Json): Contains information about the game
-            * playerIndex (integer): The player that controls this unit. 0 for you, 1 for your opponent.
-            * x (integer): The x coordinate of the unit
-            * y (integer): The y coordinate of the unit
-            * stationary (bool): Whether or not this unit is a firewall
-            * speed (double): A unit will move once every 1/speed frames
-            * damage (int): The amount of damage this firwall unit will deal to enemy information.
-            * damageF (int): The amount of damage this information unit will deal to enemy firewalls.
-            * damageI (int): The amount of damage this information unit will deal to enemy information.
-            * range (double): The effective range of this unit
-            * max_stability (double): The starting stability of this unit. Note than stability can be increased beyond this value by encryptors
-            * stability (double): The current health of this unit
-            * cost (int): The resource cost of this unit
-
-        */
     public:
+        // Functions
         GameUnit(UNIT_TYPE unitType, const Json &config, double stability, int playerIndex = 0,
             int x = -1, int y = -1);
         string toString() const;
 
-        // To be initialized
-        Json config;
+        // Members
+        Json config;                ///< Holds information about the game.
 
-        UNIT_TYPE unitType;
-        int playerIndex;
-        double stability;
-        int x;
-        int y;
+        UNIT_TYPE unitType;         ///< The type of this unit.
+        int playerIndex;            ///< Which player it belongs to.
+        double stability;           ///< The health of this unit.
+        int x;                      ///< The x position of its location.
+        int y;                      ///< The y position of its location.
 
-        // To be read in by config
-        bool stationary;
-        double speed;
-        int damage;
-        int damageF;
-        int damageI;
-        double range;
-        double maxStability;
-        int cost;
-        bool pendingRemoval;
+        // Determines these members from the config.
+        bool stationary;            ///< Whether the unit is a firewall.
+        double speed;               ///< How often this unit moves (0 if static).
+        int damage;                 ///< The amount of damage this unit does.
+        int damageF;                ///< The damage done to firewalls.
+        int damageI;                ///< The damage done to information units.
+        double range;               ///< How far away this unit can attack.
+        double maxStability;        ///< The maximum amound of health it can have.
+        int cost;                   ///< How much it costs to spawn.
+        bool pendingRemoval;        ///< If it has been attempted to be removed.
 
     private:
+        // Functions
         void serializeType();
 
     };

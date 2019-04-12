@@ -1,5 +1,5 @@
 /*
-Description: Implmentations for the Util.h header.
+Description: Implmentations for the util header.
 Last Modified: 08 Apr 2019
 Author: Isaac Draper
 */

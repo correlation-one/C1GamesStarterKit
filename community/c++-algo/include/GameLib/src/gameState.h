@@ -1,5 +1,5 @@
 /*
-Description: A header for the current game state of the class.
+Description: Represents the current state of the game.
 Last Modified: 09 Apr 2019
 Author: Isaac Draper
 */
@@ -32,28 +32,29 @@ namespace terminal {
     /// get information about the opponent.
     class GameState {
     public:
+        // Functions
         GameState(Json configuration, Json jsonState);
         void submitTurn() const;
 
         unsigned int attemptSpawn(UNIT_TYPE unitType, Pos pos, int num = 1);
-        unsigned int attemptSpawn(UNIT_TYPE unitType, vector<Pos> locations, int num = 1);
+        unsigned int attemptSpawn(UNIT_TYPE unitType, vector<Pos>& locations, int num = 1);
         unsigned int attemptSpawn(UNIT_TYPE unitType, unsigned int x, unsigned int y, int num = 1);
 
         unsigned int attemptRemove(Pos pos);
+        unsigned int attemptRemove(vector<Pos>& locations);
         unsigned int attemptRemove(unsigned int x, unsigned int y);
-        unsigned int attemptRemove(vector<Pos> locations);
 
-        bool canSpawn(UNIT_TYPE unitType, const Pos pos, int num = 1) const;
-        bool canSpawn(UNIT_TYPE unitType, unsigned int x, unsigned int y, int num = 1) const;
+        bool canSpawn(UNIT_TYPE unitType, const Pos pos, unsigned int num = 1) const;
+        bool canSpawn(UNIT_TYPE unitType, unsigned int x, unsigned int y, unsigned int num = 1) const;
 
-        unsigned int numberAffordable(UNIT_TYPE unitType) const;
         unsigned int numberAffordable(UNIT_TYPE unitType, const Player& player) const;
+        unsigned int numberAffordable(UNIT_TYPE unitType, unsigned int playerIndex = 0) const;
 
-        double projectFutureBits(int turnsInFuture = 1, double currentBits = -1) const;
         double projectFutureBits(int turnsInFuture, double currentBits, const Player& player) const;
+        double projectFutureBits(int turnsInFuture = 1, double currentBits = -1, unsigned int playerIndex = 0) const;
 
-        double getResource(RESOURCE resourceType) const;
         double getResource(RESOURCE resourceType, const Player& player) const;
+        double getResource(RESOURCE resourceType, unsigned int playerIndex = 0) const;
 
         double typeCost(UNIT_TYPE unitType) const;
         RESOURCE resourceRequired(UNIT_TYPE unitType) const;
@@ -67,27 +68,29 @@ namespace terminal {
 
         virtual string toString() const;
 
-        // public members
-        GameMap gameMap;
+        // Members
+        GameMap gameMap;            ///< Holds the game map associated with this state.
 
     private:
+        // Functions
         void parseState(Json jsonState);
         void parseUnits(Player& player, Json::array jsonUnits);
         void parsePlayerStats(Player& player, unsigned int id, Json::array stats);
 
-        void setResource(RESOURCE resourceType, double amount);
         void setResource(RESOURCE resourceType, double amount, Player& player);
+        void setResource(RESOURCE resourceType, double amount, unsigned int playerIndex = 0);
 
-        Json config;
+        // Members
+        Json config;                ///< Holds information about the game.
 
-        Player player1;
-        Player player2;
+        Player player1;             ///< Holds stats for the first player.
+        Player player2;             ///< Holds stats for the second player.
 
-        Json::array buildStack;
-        Json::array deployStack;
+        Json::array buildStack;     ///< The static units we will send to the engine to spawn.
+        Json::array deployStack;    ///< The mobile units we will send to the engine to spawn.
 
-        unsigned int turnNumber;
-        VERBOSITY verbosity;
+        unsigned int turnNumber;    ///< The current turn number.
+        VERBOSITY verbosity;        ///< The level at which to print and throw errors.
 
         // TODO: Add pathfinding
 

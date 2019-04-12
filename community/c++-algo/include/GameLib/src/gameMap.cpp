@@ -1,5 +1,5 @@
 /*
-Description: Implementations for the algoMap header.
+Description: Defines the implementations for the game map.
 Last Modified: 10 Apr 2019
 Author: Isaac Draper, Ryan Draves
 */
@@ -19,7 +19,7 @@ namespace terminal {
         createEmptyGrid();
     }
 
-    /// Fills map with an emtpy grid of dimensions AREA_SIZE.
+    /// Fills map with an emtpy grid of dimensions ARENA_SIZE.
     void GameMap::createEmptyGrid() {
         map.resize(ARENA_SIZE);
         for (unsigned int x = 0; x < ARENA_SIZE; ++x)
@@ -49,7 +49,7 @@ namespace terminal {
         return inArenaBounds(pos.x, pos.y);
     }
 
-    /// Takes an edge and fills a vector with a list of locations.
+    /// Takes an edge and appends a list of location on that edge to a vector.
     /// @param vec A vector passed by reference you would like to fill.
     /// @param edge The edge to get units for.
     void GameMap::getEdgeLocations(vector<Pos>& vec, const EDGE edge) const {
@@ -93,8 +93,8 @@ namespace terminal {
         }
     }
 
-    /// Fills out a vector of all the edges
-    /// @param vec A vector of { topRight, topLeft, bottomLeft, bottomRight } edges
+    /// Fills out a vector of all the edges.
+    /// @param vec A vector of { topRight, topLeft, bottomLeft, bottomRight } edges.
     void GameMap::getEdges(vector<vector<Pos>>& vec) const {
         vector<Pos> topRight, topLeft, bottomLeft, bottomRight;
 
@@ -112,7 +112,7 @@ namespace terminal {
     /// Add a single GameUnit to the map at the given location.
     /// This does not send it to the engine, it simply lets you create any
     /// map position you want to experiment with.
-    /// @param unitType The type of unit to add. Stationary units will replace 
+    /// @param unitType The type of unit to add. Stationary units will replace.
     /// @param pos The position to add the unit at.
     /// @param playerIndex The player to add the unit for.
     /// @param hp The health of the unit (default is max health).
@@ -147,7 +147,7 @@ namespace terminal {
     /// Add a single GameUnit to the map at the given location.
     /// This does not send it to the engine, it simply lets you create any
     /// map position you want to experiment with.
-    /// @param unitType The type of unit to add. Stationary units will replace 
+    /// @param unitType The type of unit to add. Stationary units will replace.
     /// @param x The x position to add the unit at.
     /// @param y The y position to add the unit at.
     /// @param playerIndex The player to add the unit for.
@@ -156,8 +156,9 @@ namespace terminal {
         addUnit(unitType, Pos(x, y), playerIndex, hp);
     }
 
-    /// Remove all GameUnits from the game map at the location. Throw an error if it's empty.
-    /// @param pos Position to clear from the game map
+    /// Remove all GameUnits from the game map at the location.
+    /// This will throw an error if the location is empty.
+    /// @param pos Position to clear from the game map.
     void GameMap::removeUnits(Pos pos) {
         if (!inArenaBounds(pos)) Util::printError<PosException>("Out of bounds exception", CRASH, verbosity);
         if (map.at(pos.x).at(pos.y).size() == 0) Util::printError<GameMapException>("Error trying to remove 0 units", WARNING, verbosity);
@@ -165,7 +166,7 @@ namespace terminal {
         map.at(pos.x).at(pos.y).clear();
     }
 
-    /// Takes a position and radius and fills a vector with locations in its range
+    /// Takes a position and radius and fills a vector with locations in its range.
     /// @param locations A vector passed by reference to return the values.
     /// @param pos The position to find locatins in range from.
     /// @param radius The radius of the circle to get locations from.
@@ -187,7 +188,7 @@ namespace terminal {
         }
     }
 
-    /// Boolean return of a stationary unit located at the position.
+    /// Checks whether a stationary unit is located at a position.
     /// @param pos Position to check on the map.
     /// @return Boolean answer to a stationary unit at the location.
     bool GameMap::containsStationaryUnit(Pos pos) const {
@@ -208,7 +209,7 @@ namespace terminal {
         return false;
     }
 
-    /// Boolean return of a stationary unit located at the position.
+    /// Checks whether a stationary unit is located at a position.
     /// @param x X coordinate to check on the map.
     /// @param y Y coordinate to check on the map.
     /// @return Boolean answer to a stationary unit at the location.
@@ -216,12 +217,12 @@ namespace terminal {
         return containsStationaryUnit(Pos(x, y));
     }
 
-    /// Helper function to get the euclidean distance between two locations
-    /// @param pos_1 First position.
-    /// @param pos_2 Second position.
+    /// Gives the euclidean distance between two locations.
+    /// @param pos1 First position.
+    /// @param pos2 Second position.
     /// @return Euclidean distance between two positions.
-    double GameMap::distanceBetweenLocations(Pos pos_1, Pos pos_2) const {
-        return sqrt(pow(pos_1.x - pos_2.x, 2) + pow(pos_1.y - pos_2.y, 2));
+    double GameMap::distanceBetweenLocations(Pos pos1, Pos pos2) const {
+        return sqrt(pow(pos1.x - pos2.x, 2) + pow(pos1.y - pos2.y, 2));
     }
 
     /// Sets the level of verbosity for printing errors or throwing exceptions.
@@ -250,7 +251,7 @@ namespace terminal {
         return map.at(pos.x).at(pos.y);
     }
 
-    /// Overloaded [int] operator enables access in the game map with [x][y]
+    /// Overloaded [int] operator enables access in the game map with [x][y].
     /// @param x X coordinate to index into the map.
     /// @return A reference to the column of the game map at coordinate X.
     vector<vector<GameUnit>>& GameMap::operator[](int x) {
@@ -261,21 +262,21 @@ namespace terminal {
         return map.at(x);
     }
 
-    /// Iterator function to help auto range through the game map
-    /// @return A vector begin iterator through the columns of the game map
+    /// Iterator function to help auto range through the game map.
+    /// @return A vector begin iterator through the columns of the game map.
     vector<vector<vector<GameUnit>>>::iterator GameMap::begin() {
         return map.begin();
     }
 
-    /// Iterator function to help auto range through the game map
-    /// @return A vector end iterator through the columns of the game map
+    /// Iterator function to help auto range through the game map.
+    /// @return A vector end iterator through the columns of the game map.
     vector<vector<vector<GameUnit>>>::iterator GameMap::end() {
         return map.end();
     }
 
 
-    /// Prints an ACSII version of the current game map for debug purposes
-    /// @return A very large string that represents the GameMap.
+    /// Prints an ACSII version of the current game map for debug purposes.
+    /// @return A string ascii representation of the current map.
     string GameMap::toString() const {
         string ret = "";
         for (unsigned int y = 0; y < ARENA_SIZE; y++) {

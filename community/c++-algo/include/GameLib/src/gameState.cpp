@@ -27,8 +27,9 @@ namespace terminal {
         parseState(jsonState);
     }
 
-    /// Fill in the rest of the required data from the engine.
+    /// Fills in the rest of the required data from the engine.
     /// Converts the Json object into data to be used by the class members.
+    /// @param jsonState A Json object containing the current state of the game.
     void GameState::parseState(Json jsonState) {
         turnNumber = jsonState["turnInfo"].array_items().at(1).int_value();
 
@@ -93,10 +94,14 @@ namespace terminal {
     }
 
     /// Sets a resource for a player. This is called internally.
+    /// The default player is player 1.
     /// @param resourceType The resource type to set.
     /// @param amount The new amount to set.
-    void GameState::setResource(RESOURCE resourceType, double amount) {
-        setResource(resourceType, amount, player1);
+    /// @param playerIndex The id of the player to get (0 or 1).
+    void GameState::setResource(RESOURCE resourceType, double amount, unsigned int playerIndex) {
+        playerIndex == 0 ?
+            setResource(resourceType, amount, player1) :
+            setResource(resourceType, amount, player2);
     }
 
     /// Gets the amount of a resource held by a player.
@@ -108,13 +113,18 @@ namespace terminal {
     }
 
     /// Gets the amount of a resource held by a player.
+    /// The default is player 1.
     /// @param resourceType The resource type to get.
+    /// @param playerIndex The player whos resource to get.
     /// @return The amount of a resouce player1 has.
-    double GameState::getResource(RESOURCE resourceType) const {
-        return getResource(resourceType, player1);
+    double GameState::getResource(RESOURCE resourceType, unsigned int playerIndex) const {
+        return playerIndex == 0 ?
+            getResource(resourceType, player1) :
+            getResource(resourceType, player2);
     }
 
-    /// Returns the type of resource based on the unit type.
+    /// Returns the type of resource required to build a unit
+    /// based on the unit type passed.
     /// @param unitType the UNIT_TYPE to get the resource.
     /// @return The type of resource the given unit requires.
     RESOURCE GameState::resourceRequired(UNIT_TYPE unitType) const {
@@ -123,6 +133,7 @@ namespace terminal {
 
     /// Submits and ends your turn, sending all changes to the engine.
     /// Must be called at the end of your turn.
+    /// This should be called only once per turn.
     void GameState::submitTurn() const {
         Util::sendCommand(Json(buildStack).dump());
         Util::sendCommand(Json(deployStack).dump());
@@ -130,7 +141,7 @@ namespace terminal {
 
     /// Checks if a unit type is stationary.
     /// @param unitType The unit type to check.
-    /// @return A bool saying whether it is stationary
+    /// @return A bool saying whether it is stationary.
     bool GameState::isStationary(UNIT_TYPE unitType) const {
         return unitType < 3;
     }
@@ -162,14 +173,17 @@ namespace terminal {
 
     /// The number of units a player can afford.
     /// @param unitType The type of unit to check.
+    /// @param playerIndex The player to use (0 or 1).
     /// @return The number of units that player can afford.
-    unsigned int GameState::numberAffordable(UNIT_TYPE unitType) const {
-        return numberAffordable(unitType, player1);
+    unsigned int GameState::numberAffordable(UNIT_TYPE unitType, unsigned int playerIndex) const {
+        return playerIndex == 0 ?
+            numberAffordable(unitType, player1) :
+            numberAffordable(unitType, player2);
     }
 
     /// Predicts the number of bits a player will have in a future turn.
     /// @param turnsInFuture The number of turns to look ahead.
-    /// @param currentBits Will use this value instead of player's if passed. Also if it is negative.
+    /// @param currentBits Will use this value instead of player's if passed.
     /// @param player The player to use.
     /// @return The number of bits after so many turns.
     double GameState::projectFutureBits(int turnsInFuture, double currentBits, const Player& player) const {
@@ -191,12 +205,14 @@ namespace terminal {
     
     /// Predicts the number of bits a player will have in a future turn.
     /// @param turnsInFuture The number of turns to look ahead.
-    /// @param currentBits Will use this value instead of player's if passed. Also if it is negative.
+    /// @param currentBits Will use this value instead of player's if passed.
+    /// @param playerIndex The player to use.
     /// @return The number of bits after so many turns.
-    double GameState::projectFutureBits(int turnsInFuture, double currentBits) const {
-        return projectFutureBits(turnsInFuture, currentBits, player1);
+    double GameState::projectFutureBits(int turnsInFuture, double currentBits, unsigned int playerIndex) const {
+        return playerIndex == 0 ?
+            projectFutureBits(turnsInFuture, currentBits, player1) :
+            projectFutureBits(turnsInFuture, currentBits, player2);
     }
-
 
     /// Gets the cost of a unit based on it's type.
     /// @param unitType The type of unit.
@@ -211,7 +227,7 @@ namespace terminal {
     /// @param y The y position to check.
     /// @param num The number of units to check, default is 1.
     /// @return A bool, true if can spawn.
-    bool GameState::canSpawn(UNIT_TYPE unitType, unsigned int x, unsigned int y, int num) const {
+    bool GameState::canSpawn(UNIT_TYPE unitType, unsigned int x, unsigned int y, unsigned int num) const {
         if (!gameMap.inArenaBounds(x, y)) {
             Util::printError<PosException>("Out of bounds exception", CRASH, verbosity);
             return false;
@@ -252,13 +268,14 @@ namespace terminal {
     /// @param pos The position to check.
     /// @param num The number of units to check, default is 1.
     /// @return A bool, true if can spawn.
-    bool GameState::canSpawn(UNIT_TYPE unitType, Pos pos, int num) const {
+    bool GameState::canSpawn(UNIT_TYPE unitType, Pos pos, unsigned int num) const {
         return canSpawn(unitType, pos.x, pos.y, num);
     }
 
-    /// Attempts to spawn new units with the type give at a single location;
+    /// Attempts to spawn new units with the type give at a single location.
     /// @param unitType The type of unit to spawn.
-    /// @param pos The location to spawn the unit.
+    /// @param x The x location to spawn the unit.
+    /// @param y The y location to spawn the unit.
     /// @param num The number of units to spawn.
     /// @return Returns the number of units spawned (0 or 1).
     unsigned int GameState::attemptSpawn(UNIT_TYPE unitType, unsigned int x, unsigned int y, int num) {
@@ -283,7 +300,7 @@ namespace terminal {
         return 0;
     }
 
-    /// Attempts to spawn new units with the type give at a single location;
+    /// Attempts to spawn new units with the type give at a single location.
     /// @param unitType The type of unit to spawn.
     /// @param pos The location to spawn the unit.
     /// @param num The number of units to spawn.
@@ -292,12 +309,12 @@ namespace terminal {
         return attemptSpawn(unitType, pos.x, pos.y);
     }
 
-    /// Attempts to spawn units with the type give at a list of locations;
+    /// Attempts to spawn units with the type give at a list of locations.
     /// @param unitType The type of unit to spawn.
-    /// @param locations The location to spawn the unit.
+    /// @param locations A vector of locations to spawn the units.
     /// @param num The numer of units to spawn at each location (default is 1).
     /// @return Returns the number of units spawned.
-    unsigned int GameState::attemptSpawn(UNIT_TYPE unitType, vector<Pos> locations, int num) {
+    unsigned int GameState::attemptSpawn(UNIT_TYPE unitType, vector<Pos>& locations, int num) {
         if (num < 1) {
             Util::printError<UnitSpawnException>("Attempted to spawn fewer than one unit.", WARNING, verbosity);
         }
@@ -322,7 +339,7 @@ namespace terminal {
             return 1;
         }
         else {
-            Util::printError<UnitRemoveException>("Could not remove a unit from (" + to_string(x) + ", " + to_string(y) + "). Location has no firewall or is in enemy territory", WARNING, verbosity);
+            Util::printError<UnitRemoveException>("Could not remove a unit from (" + to_string(x) + ", " + to_string(y) + "). Location has no firewall or it is in enemy territory", WARNING, verbosity);
         }
 
         return 0;
@@ -338,7 +355,7 @@ namespace terminal {
     /// Attempts to remove existing friendly firewalls at each position in a vector.
     /// @param locations The locations to try and remove.
     /// @return Returns the number of units removed.
-    unsigned int GameState::attemptRemove(vector<Pos> locations) {
+    unsigned int GameState::attemptRemove(vector<Pos>& locations) {
         unsigned int numRemoved = 0;
         for (Pos pos : locations) {
             numRemoved += attemptRemove(pos);

@@ -25,7 +25,7 @@ namespace terminal {
             return msg.c_str();
         }
     protected:
-        string msg;
+        string msg; ///< Stores the message for the error.
     };
 
     /// A Custom Exception to be thrown by any utility critical errors.
@@ -34,31 +34,37 @@ namespace terminal {
         UtilException(const string errorMsg = "Util Exception") : CustomException(errorMsg) {}
     };
 
+    /// An exception to be thrown when there is something wrong with a Unit Type.
     class UnitTypeException : public CustomException {
     public:
         UnitTypeException(const string errorMsg = "Unit Type Exception") : CustomException(errorMsg) {}
     };
 
+    /// An exception to be thrown when there is something wrong with spawning a unit.
     class UnitSpawnException : public CustomException {
     public:
         UnitSpawnException(const string errorMsg = "Unit Spawn Exception") : CustomException(errorMsg) {}
     };
 
+    /// An exception to be thrown when there is something wrong with removing a unit.
     class UnitRemoveException : public CustomException {
     public:
         UnitRemoveException(const string errorMsg = "Unit Remove Exception") : CustomException(errorMsg) {}
     };
 
+    /// An exception to be thrown when there is something wrong with a position.
     class PosException : public CustomException {
     public:
         PosException(const string errorMsg = "Pos Exception") : CustomException(errorMsg) {}
     };
 
+    /// An exception to be thrown when an invalid player index is used.
     class PlayerIndexException : public CustomException {
     public:
         PlayerIndexException(const string errorMsg = "Player Index Exception") : CustomException(errorMsg) {}
     };
 
+    /// An exception to be thrown when something wrong happens with the GameMap.
     class GameMapException : public CustomException {
     public:
         GameMapException(const string errorMsg = "Game Map Exception") : CustomException(errorMsg) {}

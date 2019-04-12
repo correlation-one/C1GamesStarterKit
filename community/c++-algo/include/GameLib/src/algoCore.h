@@ -1,5 +1,5 @@
 /*
-Description: A header to contain the core components necessary for an algo.
+Description: This contains the core components necessary for an algo to run.
 Last Modified: 08 Apr 2019
 Author: Isaac Draper
 */
@@ -22,19 +22,23 @@ namespace terminal {
     /// You should inherit from this class when developing your strategy.
     class AlgoCore {
     public:
+        // Functions
         AlgoCore();
         virtual void start();
         virtual std::string toString() const;
 
     protected:
+        // Functions
         virtual void onGameStart(Json configuration);
         virtual void onTurn(Json gameState);
         void submitDefaultTurn() const;
 
-        Json config;
+        // Members
+        Json config; ///< Holds information about the game.
 
     private:
-        bool endOfGame;
+        // Members
+        bool endOfGame; ///< Keeps track of whether the game has ended.
 
     };
 
