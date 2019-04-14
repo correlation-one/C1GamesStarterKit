@@ -226,7 +226,7 @@ class GameState:
         if type(current_bits) == int and current_bits < 0:
             self.warn("Invalid current bits ({}). Current bits cannot be negative.".format(current_bits))
 
-        bits = self.get_resource(self.BITS, player_index) if not current_bits else current_bits
+        bits = self.get_resource(self.BITS, player_index) if current_bits is None else current_bits
         for increment in range(1, turns_in_future + 1):
             current_turn = self.turn_number + increment
             bits *= (1 - self.config["resources"]["bitDecayPerRound"])
