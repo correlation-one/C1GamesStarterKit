@@ -89,6 +89,27 @@ Building this project has been tested using:
 - Visual Studio 2017
 - Ubuntu 16.04.5 LTS
 - Ubuntu 18.04.1 LTS
+- MacOS Mojave
+
+### Documentation
+
+Documentation for this starter-kit can be generated using doxygen. The general steps to do so and explanation for their accepted style can be found on [their website](http://www.doxygen.nl/index.html). However, the steps that we took were:
+
+1. Install doxygen (found on their website).
+2. Create folder to generate the documentation (`mkdir dox`) and go to it (`cd dox`).
+3. Generate the config for doxygen (`doxygen -g dox-config`).
+4. Modify the following options found in the dox-config file:
+	- EXTRACT_ALL = YES
+	- INPUT = ../ (or the path to the c++-algo code)
+	- RECURSIVE = YES
+	- JAVADOC_AUTOBRIEF = YES
+	- EXCLUDE_PATTERNS = \*/build/* + \*/json11/*
+	- USE_MDFILE_AS_MAINPAGE = ../README.md (or path to this README)
+	- STRIP_FROM_PATH (set it equal to the path up to and not including the C1GamesStarterKit) (eg C:/Users/.../)
+	
+5. Run doxygen (`doxygen dox-config`).
+
+You can modify the output style further by specifying an html header/footer and css style (see [doxygen documentation](http://www.doxygen.nl/manual/customize.html).
 
 ### Contributing
 
