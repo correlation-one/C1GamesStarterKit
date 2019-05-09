@@ -387,6 +387,8 @@ class GameState:
             True if there is a stationary unit at the location, False otherwise
             
         """
+        if not self.game_map.in_arena_bounds(location):
+            return False
         x, y = map(int, location)
         for unit in self.game_map[x,y]:
             if unit.stationary:
