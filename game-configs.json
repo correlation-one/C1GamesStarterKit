@@ -13,10 +13,15 @@
       "damage":0.0,
       "cost":1.0,
       "getHitRadius":0.51,
+      "shieldAmount":3.0, //Unhandled
       "display":"Filter",
       "range":0.0,
       "shorthand":"FF",
-      "stability":60.0
+      "stability":60.0,
+      "additionalBuildTime": 0, //Unhandled
+      "refundDelay": 0, //Unhandled
+      "refundAdjustment": 0, //Unhandled
+      "bounty": 0 //Unhandled
     },
     {
       "damage":0.0,
@@ -26,16 +31,25 @@
       "display":"Encryptor",
       "range":3.0,
       "shorthand":"EF",
-      "stability":30.0
+      "stability":30.0,
+      "additionalBuildTime": 0, //Unhandled
+      "refundDelay": 0, //Unhandled
+      "refundAdjustment": 0, //Unhandled
+      "bounty": 0 //Unhandled
     },
     {
       "damage":16.0,
       "cost":6.0,
       "getHitRadius":0.51,
+      "shieldAmount":3.0, //Unhandled
       "display":"Destructor",
       "range":3.0,
       "shorthand":"DF",
-      "stability":75.0
+      "stability":75.0,
+      "additionalBuildTime": 0, //Unhandled
+      "refundDelay": 0, //Unhandled
+      "refundAdjustment": 0, //Unhandled
+      "bounty": 0 //Unhandled
     },
     {
       "damageI":2.0,
@@ -47,7 +61,11 @@
       "range":3.0,
       "shorthand":"PI",
       "stability":15.0,
-      "speed":1
+      "speed":1,
+      "additionalBuildTime": 0, //Unhandled
+      "selfDestructRadiusAdjustment": 0, //Unhandled
+      "selfDestructOnDeath": false, //Unhandled
+      "bounty": 0 //Unhandled
     },
     {
       "damageI":8.0,
@@ -59,7 +77,11 @@
       "range":4.0,
       "shorthand":"EI",
       "stability":5.0,
-      "speed":0.5
+      "speed":0.5,
+      "additionalBuildTime": 0, //Unhandled
+      "selfDestructRadiusAdjustment": 0, //Unhandled
+      "selfDestructOnDeath": false, //Unhandled
+      "bounty": 0 //Unhandled
     },
     {
       "damageI":20.0,
@@ -71,7 +93,11 @@
       "range":4.0,
       "shorthand":"SI",
       "stability":40.0,
-      "speed":0.25
+      "speed":0.25,
+      "additionalBuildTime": 0, //Unhandled
+      "selfDestructRadiusAdjustment": 0, //Unhandled
+      "selfDestructOnDeath": false, //Unhandled
+      "bounty": 0 //Unhandled
     },
     {
       "display":"Remove",
@@ -104,6 +130,7 @@
     "coresForPlayerDamage":1.0,
     "startingBits":5.0,
     "bitDecayPerRound":0.25,
+    "coreDecayPerRound":0, //Unhandled
     "startingCores":40.0
   },
   "mechanics":{
