@@ -1,9 +1,9 @@
 package com.c1games.terminal.algo;
 
-import com.c1games.terminal.algo.serialization.StartIndexAt;
+import com.google.gson.annotations.SerializedName;
 
-@StartIndexAt(1)
 public enum PlayerId {
-    Player1,
-    Player2
+    @SerializedName("0") Error,
+    @SerializedName("1") Player1,
+    @SerializedName("2") Player2,
 }
