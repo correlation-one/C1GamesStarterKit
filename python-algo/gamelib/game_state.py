@@ -226,7 +226,7 @@ class GameState:
         if type(current_bits) == int and current_bits < 0:
             self.warn("Invalid current bits ({}). Current bits cannot be negative.".format(current_bits))
 
-        bits = self.get_resource(self.BITS, player_index) if current_bits is None else current_bits
+        bits = self.get_resource(self.BITS, player_index) if not current_bits else current_bits
         for increment in range(1, turns_in_future + 1):
             current_turn = self.turn_number + increment
             bits *= (1 - self.config["resources"]["bitDecayPerRound"])
@@ -359,12 +359,26 @@ class GameState:
                 self.warn("Could not remove a unit from {}. Location has no firewall or is enemy territory.".format(location))
         return removed_units
 
-    def find_path_to_edge(self, start_location, target_edge):
+    def get_target_edge(self, start_location):
+        left = start_location[0] < self.HALF_ARENA
+        bottom = start_location[1] < self.HALF_ARENA
+        right = not(left)
+        top = not(bottom)
+        if left and bottom:
+            return self.game_map.TOP_RIGHT
+        elif left and top:
+            return self.game_map.BOTTOM_RIGHT
+        elif right and bottom:
+            return self.game_map.TOP_LEFT
+        elif right and top:
+            return self.game_map.BOTTOM_LEFT
+
+    def find_path_to_edge(self, start_location, target_edge=None):
         """Gets the path a unit at a given location would take
 
         Args:
             * start_location: The location of a hypothetical unit
-            * target_edge: The edge the unit wants to reach. game_map.TOP_LEFT, game_map.BOTTOM_RIGHT, etc.
+            * target_edge: The edge the unit wants to reach. game_map.TOP_LEFT, game_map.BOTTOM_RIGHT, etc. Will auto calculate if None.
 
         Returns:
             A list of locations corresponding to the path the unit would take 
@@ -374,6 +388,10 @@ class GameState:
         if self.contains_stationary_unit(start_location):
             self.warn("Attempted to perform pathing from blocked starting location {}".format(start_location))
             return
+
+        if target_edge is None:
+            target_edge = self.get_target_edge(start_location)
+
         end_points = self.game_map.get_edge_locations(target_edge)
         return self._shortest_path_finder.navigate_multiple_endpoints(start_location, end_points, self)
 
@@ -387,9 +405,6 @@ class GameState:
             True if there is a stationary unit at the location, False otherwise
             
         """
-        if not self.game_map.in_arena_bounds(location):
-            self.warn('Checked for stationary unit outside of arena bounds')
-            return False
         x, y = map(int, location)
         for unit in self.game_map[x,y]:
             if unit.stationary:
@@ -411,3 +426,116 @@ class GameState:
         self.enable_warnings = not suppress
         self.game_map.enable_warnings = not suppress
 
+    def get_target(self, attacking_unit):
+        """Returns target of given unit based on current map of the game board. 
+        A Unit can often have many other units in range, and Units that attack do so once each frame.
+
+        Their targeting priority is as follows:
+            Infantry > Nearest Unit > Lowest Stability > Lowest Y position > Closest to edge (Highest distance of X from the boards center, 13.5)
+
+        Args:
+            * attacking_unit: A GameUnit
+
+        Returns:
+            The GameUnit this unit would choose to attack.
+
+        """
+        
+        from .game_state import SCRAMBLER, is_stationary
+
+        if not isinstance(attacking_unit, GameUnit):
+            self.warn("Passed a {} to get_target as attacking_unit. Expected a GameUnit.".format(type(attacking_unit)))
+            return
+
+        attacker_location = [attacking_unit.x, attacking_unit.y]
+        possible_locations = self.game_map.get_locations_in_range(attacker_location, attacking_unit.range)
+        target = None
+        target_stationary = True
+        target_distance = sys.maxsize
+        target_stability = sys.maxsize
+        target_y = self.ARENA_SIZE
+        target_x_distance = 0
+
+        for location in possible_locations:
+            for unit in self.game_map[location]:
+                """
+                NOTE: scrambler units cannot attack firewalls so skip them if unit is firewall
+                """
+                if unit.player_index == attacking_unit.player_index or (attacking_unit.unit_type == SCRAMBLER and is_stationary(unit.unit_type)):
+                    continue
+
+                new_target = False
+                unit_stationary = unit.stationary
+                unit_distance = self.game_map.distance_between_locations(location, [attacking_unit.x, attacking_unit.y])
+                unit_stability = unit.stability
+                unit_y = unit.y
+                unit_x_distance = abs(self.HALF_ARENA - 0.5 - unit.x)
+
+                if target_stationary and not unit_stationary:
+                    new_target = True
+                elif not target_stationary and unit_stationary:
+                    continue
+                
+                if target_distance > unit_distance:
+                    new_target = True
+                elif target_distance < unit_distance and not new_target:
+                    continue
+
+                if target_stability > unit_stability:
+                    new_target = True
+                elif target_stability < unit_stability and not new_target:
+                    continue
+
+                # Compare height heuristic relative to attacking unit's player index
+                if attacking_unit.player_index == 0:
+                    if target_y > unit_y:
+                        new_target = True
+                    elif target_y < unit_y and not new_target:
+                        continue
+                else:
+                    if target_y < unit_y:
+                        new_target = True
+                    elif target_y > unit_y and not new_target:
+                        continue
+
+                if target_x_distance < unit_x_distance:
+                    new_target = True
+                
+                if new_target:
+                    target = unit
+                    target_stationary = unit_stationary
+                    target_distance = unit_distance
+                    target_stability = unit_stability
+                    target_y = unit_y
+                    target_x_distance = unit_x_distance
+        return target
+
+    def get_attackers(self, location, player_index):
+        """Gets the destructors threatening a given location
+
+        Args:
+            * location: The location of a hypothetical defender
+            * player_index: The index corresponding to the defending player, 0 for you 1 for the enemy
+
+        Returns:
+            A list of destructors that would attack a unit controlled by the given player at the given location
+
+        """
+        
+        from .game_state import DESTRUCTOR, UNIT_TYPE_TO_INDEX
+
+        if not player_index == 0 and not player_index == 1:
+            self._invalid_player_index(player_index)
+        if not self.game_map.in_arena_bounds(location):
+            self.warn("Location {} is not in the arena bounds.".format(location))
+
+        attackers = []
+        """
+        Get locations in the range of DESTRUCTOR units
+        """
+        possible_locations= self.game_map.get_locations_in_range(location, self.config["unitInformation"][UNIT_TYPE_TO_INDEX[DESTRUCTOR]]["range"])
+        for location in possible_locations:
+            for unit in self.game_map[location]:
+                if unit.unit_type == DESTRUCTOR and unit.player_index != player_index:
+                    attackers.append(unit)
+        return attackers

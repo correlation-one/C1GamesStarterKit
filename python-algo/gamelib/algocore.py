@@ -26,6 +26,15 @@ class AlgoCore(object):
         the current game state, which can be used to initialize a new GameMap
         """
         self.submit_default_turn()
+    
+    def on_action_frame(self, turn_string):
+        """
+        This function is called every action frame and is passed a string containing
+        the current game state, which can also be used to initialize a new GameMap.
+        Be careful about going over your compute time as this is potentially called hundreds of 
+        times per turn
+        """
+        pass
 
     def submit_default_turn(self):
         send_command("")
@@ -60,9 +69,9 @@ class AlgoCore(object):
                     self.on_turn(game_state_string)
                 elif stateType == 1:
                     """
-                    If stateType == 1, this game_state_string string represents the results of an action phase
+                    If stateType == 1, this game_state_string string represents a single frame of an action phase
                     """
-                    continue
+                    self.on_action_frame(game_state_string)
                 elif stateType == 2:
                     """
                     This is the end game message. This means the game is over so break and finish the program.
