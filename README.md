@@ -30,9 +30,10 @@ If this doesn't work try this:
     
     `Set-ExecutionPolicy Unrestricted CurrentUser`
     
-If that still doesn't work, try this:
+If that still doesn't work, try these below:
     
     `Set-ExecutionPolicy Bypass`
+    `Set-ExecutionPolicy RemoteSigned`
     
 And don't forget to run the PowerShell as admin.
 
