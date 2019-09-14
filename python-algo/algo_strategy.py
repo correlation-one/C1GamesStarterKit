@@ -57,21 +57,58 @@ class AlgoStrategy(gamelib.AlgoCore):
         state = json.loads(turn_string)
         events = state["events"]
 
+        UnitDict = dict()#key is ID, [0] is spawned at, [1] is unit type, [2] is owner
+
         Scrambler_at = []
+        Damage = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        Breach = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
         for attack in events["attack"]:
             if attack[6] == 2 and attack[3] == 5:  # enemy Scrambler
                 ID = attack[5]
-                for spawn in events["spawn"]:
-                    if spawn[2] == ID:
-                        UnitType = spawn[1]
-                    break
-                if UnitType == 3 or UnitType == 4:
+                if ID not in UnitDict.keys():
+                    for spawn in events["spawn"]:
+                        if spawn[2] == ID:
+                            UnitDict[ID] = [0,0,0]
+                            UnitDict[ID][0] = spawn[0]
+                            UnitDict[ID][1] = spawn[1]
+                            UnitDict[ID][2] = spawn[3]
+                        break
+                if UnitDict[ID][0] == 3 or UnitDict[ID][0] == 4:
                     Scrambler_at.append(attack[0])
 
-        Scores = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-        
+            if attack[3] == 3 or attack[3] ==4: # PING or EMP
+                if attack[6] == 1:   # MINE
+                    ID = attack[5]
+                if ID not in UnitDict.keys():
+                    for spawn in events["spawn"]:
+                        if spawn[2] == ID:
+                            UnitDict[ID] = [0,0,0]
+                            UnitDict[ID][0] = spawn[0]
+                            UnitDict[ID][1] = spawn[1]
+                            UnitDict[ID][2] = spawn[3]
+                        break
+                Damage[UnitDict[ID][0]]+=attack[2]   #add the damage done into damage list
+
+        for breach in event["breach"]:
+            if breach[4] == 1: #I breached!!
+                ID = breach[3]
+                if ID not in UnitDict.keys():
+                    for spawn in events["spawn"]:
+                        if spawn[2] == ID:
+                            UnitDict[ID] = [0,0,0]
+                            UnitDict[ID][0] = spawn[0]
+                            UnitDict[ID][1] = spawn[1]
+                            UnitDict[ID][2] = spawn[3]
+                        break
+                Breach[UnitDict[ID][0]]+=1 # add 1 breach to the starting point
+
+
+
+
+
+
         game_state = gamelib.GameState(self.config, turn_state)
         gamelib.debug_write('Performing turn {} of your custom algo strategy'.format(game_state.turn_number))
         game_state.suppress_warnings(True)  #Comment or remove this line to enable warnings.
