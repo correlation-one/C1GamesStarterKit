@@ -47,15 +47,28 @@ class AttackStrategy:
         if not self.is_attack(game_state, risk_level):
             return
 
-        spawn_location, path = self.best_spawn_location(game_state, scrambler_heatmap, score_board)
-        encryptors = self.spawn_encryptors(game_state, path)
+        spawn_location, path, destr_count = self.best_spawn_location(game_state, scrambler_heatmap, score_board)
 
+        if self.is_spawn_encryptor(game_state):
+            encryptors = self.spawn_encryptors(game_state, path)
+            game_state.attemp_spawn(game_state.ENCRYPTOR, encryptors)
+
+        game_state.attemp_spawn(game_state.EMP, spawn_location, destr_count)
+        game_state.attemp_spawn(game_state.PING, spawn_location, game_state.number_affordable(game_state.PING))
+
+
+    def is_spawn_encryptor(self, game_state):
+        if game_state.turn_number >= 5:
+            return True
+        return False
 
     def spawn_encryptors(self, game_state, path):
         core_budget = game_state.get_resource(game_state.BITS)
         num_encryptor = game_state.number_affordable(game_state.ENCRYPTOR)
         spawn_encryptor = []
         for location in path:
+            if num_encryptor == 0:
+                break
             neighbors = self.get_neighbors(location)
             for neighbor in neighbors:
                 if neighbor not in path and game_state.can_spawn(game_state.ENCRYPTOR, neighbor):
@@ -76,18 +89,21 @@ class AttackStrategy:
         global location_options, fire_param, scrambler_param, bits_save_threshold
         preferences = []
         paths = []
+        enemy_destr_counts = []
         for location in location_options:
             path = game_state.find_path_to_edge(location)
             paths.append(path)
             preference, fire, scram, tough = 0
             for path_location in path:
                 [x, y] = path_location
-                fire += len(game_state.get_attackers(path_location, 0)) * gamelib.GameUnit(DESTRUCTOR, game_state.config).damage
+                enemy_destr_count = len(game_state.get_attackers(path_location, 0))
+                enemy_destr_counts.append(enemy_destr_count)
+                fire += enemy_destr_count * gamelib.GameUnit(DESTRUCTOR, game_state.config).damage
                 scram += scrambler_heatmap[x, y]
                 risk = fire * fire_param + scram * scrambler_param
                 reward = score_board[x]
                 preference = reward / risk
             preference.append(preference)
         idx = preferences.index(min(preferences))
-        return location_options[idx], paths[idx]
+        return location_options[idx], paths[idx], enemy_destr_counts[idx]
 
