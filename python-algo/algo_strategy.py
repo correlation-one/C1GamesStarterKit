@@ -53,6 +53,25 @@ class AlgoStrategy(gamelib.AlgoCore):
         unit deployments, and transmitting your intended deployments to the
         game engine.
         """
+
+        state = json.loads(turn_string)
+        events = state["events"]
+
+        Scrambler_at = []
+
+        for attack in events["attack"]:
+            if attack[6] == 2 and attack[3] == 5:  # enemy Scrambler
+                ID = attack[5]
+                for spawn in events["spawn"]:
+                    if spawn[2] == ID:
+                        UnitType = spawn[1]
+                    break
+                if UnitType == 3 or UnitType == 4:
+                    Scrambler_at.append(attack[0])
+
+        Scores = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+        
         game_state = gamelib.GameState(self.config, turn_state)
         gamelib.debug_write('Performing turn {} of your custom algo strategy'.format(game_state.turn_number))
         game_state.suppress_warnings(True)  #Comment or remove this line to enable warnings.
