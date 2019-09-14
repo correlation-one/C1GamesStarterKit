@@ -76,6 +76,8 @@ class AlgoStrategy(gamelib.AlgoCore):
         If there are no stationary units to attack in the front, we will send Pings to try and score quickly.
         """
         # First, place basic defenses
+        if game_state.turn_number == 1:
+            self.build_opener(game_state)
         self.build_defences(game_state)
         # Now build reactive defenses based on where the enemy scored
         self.build_reactive_defense(game_state)
@@ -119,6 +121,15 @@ class AlgoStrategy(gamelib.AlgoCore):
         # Place filters in front of destructors to soak up damage for them
         filter_locations = [[8, 12], [19, 12]]
         game_state.attempt_spawn(FILTER, filter_locations)
+
+    def build_opener(self, game_state):
+        filter_locations = [[0, 13], [1, 13], [2, 13], [3, 12], [4, 11], [5, 10], [27, 13], [26, 13],[25,13],[24,12],[23,11],[22,10]]
+
+        game_state.attempt_spawn(FILTER, filter_locations)
+
+        destructor_locations = [[2,12], [25,12]]
+        game_state.attempt_spawn(DESTRUCTOR, destructor_locations)
+
 
     def build_reactive_defense(self, game_state):
         """
