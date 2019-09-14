@@ -443,8 +443,6 @@ class GameState:
             The GameUnit this unit would choose to attack.
 
         """
-        
-        from .game_state import SCRAMBLER, is_stationary
 
         if not isinstance(attacking_unit, GameUnit):
             self.warn("Passed a {} to get_target as attacking_unit. Expected a GameUnit.".format(type(attacking_unit)))
@@ -524,8 +522,6 @@ class GameState:
             A list of destructors that would attack a unit controlled by the given player at the given location
 
         """
-        
-        from .game_state import DESTRUCTOR, UNIT_TYPE_TO_INDEX
 
         if not player_index == 0 and not player_index == 1:
             self._invalid_player_index(player_index)
