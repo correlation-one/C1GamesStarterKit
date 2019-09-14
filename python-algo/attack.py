@@ -43,7 +43,7 @@ bits_save_threshold = 10
 
 class AttackStrategy:
 
-    def spawn_attackers(self, game_state, scrambler_heatmap, score_board):
+    def spawn_attackers(self, game_state, scrambler_heatmap, score_board, risk_level):
         if not self.is_attack(game_state, risk_level):
             return
 
@@ -63,7 +63,6 @@ class AttackStrategy:
         return False
 
     def spawn_encryptors(self, game_state, path):
-        core_budget = game_state.get_resource(game_state.BITS)
         num_encryptor = game_state.number_affordable(game_state.ENCRYPTOR)
         spawn_encryptor = []
         for location in path:
@@ -82,7 +81,7 @@ class AttackStrategy:
 
 
     def is_attack(self, game_state, risk_level):
-        return False
+        return True
 
 
     def best_spawn_location(self, game_state, scrambler_heatmap, score_board):
