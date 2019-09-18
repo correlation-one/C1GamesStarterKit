@@ -230,7 +230,7 @@ class GameState:
         for increment in range(1, turns_in_future + 1):
             current_turn = self.turn_number + increment
             bits *= (1 - self.config["resources"]["bitDecayPerRound"])
-            bits_gained = self.config["resources"]["bitsPerRound"] + (current_turn // self.config["resources"]["turnIntervalForBitSchedule"])
+            bits_gained = self.config["resources"]["bitsPerRound"] + (self.config["resources"]["bitGrowthRate"] * (current_turn // self.config["resources"]["turnIntervalForBitSchedule"]))
             bits += bits_gained
             bits = round(bits, 1)
         return bits
