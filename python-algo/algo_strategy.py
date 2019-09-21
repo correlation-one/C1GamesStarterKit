@@ -104,7 +104,7 @@ class AlgoStrategy(gamelib.AlgoCore):
                 game_state.attempt_spawn(ENCRYPTOR, encryptor_locations)
 
                     
-    def build_defences_adv(self, locations, firewall, row = None, game_state)
+    def build_defences_adv(self, locations, firewall, game_state, row = None):
         """
         Simplify the defence units building process
         Ref: https://www.youtube.com/watch?v=htvFHKA2RSs&feature=share
@@ -144,17 +144,17 @@ class AlgoStrategy(gamelib.AlgoCore):
         # More community tools available at: https://terminal.c1games.com/rules#Download
         row = 12
         destructors = [26, 1, 21, 6, 16, 11] # Right first, Left second; We attack Left first, Right second
-        if not self.build_defences_adv(filters, FILTER, row = row, game_state):
+        if not self.build_defences_adv(filters, FILTER, game_state, row = row,):
             return 
         
         row = 13
         filters = [27, 26, 25, 0, 1, 2, 22, 21, 20, 5, 6, 7, 17, 16, 15, 10, 11, 12]
-        if not self.build_defences_adv(filter, FILTER, game_state):
+        if not self.build_defences_adv(filter, FILTER, game_state, row = row,):
             return
         
         row = 12
         destructors = [25, 2, 23, 4, 19, 8, 14, 13] # Right first, Left second; We attack Left first, Right second
-        if not self.build_defences_adv(filters, FILTER, row = row, game_state):
+        if not self.build_defences_adv(filters, FILTER, game_state, row = row,):
             return 
         """
         OLD CODES
