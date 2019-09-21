@@ -103,14 +103,61 @@ class AlgoStrategy(gamelib.AlgoCore):
                 encryptor_locations = [[13, 2], [14, 2], [13, 3], [14, 3]]
                 game_state.attempt_spawn(ENCRYPTOR, encryptor_locations)
 
+                    
+    def build_defences_adv(self, locations, firewall, row = None, game_state)
+        """
+        Simplify the defence units building process
+        Ref: https://www.youtube.com/watch?v=htvFHKA2RSs&feature=share
+        """
+        for location in locations:
+            if not type(location) == list:
+                location = [location, row]
+            if game_state.can_spawn(firewall, location):
+                game_state.attempt_spawn(firewall, location)
+                gamelib.debug_write(f"{firewall} deployed at {location}")
+                game_state._player_resources[0]['cores'] -= game_state.type_cost(firewall)
+            elif not game_state.contains_stationary_unit(location):
+                return False
+        retirn True
+    
     def build_defences(self, game_state):
         """
         Build basic defenses using hardcoded locations.
         Remember to defend corners and avoid placing units in the front where enemy EMPs can attack them.
         """
+        
+        """
+        Ref: https://www.youtube.com/watch?v=htvFHKA2RSs&feature=share
+        filters = [[0, 13], [27, 13], [1, 12], [26, 12]]
+        if not self.build_defences_adv(filters, FILTER, game_state):
+            return
+        row = 11
+        destructors = [2, 25, 6, 21, 11, 16]
+        if not self.build_defences_adv(destructors, DESTRUCTOR, row = row, game_sate):
+            return
+        filters = [3, 24, 4, 23, 5, 22, 7, 20, 8, 19, 9, 18, 10, 17, 12, 15]
+        if not self.build_defences_adv(filter, FILTER, game_state):
+            return
+        """
+        
         # Useful tool for setting up your base locations: https://www.kevinbai.design/terminal-map-maker
         # More community tools available at: https://terminal.c1games.com/rules#Download
-
+        row = 12
+        destructors = [26, 1, 21, 6, 16, 11] # Right first, Left second; We attack Left first, Right second
+        if not self.build_defences_adv(filters, FILTER, row = row, game_state):
+            return 
+        
+        row = 13
+        filters = [27, 26, 25, 0, 1, 2, 22, 21, 20, 5, 6, 7, 17, 16, 15, 10, 11, 12]
+        if not self.build_defences_adv(filter, FILTER, game_state):
+            return
+        
+        row = 12
+        destructors = [25, 2, 23, 4, 19, 8, 14, 13] # Right first, Left second; We attack Left first, Right second
+        if not self.build_defences_adv(filters, FILTER, row = row, game_state):
+            return 
+        """
+        OLD CODES
         # Place destructors that attack enemy units
         destructor_locations = [[0, 13], [27, 13], [8, 11], [19, 11], [13, 11], [14, 11]]
         # attempt_spawn will try to spawn units if we have resources, and will check if a blocking unit is already there
@@ -120,6 +167,8 @@ class AlgoStrategy(gamelib.AlgoCore):
         filter_locations = [[8, 12], [19, 12]]
         game_state.attempt_spawn(FILTER, filter_locations)
 
+        """
+        
     def build_reactive_defense(self, game_state):
         """
         This function builds reactive defenses based on where the enemy scored on us from.
