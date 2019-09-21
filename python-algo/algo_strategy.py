@@ -245,7 +245,7 @@ class AlgoStrategy(gamelib.AlgoCore):
         # Now let's build out a line of stationary units. This will prevent our EMPs from running into the enemy base.
         # Instead they will stay at the perfect distance to attack the front two rows of the enemy base.
         row = 12
-        filters = [26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5] # Right first, Left second; We attack Left first, Right second
+        filters = [24, 22, 21, 20, 18, 17, 15, 12, 10, 9, 7, 5] # Right first, Left second; We attack Left first, Right second
         if not self.build_defences_adv(filters, FILTER, game_state, row = row):
             return 
         """ OLD CODE
