@@ -115,7 +115,7 @@ class AlgoStrategy(gamelib.AlgoCore):
             if game_state.can_spawn(firewall, location):
                 game_state.attempt_spawn(firewall, location)
                 gamelib.debug_write(f"{firewall} deployed at {location}")
-                game_state._player_resources[0]['cores'] -= game_state.type_cost(firewall)
+                #game_state._player_resources[0]['cores'] -= game_state.type_cost(firewall)
             elif not game_state.contains_stationary_unit(location):
                 return False
         return True
