@@ -218,9 +218,14 @@ class AlgoStrategy(gamelib.AlgoCore):
 
         # Now let's build out a line of stationary units. This will prevent our EMPs from running into the enemy base.
         # Instead they will stay at the perfect distance to attack the front two rows of the enemy base.
+        row = 12
+        filters = [27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5] # Right first, Left second; We attack Left first, Right second
+        if not self.build_defences_adv(filters, FILTER, game_state, row = row):
+            return 
+        """ OLD CODE
         for x in range(27, 5, -1):
             game_state.attempt_spawn(cheapest_unit, [x, 11])
-
+        """
         # Now spawn EMPs next to the line
         # By asking attempt_spawn to spawn 1000 units, it will essentially spawn as many as we have resources for
         game_state.attempt_spawn(EMP, [24, 10], 1000)
