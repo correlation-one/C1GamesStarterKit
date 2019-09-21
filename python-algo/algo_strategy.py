@@ -157,8 +157,18 @@ class AlgoStrategy(gamelib.AlgoCore):
         if not self.build_defences_adv(destructors, DESTRUCTOR, game_state, row = row):
             return 
           
+        row = 11
+        destructors = [2] # Right first, Left second; We attack Left first, Right second
+        if not self.build_defences_adv(destructors, DESTRUCTOR, game_state, row = row):
+            return  
+        
         row = 10
-        encryps = [10, 9, 8, 7, 6, 5] # Right first, Left second; We attack Left first, Right second
+        destructors = [3, 4, 5] # Right first, Left second; We attack Left first, Right second
+        if not self.build_defences_adv(destructors, DESTRUCTOR, game_state, row = row):
+            return  
+          
+        row = 10
+        encryps = [10, 9, 8, 7, 6] # Right first, Left second; We attack Left first, Right second
         if not self.build_defences_adv(encryps, ENCRYPTOR, game_state, row = row):
             return
           
