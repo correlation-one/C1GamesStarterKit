@@ -172,6 +172,16 @@ class AlgoStrategy(gamelib.AlgoCore):
         if not self.build_defences_adv(encryps, ENCRYPTOR, game_state, row = row):
             return
           
+        row = 10
+        destructors = [11, 12, 14, 15, 16, 17, 18, 19, 21] # Right first, Left second; We attack Left first, Right second
+        if not self.build_defences_adv(destructors, DESTRUCTOR, game_state, row = row):
+            return  
+          
+        row = 10
+        encryps = [13, 16, 20, 22] # Right first, Left second; We attack Left first, Right second
+        if not self.build_defences_adv(encryps, ENCRYPTOR, game_state, row = row):
+            return
+          
         """
         OLD CODES
         # Place destructors that attack enemy units
