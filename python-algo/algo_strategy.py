@@ -118,7 +118,7 @@ class AlgoStrategy(gamelib.AlgoCore):
                 game_state._player_resources[0]['cores'] -= game_state.type_cost(firewall)
             elif not game_state.contains_stationary_unit(location):
                 return False
-        retirn True
+        return True
     
     def build_defences(self, game_state):
         """
