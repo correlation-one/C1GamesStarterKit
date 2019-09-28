@@ -6,8 +6,10 @@ from .util import send_command, debug_write
 from .unit import GameUnit
 from .game_map import GameMap
 
+
 def is_stationary(unit_type):
     return unit_type in FIREWALL_TYPES
+
 
 class GameState:
     """Represents the entire gamestate for a given turn
@@ -79,8 +81,8 @@ class GameState:
         self._build_stack = []
         self._deploy_stack = []
         self._player_resources = [
-                {'cores': 0, 'bits': 0},  # player 0, which is you
-                {'cores': 0, 'bits': 0}]  # player 1, which is the opponent
+            {'cores': 0, 'bits': 0},  # player 0, which is you
+            {'cores': 0, 'bits': 0}]  # player 1, which is the opponent
         self.__parse_state(serialized_string)
 
     def __parse_state(self, state_line):
@@ -125,11 +127,11 @@ class GameState:
                 # This depends on RM always being the last type to be processed
                 if unit_type == REMOVE:
                     # Quick fix will deploy engine fix soon
-                    if self.contains_stationary_unit([x,y]):
-                        self.game_map[x,y][0].pending_removal = True
+                    if self.contains_stationary_unit([x, y]):
+                        self.game_map[x, y][0].pending_removal = True
                 else:
                     unit = GameUnit(unit_type, self.config, player_number, hp, x, y)
-                    self.game_map[x,y].append(unit)
+                    self.game_map[x, y].append(unit)
 
     def __resource_required(self, unit_type):
         return self.CORES if is_stationary(unit_type) else self.BITS
@@ -147,8 +149,10 @@ class GameState:
         self._player_resources[player_index][resource_key] = held_resource + amount
 
     def _invalid_player_index(self, index):
-        self.warn("Invalid player index {} passed, player index should always be 0 (yourself) or 1 (your opponent)".format(index))
-    
+        self.warn(
+            "Invalid player index {} passed, player index should always be 0 (yourself) or 1 (your opponent)".format(
+                index))
+
     def _invalid_unit(self, unit):
         self.warn("Invalid unit {}".format(unit))
 
@@ -162,7 +166,7 @@ class GameState:
         send_command(build_string)
         send_command(deploy_string)
 
-    def get_resource(self, resource_type, player_index = 0):
+    def get_resource(self, resource_type, player_index=0):
         """Gets a players resources
 
         Args:
@@ -177,7 +181,8 @@ class GameState:
             self._invalid_player_index(player_index)
             return
         if not resource_type == self.BITS and not resource_type == self.CORES:
-            self.warn("Invalid resource_type '{}'. Please use game_state.BITS or game_state.CORES".format(resource_type))
+            self.warn(
+                "Invalid resource_type '{}'. Please use game_state.BITS or game_state.CORES".format(resource_type))
             return
 
         if resource_type == self.BITS:
@@ -220,7 +225,8 @@ class GameState:
         """
 
         if turns_in_future < 1 or turns_in_future > 99:
-            self.warn("Invalid turns in future used ({}). Turns in future should be between 1 and 99".format(turns_in_future))
+            self.warn(
+                "Invalid turns in future used ({}). Turns in future should be between 1 and 99".format(turns_in_future))
         if not player_index == 1 and not player_index == 0:
             self._invalid_player_index(player_index)
         if type(current_bits) == int and current_bits < 0:
@@ -230,7 +236,8 @@ class GameState:
         for increment in range(1, turns_in_future + 1):
             current_turn = self.turn_number + increment
             bits *= (1 - self.config["resources"]["bitDecayPerRound"])
-            bits_gained = self.config["resources"]["bitsPerRound"] + (self.config["resources"]["bitGrowthRate"] * (current_turn // self.config["resources"]["turnIntervalForBitSchedule"]))
+            bits_gained = self.config["resources"]["bitsPerRound"] + (self.config["resources"]["bitGrowthRate"] * (
+                        current_turn // self.config["resources"]["turnIntervalForBitSchedule"]))
             bits += bits_gained
             bits = round(bits, 1)
         return bits
@@ -271,7 +278,7 @@ class GameState:
         if unit_type not in ALL_UNITS:
             self._invalid_unit(unit_type)
             return
-        
+
         if not self.game_map.in_arena_bounds(location):
             if self.enable_warnings:
                 self.warn("Could not spawn {} at location {}. Location invalid.".format(unit_type, location))
@@ -279,9 +286,12 @@ class GameState:
 
         affordable = self.number_affordable(unit_type) >= num
         stationary = is_stationary(unit_type)
-        blocked = self.contains_stationary_unit(location) or (stationary and len(self.game_map[location[0],location[1]]) > 0)
+        blocked = self.contains_stationary_unit(location) or (
+                    stationary and len(self.game_map[location[0], location[1]]) > 0)
         correct_territory = location[1] < self.HALF_ARENA
-        on_edge = location in (self.game_map.get_edge_locations(self.game_map.BOTTOM_LEFT) + self.game_map.get_edge_locations(self.game_map.BOTTOM_RIGHT))
+        on_edge = location in (
+                    self.game_map.get_edge_locations(self.game_map.BOTTOM_LEFT) + self.game_map.get_edge_locations(
+                self.game_map.BOTTOM_RIGHT))
 
         if self.enable_warnings:
             fail_reason = ""
@@ -318,7 +328,7 @@ class GameState:
         if num < 1:
             self.warn("Attempted to spawn fewer than one units! ({})".format(num))
             return
-      
+
         if type(locations[0]) == int:
             locations = [locations]
         spawned_units = 0
@@ -356,14 +366,15 @@ class GameState:
                 self._build_stack.append((REMOVE, x, y))
                 removed_units += 1
             else:
-                self.warn("Could not remove a unit from {}. Location has no firewall or is enemy territory.".format(location))
+                self.warn(
+                    "Could not remove a unit from {}. Location has no firewall or is enemy territory.".format(location))
         return removed_units
 
     def get_target_edge(self, start_location):
         left = start_location[0] < self.HALF_ARENA
         bottom = start_location[1] < self.HALF_ARENA
-        right = not(left)
-        top = not(bottom)
+        right = not (left)
+        top = not (bottom)
         if left and bottom:
             return self.game_map.TOP_RIGHT
         elif left and top:
@@ -409,13 +420,13 @@ class GameState:
             self.warn('Checked for stationary unit outside of arena bounds')
             return False
         x, y = map(int, location)
-        for unit in self.game_map[x,y]:
+        for unit in self.game_map[x, y]:
             if unit.stationary:
                 return unit
         return False
 
     def warn(self, message):
-        if(self.enable_warnings):
+        if (self.enable_warnings):
             debug_write(message)
 
     def suppress_warnings(self, suppress):
@@ -462,7 +473,8 @@ class GameState:
                 """
                 NOTE: scrambler units cannot attack firewalls so skip them if unit is firewall
                 """
-                if unit.player_index == attacking_unit.player_index or (attacking_unit.unit_type == SCRAMBLER and is_stationary(unit.unit_type)):
+                if unit.player_index == attacking_unit.player_index or (
+                        attacking_unit.unit_type == SCRAMBLER and is_stationary(unit.unit_type)):
                     continue
 
                 new_target = False
@@ -476,7 +488,7 @@ class GameState:
                     new_target = True
                 elif not target_stationary and unit_stationary:
                     continue
-                
+
                 if target_distance > unit_distance:
                     new_target = True
                 elif target_distance < unit_distance and not new_target:
@@ -501,7 +513,7 @@ class GameState:
 
                 if target_x_distance < unit_x_distance:
                     new_target = True
-                
+
                 if new_target:
                     target = unit
                     target_stationary = unit_stationary
@@ -532,7 +544,8 @@ class GameState:
         """
         Get locations in the range of DESTRUCTOR units
         """
-        possible_locations= self.game_map.get_locations_in_range(location, self.config["unitInformation"][UNIT_TYPE_TO_INDEX[DESTRUCTOR]]["range"])
+        possible_locations = self.game_map.get_locations_in_range(location, self.config["unitInformation"][
+            UNIT_TYPE_TO_INDEX[DESTRUCTOR]]["range"])
         for location in possible_locations:
             for unit in self.game_map[location]:
                 if unit.unit_type == DESTRUCTOR and unit.player_index != player_index:

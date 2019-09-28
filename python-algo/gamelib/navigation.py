@@ -4,6 +4,7 @@ import sys
 import queue
 from .util import debug_write
 
+
 class Node:
     """A pathfinding node
 
@@ -14,17 +15,21 @@ class Node:
         * pathlength: The distance between this node and the target location
 
     """
+
     def __init__(self):
         self.visited_idealness = False
         self.visited_validate = False
         self.blocked = False
         self.pathlength = -1
 
+
 """
 This class helps with pathfinding. We guarantee the results will
 be accurate, but top players may want to write their own pathfinding
 code to maximise time efficiency
 """
+
+
 class ShortestPathFinder:
     """Handles pathfinding
 
@@ -36,6 +41,7 @@ class ShortestPathFinder:
         * game_map (:obj: GameMap): The current gamemap
 
     """
+
     def __init__(self):
         self.HORIZONTAL = 1
         self.VERTICAL = 2
@@ -47,7 +53,7 @@ class ShortestPathFinder:
         Args:
             * game_state: A GameState object representing the gamestate we want to 
         """
-        #Initialize map 
+        # Initialize map 
         self.initialized = True
         self.game_state = game_state
         self.game_map = [[Node() for x in range(self.game_state.ARENA_SIZE)] for y in range(self.game_state.ARENA_SIZE)]
@@ -68,13 +74,13 @@ class ShortestPathFinder:
         if game_state.contains_stationary_unit(start_point):
             return
 
-        #Initialize map 
+        # Initialize map 
         self.initialize_map(game_state)
-        #Fill in walls
+        # Fill in walls
         for location in self.game_state.game_map:
             if self.game_state.contains_stationary_unit(location):
                 self.game_map[location[0]][location[1]].blocked = True
-        #Do pathfinding
+        # Do pathfinding
         ideal_endpoints = self._idealness_search(start_point, end_points)
         self._validate(ideal_endpoints, end_points)
         return self._get_path(start_point, end_points)
@@ -93,7 +99,8 @@ class ShortestPathFinder:
         while not current.empty():
             search_location = current.get()
             for neighbor in self._get_neighbors(search_location):
-                if not self.game_state.game_map.in_arena_bounds(neighbor) or self.game_map[neighbor[0]][neighbor[1]].blocked:
+                if not self.game_state.game_map.in_arena_bounds(neighbor) or self.game_map[neighbor[0]][
+                    neighbor[1]].blocked:
                     continue
 
                 x, y = neighbor
@@ -129,7 +136,7 @@ class ShortestPathFinder:
         x, y = point
         direction = [1, 1]
         if x < self.game_state.HALF_ARENA:
-           direction[0] = -1
+            direction[0] = -1
         if y < self.game_state.HALF_ARENA:
             direction[1] = -1
         return direction
@@ -149,11 +156,11 @@ class ShortestPathFinder:
         idealness = 0
         if direction[1] == 1:
             idealness += 28 * location[1]
-        else: 
+        else:
             idealness += 28 * (27 - location[1])
         if direction[0] == 1:
             idealness += location[0]
-        else: 
+        else:
             idealness += (27 - location[0])
 
         return idealness
@@ -162,26 +169,27 @@ class ShortestPathFinder:
         """Breadth first search of the grid, setting the pathlengths of each node
 
         """
-        #VALDIATION
-        #Add our most ideal tiles to current
+        # VALDIATION
+        # Add our most ideal tiles to current
         current = queue.Queue()
         if ideal_tile in end_points:
             for location in end_points:
-               current.put(location)
-               #Set current pathlength to 0
-               self.game_map[location[0]][location[1]].pathlength = 0
-               self.game_map[location[0]][location[1]].visited_validate = True
+                current.put(location)
+                # Set current pathlength to 0
+                self.game_map[location[0]][location[1]].pathlength = 0
+                self.game_map[location[0]][location[1]].visited_validate = True
         else:
             current.put(ideal_tile)
             self.game_map[ideal_tile[0]][ideal_tile[1]].pathlength = 0
             self.game_map[ideal_tile[0]][ideal_tile[1]].visited_validate = True
 
-        #While current is not empty
+        # While current is not empty
         while not current.empty():
             current_location = current.get()
             current_node = self.game_map[current_location[0]][current_location[1]]
             for neighbor in self._get_neighbors(current_location):
-                if not self.game_state.game_map.in_arena_bounds(neighbor) or self.game_map[neighbor[0]][neighbor[1]].blocked:
+                if not self.game_state.game_map.in_arena_bounds(neighbor) or self.game_map[neighbor[0]][
+                    neighbor[1]].blocked:
                     continue
 
                 neighbor_node = self.game_map[neighbor[0]][neighbor[1]]
@@ -190,23 +198,23 @@ class ShortestPathFinder:
                     neighbor_node.visited_validate = True
                     current.put(neighbor)
 
-        #debug_write("Print after validate")
-        #self.print_map()
+        # debug_write("Print after validate")
+        # self.print_map()
         return
 
     def _get_path(self, start_point, end_points):
         """Once all nodes are validated, and a target is found, the unit can path to its target
 
         """
-        #GET THE PATH
+        # GET THE PATH
         path = [start_point]
         current = start_point
         move_direction = 0
 
         while not self.game_map[current[0]][current[1]].pathlength == 0:
-            #debug_write("current tile {} has cost {}".format(current, self.game_map[current[0]][current[1]].pathlength))
+            # debug_write("current tile {} has cost {}".format(current, self.game_map[current[0]][current[1]].pathlength))
             next_move = self._choose_next_move(current, move_direction, end_points)
-            #debug_write(next_move)
+            # debug_write(next_move)
 
             if current[0] == next_move[0]:
                 move_direction = self.VERTICAL
@@ -214,77 +222,83 @@ class ShortestPathFinder:
                 move_direction = self.HORIZONTAL
             path.append(next_move)
             current = next_move
-        
-        #debug_write(path)
+
+        # debug_write(path)
         return path
-  
+
     def _choose_next_move(self, current_point, previous_move_direction, end_points):
         """Given the current location and adjacent locations, return the best 'next step' for a given unit to take
         """
         neighbors = self._get_neighbors(current_point)
-        #debug_write("Unit at {} previously moved {} and has these neighbors {}".format(current_point, previous_move_direction, neighbors))
+        # debug_write("Unit at {} previously moved {} and has these neighbors {}".format(current_point, previous_move_direction, neighbors))
 
         ideal_neighbor = current_point
         best_pathlength = self.game_map[current_point[0]][current_point[1]].pathlength
         for neighbor in neighbors:
-            #debug_write("Comparing champ {} and contender {}".format(ideal_neighbor, neighbor))
-            if not self.game_state.game_map.in_arena_bounds(neighbor) or self.game_map[neighbor[0]][neighbor[1]].blocked:
+            # debug_write("Comparing champ {} and contender {}".format(ideal_neighbor, neighbor))
+            if not self.game_state.game_map.in_arena_bounds(neighbor) or self.game_map[neighbor[0]][
+                neighbor[1]].blocked:
                 continue
 
             new_best = False
             x, y = neighbor
             current_pathlength = self.game_map[x][y].pathlength
 
-            #Filter by pathlength
+            # Filter by pathlength
             if current_pathlength > best_pathlength:
                 continue
             elif current_pathlength < best_pathlength:
-                #debug_write("Contender has better pathlength at {} vs champs {}".format(current_pathlength, best_pathlength))
+                # debug_write("Contender has better pathlength at {} vs champs {}".format(current_pathlength, best_pathlength))
                 new_best = True
 
-            #Filter by direction based on prev move
-            if not new_best and not self._better_direction(current_point, neighbor, ideal_neighbor, previous_move_direction, end_points):
+            # Filter by direction based on prev move
+            if not new_best and not self._better_direction(current_point, neighbor, ideal_neighbor,
+                                                           previous_move_direction, end_points):
                 continue
 
             ideal_neighbor = neighbor
             best_pathlength = current_pathlength
 
-        #debug_write("Gave unit at {} new tile {}".format(current_point, ideal_neighbor))
+        # debug_write("Gave unit at {} new tile {}".format(current_point, ideal_neighbor))
         return ideal_neighbor
 
     def _better_direction(self, prev_tile, new_tile, prev_best, previous_move_direction, end_points):
         """Compare two tiles and return True if the unit would rather move to the new one
 
         """
-        #True if we are moving in a different direction than prev move and prev is not
-        #If we previously moved horizontal, and now one of our options has a different x position then the other (the two options are not up/down)
+        # True if we are moving in a different direction than prev move and prev is not
+        # If we previously moved horizontal, and now one of our options has a different x position then the other (the two options are not up/down)
         if previous_move_direction == self.HORIZONTAL and not new_tile[0] == prev_best[0]:
-            #We want to go up now. If we have not changed our y, we are not going up
+            # We want to go up now. If we have not changed our y, we are not going up
             if prev_tile[1] == new_tile[1]:
-                return False 
+                return False
             return True
         if previous_move_direction == self.VERTICAL and not new_tile[1] == prev_best[1]:
             if prev_tile[0] == new_tile[0]:
-                #debug_write("contender {} has the same x coord as prev tile {} so we will keep best move {}".format(new_tile, prev_tile, prev_best))
+                # debug_write("contender {} has the same x coord as prev tile {} so we will keep best move {}".format(new_tile, prev_tile, prev_best))
                 return False
             return True
-        if previous_move_direction == 0: 
-            if prev_tile[1] == new_tile[1]: 
+        if previous_move_direction == 0:
+            if prev_tile[1] == new_tile[1]:
                 return False
             return True
-        
-        #To make it here, both moves are on the same axis 
+
+        # To make it here, both moves are on the same axis 
         direction = self._get_direction_from_endpoints(end_points)
-        if new_tile[1] == prev_best[1]: #If they both moved horizontal...
-            if direction[0] == 1 and new_tile[0] > prev_best[0]: #If we moved right and right is our direction, we moved towards our direction
-                return True 
-            if direction[0] == -1 and new_tile[0] < prev_best[0]: #If we moved left and left is our direction, we moved towards our direction
-                return True 
-            return False 
-        if new_tile[0] == prev_best[0]: #If they both moved vertical...
-            if direction[1] == 1 and new_tile[1] > prev_best[1]: #If we moved up and up is our direction, we moved towards our direction
+        if new_tile[1] == prev_best[1]:  # If they both moved horizontal...
+            if direction[0] == 1 and new_tile[0] > prev_best[
+                0]:  # If we moved right and right is our direction, we moved towards our direction
                 return True
-            if direction[1] == -1 and new_tile[1] < prev_best[1]: #If we moved down and down is our direction, we moved towards our direction
+            if direction[0] == -1 and new_tile[0] < prev_best[
+                0]:  # If we moved left and left is our direction, we moved towards our direction
+                return True
+            return False
+        if new_tile[0] == prev_best[0]:  # If they both moved vertical...
+            if direction[1] == 1 and new_tile[1] > prev_best[
+                1]:  # If we moved up and up is our direction, we moved towards our direction
+                return True
+            if direction[1] == -1 and new_tile[1] < prev_best[
+                1]:  # If we moved down and down is our direction, we moved towards our direction
                 return True
             return False
         return True
@@ -294,7 +308,8 @@ class ShortestPathFinder:
 
         """
         if not self.initialized:
-            debug_write("Attempted to print_map before pathfinder initialization. Use 'this_object.initialize_map(game_state)' to initialize the map first")
+            debug_write(
+                "Attempted to print_map before pathfinder initialization. Use 'this_object.initialize_map(game_state)' to initialize the map first")
             return
 
         for y in range(28):

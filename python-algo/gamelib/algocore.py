@@ -3,6 +3,7 @@ import json
 from .game_state import GameState
 from .util import get_command, debug_write, BANNER_TEXT, send_command
 
+
 class AlgoCore(object):
     """This class handles communication with the game itself. Your strategy should subclass it.
 
@@ -10,6 +11,7 @@ class AlgoCore(object):
         * config (JSON): json object containing information about the game
 
     """
+
     def __init__(self):
         self.config = None
 
@@ -26,7 +28,7 @@ class AlgoCore(object):
         the current game state, which can be used to initialize a new GameMap
         """
         self.submit_default_turn()
-    
+
     def on_action_frame(self, turn_string):
         """
         This function is called every action frame and is passed a string containing

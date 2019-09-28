@@ -9,4 +9,3 @@ from .unit import GameUnit
 from .game_map import GameMap
 
 __all__ = ["algocore", "game_state", "game_map", "navigation", "unit", "util"]
- 

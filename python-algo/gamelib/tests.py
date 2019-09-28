@@ -4,6 +4,7 @@ from .game_state import GameState
 from .unit import GameUnit
 from .advanced_game_state import AdvancedGameState
 
+
 class BasicTests(unittest.TestCase):
 
     def make_turn_0_map(self, adv=False):
@@ -128,7 +129,7 @@ class BasicTests(unittest.TestCase):
         }
         """
         turn_0 = """{"p2Units":[[],[],[],[],[],[],[]],"turnInfo":[0,0,-1],"p1Stats":[30.0,25.0,5.0,0],"p1Units":[[],[],[],[],[],[],[]],"p2Stats":[30.0,25.0,5.0,0],"events":{"selfDestruct":[],"breach":[],"damage":[],"shield":[],"move":[],"spawn":[],"death":[],"attack":[],"melee":[]}}"""
-        
+
         state = GameState(json.loads(config), turn_0)
         if adv:
             state = AdvancedGameState(json.loads(config), turn_0)
@@ -159,61 +160,70 @@ class BasicTests(unittest.TestCase):
     def test_spawning(self, adv=False):
         game = self.make_turn_0_map(adv)
         self.assertEqual(True, game.attempt_spawn("SI", [[13, 0]]), "We cannot spawn a soldier!")
-        self.assertEqual(False, game.attempt_spawn("SI", [[13, 13]]), "We can spawn a soldier in the middle of the map?!?!")
+        self.assertEqual(False, game.attempt_spawn("SI", [[13, 13]]),
+                         "We can spawn a soldier in the middle of the map?!?!")
         self.assertEqual(False, game.can_spawn("FF", [14, 14]), "Apparently I can place towers on my opponent's side")
         self.assertEqual(True, game.attempt_spawn("DF", [[13, 6]]), "We cannot spawn a tower!")
-        self.assertEqual(2, game.attempt_spawn("SI", [[13, 0], [13, 0], [13, 5]]), "More or less than 2 units were spawned!")
+        self.assertEqual(2, game.attempt_spawn("SI", [[13, 0], [13, 0], [13, 5]]),
+                         "More or less than 2 units were spawned!")
         self.assertEqual([("DF", 13, 6)], game._build_stack, "Build queue is wrong!")
         self.assertEqual([("SI", 13, 0), ("SI", 13, 0), ("SI", 13, 0)], game._deploy_stack, "Deploy queue is wrong!")
 
     def test_trivial_functions(self, adv=False):
         game = self.make_turn_0_map(adv)
 
-        #Distance Between locations
-        self.assertEqual(1, game.game_map.distance_between_locations([0, 0], [0,-1]), "The distance between 0,0 and 0,-1 should be 1")
-        self.assertEqual(1, game.game_map.distance_between_locations([-1, -1], [-2,-1]), "The distance between -1,-1 and -2,-1 should be 1")
-        self.assertEqual(5, game.game_map.distance_between_locations([0, 0], [4, 3]), "The distance between 0,0 and 16,9 should be 5")
-        self.assertEqual(0, len(game.game_map.get_locations_in_range([-500,-500], 10)), "Invalid tiles are being marked as in range")
-        self.assertEqual(1, len(game.game_map.get_locations_in_range([13,13], 0)), "A location should be in range of itself")
-    
+        # Distance Between locations
+        self.assertEqual(1, game.game_map.distance_between_locations([0, 0], [0, -1]),
+                         "The distance between 0,0 and 0,-1 should be 1")
+        self.assertEqual(1, game.game_map.distance_between_locations([-1, -1], [-2, -1]),
+                         "The distance between -1,-1 and -2,-1 should be 1")
+        self.assertEqual(5, game.game_map.distance_between_locations([0, 0], [4, 3]),
+                         "The distance between 0,0 and 16,9 should be 5")
+        self.assertEqual(0, len(game.game_map.get_locations_in_range([-500, -500], 10)),
+                         "Invalid tiles are being marked as in range")
+        self.assertEqual(1, len(game.game_map.get_locations_in_range([13, 13], 0)),
+                         "A location should be in range of itself")
+
     def test_get_units(self, adv=False):
         game = self.make_turn_0_map(adv)
-        self.assertEqual(0, len(game.game_map[13,13]), "There should not be a unit on this location")
+        self.assertEqual(0, len(game.game_map[13, 13]), "There should not be a unit on this location")
         for _ in range(3):
-            game.game_map.add_unit("EI", [13,13])
-        self.assertEqual(3, len(game.game_map[13,13]), "Information seems not to be stacking")
+            game.game_map.add_unit("EI", [13, 13])
+        self.assertEqual(3, len(game.game_map[13, 13]), "Information seems not to be stacking")
         for _ in range(3):
-            game.game_map.add_unit("FF", [13,13])
-        self.assertEqual(1, len(game.game_map[13,13]), "Towers seem to be stacking")
-        
+            game.game_map.add_unit("FF", [13, 13])
+        self.assertEqual(1, len(game.game_map[13, 13]), "Towers seem to be stacking")
+
     def test_get_units_in_range(self, adv=False):
         game = self.make_turn_0_map(adv)
-        self.assertEqual(1, len(game.game_map.get_locations_in_range([13,13], 0)), "We should be in 0 range of ourself")
-        self.assertEqual(37, len(game.game_map.get_locations_in_range([13,13], 3)), "Wrong number of tiles in range")
+        self.assertEqual(1, len(game.game_map.get_locations_in_range([13, 13], 0)),
+                         "We should be in 0 range of ourself")
+        self.assertEqual(37, len(game.game_map.get_locations_in_range([13, 13], 3)), "Wrong number of tiles in range")
 
     def _test_get_attackers(self):
         game = self.make_turn_0_map(True)
-        
-        self.assertEqual([], game.get_attackers([13,13], 0), "Are we being attacked by a ghost?")
-        game.game_map.add_unit("DF", [12,12], 0)
-        self.assertEqual([], game.get_attackers([13,13], 0), "Are we being attacked by a friend?")
-        game.game_map.add_unit("EF", [13,12], 1)
-        self.assertEqual([], game.get_attackers([13,13], 0), "Are we being attacked by an encryptor?")
-        game.game_map.add_unit("FF", [14,12], 1)
-        self.assertEqual([], game.get_attackers([13,13], 0), "Are we being attacked by a filter?")
-        game.game_map.add_unit("DF", [12,14], 1)
-        self.assertEqual(1, len(game.get_attackers([13,13], 0)), "We should be in danger")
-        game.game_map.add_unit("DF", [13,14], 1)
-        game.game_map.add_unit("DF", [14,14], 1)
-        self.assertEqual(3, len(game.get_attackers([13,13], 0)), "We should be in danger from 3 places")
+
+        self.assertEqual([], game.get_attackers([13, 13], 0), "Are we being attacked by a ghost?")
+        game.game_map.add_unit("DF", [12, 12], 0)
+        self.assertEqual([], game.get_attackers([13, 13], 0), "Are we being attacked by a friend?")
+        game.game_map.add_unit("EF", [13, 12], 1)
+        self.assertEqual([], game.get_attackers([13, 13], 0), "Are we being attacked by an encryptor?")
+        game.game_map.add_unit("FF", [14, 12], 1)
+        self.assertEqual([], game.get_attackers([13, 13], 0), "Are we being attacked by a filter?")
+        game.game_map.add_unit("DF", [12, 14], 1)
+        self.assertEqual(1, len(game.get_attackers([13, 13], 0)), "We should be in danger")
+        game.game_map.add_unit("DF", [13, 14], 1)
+        game.game_map.add_unit("DF", [14, 14], 1)
+        self.assertEqual(3, len(game.get_attackers([13, 13], 0)), "We should be in danger from 3 places")
 
     def test_print_unit(self, adv=False):
         game = self.make_turn_0_map(adv)
 
-        game.game_map.add_unit("FF", [14,13], 1)
-        got_string = str(game.game_map[14,13][0])
+        game.game_map.add_unit("FF", [14, 13], 1)
+        got_string = str(game.game_map[14, 13][0])
         expected_string = "Enemy FF, stability: 60.0 location: [14, 13] "
-        self.assertEqual(got_string, expected_string, "Expected {} from print_unit test got {} ".format(expected_string, got_string))
+        self.assertEqual(got_string, expected_string,
+                         "Expected {} from print_unit test got {} ".format(expected_string, got_string))
 
     def test_future_bits(self, adv=False):
         game = self.make_turn_0_map(adv)
@@ -241,5 +251,5 @@ class BasicTests(unittest.TestCase):
 
     def future_turn_testing_function(self, game, expected, turns):
         actual = game.project_future_bits(turns)
-        self.assertAlmostEqual(actual, expected, 0, "Expected {} power {} turns from now, got {}".format(expected, turns, actual))
-
+        self.assertAlmostEqual(actual, expected, 0,
+                               "Expected {} power {} turns from now, got {}".format(expected, turns, actual))

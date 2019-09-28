@@ -1,6 +1,7 @@
 def is_stationary(unit_type, firewall_types):
     return unit_type in firewall_types
 
+
 class GameUnit:
     """Holds information about a Unit. 
 
@@ -21,6 +22,7 @@ class GameUnit:
         * cost (int): The resource cost of this unit
 
     """
+
     def __init__(self, unit_type, config, player_index=None, stability=None, x=-1, y=-1):
         """ Initialize unit variables using args passed
 
@@ -55,11 +57,11 @@ class GameUnit:
     def __toString(self):
         owner = "Friendly" if self.player_index == 0 else "Enemy"
         removal = ", pending removal" if self.pending_removal else ""
-        return "{} {}, stability: {} location: {}{} ".format(owner, self.unit_type, self.stability, [self.x, self.y], removal)
+        return "{} {}, stability: {} location: {}{} ".format(owner, self.unit_type, self.stability, [self.x, self.y],
+                                                             removal)
 
     def __str__(self):
         return self.__toString()
 
     def __repr__(self):
         return self.__toString()
-
