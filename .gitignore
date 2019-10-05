@@ -1,12 +1,32 @@
-*.DS_Store*
-*.replay
-*__pycache__*
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+.vscode
 
-algos/*
-!algos/starter-algo-ZIPME
+# Icon must end with two \r
+Icon
 
-dist/*
-!dist/.gitkeep
 
-*.zip
-*/.idea/*
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Python caches
+__pycache__
+.ipynb_checkpoints
