@@ -101,7 +101,7 @@ class AlgoStrategy(gamelib.AlgoCore):
         game_state.attempt_spawn(DESTRUCTOR, self.front_def)
 
     def build_maze(self, game_state):
-        game_state.attempt_spawn(ENCRYPTOR, self.front_filters)
+        game_state.attempt_spawn(ENCRYPTOR, self.maze_encryptors)
 
         if self.maze_switch: 
             if self.maze_on_L:
