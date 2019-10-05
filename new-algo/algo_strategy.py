@@ -45,8 +45,11 @@ class AlgoStrategy(gamelib.AlgoCore):
 
         self.front_filters = [[0, 13], [1, 13], [26, 13], [27, 13], [3, 12], [24, 12], [5, 11], [22, 11]]
         self.maze_encryptors = [[8, 8], [9, 8], [10, 8], [11, 8], [12, 8], [13, 8], [14, 8], [15, 8], [16, 8], [17, 8], [18, 8], [19, 8], [7, 6], [9, 6], [10, 6], [11, 6], [12, 6], [13, 6], [14, 6], [15, 6], [16, 6], [17, 6], [18, 6], [20, 6], [10, 5], [11, 5], [12, 5], [13, 5], [14, 5], [15, 5], [16, 5], [17, 5], [10, 3], [12, 3], [13, 3], [14, 3], [15, 3], [17, 3], [13, 2], [14, 2]]
+        self.maze_init
         self.mazeL = [[7, 7], [17, 4], [12, 1]]
         self.mazeR = [[20, 7], [10, 4], [15, 1]]
+        self.maze_switch = False
+        self.maze_on_L = True
         self.orange_destructors_points = [[5, 10], [6, 10], [7, 10], [8, 10], [9, 10], [18, 10], [19, 10], [20, 10], [21, 10], [22, 10]]
         # extended front line?
         self.orange_filters_points = [[7, 11], [9, 11], [18, 11], [20, 11]]
@@ -98,13 +101,33 @@ class AlgoStrategy(gamelib.AlgoCore):
         game_state.attempt_spawn(DESTRUCTOR, self.front_def)
 
     def build_maze(self, game_state):
-        if game_state.get_resource(game_state.BITS) >= game_state.type_cost(SCRAMBLER):
-            return
+        game_state.attempt_spawn(ENCRYPTOR, self.front_filters)
+
+        if self.maze_switch: 
+            if self.maze_on_L:
+                game_state.attempt_spawn(ENCRYPTOR, self.mazeL)
+            else:
+                game_state.attempt_spawn(ENCRYPTOR, self.mazeR)
+            self.maze_on_L = not self.maze_on_L 
+            self.maze_switch = False
+        else: 
+            # Randomly decide whether or not to change maze configuration 
+            self.maze_switch = bool(random.getrandbits(1))
+            if self.maze_switch: 
+                if self.maze_on_L:
+                    game_state.attempt_remove(self.mazeR)
+                else:
+                    game_state.attempt_remove(self.mazeL)
+            else:
+                if self.maze_on_L:
+                    game_state.attempt_spawn(ENCRYPTOR, self.mazeR)
+                else:
+                    game_state.attempt_spawn(ENCRYPTOR, self.mazeL)
 
     def boost_def(self, game_state):
-        if game_state.get_resource(game_state.BITS) >= game_state.type_cost(SCRAMBLER):
-            return
-
+        game_state.attempt_spawn(DESTRUCTOR, self.orange_destructors_points[:2:] + self.orange_destructors_points[-2::])
+        game_state.attempt_spawn(FILTER, self.orange_filters_points)
+        game_state.attempt_spawn(DESTRUCTOR, self.orange_destructors_points)
     def scrambler_def(self, game_state):
         """
         Send out Scramblers at random locations to defend our base from enemy moving units.
