@@ -1,0 +1,388 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>gamelib.navigation &#8212; C1 Terminal Python Starterkit 1.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for gamelib.navigation</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">heapq</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">queue</span>
+<span class="kn">from</span> <span class="nn">.util</span> <span class="k">import</span> <span class="n">debug_write</span>
+
+<div class="viewcode-block" id="Node"><a class="viewcode-back" href="../../gamelib.html#gamelib.navigation.Node">[docs]</a><span class="k">class</span> <span class="nc">Node</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;A pathfinding node</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        * visited_idealness (bool): Have we visited this node during the idealness search step?</span>
+<span class="sd">        * visited_validate (bool): Have we visited this node during the validation step?</span>
+<span class="sd">        * blocked (bool): Is there a firewall at this node&#39;s location</span>
+<span class="sd">        * pathlength: The distance between this node and the target location</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">visited_idealness</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">visited_validate</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">blocked</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pathlength</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span></div>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This class helps with pathfinding. We guarentee the results will</span>
+<span class="sd">be accurate, but top players may want to write their own pathfinding</span>
+<span class="sd">code to maximise time efficiancy</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ShortestPathFinder"><a class="viewcode-back" href="../../gamelib.html#gamelib.navigation.ShortestPathFinder">[docs]</a><span class="k">class</span> <span class="nc">ShortestPathFinder</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Handles pathfinding</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        * HORIZONTAL (int): A constant representing a horizontal movement</span>
+<span class="sd">        * VERTICAL (int): A constant representing a vertical movement</span>
+
+<span class="sd">        * game_state (:obj: GameState): The current gamestate</span>
+<span class="sd">        * game_map (:obj: GameMap): The current gamemap</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">HORIZONTAL</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">VERTICAL</span> <span class="o">=</span> <span class="mi">2</span>
+
+<div class="viewcode-block" id="ShortestPathFinder.navigate_multiple_endpoints"><a class="viewcode-back" href="../../gamelib.html#gamelib.navigation.ShortestPathFinder.navigate_multiple_endpoints">[docs]</a>    <span class="k">def</span> <span class="nf">navigate_multiple_endpoints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_point</span><span class="p">,</span> <span class="n">end_points</span><span class="p">,</span> <span class="n">game_state</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Finds tha path a unit would take to reach a set of endpoints</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            * start_point: The starting location of the unit</span>
+<span class="sd">            * end_points: The end points of the unit, should be a list of edge locations</span>
+<span class="sd">            * game_state: The current game state</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The path a unit at start_point would take when trying to reach end_points given the current game state.</span>
+<span class="sd">            Note that this path can change if a tower is destroyed during pathing, or if you or your enemy places firewalls.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#Initialize map </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">=</span> <span class="n">game_state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">game_map</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Node</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game_state</span><span class="o">.</span><span class="n">ARENA_SIZE</span><span class="p">)]</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game_state</span><span class="o">.</span><span class="n">ARENA_SIZE</span><span class="p">)]</span>
+        <span class="c1">#Fill in walls</span>
+        <span class="k">for</span> <span class="n">location</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span><span class="o">.</span><span class="n">game_map</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span><span class="o">.</span><span class="n">contains_stationary_unit</span><span class="p">(</span><span class="n">location</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">game_map</span><span class="p">[</span><span class="n">location</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">location</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">blocked</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="c1">#Do pathfinding</span>
+        <span class="n">ideal_endpoints</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_idealness_search</span><span class="p">(</span><span class="n">start_point</span><span class="p">,</span> <span class="n">end_points</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="n">ideal_endpoints</span><span class="p">,</span> <span class="n">end_points</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_path</span><span class="p">(</span><span class="n">start_point</span><span class="p">,</span> <span class="n">end_points</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_idealness_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end_points</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Finds the most ideal tile in our &#39;pocket&#39; of pathable space. </span>
+<span class="sd">        The edge if it is available, or the best self destruct location otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+        <span class="n">current</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
+        <span class="n">best_idealness</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_idealness</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end_points</span><span class="p">)</span>
+        <span class="n">most_ideal</span> <span class="o">=</span> <span class="n">start</span>
+
+        <span class="k">while</span> <span class="ow">not</span> <span class="n">current</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
+            <span class="n">search_location</span> <span class="o">=</span> <span class="n">current</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">neighbor</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_neighbors</span><span class="p">(</span><span class="n">search_location</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span><span class="o">.</span><span class="n">game_map</span><span class="o">.</span><span class="n">in_arena_bounds</span><span class="p">(</span><span class="n">neighbor</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_map</span><span class="p">[</span><span class="n">neighbor</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">neighbor</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">blocked</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+                <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">neighbor</span>
+                <span class="n">current_idealness</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_idealness</span><span class="p">(</span><span class="n">neighbor</span><span class="p">,</span> <span class="n">end_points</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">current_idealness</span> <span class="o">&gt;</span> <span class="n">best_idealness</span><span class="p">:</span>
+                    <span class="n">best_idealness</span> <span class="o">=</span> <span class="n">current_idealness</span>
+                    <span class="n">most_ideal</span> <span class="o">=</span> <span class="n">neighbor</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_map</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span><span class="o">.</span><span class="n">visited_idealness</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_map</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span><span class="o">.</span><span class="n">blocked</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">game_map</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span><span class="o">.</span><span class="n">visited_idealness</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">current</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">neighbor</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">most_ideal</span>
+
+    <span class="k">def</span> <span class="nf">_get_neighbors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the locations adjacent to a location</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">location</span>
+        <span class="k">return</span> <span class="p">[[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="p">[</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">]]</span>
+
+    <span class="k">def</span> <span class="nf">_get_direction_from_endpoints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">end_points</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Prints a message to the games debug output</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            * end_points: A set of endpoints, should be an edge </span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A direction [x,y] representing the edge. For example, [1,1] for the top right and [-1, 1] for the top left</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">point</span> <span class="o">=</span> <span class="n">end_points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">point</span>
+        <span class="n">direction</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span><span class="o">.</span><span class="n">HALF_ARENA</span><span class="p">:</span>
+           <span class="n">direction</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">if</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span><span class="o">.</span><span class="n">HALF_ARENA</span><span class="p">:</span>
+            <span class="n">direction</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">return</span> <span class="n">direction</span>
+
+    <span class="k">def</span> <span class="nf">_get_idealness</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">end_points</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the idealness of a tile, the reachable tile the unit most wants to path to.</span>
+<span class="sd">        Better self destruct locations are more ideal. The endpoints are perfectly ideal. </span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A location the unit will attempt to reach</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">location</span> <span class="ow">in</span> <span class="n">end_points</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">sys</span><span class="o">.</span><span class="n">maxsize</span>
+
+        <span class="n">direction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_direction_from_endpoints</span><span class="p">(</span><span class="n">end_points</span><span class="p">)</span>
+
+        <span class="n">idealness</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">direction</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">idealness</span> <span class="o">+=</span> <span class="mi">28</span> <span class="o">*</span> <span class="n">location</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span> 
+            <span class="n">idealness</span> <span class="o">+=</span> <span class="mi">28</span> <span class="o">*</span> <span class="p">(</span><span class="mi">27</span> <span class="o">-</span> <span class="n">location</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">direction</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">idealness</span> <span class="o">+=</span> <span class="n">location</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span> 
+            <span class="n">idealness</span> <span class="o">+=</span> <span class="p">(</span><span class="mi">27</span> <span class="o">-</span> <span class="n">location</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">idealness</span>
+
+    <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ideal_tile</span><span class="p">,</span> <span class="n">end_points</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Breadth first search of the grid, setting the pathlengths of each node</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#VALDIATION</span>
+        <span class="c1">#Add our most ideal tiles to current</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">ideal_tile</span> <span class="ow">in</span> <span class="n">end_points</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">location</span> <span class="ow">in</span> <span class="n">end_points</span><span class="p">:</span>
+               <span class="n">current</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
+               <span class="c1">#Set current pathlength to 0</span>
+               <span class="bp">self</span><span class="o">.</span><span class="n">game_map</span><span class="p">[</span><span class="n">location</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">location</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">pathlength</span> <span class="o">=</span> <span class="mi">0</span>
+               <span class="bp">self</span><span class="o">.</span><span class="n">game_map</span><span class="p">[</span><span class="n">location</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">location</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">visited_validate</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">current</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">ideal_tile</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">game_map</span><span class="p">[</span><span class="n">ideal_tile</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">ideal_tile</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">pathlength</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">game_map</span><span class="p">[</span><span class="n">ideal_tile</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">ideal_tile</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">visited_validate</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1">#While current is not empty</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="n">current</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
+            <span class="n">current_location</span> <span class="o">=</span> <span class="n">current</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+            <span class="n">current_node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_map</span><span class="p">[</span><span class="n">current_location</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">current_location</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+            <span class="k">for</span> <span class="n">neighbor</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_neighbors</span><span class="p">(</span><span class="n">current_location</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span><span class="o">.</span><span class="n">game_map</span><span class="o">.</span><span class="n">in_arena_bounds</span><span class="p">(</span><span class="n">neighbor</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_map</span><span class="p">[</span><span class="n">neighbor</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">neighbor</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">blocked</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+                <span class="n">neighbor_node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_map</span><span class="p">[</span><span class="n">neighbor</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">neighbor</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">neighbor_node</span><span class="o">.</span><span class="n">visited_validate</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">current_node</span><span class="o">.</span><span class="n">blocked</span><span class="p">:</span>
+                    <span class="n">neighbor_node</span><span class="o">.</span><span class="n">pathlength</span> <span class="o">=</span> <span class="n">current_node</span><span class="o">.</span><span class="n">pathlength</span> <span class="o">+</span> <span class="mi">1</span>
+                    <span class="n">neighbor_node</span><span class="o">.</span><span class="n">visited_validate</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">current</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">neighbor</span><span class="p">)</span>
+
+        <span class="c1">#debug_write(&quot;Print after validate&quot;)</span>
+        <span class="c1">#self.print_map()</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="nf">_get_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_point</span><span class="p">,</span> <span class="n">end_points</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Once all nodes are validated, and a target is found, the unit can path to its target</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#GET THE PATH</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="p">[</span><span class="n">start_point</span><span class="p">]</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="n">start_point</span>
+        <span class="n">move_direction</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_map</span><span class="p">[</span><span class="n">current</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">current</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">pathlength</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1">#debug_write(&quot;current tile {} has cost {}&quot;.format(current, self.game_map[current[0]][current[1]].pathlength))</span>
+            <span class="n">next_move</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_choose_next_move</span><span class="p">(</span><span class="n">current</span><span class="p">,</span> <span class="n">move_direction</span><span class="p">,</span> <span class="n">end_points</span><span class="p">)</span>
+            <span class="c1">#debug_write(next_move)</span>
+
+            <span class="k">if</span> <span class="n">current</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">next_move</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">move_direction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">VERTICAL</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">move_direction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">HORIZONTAL</span>
+            <span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">next_move</span><span class="p">)</span>
+            <span class="n">current</span> <span class="o">=</span> <span class="n">next_move</span>
+        
+        <span class="n">debug_write</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">path</span>
+  
+    <span class="k">def</span> <span class="nf">_choose_next_move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_point</span><span class="p">,</span> <span class="n">previous_move_direction</span><span class="p">,</span> <span class="n">end_points</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Given the current location and adjacent locations, return the best &#39;next step&#39; for a given unit to take</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">neighbors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_neighbors</span><span class="p">(</span><span class="n">current_point</span><span class="p">)</span>
+        <span class="c1">#debug_write(&quot;Unit at {} previously moved {} and has these neighbors {}&quot;.format(current_point, previous_move_direction, neighbors))</span>
+
+        <span class="n">ideal_neighbor</span> <span class="o">=</span> <span class="n">current_point</span>
+        <span class="n">best_pathlength</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_map</span><span class="p">[</span><span class="n">current_point</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">current_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">pathlength</span>
+        <span class="k">for</span> <span class="n">neighbor</span> <span class="ow">in</span> <span class="n">neighbors</span><span class="p">:</span>
+            <span class="c1">#debug_write(&quot;Comparing champ {} and contender {}&quot;.format(ideal_neighbor, neighbor))</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span><span class="o">.</span><span class="n">game_map</span><span class="o">.</span><span class="n">in_arena_bounds</span><span class="p">(</span><span class="n">neighbor</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_map</span><span class="p">[</span><span class="n">neighbor</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">neighbor</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">blocked</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">new_best</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">neighbor</span>
+            <span class="n">current_pathlength</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_map</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span><span class="o">.</span><span class="n">pathlength</span>
+
+            <span class="c1">#Filter by pathlength</span>
+            <span class="k">if</span> <span class="n">current_pathlength</span> <span class="o">&gt;</span> <span class="n">best_pathlength</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">elif</span> <span class="n">current_pathlength</span> <span class="o">&lt;</span> <span class="n">best_pathlength</span><span class="p">:</span>
+                <span class="c1">#debug_write(&quot;Contender has better pathlength at {} vs champs {}&quot;.format(current_pathlength, best_pathlength))</span>
+                <span class="n">new_best</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="c1">#Filter by direction based on prev move</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">new_best</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_better_direction</span><span class="p">(</span><span class="n">current_point</span><span class="p">,</span> <span class="n">neighbor</span><span class="p">,</span> <span class="n">ideal_neighbor</span><span class="p">,</span> <span class="n">previous_move_direction</span><span class="p">,</span> <span class="n">end_points</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="n">ideal_neighbor</span> <span class="o">=</span> <span class="n">neighbor</span>
+            <span class="n">best_pathlength</span> <span class="o">=</span> <span class="n">current_pathlength</span>
+
+        <span class="c1">#debug_write(&quot;Gave unit at {} new tile {}&quot;.format(current_point, ideal_neighbor))</span>
+        <span class="k">return</span> <span class="n">ideal_neighbor</span>
+
+    <span class="k">def</span> <span class="nf">_better_direction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prev_tile</span><span class="p">,</span> <span class="n">new_tile</span><span class="p">,</span> <span class="n">prev_best</span><span class="p">,</span> <span class="n">previous_move_direction</span><span class="p">,</span> <span class="n">end_points</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compare two tiles and return True if the unit would rather move to the new one</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#True if we are moving in a different direction than prev move and prev is not</span>
+        <span class="c1">#If we previously moved horizontal, and now one of our options has a different x position then the other (the two options are not up/down)</span>
+        <span class="k">if</span> <span class="n">previous_move_direction</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">HORIZONTAL</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">new_tile</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">prev_best</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="c1">#We want to go up now. If we have not changed our y, we are not going up</span>
+            <span class="k">if</span> <span class="n">prev_tile</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">new_tile</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="k">return</span> <span class="kc">False</span> 
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">previous_move_direction</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">VERTICAL</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">new_tile</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">prev_best</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">prev_tile</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">new_tile</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="c1">#debug_write(&quot;contender {} has the same x coord as prev tile {} so we will keep best move {}&quot;.format(new_tile, prev_tile, prev_best))</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">previous_move_direction</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> 
+            <span class="k">if</span> <span class="n">prev_tile</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">new_tile</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> 
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        
+        <span class="c1">#To make it here, both moves are on the same axis </span>
+        <span class="n">direction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_direction_from_endpoints</span><span class="p">(</span><span class="n">end_points</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">new_tile</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">prev_best</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="c1">#If they both moved horizontal...</span>
+            <span class="k">if</span> <span class="n">direction</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">new_tile</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">prev_best</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="c1">#If we moved right and right is our direction, we moved towards our direction</span>
+                <span class="k">return</span> <span class="kc">True</span> 
+            <span class="k">return</span> <span class="kc">False</span> 
+        <span class="k">if</span> <span class="n">new_tile</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">prev_best</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="c1">#If they both moved vertical...</span>
+            <span class="k">if</span> <span class="n">direction</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">new_tile</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">prev_best</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="c1">#If we moved up and up is our direction, we moved towards our direction</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="ShortestPathFinder.print_map"><a class="viewcode-back" href="../../gamelib.html#gamelib.navigation.ShortestPathFinder.print_map">[docs]</a>    <span class="k">def</span> <span class="nf">print_map</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Prints an ASCII version of the current game map for debug purposes</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">28</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">28</span><span class="p">):</span>
+                <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_map</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="mi">28</span> <span class="o">-</span> <span class="n">y</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">node</span><span class="o">.</span><span class="n">blocked</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">node</span><span class="o">.</span><span class="n">pathlength</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_print_justified</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">pathlength</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;   &quot;</span><span class="p">)</span>
+            <span class="n">debug_write</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_print_justified</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Prints a number between 100 and -10 in 3 spaces</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">number</span> <span class="o">&lt;</span> <span class="mi">10</span> <span class="ow">and</span> <span class="n">number</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">number</span><span class="p">))</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">C1 Terminal Python Starterkit</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../gamelib.html">gamelib package</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Correlation One.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.8</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
