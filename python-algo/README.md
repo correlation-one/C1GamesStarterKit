@@ -7,7 +7,6 @@ starter-algo
  │
  ├──gamelib
  │   ├──__init__.py
- │   ├──advanced_game_state.py
  │   ├──algocore.py
  │   ├──game_map.py
  │   ├──game_state.py
@@ -55,10 +54,6 @@ This file tells python to treat `gamelib` as a bundled python module. This
 library of functions and classes is intended to simplify development by
 handling tedious tasks such as communication with the game engine, summarizing
 the latest turn, and estimating paths based on the latest board state.
-
-### `gamelib/advanced_game_state.py`
-
-This module contains the `AdvancedGameState` class. This file is a version of gamestate with access to a few more advanced functions.
 
 ### `gamelib/algocore.py`
 
