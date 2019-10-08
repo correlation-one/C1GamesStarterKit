@@ -1,6 +1,0 @@
-game_map
-=========================================================
-
-.. automodule:: gamelib.game_map
-    :members:
-
