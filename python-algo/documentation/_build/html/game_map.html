@@ -1,0 +1,342 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>game_map &#8212; C1 Terminal Python Starterkit 1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="game_state" href="game_state.html" />
+    <link rel="prev" title="Welcome to C1 Terminal Python Starterkit’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-gamelib.game_map">
+<span id="game-map"></span><h1>game_map<a class="headerlink" href="#module-gamelib.game_map" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="gamelib.game_map.GameMap">
+<em class="property">class </em><code class="descclassname">gamelib.game_map.</code><code class="descname">GameMap</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_map.GameMap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Holds data about the current game map and provides functions
+useful for getting information related to the map.</p>
+<p>game_map[x, y] will return a list of Units located at that location,
+or an empty list if there are no units at the location</p>
+<dl class="attribute">
+<dt>
+<code class="descname">* config</code></dt>
+<dd><p>Contains information about the game</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">JSON</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* ARENA_SIZE</code></dt>
+<dd><p>The size of the arena.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* HALF_ARENA</code></dt>
+<dd><p>Half of the size of the arena.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* TOP_RIGHT</code></dt>
+<dd><p>A constant that represents the top right edge</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* TOP_LEFT</code></dt>
+<dd><p>A constant that represents the top left edge</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* BOTTOM_LEFT</code></dt>
+<dd><p>Hidden challenge! Can you guess what this constant represents???</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* BOTTOM_RIGHT</code></dt>
+<dd><p>A constant that represents the bottom right edge</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.game_map.GameMap.add_unit">
+<code class="descname">add_unit</code><span class="sig-paren">(</span><em>unit_type</em>, <em>location</em>, <em>player_index=0</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_map.GameMap.add_unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a single GameUnit to the map at the given location.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>unit_type</strong> (<em>*</em>) – The type of the new unit</li>
+<li><strong>location</strong> (<em>*</em>) – The location of the new unit</li>
+<li><strong>player_index</strong> (<em>*</em>) – The index corresponding to the player controlling the new unit, 0 for you 1 for the enemy</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This function does not affect your turn and only changes the data stored in GameMap. The intended use of this function
+is to allow you to create arbitrary gamestates. Using this function on the GameMap inside game_state can cause your algo to crash.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.game_map.GameMap.distance_between_locations">
+<code class="descname">distance_between_locations</code><span class="sig-paren">(</span><em>location_1</em>, <em>location_2</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_map.GameMap.distance_between_locations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Euclidean distance</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>location_1</strong> (<em>*</em>) – An arbitrary location</li>
+<li><strong>location_2</strong> (<em>*</em>) – An arbitrary location</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The euclidean distance between the two locations</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.game_map.GameMap.get_edge_locations">
+<code class="descname">get_edge_locations</code><span class="sig-paren">(</span><em>quadrant_description</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_map.GameMap.get_edge_locations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes in an edge description and returns a list of locations.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>quadrant_description</strong> (<em>*</em>) – A constant corresponding to an edge. Valid quadrant descriptions are
+* GameMap.TOP_RIGHT
+* GameMap.TOP_LEFT
+* GameMap.BOTTOM_RIGHT
+* GameMap.BOTTOM_LEFT</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of locations corresponding to the requested edge</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.game_map.GameMap.get_edges">
+<code class="descname">get_edges</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_map.GameMap.get_edges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all of the edges and their edge locations</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list with four lists inside of it of locations corresponding to the four edges.
+[0] = top_right, [1] = top_left, [2] = bottom_left, [3] = bottom_right.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.game_map.GameMap.get_locations_in_range">
+<code class="descname">get_locations_in_range</code><span class="sig-paren">(</span><em>location</em>, <em>radius</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_map.GameMap.get_locations_in_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets locations in a circular area around a location</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>location</strong> (<em>*</em>) – The center of our search area</li>
+<li><strong>radius</strong> (<em>*</em>) – The radius of our search area</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The locations that are within our search area</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.game_map.GameMap.in_arena_bounds">
+<code class="descname">in_arena_bounds</code><span class="sig-paren">(</span><em>location</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_map.GameMap.in_arena_bounds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the given location is inside the diamond shaped game board.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>location</strong> (<em>*</em>) – A map location</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if the location is on the board, False otherwise</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.game_map.GameMap.remove_unit">
+<code class="descname">remove_unit</code><span class="sig-paren">(</span><em>location</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_map.GameMap.remove_unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove all units on the map in the given location.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>location</strong> (<em>*</em>) – The location that you will empty of units</td>
+</tr>
+</tbody>
+</table>
+<p>This function does not affect your turn and only changes the data stored in GameMap. The intended use of this function
+is to allow you to create arbitrary gamestates. Using this function on the GameMap inside game_state can cause your algo to crash.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">C1 Terminal Python Starterkit</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">game_map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="game_state.html">game_state</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to C1 Terminal Python Starterkit’s documentation!</a></li>
+      <li>Next: <a href="game_state.html" title="next chapter">game_state</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Correlation One.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+      |
+      <a href="_sources/game_map.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

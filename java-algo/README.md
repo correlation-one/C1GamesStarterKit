@@ -24,7 +24,7 @@
     |   └--test/java
     |
     └--gradle build files
-    
+
 ### Creating an algo
 
 For starters, simply modify the `starteralgo/StarterAlgo.java` file. You will be mostly using functions in the `GameState`
@@ -40,7 +40,7 @@ There are three callbacks for `GameLoop` which you can implement
     void onActionFrame(GameIO io, GameState move)
     
     void onTurn(GameIO io, GameState move)
-    
+
 However, it is only essential to implement `onTurn`. The `GameState` provides fast and 
 convenient access to the game board, and the ability to perform actions, such as placing a 
 unit, which will mutate the `GameState` game state, as well as record that action. When 
@@ -101,7 +101,6 @@ returns a `PrintStream` which can be safely used for logging.
         }
     }
 
-
 ### Map Bounds
 
 The `MapBounds` class contains statically initialized data pertaining to the structure of the 
@@ -130,11 +129,11 @@ your algo, you will have to modify the `mainClassName` in the `build.gradle` fil
 
     // Define the main class for the application
     mainClassName = 'com.c1games.terminal.starteralgo.StarterAlgo'
-    
+
 If you change your build process such that you are no longer building to the directory `algo-target`, you can
 configure the path which will be packaged with the `compile-target` field in `algo.json`.
 
 ### Unit tests
 
-The gradle build script is set up to perform `JUnit` unit tests. These test are in the `src/test/java` 
-directory. To run unit tests, simple call `gradle test`.
+The gradle build script is set up to perform `JUnit` unit tests. These test are in the `src/test/java` directory. 
+To run unit tests, simple call `gradle test`.
