@@ -201,7 +201,7 @@ class BasicTests(unittest.TestCase):
 
         game.game_map.add_unit("FF", [14,13], 1)
         got_string = str(game.game_map[14,13][0])
-        expected_string = "Enemy FF, stability: 60.0 location: [14, 13] "
+        expected_string = "Enemy FF, health: 60.0 location: [14, 13] "
         self.assertEqual(got_string, expected_string, "Expected {} from print_unit test got {} ".format(expected_string, got_string))
 
     def test_future_bits(self):
@@ -230,5 +230,5 @@ class BasicTests(unittest.TestCase):
 
     def future_turn_testing_function(self, game, expected, turns):
         actual = game.project_future_bits(turns)
-        self.assertAlmostEqual(actual, expected, 0, "Expected {} power {} turns from now, got {}".format(expected, turns, actual))
+        self.assertAlmostEqual(actual, expected, 0, "Expected {} bits {} turns from now, got {}".format(expected, turns, actual))
 

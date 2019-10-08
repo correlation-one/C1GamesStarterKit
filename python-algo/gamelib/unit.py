@@ -49,7 +49,7 @@ class GameUnit:
             self.damage_f = type_config["damageF"]
             self.damage_i = type_config["damageI"]
         self.range = type_config["range"]
-        self.max_health = type_config["health"]
+        self.max_health = type_config["stability"]
         self.cost = type_config["cost"]
 
     def __toString(self):
