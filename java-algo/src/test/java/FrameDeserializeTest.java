@@ -23,6 +23,7 @@ public class FrameDeserializeTest {
                 "      \"damage\": 0.0,\n" +
                 "      \"cost\": 1.0,\n" +
                 "      \"getHitRadius\": 0.51,\n" +
+                "      \"shieldAmount\": 10.0,\n" +
                 "      \"display\": \"Filter\",\n" +
                 "      \"range\": 3.0,\n" +
                 "      \"shorthand\": \"FF\",\n" +
@@ -42,6 +43,7 @@ public class FrameDeserializeTest {
                 "      \"damage\": 4.0,\n" +
                 "      \"cost\": 3.0,\n" +
                 "      \"getHitRadius\": 0.51,\n" +
+                "      \"shieldAmount\": 10.0,\n" +
                 "      \"display\": \"Destructor\",\n" +
                 "      \"range\": 3.0,\n" +
                 "      \"shorthand\": \"DF\",\n" +

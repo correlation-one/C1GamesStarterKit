@@ -41,7 +41,7 @@ pub mod config {
             range: f32,
             shorthand: String,
             stability: f32,
-            shield_amount: Option<f32>,
+            shield_amount: f32,
         },
         #[serde(rename_all = "camelCase")]
         Data {

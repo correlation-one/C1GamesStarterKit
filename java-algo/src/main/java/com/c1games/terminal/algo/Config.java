@@ -47,11 +47,7 @@ public final class Config {
         public float range;
         public String shorthand;
         public float stability;
-        public OptionalDouble shieldAmount;
-
-        public WallUnitInformation() {
-            shieldAmount = OptionalDouble.empty();
-        }
+        public float shieldAmount;
 
         @Override
         public String toString() {
