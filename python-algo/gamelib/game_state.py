@@ -434,7 +434,7 @@ class GameState:
         A Unit can often have many other units in range, and Units that attack do so once each frame.
 
         Their targeting priority is as follows:
-            Infantry > Nearest Unit > Lowest Stability > Lowest Y position > Closest to edge (Highest distance of X from the boards center, 13.5)
+            Infantry > Nearest Unit > Lowest Health > Lowest Y position > Closest to edge (Highest distance of X from the boards center, 13.5)
 
         Args:
             * attacking_unit: A GameUnit
@@ -453,7 +453,7 @@ class GameState:
         target = None
         target_stationary = True
         target_distance = sys.maxsize
-        target_stability = sys.maxsize
+        target_health = sys.maxsize
         target_y = self.ARENA_SIZE
         target_x_distance = 0
 
@@ -468,7 +468,7 @@ class GameState:
                 new_target = False
                 unit_stationary = unit.stationary
                 unit_distance = self.game_map.distance_between_locations(location, [attacking_unit.x, attacking_unit.y])
-                unit_stability = unit.stability
+                unit_health = unit.health
                 unit_y = unit.y
                 unit_x_distance = abs(self.HALF_ARENA - 0.5 - unit.x)
 
@@ -482,9 +482,9 @@ class GameState:
                 elif target_distance < unit_distance and not new_target:
                     continue
 
-                if target_stability > unit_stability:
+                if target_health > unit_health:
                     new_target = True
-                elif target_stability < unit_stability and not new_target:
+                elif target_health < unit_health and not new_target:
                     continue
 
                 # Compare height heuristic relative to attacking unit's player index
@@ -506,7 +506,7 @@ class GameState:
                     target = unit
                     target_stationary = unit_stationary
                     target_distance = unit_distance
-                    target_stability = unit_stability
+                    target_health = unit_health
                     target_y = unit_y
                     target_x_distance = unit_x_distance
         return target
