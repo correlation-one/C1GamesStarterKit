@@ -1,6 +1,14 @@
 gamelib package
 ===============
 
+Module contents
+---------------
+
+.. automodule:: gamelib
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Submodules
 ----------
 
@@ -48,14 +56,6 @@ Util  (gamelib.util)
 -------------------
 
 .. automodule:: gamelib.util
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: gamelib
     :members:
     :undoc-members:
     :show-inheritance:
