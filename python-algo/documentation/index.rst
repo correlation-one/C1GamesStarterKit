@@ -5,3 +5,5 @@ gamelib
    :maxdepth: 4
 
    gamelib
+
+* :ref:`genindex`
