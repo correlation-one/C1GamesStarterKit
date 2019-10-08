@@ -49,7 +49,7 @@ templates_path = ['_templates']
 # You can specify multiple suffix as a list of string:
 #
 # source_suffix = ['.rst', '.md']
-source_suffix = '.rst'
+source_suffix = '.py'
 
 # The master toctree document.
 master_doc = 'index'
@@ -69,7 +69,6 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = None
 
-autosummary_generate = True
 
 # -- Options for HTML output -------------------------------------------------
 
