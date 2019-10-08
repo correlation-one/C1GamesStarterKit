@@ -25,8 +25,8 @@ class GameState:
 
         * ARENA_SIZE (int): The size of the arena
         * HALF_ARENA (int): Half the size of the arena
-        * BITS (int): A constant representing the bits resource
-        * CORES (int): A constant representing the cores resource
+        * BITS (int): A constant representing the bits resource, used in the get_resource function
+        * CORES (int): A constant representing the cores resource, used in the get_resource function
          
         * game_map (:obj: GameMap): The current GameMap. To retrieve a list of GameUnits at a location, use game_map[x, y]
         * turn_number (int): The current turn number. Starts at 0.
@@ -166,7 +166,7 @@ class GameState:
         """Gets a players resources
 
         Args:
-            * resource_type: self.CORES or self.BITS
+            * resource_type: BITS (0) or CORES (1)
             * player_index: The index corresponding to the player whos resources you are querying, 0 for you 1 for the enemy
 
         Returns:
@@ -177,7 +177,7 @@ class GameState:
             self._invalid_player_index(player_index)
             return
         if not resource_type == self.BITS and not resource_type == self.CORES:
-            self.warn("Invalid resource_type '{}'. Please use game_state.BITS or game_state.CORES".format(resource_type))
+            self.warn("Invalid resource_type '{}'. Please use BITS (0) or CORES (1)".format(resource_type))
             return
 
         if resource_type == self.BITS:
