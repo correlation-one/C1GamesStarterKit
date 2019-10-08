@@ -1,0 +1,387 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>&lt;no title&gt; &#8212; C1 Terminal Python Starterkit 1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <p>import math
+from .unit import GameUnit
+from .util import debug_write</p>
+<dl class="docutils">
+<dt>class GameMap:</dt>
+<dd><p class="first">“”“Holds data about the current game map and provides functions
+useful for getting information related to the map.</p>
+<p>game_map[x, y] will return a list of Units located at that location,
+or an empty list if there are no units at the location</p>
+<dl class="docutils">
+<dt>Attributes:</dt>
+<dd><ul class="first last simple">
+<li>config (JSON): Contains information about the game</li>
+<li>ARENA_SIZE (int): The size of the arena.</li>
+<li>HALF_ARENA (int): Half of the size of the arena.</li>
+<li>TOP_RIGHT (int): A constant that represents the top right edge</li>
+<li>TOP_LEFT (int): A constant that represents the top left edge</li>
+<li>BOTTOM_LEFT (int): Hidden challenge! Can you guess what this constant represents???</li>
+<li>BOTTOM_RIGHT (int): A constant that represents the bottom right edge</li>
+</ul>
+</dd>
+</dl>
+<p>“””
+def __init__(self, config):</p>
+<blockquote>
+<div><p>“”“Initializes constants and game map</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>config (JSON): Contains information about the game</li>
+</ul>
+</dd>
+</dl>
+<p>“””
+self.config = config
+self.enable_warnings = True
+self.ARENA_SIZE = 28
+self.HALF_ARENA = int(self.ARENA_SIZE / 2)
+self.TOP_RIGHT = 0
+self.TOP_LEFT = 1
+self.BOTTOM_LEFT = 2
+self.BOTTOM_RIGHT = 3
+self.__map = self.__empty_grid()
+self.__start = [13,0]</p>
+</div></blockquote>
+<dl class="last docutils">
+<dt>def __getitem__(self, location):</dt>
+<dd><dl class="first docutils">
+<dt>if len(location) == 2 and self.in_arena_bounds(location):</dt>
+<dd>x,y = location
+return self.__map[x][y]</dd>
+</dl>
+<p class="last">self._invalid_coordinates(location)</p>
+</dd>
+<dt>def __setitem__(self, location, val):</dt>
+<dd><dl class="first docutils">
+<dt>if type(location) == tuple and len(location) == 2 and self.in_arena_bounds(location):</dt>
+<dd>self.__map[location[0]][location[1]] = val
+return</dd>
+</dl>
+<p class="last">self._invalid_coordinates(location)</p>
+</dd>
+<dt>def __iter__(self):</dt>
+<dd>self.__start = [13,0]
+return self</dd>
+<dt>def __next__(self):</dt>
+<dd><p class="first">location = self.__start
+if location == [15,27]:</p>
+<blockquote>
+<div>raise StopIteration</div></blockquote>
+<p>new_location = [location[0]+1, location[1]]
+while not self.in_arena_bounds(new_location) and not location == [14,27]:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>if new_location[0] == self.ARENA_SIZE:</dt>
+<dd>new_location = [0, new_location[1]+1]</dd>
+<dt>else:</dt>
+<dd>new_location = [new_location[0]+1, new_location[1]]</dd>
+</dl>
+</div></blockquote>
+<p class="last">self.__start = new_location
+return location</p>
+</dd>
+<dt>def __empty_grid(self):</dt>
+<dd><p class="first">grid = []
+for x in range(0, self.ARENA_SIZE):</p>
+<blockquote>
+<div><p>grid.append([])
+for _ in range(0, self.ARENA_SIZE):</p>
+<blockquote>
+<div>grid[x].append([])</div></blockquote>
+</div></blockquote>
+<p class="last">return grid</p>
+</dd>
+<dt>def _invalid_coordinates(self, location):</dt>
+<dd>self.warn(“{} is out of bounds.”.format(str(location)))</dd>
+<dt>def in_arena_bounds(self, location):</dt>
+<dd><p class="first">“”“Checks if the given location is inside the diamond shaped game board.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>location: A map location</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd>True if the location is on the board, False otherwise</dd>
+</dl>
+<p>“””
+x, y = location
+half_board = self.HALF_ARENA</p>
+<p>row_size = y + 1
+startx = half_board - row_size
+endx = startx + (2 * row_size) - 1
+top_half_check = (y &lt; self.HALF_ARENA and x &gt;= startx and x &lt;= endx)</p>
+<p>row_size = (self.ARENA_SIZE - 1 - y) + 1
+startx = half_board - row_size
+endx = startx + (2 * row_size) - 1
+bottom_half_check = (y &gt;= self.HALF_ARENA and x &gt;= startx and x &lt;= endx)</p>
+<p class="last">return bottom_half_check or top_half_check</p>
+</dd>
+<dt>def get_edge_locations(self, quadrant_description):</dt>
+<dd><p class="first">“”“Takes in an edge description and returns a list of locations.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li><dl class="first docutils">
+<dt>quadrant_description: A constant corresponding to an edge. Valid quadrant descriptions are</dt>
+<dd><ul class="first last">
+<li>GameMap.TOP_RIGHT</li>
+<li>GameMap.TOP_LEFT</li>
+<li>GameMap.BOTTOM_RIGHT</li>
+<li>GameMap.BOTTOM_LEFT</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd>A list of locations corresponding to the requested edge</dd>
+</dl>
+<p>“””
+if not quadrant_description in [self.TOP_LEFT, self.TOP_RIGHT, self.BOTTOM_LEFT, self.BOTTOM_RIGHT]:</p>
+<blockquote>
+<div>self.warn(“Passed invalid quadrant_description ‘{}’. See the documentation for valid inputs for get_edge_locations.”.format(quadrant_description))
+return</div></blockquote>
+<p class="last">edges = self.get_edges()
+return edges[quadrant_description]</p>
+</dd>
+<dt>def get_edges(self):</dt>
+<dd><p class="first">“”“Gets all of the edges and their edge locations</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>A list with four lists inside of it of locations corresponding to the four edges.
+[0] = top_right, [1] = top_left, [2] = bottom_left, [3] = bottom_right.</dd>
+</dl>
+<p>“””
+top_right = []
+for num in range(0, self.HALF_ARENA):</p>
+<blockquote>
+<div>x = self.HALF_ARENA + num
+y = self.ARENA_SIZE - 1 - num
+top_right.append([int(x), int(y)])</div></blockquote>
+<p>top_left = []
+for num in range(0, self.HALF_ARENA):</p>
+<blockquote>
+<div>x = self.HALF_ARENA - 1 - num
+y = self.ARENA_SIZE - 1 - num
+top_left.append([int(x), int(y)])</div></blockquote>
+<p>bottom_left = []
+for num in range(0, self.HALF_ARENA):</p>
+<blockquote>
+<div>x = self.HALF_ARENA - 1 - num
+y = num
+bottom_left.append([int(x), int(y)])</div></blockquote>
+<p>bottom_right = []
+for num in range(0, self.HALF_ARENA):</p>
+<blockquote>
+<div>x = self.HALF_ARENA + num
+y = num
+bottom_right.append([int(x), int(y)])</div></blockquote>
+<p class="last">return [top_right, top_left, bottom_left, bottom_right]</p>
+</dd>
+<dt>def add_unit(self, unit_type, location, player_index=0):</dt>
+<dd><p class="first">“”“Add a single GameUnit to the map at the given location.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>unit_type: The type of the new unit</li>
+<li>location: The location of the new unit</li>
+<li>player_index: The index corresponding to the player controlling the new unit, 0 for you 1 for the enemy</li>
+</ul>
+</dd>
+</dl>
+<p>This function does not affect your turn and only changes the data stored in GameMap. The intended use of this function
+is to allow you to create arbitrary gamestates. Using this function on the GameMap inside game_state can cause your algo to crash.
+“””
+if not self.in_arena_bounds(location):</p>
+<blockquote>
+<div>self._invalid_coordinates(location)</div></blockquote>
+<dl class="docutils">
+<dt>if player_index &lt; 0 or player_index &gt; 1:</dt>
+<dd>self.warn(“Player index {} is invalid. Player index should be 0 or 1.”.format(player_index))</dd>
+</dl>
+<p>x, y = location
+new_unit = GameUnit(unit_type, self.config, player_index, None, location[0], location[1])
+if not new_unit.stationary:</p>
+<blockquote>
+<div>self.__map[x][y].append(new_unit)</div></blockquote>
+<dl class="last docutils">
+<dt>else:</dt>
+<dd>self.__map[x][y] = [new_unit]</dd>
+</dl>
+</dd>
+<dt>def remove_unit(self, location):</dt>
+<dd><p class="first">“”“Remove all units on the map in the given location.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>location: The location that you will empty of units</li>
+</ul>
+</dd>
+</dl>
+<p>This function does not affect your turn and only changes the data stored in GameMap. The intended use of this function
+is to allow you to create arbitrary gamestates. Using this function on the GameMap inside game_state can cause your algo to crash.
+“””
+if not self.in_arena_bounds(location):</p>
+<blockquote>
+<div>self._invalid_coordinates(location)</div></blockquote>
+<p class="last">x, y = location
+self.__map[x][y] = []</p>
+</dd>
+<dt>def get_locations_in_range(self, location, radius):</dt>
+<dd><p class="first">“”“Gets locations in a circular area around a location</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>location: The center of our search area</li>
+<li>radius: The radius of our search area</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd>The locations that are within our search area</dd>
+</dl>
+<p>“””
+if radius &lt; 0 or radius &gt; self.ARENA_SIZE:</p>
+<blockquote>
+<div>self.warn(“Radius {} was passed to get_locations_in_range. Expected integer between 0 and {}”.format(radius, self.ARENA_SIZE))</div></blockquote>
+<dl class="docutils">
+<dt>if not self.in_arena_bounds(location):</dt>
+<dd>self._invalid_coordinates(location)</dd>
+</dl>
+<p>x, y = location
+locations = []
+for i in range(int(x - math.ceil(radius)), int(x + math.ceil(radius) + 1)):</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>for j in range(int(y - math.ceil(radius)), int(y + math.ceil(radius) + 1)):</dt>
+<dd><p class="first">new_location = [i, j]
+# A unit with a given range affects all locations who’s centers are within that range + 0.51 so we add 0.51 here
+if self.in_arena_bounds(new_location) and self.distance_between_locations(location, new_location) &lt; radius + 0.51:</p>
+<blockquote class="last">
+<div>locations.append(new_location)</div></blockquote>
+</dd>
+</dl>
+</div></blockquote>
+<p class="last">return locations</p>
+</dd>
+<dt>def distance_between_locations(self, location_1, location_2):</dt>
+<dd><p class="first">“”“Euclidean distance</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>location_1: An arbitrary location</li>
+<li>location_2: An arbitrary location</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd>The euclidean distance between the two locations</dd>
+</dl>
+<p>“””
+x1, y1 = location_1
+x2, y2 = location_2</p>
+<p class="last">return math.sqrt((x1 - x2)**2 + (y1 - y2)**2)</p>
+</dd>
+<dt>def warn(self, message):</dt>
+<dd><dl class="first last docutils">
+<dt>if(self.enable_warnings):</dt>
+<dd>debug_write(message)</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">C1 Terminal Python Starterkit</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Correlation One.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+      |
+      <a href="_sources/game_map.py.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

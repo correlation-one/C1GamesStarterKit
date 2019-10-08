@@ -1,0 +1,327 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>&lt;no title&gt; &#8212; C1 Terminal Python Starterkit 1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <p>import unittest
+import json
+from .game_state import GameState
+from .unit import GameUnit</p>
+<p>class BasicTests(unittest.TestCase):</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>def make_turn_0_map(self):</dt>
+<dd><p class="first">config = “””
+{</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>“debug”:{</dt>
+<dd>“printMapString”:false,
+“printTStrings”:false,
+“printActStrings”:false,
+“printHitStrings”:false,
+“printPlayerInputStrings”:false,
+“printBotErrors”:false,
+“printPlayerGetHitStrings”:false</dd>
+</dl>
+<p>},
+“unitInformation”:[</p>
+<blockquote>
+<div>{
+“damage”:0.0,
+“cost”:1,
+“getHitRadius”:0.51,
+“display”:”Filter”,
+“range”:3.0,
+“shorthand”:”FF”,
+“stability”:60.0
+},
+{
+“damage”:0.0,
+“cost”:4,
+“getHitRadius”:0.51,
+“shieldAmount”:10.0,
+“display”:”Encryptor”,
+“range”:3.0,
+“shorthand”:”EF”,
+“stability”:30.0
+},
+{
+“damage”:4.0,
+“cost”:3,
+“getHitRadius”:0.51,
+“display”:”Destructor”,
+“range”:3.0,
+“shorthand”:”DF”,
+“stability”:75.0
+},
+{
+“damageI”:1.0,
+“damageToPlayer”:1.0,
+“cost”:1.0,
+“getHitRadius”:0.51,
+“damageF”:1.0,
+“display”:”Ping”,
+“range”:3.0,
+“shorthand”:”PI”,
+“stability”:15.0,
+“speed”:0.5
+},
+{
+“damageI”:3.0,
+“damageToPlayer”:1.0,
+“cost”:3.0,
+“getHitRadius”:0.51,
+“damageF”:3.0,
+“display”:”EMP”,
+“range”:5.0,
+“shorthand”:”EI”,
+“stability”:5.0,
+“speed”:0.25
+},
+{
+“damageI”:10.0,
+“damageToPlayer”:1.0,
+“cost”:1.0,
+“getHitRadius”:0.51,
+“damageF”:0.0,
+“display”:”Scrambler”,
+“range”:3.0,
+“shorthand”:”SI”,
+“stability”:40.0,
+“speed”:0.25
+},
+{
+“display”:”Remove”,
+“shorthand”:”RM”
+}</div></blockquote>
+<p>],
+“timingAndReplay”:{</p>
+<blockquote>
+<div>“waitTimeBotMax”:100000,
+“waitTimeManual”:1820000,
+“waitForever”:false,
+“waitTimeBotSoft”:70000,
+“replaySave”:0,
+“storeBotTimes”:true</div></blockquote>
+<p>},
+“resources”:{</p>
+<blockquote>
+<div>“turnIntervalForBitCapSchedule”:10,
+“turnIntervalForBitSchedule”:10,
+“bitRampBitCapGrowthRate”:5.0,
+“roundStartBitRamp”:10,
+“bitGrowthRate”:1.0,
+“startingHP”:30.0,
+“maxBits”:999999.0,
+“bitsPerRound”:5.0,
+“coresPerRound”:5.0,
+“coresForPlayerDamage”:1.0,
+“startingBits”:5.0,
+“bitDecayPerRound”:0.33333,
+“startingCores”:25.0</div></blockquote>
+<p>},
+“mechanics”:{</p>
+<blockquote>
+<div>“basePlayerHealthDamage”:1.0,
+“damageGrowthBasedOnY”:0.0,
+“bitsCanStackOnDeployment”:true,
+“destroyOwnUnitRefund”:0.5,
+“destroyOwnUnitsEnabled”:true,
+“stepsRequiredSelfDestruct”:5,
+“selfDestructRadius”:1.5,
+“shieldDecayPerFrame”:0.15,
+“meleeMultiplier”:0,
+“destroyOwnUnitDelay”:1,
+“rerouteMidRound”:true,
+“firewallBuildTime”:0</div></blockquote>
+<p>}</p>
+</div></blockquote>
+<p>turn_0 = “”“{“p2Units”:[[],[],[],[],[],[],[]],”turnInfo”:[0,0,-1],”p1Stats”:[30.0,25.0,5.0,0],”p1Units”:[[],[],[],[],[],[],[]],”p2Stats”:[30.0,25.0,5.0,0],”events”:{“selfDestruct”:[],”breach”:[],”damage”:[],”shield”:[],”move”:[],”spawn”:[],”death”:[],”attack”:[],”melee”:[]}}”“”</p>
+<p class="last">state = GameState(json.loads(config), turn_0)
+state.suppress_warnings(True)
+return state</p>
+</dd>
+<dt>def test_basic(self):</dt>
+<dd>self.assertEqual(True, True, “It’s the end of the world as we know it, and I feel fine”)</dd>
+<dt>def test_simple_fields(self):</dt>
+<dd>game = self.make_turn_0_map()
+self.assertEqual(5, game.get_resource(game.BITS), “I should have 5 bits”)
+self.assertEqual(25, game.get_resource(game.CORES), “I should have 25 cores”)
+self.assertEqual(5, game.get_resource(game.BITS, 1), “My opponent should have 5 bits”)
+self.assertEqual(25, game.get_resource(game.CORES, 1), “My opponent should have 25 cores”)
+self.assertEqual(0, game.turn_number, “The map does not have a turn_number, or we can’t read it”)
+self.assertEqual(30, game.my_health, “My integrity is not working”)
+self.assertEqual(30, game.enemy_health, “My opponent has no integrity!”)</dd>
+<dt>def test_spawning(self):</dt>
+<dd>game = self.make_turn_0_map()
+self.assertEqual(True, game.attempt_spawn(“SI”, [[13, 0]]), “We cannot spawn a soldier!”)
+self.assertEqual(False, game.attempt_spawn(“SI”, [[13, 13]]), “We can spawn a soldier in the middle of the map?!?!”)
+self.assertEqual(False, game.can_spawn(“FF”, [14, 14]), “Apparently I can place towers on my opponent’s side”)
+self.assertEqual(True, game.attempt_spawn(“DF”, [[13, 6]]), “We cannot spawn a tower!”)
+self.assertEqual(2, game.attempt_spawn(“SI”, [[13, 0], [13, 0], [13, 5]]), “More or less than 2 units were spawned!”)
+self.assertEqual([(“DF”, 13, 6)], game._build_stack, “Build queue is wrong!”)
+self.assertEqual([(“SI”, 13, 0), (“SI”, 13, 0), (“SI”, 13, 0)], game._deploy_stack, “Deploy queue is wrong!”)</dd>
+<dt>def test_trivial_functions(self):</dt>
+<dd><p class="first">game = self.make_turn_0_map()</p>
+<p class="last">#Distance Between locations
+self.assertEqual(1, game.game_map.distance_between_locations([0, 0], [0,-1]), “The distance between 0,0 and 0,-1 should be 1”)
+self.assertEqual(1, game.game_map.distance_between_locations([-1, -1], [-2,-1]), “The distance between -1,-1 and -2,-1 should be 1”)
+self.assertEqual(5, game.game_map.distance_between_locations([0, 0], [4, 3]), “The distance between 0,0 and 16,9 should be 5”)
+self.assertEqual(0, len(game.game_map.get_locations_in_range([-500,-500], 10)), “Invalid tiles are being marked as in range”)
+self.assertEqual(1, len(game.game_map.get_locations_in_range([13,13], 0)), “A location should be in range of itself”)</p>
+</dd>
+<dt>def test_get_units(self):</dt>
+<dd><p class="first">game = self.make_turn_0_map()
+self.assertEqual(0, len(game.game_map[13,13]), “There should not be a unit on this location”)
+for _ in range(3):</p>
+<blockquote>
+<div>game.game_map.add_unit(“EI”, [13,13])</div></blockquote>
+<p>self.assertEqual(3, len(game.game_map[13,13]), “Information seems not to be stacking”)
+for _ in range(3):</p>
+<blockquote>
+<div>game.game_map.add_unit(“FF”, [13,13])</div></blockquote>
+<p class="last">self.assertEqual(1, len(game.game_map[13,13]), “Towers seem to be stacking”)</p>
+</dd>
+<dt>def test_get_units_in_range(self):</dt>
+<dd>game = self.make_turn_0_map()
+self.assertEqual(1, len(game.game_map.get_locations_in_range([13,13], 0)), “We should be in 0 range of ourself”)
+self.assertEqual(37, len(game.game_map.get_locations_in_range([13,13], 3)), “Wrong number of tiles in range”)</dd>
+<dt>def _test_get_attackers(self):</dt>
+<dd><p class="first">game = self.make_turn_0_map()</p>
+<p class="last">self.assertEqual([], game.get_attackers([13,13], 0), “Are we being attacked by a ghost?”)
+game.game_map.add_unit(“DF”, [12,12], 0)
+self.assertEqual([], game.get_attackers([13,13], 0), “Are we being attacked by a friend?”)
+game.game_map.add_unit(“EF”, [13,12], 1)
+self.assertEqual([], game.get_attackers([13,13], 0), “Are we being attacked by an encryptor?”)
+game.game_map.add_unit(“FF”, [14,12], 1)
+self.assertEqual([], game.get_attackers([13,13], 0), “Are we being attacked by a filter?”)
+game.game_map.add_unit(“DF”, [12,14], 1)
+self.assertEqual(1, len(game.get_attackers([13,13], 0)), “We should be in danger”)
+game.game_map.add_unit(“DF”, [13,14], 1)
+game.game_map.add_unit(“DF”, [14,14], 1)
+self.assertEqual(3, len(game.get_attackers([13,13], 0)), “We should be in danger from 3 places”)</p>
+</dd>
+<dt>def test_print_unit(self):</dt>
+<dd><p class="first">game = self.make_turn_0_map()</p>
+<p class="last">game.game_map.add_unit(“FF”, [14,13], 1)
+got_string = str(game.game_map[14,13][0])
+expected_string = “Enemy FF, health: 60.0 location: [14, 13] ”
+self.assertEqual(got_string, expected_string, “Expected {} from print_unit test got {} “.format(expected_string, got_string))</p>
+</dd>
+<dt>def test_future_bits(self):</dt>
+<dd><p class="first">game = self.make_turn_0_map()</p>
+<p class="last">self.future_turn_testing_function(game, 8.3, 1)
+self.future_turn_testing_function(game, 10.5, 2)
+self.future_turn_testing_function(game, 12.0, 3)
+self.future_turn_testing_function(game, 13.0, 4)
+self.future_turn_testing_function(game, 13.7, 5)
+self.future_turn_testing_function(game, 14.1, 6)
+self.future_turn_testing_function(game, 14.4, 7)
+self.future_turn_testing_function(game, 14.6, 8)
+self.future_turn_testing_function(game, 14.7, 9)
+self.future_turn_testing_function(game, 15.8, 10)
+self.future_turn_testing_function(game, 16.5, 11)
+self.future_turn_testing_function(game, 17.0, 12)
+self.future_turn_testing_function(game, 17.3, 13)
+self.future_turn_testing_function(game, 17.5, 14)
+self.future_turn_testing_function(game, 17.7, 15)
+self.future_turn_testing_function(game, 17.8, 16)
+self.future_turn_testing_function(game, 17.9, 17)
+self.future_turn_testing_function(game, 17.9, 18)
+self.future_turn_testing_function(game, 17.9, 19)
+self.future_turn_testing_function(game, 18.9, 20)</p>
+</dd>
+<dt>def future_turn_testing_function(self, game, expected, turns):</dt>
+<dd>actual = game.project_future_bits(turns)
+self.assertAlmostEqual(actual, expected, 0, “Expected {} bits {} turns from now, got {}”.format(expected, turns, actual))</dd>
+</dl>
+</div></blockquote>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">C1 Terminal Python Starterkit</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Correlation One.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+      |
+      <a href="_sources/tests.py.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

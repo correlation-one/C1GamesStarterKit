@@ -1,0 +1,720 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>&lt;no title&gt; &#8212; C1 Terminal Python Starterkit 1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <p>import math
+import json</p>
+<p>from .navigation import ShortestPathFinder
+from .util import send_command, debug_write
+from .unit import GameUnit
+from .game_map import GameMap</p>
+<dl class="docutils">
+<dt>def is_stationary(unit_type):</dt>
+<dd>return unit_type in FIREWALL_TYPES</dd>
+<dt>class GameState:</dt>
+<dd><p class="first">“”“Represents the entire gamestate for a given turn
+Provides methods related to resources and unit deployment</p>
+<dl class="docutils">
+<dt>Attributes:</dt>
+<dd><ul class="first last simple">
+<li>UNIT_TYPE_TO_INDEX (dict): Maps a unit to a corresponding index</li>
+<li>FILTER (str): A constant representing the filter unit</li>
+<li>ENCRYPTOR (str): A constant representing the encryptor unit</li>
+<li>DESTRUCTOR (str): A constant representing the destructor unit</li>
+<li>PING (str): A constant representing the ping unit</li>
+<li>EMP (str): A constant representing the emp unit</li>
+<li>SCRAMBLER (str): A constant representing the scrambler unit</li>
+<li>FIREWALL_TYPES (list): A list of the firewall units</li>
+<li>ARENA_SIZE (int): The size of the arena</li>
+<li>HALF_ARENA (int): Half the size of the arena</li>
+<li>BITS (int): A constant representing the bits resource, used in the get_resource function</li>
+<li>CORES (int): A constant representing the cores resource, used in the get_resource function</li>
+<li>game_map (:obj: GameMap): The current GameMap. To retrieve a list of GameUnits at a location, use game_map[x, y]</li>
+<li>turn_number (int): The current turn number. Starts at 0.</li>
+<li>my_health (int): Your current remaining health</li>
+<li>my_time (int): The time you took to submit your previous turn</li>
+<li>enemy_health (int): Your opponents current remaining health</li>
+<li>enemy_time (int): Your opponents current remaining time</li>
+</ul>
+</dd>
+</dl>
+<p>“”“</p>
+<dl class="last docutils">
+<dt>def __init__(self, config, serialized_string):</dt>
+<dd><p class="first">“”” Setup a turns variables using arguments passed</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>config (JSON): A json object containing information about the game</li>
+<li>serialized_string (string): A string containing information about the game state at the start of this turn</li>
+</ul>
+</dd>
+</dl>
+<p>“””
+self.serialized_string = serialized_string
+self.config = config
+self.enable_warnings = True</p>
+<p>global FILTER, ENCRYPTOR, DESTRUCTOR, PING, EMP, SCRAMBLER, REMOVE, FIREWALL_TYPES, ALL_UNITS, UNIT_TYPE_TO_INDEX
+UNIT_TYPE_TO_INDEX = {}
+FILTER = config[“unitInformation”][0][“shorthand”]
+UNIT_TYPE_TO_INDEX[FILTER] = 0
+ENCRYPTOR = config[“unitInformation”][1][“shorthand”]
+UNIT_TYPE_TO_INDEX[ENCRYPTOR] = 1
+DESTRUCTOR = config[“unitInformation”][2][“shorthand”]
+UNIT_TYPE_TO_INDEX[DESTRUCTOR] = 2
+PING = config[“unitInformation”][3][“shorthand”]
+UNIT_TYPE_TO_INDEX[PING] = 3
+EMP = config[“unitInformation”][4][“shorthand”]
+UNIT_TYPE_TO_INDEX[EMP] = 4
+SCRAMBLER = config[“unitInformation”][5][“shorthand”]
+UNIT_TYPE_TO_INDEX[SCRAMBLER] = 5
+REMOVE = config[“unitInformation”][6][“shorthand”]
+UNIT_TYPE_TO_INDEX[REMOVE] = 6</p>
+<p>ALL_UNITS = [PING, EMP, SCRAMBLER, FILTER, ENCRYPTOR, DESTRUCTOR]
+FIREWALL_TYPES = [FILTER, ENCRYPTOR, DESTRUCTOR]</p>
+<p>self.ARENA_SIZE = 28
+self.HALF_ARENA = int(self.ARENA_SIZE / 2)
+self.BITS = 0
+self.CORES = 1</p>
+<p>self.game_map = GameMap(self.config)
+self._shortest_path_finder = ShortestPathFinder()
+self._build_stack = []
+self._deploy_stack = []
+self._player_resources = [</p>
+<blockquote>
+<div>{‘cores’: 0, ‘bits’: 0},  # player 0, which is you
+{‘cores’: 0, ‘bits’: 0}]  # player 1, which is the opponent</div></blockquote>
+<p class="last">self.__parse_state(serialized_string)</p>
+</dd>
+<dt>def __parse_state(self, state_line):</dt>
+<dd><p class="first">“””
+Fills in map based on the serialized game state so that self.game_map[x,y] is a list of GameUnits at that location.
+state_line is the game state as a json string.
+“””
+state = json.loads(state_line)</p>
+<p>turn_info = state[“turnInfo”]
+self.turn_number = int(turn_info[1])</p>
+<p>p1_health, p1_cores, p1_bits, p1_time = map(float, state[“p1Stats”][:4])
+p2_health, p2_cores, p2_bits, p2_time = map(float, state[“p2Stats”][:4])</p>
+<p>self.my_health = p1_health
+self.my_time = p1_time
+self.enemy_health = p2_health
+self.enemy_time = p2_time</p>
+<dl class="docutils">
+<dt>self._player_resources = [</dt>
+<dd>{‘cores’: p1_cores, ‘bits’: p1_bits},
+{‘cores’: p2_cores, ‘bits’: p2_bits}]</dd>
+</dl>
+<p>p1units = state[“p1Units”]
+p2units = state[“p2Units”]</p>
+<p class="last">self.__create_parsed_units(p1units, 0)
+self.__create_parsed_units(p2units, 1)</p>
+</dd>
+<dt>def __create_parsed_units(self, units, player_number):</dt>
+<dd><p class="first">“””
+Helper function for __parse_state to add units to the map.
+“””
+typedef = self.config.get(“unitInformation”)
+for i, unit_types in enumerate(units):</p>
+<blockquote class="last">
+<div><dl class="docutils">
+<dt>for uinfo in unit_types:</dt>
+<dd><p class="first">unit_type = typedef[i].get(“shorthand”)
+sx, sy, shp = uinfo[:3]
+x, y = map(int, [sx, sy])
+hp = float(shp)
+# This depends on RM always being the last type to be processed
+if unit_type == REMOVE:</p>
+<blockquote>
+<div><p># Quick fix will deploy engine fix soon
+if self.contains_stationary_unit([x,y]):</p>
+<blockquote>
+<div>self.game_map[x,y][0].pending_removal = True</div></blockquote>
+</div></blockquote>
+<dl class="last docutils">
+<dt>else:</dt>
+<dd>unit = GameUnit(unit_type, self.config, player_number, hp, x, y)
+self.game_map[x,y].append(unit)</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+</dd>
+<dt>def __resource_required(self, unit_type):</dt>
+<dd>return self.CORES if is_stationary(unit_type) else self.BITS</dd>
+<dt>def __set_resource(self, resource_type, amount, player_index=0):</dt>
+<dd><p class="first">“””
+Sets the resources for the given player_index and resource_type.
+Is automatically called by other provided functions.
+“””
+if resource_type == self.BITS:</p>
+<blockquote>
+<div>resource_key = ‘bits’</div></blockquote>
+<dl class="docutils">
+<dt>elif resource_type == self.CORES:</dt>
+<dd>resource_key = ‘cores’</dd>
+</dl>
+<p class="last">held_resource = self.get_resource(resource_type, player_index)
+self._player_resources[player_index][resource_key] = held_resource + amount</p>
+</dd>
+<dt>def _invalid_player_index(self, index):</dt>
+<dd>self.warn(“Invalid player index {} passed, player index should always be 0 (yourself) or 1 (your opponent)”.format(index))</dd>
+<dt>def _invalid_unit(self, unit):</dt>
+<dd>self.warn(“Invalid unit {}”.format(unit))</dd>
+<dt>def submit_turn(self):</dt>
+<dd><p class="first">“”“Submit and end your turn.
+Must be called at the end of your turn or the algo will hang.</p>
+<p class="last">“””
+build_string = json.dumps(self._build_stack)
+deploy_string = json.dumps(self._deploy_stack)
+send_command(build_string)
+send_command(deploy_string)</p>
+</dd>
+<dt>def get_resource(self, resource_type, player_index = 0):</dt>
+<dd><p class="first">“”“Gets a players resources</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>resource_type: BITS (0) or CORES (1)</li>
+<li>player_index: The index corresponding to the player whos resources you are querying, 0 for you 1 for the enemy</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd>The number of the given resource the given player controls</dd>
+</dl>
+<p>“””
+if not player_index == 1 and not player_index == 0:</p>
+<blockquote>
+<div>self._invalid_player_index(player_index)
+return</div></blockquote>
+<dl class="docutils">
+<dt>if not resource_type == self.BITS and not resource_type == self.CORES:</dt>
+<dd>self.warn(“Invalid resource_type ‘{}’. Please use BITS (0) or CORES (1)”.format(resource_type))
+return</dd>
+<dt>if resource_type == self.BITS:</dt>
+<dd>resource_key = ‘bits’</dd>
+<dt>elif resource_type == self.CORES:</dt>
+<dd>resource_key = ‘cores’</dd>
+</dl>
+<p class="last">resources = self._player_resources[player_index]
+return resources.get(resource_key, None)</p>
+</dd>
+<dt>def number_affordable(self, unit_type):</dt>
+<dd><p class="first">“”“The number of units of a given type we can afford</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>unit_type: A unit type, PING, FILTER, etc.</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd>The number of units affordable of the given unit_type.</dd>
+</dl>
+<p>“””
+if unit_type not in ALL_UNITS:</p>
+<blockquote>
+<div>self._invalid_unit(unit_type)
+return</div></blockquote>
+<p class="last">cost = self.type_cost(unit_type)
+resource_type = self.__resource_required(unit_type)
+player_held = self.get_resource(resource_type)
+return math.floor(player_held / cost)</p>
+</dd>
+<dt>def project_future_bits(self, turns_in_future=1, player_index=0, current_bits=None):</dt>
+<dd><p class="first">“”“Predicts the number of bits we will have on a future turn</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>turns_in_future: The number of turns in the future we want to look forward to predict</li>
+<li>player_index: The player whose bits we are tracking</li>
+<li>current_bits: If we pass a value here, we will use that value instead of the current bits of the given player.</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd>The number of bits the given player will have after the given number of turns</dd>
+</dl>
+<p>“”“</p>
+<dl class="docutils">
+<dt>if turns_in_future &lt; 1 or turns_in_future &gt; 99:</dt>
+<dd>self.warn(“Invalid turns in future used ({}). Turns in future should be between 1 and 99”.format(turns_in_future))</dd>
+<dt>if not player_index == 1 and not player_index == 0:</dt>
+<dd>self._invalid_player_index(player_index)</dd>
+<dt>if type(current_bits) == int and current_bits &lt; 0:</dt>
+<dd>self.warn(“Invalid current bits ({}). Current bits cannot be negative.”.format(current_bits))</dd>
+</dl>
+<p>bits = self.get_resource(self.BITS, player_index) if not current_bits else current_bits
+for increment in range(1, turns_in_future + 1):</p>
+<blockquote>
+<div>current_turn = self.turn_number + increment
+bits <a href="#id1"><span class="problematic" id="id2">*</span></a>= (1 - self.config[“resources”][“bitDecayPerRound”])
+bits_gained = self.config[“resources”][“bitsPerRound”] + (self.config[“resources”][“bitGrowthRate”] * (current_turn // self.config[“resources”][“turnIntervalForBitSchedule”]))
+bits += bits_gained
+bits = round(bits, 1)</div></blockquote>
+<p class="last">return bits</p>
+</dd>
+<dt>def type_cost(self, unit_type):</dt>
+<dd><p class="first">“”“Gets the cost of a unit based on its type</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>unit_type: The units type</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd>The units cost</dd>
+</dl>
+<p>“””
+if unit_type not in ALL_UNITS:</p>
+<blockquote>
+<div>self._invalid_unit(unit_type)
+return</div></blockquote>
+<p class="last">unit_def = self.config[“unitInformation”][UNIT_TYPE_TO_INDEX[unit_type]]
+return unit_def.get(‘cost’)</p>
+</dd>
+<dt>def can_spawn(self, unit_type, location, num=1):</dt>
+<dd><p class="first">“”“Check if we can spawn a unit at a location.</p>
+<p>To units, we need to be able to afford them, and the location must be
+in bounds, unblocked, on our side of the map, not on top of a unit we can’t stack with,
+and on an edge if the unit is information.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>unit_type: The type of the unit</li>
+<li>location: The location we want to spawn the unit</li>
+<li>num: The number of units we want to spawn</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd>True if we can spawn the unit(s)</dd>
+</dl>
+<p>“””
+if unit_type not in ALL_UNITS:</p>
+<blockquote>
+<div>self._invalid_unit(unit_type)
+return</div></blockquote>
+<dl class="docutils">
+<dt>if not self.game_map.in_arena_bounds(location):</dt>
+<dd><dl class="first docutils">
+<dt>if self.enable_warnings:</dt>
+<dd>self.warn(“Could not spawn {} at location {}. Location invalid.”.format(unit_type, location))</dd>
+</dl>
+<p class="last">return False</p>
+</dd>
+</dl>
+<p>affordable = self.number_affordable(unit_type) &gt;= num
+stationary = is_stationary(unit_type)
+blocked = self.contains_stationary_unit(location) or (stationary and len(self.game_map[location[0],location[1]]) &gt; 0)
+correct_territory = location[1] &lt; self.HALF_ARENA
+on_edge = location in (self.game_map.get_edge_locations(self.game_map.BOTTOM_LEFT) + self.game_map.get_edge_locations(self.game_map.BOTTOM_RIGHT))</p>
+<dl class="last docutils">
+<dt>if self.enable_warnings:</dt>
+<dd><p class="first">fail_reason = “”
+if not affordable:</p>
+<blockquote>
+<div>fail_reason = fail_reason + ” Not enough resources.”</div></blockquote>
+<dl class="last docutils">
+<dt>if blocked:</dt>
+<dd>fail_reason = fail_reason + ” Location is blocked.”</dd>
+<dt>if not correct_territory:</dt>
+<dd>fail_reason = fail_reason + ” Location in enemy territory.”</dd>
+<dt>if not (stationary or on_edge):</dt>
+<dd>fail_reason = fail_reason + ” Information units must be deployed on the edge.”</dd>
+<dt>if len(fail_reason) &gt; 0:</dt>
+<dd>self.warn(“Could not spawn {} at location {}.{}”.format(unit_type, location, fail_reason))</dd>
+</dl>
+</dd>
+<dt>return (affordable and correct_territory and not blocked and</dt>
+<dd>(stationary or on_edge) and
+(not stationary or num == 1))</dd>
+</dl>
+</dd>
+<dt>def attempt_spawn(self, unit_type, locations, num=1):</dt>
+<dd><p class="first">“”“Attempts to spawn new units with the type given in the given locations.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>unit_type: The type of unit we want to spawn</li>
+<li>locations: A single location or list of locations to spawn units at</li>
+<li>num: The number of units of unit_type to deploy at the given location(s)</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd>The number of units successfully spawned</dd>
+</dl>
+<p>“””
+if unit_type not in ALL_UNITS:</p>
+<blockquote>
+<div>self._invalid_unit(unit_type)
+return</div></blockquote>
+<dl class="docutils">
+<dt>if num &lt; 1:</dt>
+<dd>self.warn(“Attempted to spawn fewer than one units! ({})”.format(num))
+return</dd>
+<dt>if type(locations[0]) == int:</dt>
+<dd>locations = [locations]</dd>
+</dl>
+<p>spawned_units = 0
+for location in locations:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>for i in range(num):</dt>
+<dd><dl class="first last docutils">
+<dt>if self.can_spawn(unit_type, location, 1):</dt>
+<dd><p class="first">x, y = map(int, location)
+cost = self.type_cost(unit_type)
+resource_type = self.__resource_required(unit_type)
+self.__set_resource(resource_type, 0 - cost)
+self.game_map.add_unit(unit_type, location, 0)
+if is_stationary(unit_type):</p>
+<blockquote>
+<div>self._build_stack.append((unit_type, x, y))</div></blockquote>
+<dl class="docutils">
+<dt>else:</dt>
+<dd>self._deploy_stack.append((unit_type, x, y))</dd>
+</dl>
+<p class="last">spawned_units += 1</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+<p class="last">return spawned_units</p>
+</dd>
+<dt>def attempt_remove(self, locations):</dt>
+<dd><p class="first">“”“Attempts to remove existing friendly firewalls in the given locations.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>locations: A location or list of locations we want to remove firewalls from</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd>The number of firewalls successfully flagged for removal</dd>
+</dl>
+<p>“””
+if type(locations[0]) == int:</p>
+<blockquote>
+<div>locations = [locations]</div></blockquote>
+<p>removed_units = 0
+for location in locations:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>if location[1] &lt; self.HALF_ARENA and self.contains_stationary_unit(location):</dt>
+<dd>x, y = map(int, location)
+self._build_stack.append((REMOVE, x, y))
+removed_units += 1</dd>
+<dt>else:</dt>
+<dd>self.warn(“Could not remove a unit from {}. Location has no firewall or is enemy territory.”.format(location))</dd>
+</dl>
+</div></blockquote>
+<p class="last">return removed_units</p>
+</dd>
+<dt>def get_target_edge(self, start_location):</dt>
+<dd><p class="first">left = start_location[0] &lt; self.HALF_ARENA
+bottom = start_location[1] &lt; self.HALF_ARENA
+right = not(left)
+top = not(bottom)
+if left and bottom:</p>
+<blockquote>
+<div>return self.game_map.TOP_RIGHT</div></blockquote>
+<dl class="last docutils">
+<dt>elif left and top:</dt>
+<dd>return self.game_map.BOTTOM_RIGHT</dd>
+<dt>elif right and bottom:</dt>
+<dd>return self.game_map.TOP_LEFT</dd>
+<dt>elif right and top:</dt>
+<dd>return self.game_map.BOTTOM_LEFT</dd>
+</dl>
+</dd>
+<dt>def find_path_to_edge(self, start_location, target_edge=None):</dt>
+<dd><p class="first">“”“Gets the path a unit at a given location would take</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>start_location: The location of a hypothetical unit</li>
+<li>target_edge: The edge the unit wants to reach. game_map.TOP_LEFT, game_map.BOTTOM_RIGHT, etc. Will auto calculate if None.</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd>A list of locations corresponding to the path the unit would take
+to get from it’s starting location to the best available end location</dd>
+</dl>
+<p>“””
+if self.contains_stationary_unit(start_location):</p>
+<blockquote>
+<div>self.warn(“Attempted to perform pathing from blocked starting location {}”.format(start_location))
+return</div></blockquote>
+<dl class="docutils">
+<dt>if target_edge is None:</dt>
+<dd>target_edge = self.get_target_edge(start_location)</dd>
+</dl>
+<p class="last">end_points = self.game_map.get_edge_locations(target_edge)
+return self._shortest_path_finder.navigate_multiple_endpoints(start_location, end_points, self)</p>
+</dd>
+<dt>def contains_stationary_unit(self, location):</dt>
+<dd><p class="first">“”“Check if a location is blocked</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>location: The location to check</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd>True if there is a stationary unit at the location, False otherwise</dd>
+</dl>
+<p>“””
+if not self.game_map.in_arena_bounds(location):</p>
+<blockquote>
+<div>self.warn(‘Checked for stationary unit outside of arena bounds’)
+return False</div></blockquote>
+<p>x, y = map(int, location)
+for unit in self.game_map[x,y]:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>if unit.stationary:</dt>
+<dd>return unit</dd>
+</dl>
+</div></blockquote>
+<p class="last">return False</p>
+</dd>
+<dt>def warn(self, message):</dt>
+<dd><dl class="first last docutils">
+<dt>if(self.enable_warnings):</dt>
+<dd>debug_write(message)</dd>
+</dl>
+</dd>
+<dt>def suppress_warnings(self, suppress):</dt>
+<dd><p class="first">“”“Suppress all warnings</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>suppress: If true, disable warnings. If false, enable warnings.</li>
+</ul>
+</dd>
+</dl>
+<p>“”“</p>
+<p class="last">self.enable_warnings = not suppress
+self.game_map.enable_warnings = not suppress</p>
+</dd>
+<dt>def get_target(self, attacking_unit):</dt>
+<dd><p class="first">“”“Returns target of given unit based on current map of the game board.
+A Unit can often have many other units in range, and Units that attack do so once each frame.</p>
+<dl class="docutils">
+<dt>Their targeting priority is as follows:</dt>
+<dd>Infantry &gt; Nearest Unit &gt; Lowest Health &gt; Lowest Y position &gt; Closest to edge (Highest distance of X from the boards center, 13.5)</dd>
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>attacking_unit: A GameUnit</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd>The GameUnit this unit would choose to attack.</dd>
+</dl>
+<p>“”“</p>
+<dl class="docutils">
+<dt>if not isinstance(attacking_unit, GameUnit):</dt>
+<dd>self.warn(“Passed a {} to get_target as attacking_unit. Expected a GameUnit.”.format(type(attacking_unit)))
+return</dd>
+</dl>
+<p>attacker_location = [attacking_unit.x, attacking_unit.y]
+possible_locations = self.game_map.get_locations_in_range(attacker_location, attacking_unit.range)
+target = None
+target_stationary = True
+target_distance = sys.maxsize
+target_health = sys.maxsize
+target_y = self.ARENA_SIZE
+target_x_distance = 0</p>
+<dl class="docutils">
+<dt>for location in possible_locations:</dt>
+<dd><dl class="first last docutils">
+<dt>for unit in self.game_map[location]:</dt>
+<dd><p class="first">“””
+NOTE: scrambler units cannot attack firewalls so skip them if unit is firewall
+“””
+if unit.player_index == attacking_unit.player_index or (attacking_unit.unit_type == SCRAMBLER and is_stationary(unit.unit_type)):</p>
+<blockquote>
+<div>continue</div></blockquote>
+<p>new_target = False
+unit_stationary = unit.stationary
+unit_distance = self.game_map.distance_between_locations(location, [attacking_unit.x, attacking_unit.y])
+unit_health = unit.health
+unit_y = unit.y
+unit_x_distance = abs(self.HALF_ARENA - 0.5 - unit.x)</p>
+<dl class="docutils">
+<dt>if target_stationary and not unit_stationary:</dt>
+<dd>new_target = True</dd>
+<dt>elif not target_stationary and unit_stationary:</dt>
+<dd>continue</dd>
+<dt>if target_distance &gt; unit_distance:</dt>
+<dd>new_target = True</dd>
+<dt>elif target_distance &lt; unit_distance and not new_target:</dt>
+<dd>continue</dd>
+<dt>if target_health &gt; unit_health:</dt>
+<dd>new_target = True</dd>
+<dt>elif target_health &lt; unit_health and not new_target:</dt>
+<dd>continue</dd>
+</dl>
+<p># Compare height heuristic relative to attacking unit’s player index
+if attacking_unit.player_index == 0:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>if target_y &gt; unit_y:</dt>
+<dd>new_target = True</dd>
+<dt>elif target_y &lt; unit_y and not new_target:</dt>
+<dd>continue</dd>
+</dl>
+</div></blockquote>
+<dl class="last docutils">
+<dt>else:</dt>
+<dd><dl class="first last docutils">
+<dt>if target_y &lt; unit_y:</dt>
+<dd>new_target = True</dd>
+<dt>elif target_y &gt; unit_y and not new_target:</dt>
+<dd>continue</dd>
+</dl>
+</dd>
+<dt>if target_x_distance &lt; unit_x_distance:</dt>
+<dd>new_target = True</dd>
+<dt>if new_target:</dt>
+<dd>target = unit
+target_stationary = unit_stationary
+target_distance = unit_distance
+target_health = unit_health
+target_y = unit_y
+target_x_distance = unit_x_distance</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="last">return target</p>
+</dd>
+<dt>def get_attackers(self, location, player_index):</dt>
+<dd><p class="first">“”“Gets the destructors threatening a given location</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><ul class="first last simple">
+<li>location: The location of a hypothetical defender</li>
+<li>player_index: The index corresponding to the defending player, 0 for you 1 for the enemy</li>
+</ul>
+</dd>
+<dt>Returns:</dt>
+<dd>A list of destructors that would attack a unit controlled by the given player at the given location</dd>
+</dl>
+<p>“”“</p>
+<dl class="docutils">
+<dt>if not player_index == 0 and not player_index == 1:</dt>
+<dd>self._invalid_player_index(player_index)</dd>
+<dt>if not self.game_map.in_arena_bounds(location):</dt>
+<dd>self.warn(“Location {} is not in the arena bounds.”.format(location))</dd>
+</dl>
+<p>attackers = []
+“””
+Get locations in the range of DESTRUCTOR units
+“””
+possible_locations= self.game_map.get_locations_in_range(location, self.config[“unitInformation”][UNIT_TYPE_TO_INDEX[DESTRUCTOR]][“range”])
+for location in possible_locations:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>for unit in self.game_map[location]:</dt>
+<dd><dl class="first last docutils">
+<dt>if unit.unit_type == DESTRUCTOR and unit.player_index != player_index:</dt>
+<dd>attackers.append(unit)</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+<p class="last">return attackers</p>
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">C1 Terminal Python Starterkit</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Correlation One.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+      |
+      <a href="_sources/game_state.py.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
