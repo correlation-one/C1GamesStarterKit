@@ -135,14 +135,6 @@ class BasicTests(unittest.TestCase):
     def test_basic(self):
         self.assertEqual(True, True, "It's the end of the world as we know it, and I feel fine")
 
-    def test_advanced_game_state(self):
-        advanced = self.make_turn_0_map()
-        self.assertTrue(isinstance(advanced, GameState))
-        self.assertTrue(isinstance(advanced, AdvancedGameState))
-        for name in sorted(dir(self)):
-            if name.startswith("test") and "advanced" not in name:
-                getattr(self, name)(True)
-
     def test_simple_fields(self):
         game = self.make_turn_0_map()
         self.assertEqual(5, game.get_resource(game.BITS), "I should have 5 bits")
