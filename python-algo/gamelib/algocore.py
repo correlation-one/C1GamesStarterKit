@@ -4,9 +4,11 @@ from .game_state import GameState
 from .util import get_command, debug_write, BANNER_TEXT, send_command
 
 class AlgoCore(object):
-    """This class handles communication with the game itself. Your strategy should subclass it.
+    """
+    This class handles communication with the game engine. \n
+    algo_strategy.py subclasses it. 
 
-    Attributes:
+    Attributes :
         * config (JSON): json object containing information about the game
 
     """
@@ -15,36 +17,39 @@ class AlgoCore(object):
 
     def on_game_start(self, config):
         """
-        Override this to perform initial setup at the start of the game, based
-        on the config, a json file which contains information about the game.
+        This function is called once at the start of the game. 
+        By default, it just initializes the config. \n
+        You can override it it in algo_strategy.py to perform start of game setup
         """
         self.config = config
 
     def on_turn(self, game_state):
         """
-        This step function is called every turn and is passed a string containing
-        the current game state, which can be used to initialize a new GameMap
+        This step function is called at the start of each turn.
+        It is passed the current game state, which can be used to initiate a new GameState object. 
+        By default, it sends empty commands to the game engine. \n
+        algo_strategy.py inherits from AlgoCore and overrides this on turn function. 
+        Adjusting the on_turn function in algo_strategy is the main way to adjust your algo's logic. 
         """
-        self.submit_default_turn()
+        send_command("")
+        send_command("") 
     
-    def on_action_frame(self, turn_string):
+    def on_action_frame(self, action_frame_game_state):
         """
-        This function is called every action frame and is passed a string containing
-        the current game state, which can also be used to initialize a new GameMap.
-        Be careful about going over your compute time as this is potentially called hundreds of 
-        times per turn
+        After each deploy phase, the game engine will run the action phase of the round.
+        The action phase is made up of a sequence of distinct frames. 
+        Each of these frames is sent to the algo in order. 
+        They can be handled in this function. 
         """
         pass
 
-    def submit_default_turn(self):
-        send_command("")
-        send_command("")
 
     def start(self):
         """ 
         Start the parsing loop.
-        Python will hang on the readline() statement so actually this program will run forever unless manually stopped or
-        it receives the "End" turn message from the game.
+        After starting the algo, it will wait until it recieves information from the game 
+        engine, proccess this information, and respond if needed to take it's turn. 
+        The algo continues this loop until it recieves the "End" turn message from the game.
         """
         debug_write(BANNER_TEXT)
 
@@ -76,7 +81,7 @@ class AlgoCore(object):
                     """
                     This is the end game message. This means the game is over so break and finish the program.
                     """
-                    debug_write("Got end state quitting bot.")
+                    debug_write("Got end state, game over. Stopping algo.")
                     break
                 else:
                     """

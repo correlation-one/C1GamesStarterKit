@@ -1,10 +1,17 @@
 def is_stationary(unit_type, firewall_types):
+    """
+        Args:
+            unit_type: A unit type
+        
+        Returns: 
+            Boolean, True if the unit is stationary, False otherwise.
+    """
     return unit_type in firewall_types
 
 class GameUnit:
     """Holds information about a Unit. 
 
-    Attributes:
+    Attributes :
         * unit_type (string): This unit's type
         * config (JSON): Contains information about the game
         * player_index (integer): The player that controls this unit. 0 for you, 1 for your opponent.
