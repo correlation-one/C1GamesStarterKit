@@ -67,7 +67,6 @@ class AlgoStrategy(gamelib.AlgoCore):
     strategy and can safely be replaced for your custom algo.
     """
 
-
     def starter_strategy(self, game_state):
         """
         For defense we will use a spread out layout and some Scramblers early on.
