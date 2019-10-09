@@ -46,18 +46,13 @@ in documents/_build. You can remake the documentation by running 'make html' in 
 ### `run.sh`
 
 A script that contains logic to invoke your code. You do not need to run this directly.
-See the 'scripts' folder in the Starterkit for information about testing locally.
+See the 'scripts' folder in the Starterkit for information about testing locally. 
 
 ### `run.ps1`
 
-<<<<<<< HEAD
 A script that contains logic to invoke your code. You shouldn't need to change
 this unless you change file structure or require a more customized process
 startup. 
-=======
-A script that contains logic to invoke your code. You do not need to run this directly.
-See the 'scripts' folder in the Starterkit for information about testing locally.
->>>>>>> b8cb7ec3953fbb50852c2c00908f6732ce79f5cb
 
 ### `gamelib/__init__.py`
 
