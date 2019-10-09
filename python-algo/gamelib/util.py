@@ -33,7 +33,7 @@ def debug_write(*msg):
     """Prints a message to the games debug output
 
     Args:
-        * msg: The message to output
+        msg: The message to output
 
     """
     #Printing to STDERR is okay and printed out by the game but doesn't effect turns.
