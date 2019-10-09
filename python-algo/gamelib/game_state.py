@@ -7,13 +7,20 @@ from .unit import GameUnit
 from .game_map import GameMap
 
 def is_stationary(unit_type):
+    """
+        Args:
+            unit_type: A unit type
+        
+        Returns: 
+            Boolean, True if the unit is stationary, False otherwise.
+    """
     return unit_type in FIREWALL_TYPES
 
 class GameState:
     """Represents the entire gamestate for a given turn
     Provides methods related to resources and unit deployment
 
-    Attributes:
+    Attributes :
         * UNIT_TYPE_TO_INDEX (dict): Maps a unit to a corresponding index
         * FILTER (str): A constant representing the filter unit
         * ENCRYPTOR (str): A constant representing the encryptor unit
@@ -154,8 +161,7 @@ class GameState:
 
     def submit_turn(self):
         """Submit and end your turn.
-        Must be called at the end of your turn or the algo will hang.
-        
+            Must be called at the end of your turn or the algo will hang.
         """
         build_string = json.dumps(self._build_stack)
         deploy_string = json.dumps(self._deploy_stack)
@@ -166,8 +172,8 @@ class GameState:
         """Gets a players resources
 
         Args:
-            * resource_type: BITS (0) or CORES (1)
-            * player_index: The index corresponding to the player whos resources you are querying, 0 for you 1 for the enemy
+            resource_type: BITS (0) or CORES (1)
+            player_index: The index corresponding to the player whos resources you are querying, 0 for you 1 for the enemy
 
         Returns:
             The number of the given resource the given player controls
@@ -191,7 +197,7 @@ class GameState:
         """The number of units of a given type we can afford
 
         Args:
-            * unit_type: A unit type, PING, FILTER, etc.
+            unit_type: A unit type, PING, FILTER, etc.
 
         Returns:
             The number of units affordable of the given unit_type.
@@ -210,9 +216,9 @@ class GameState:
         """Predicts the number of bits we will have on a future turn
 
         Args:
-            * turns_in_future: The number of turns in the future we want to look forward to predict
-            * player_index: The player whose bits we are tracking
-            * current_bits: If we pass a value here, we will use that value instead of the current bits of the given player.
+            turns_in_future: The number of turns in the future we want to look forward to predict
+            player_index: The player whose bits we are tracking
+            current_bits: If we pass a value here, we will use that value instead of the current bits of the given player.
 
         Returns:
             The number of bits the given player will have after the given number of turns
@@ -239,7 +245,7 @@ class GameState:
         """Gets the cost of a unit based on its type
 
         Args:
-            * unit_type: The units type
+            unit_type: The units type
 
         Returns:
             The units cost
@@ -260,9 +266,9 @@ class GameState:
         and on an edge if the unit is information.
 
         Args:
-            * unit_type: The type of the unit
-            * location: The location we want to spawn the unit
-            * num: The number of units we want to spawn
+            unit_type: The type of the unit
+            location: The location we want to spawn the unit
+            num: The number of units we want to spawn
 
         Returns:
             True if we can spawn the unit(s)
@@ -304,9 +310,9 @@ class GameState:
         """Attempts to spawn new units with the type given in the given locations.
 
         Args:
-            * unit_type: The type of unit we want to spawn
-            * locations: A single location or list of locations to spawn units at
-            * num: The number of units of unit_type to deploy at the given location(s)
+            unit_type: The type of unit we want to spawn
+            locations: A single location or list of locations to spawn units at
+            num: The number of units of unit_type to deploy at the given location(s)
 
         Returns:
             The number of units successfully spawned
@@ -341,7 +347,7 @@ class GameState:
         """Attempts to remove existing friendly firewalls in the given locations.
 
         Args:
-            * locations: A location or list of locations we want to remove firewalls from
+            locations: A location or list of locations we want to remove firewalls from
 
         Returns:
             The number of firewalls successfully flagged for removal
@@ -360,6 +366,15 @@ class GameState:
         return removed_units
 
     def get_target_edge(self, start_location):
+        """Gets the target edge given a starting location
+
+        Args:
+            start_location: The location of a hypothetical unit
+
+        Returns: 
+            The edge this unit would attempt to reach if it was spawned at this location
+        """
+
         left = start_location[0] < self.HALF_ARENA
         bottom = start_location[1] < self.HALF_ARENA
         right = not(left)
@@ -377,8 +392,8 @@ class GameState:
         """Gets the path a unit at a given location would take
 
         Args:
-            * start_location: The location of a hypothetical unit
-            * target_edge: The edge the unit wants to reach. game_map.TOP_LEFT, game_map.BOTTOM_RIGHT, etc. Will auto calculate if None.
+            start_location: The location of a hypothetical unit
+            target_edge: The edge the unit wants to reach. game_map.TOP_LEFT, game_map.BOTTOM_RIGHT, etc. Induced from start_location if None.
 
         Returns:
             A list of locations corresponding to the path the unit would take 
@@ -399,7 +414,7 @@ class GameState:
         """Check if a location is blocked
 
         Args:
-            * location: The location to check
+            location: The location to check
 
         Returns:
             True if there is a stationary unit at the location, False otherwise
@@ -415,6 +430,9 @@ class GameState:
         return False
 
     def warn(self, message):
+        """ Used internally by game_state to print warnings
+        """
+
         if(self.enable_warnings):
             debug_write(message)
 
@@ -422,7 +440,7 @@ class GameState:
         """Suppress all warnings
 
         Args: 
-            * suppress: If true, disable warnings. If false, enable warnings.
+            suppress: If true, disable warnings. If false, enable warnings.
             
         """
 
@@ -437,7 +455,7 @@ class GameState:
             Infantry > Nearest Unit > Lowest Health > Lowest Y position > Closest to edge (Highest distance of X from the boards center, 13.5)
 
         Args:
-            * attacking_unit: A GameUnit
+            attacking_unit: A GameUnit
 
         Returns:
             The GameUnit this unit would choose to attack.
@@ -515,8 +533,8 @@ class GameState:
         """Gets the destructors threatening a given location
 
         Args:
-            * location: The location of a hypothetical defender
-            * player_index: The index corresponding to the defending player, 0 for you 1 for the enemy
+            location: The location of a hypothetical defender
+            player_index: The index corresponding to the defending player, 0 for you 1 for the enemy
 
         Returns:
             A list of destructors that would attack a unit controlled by the given player at the given location

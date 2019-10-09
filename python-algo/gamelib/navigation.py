@@ -7,7 +7,7 @@ from .util import debug_write
 class Node:
     """A pathfinding node
 
-    Attributes:
+    Attributes :
         * visited_idealness (bool): Have we visited this node during the idealness search step?
         * visited_validate (bool): Have we visited this node during the validation step?
         * blocked (bool): Is there a firewall at this node's location
@@ -28,7 +28,7 @@ code to maximise time efficiency
 class ShortestPathFinder:
     """Handles pathfinding
 
-    Attributes:
+    Attributes :
         * HORIZONTAL (int): A constant representing a horizontal movement
         * VERTICAL (int): A constant representing a vertical movement
 
@@ -45,7 +45,7 @@ class ShortestPathFinder:
         """Initializes the map
 
         Args:
-            * game_state: A GameState object representing the gamestate we want to 
+            game_state: A GameState object representing the gamestate we want to traverse
         """
         #Initialize map 
         self.initialized = True
