@@ -46,7 +46,7 @@ startup.
 
 A script that contains logic to invoke your code. You shouldn't need to change
 this unless you change file structure or require a more customized process
-startup.
+startup. 
 
 ### `gamelib/__init__.py`
 
