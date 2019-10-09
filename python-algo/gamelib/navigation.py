@@ -45,7 +45,7 @@ class ShortestPathFinder:
         """Initializes the map
 
         Args:
-            * game_state: A GameState object representing the gamestate we want to traverse
+            game_state: A GameState object representing the gamestate we want to traverse
         """
         #Initialize map 
         self.initialized = True

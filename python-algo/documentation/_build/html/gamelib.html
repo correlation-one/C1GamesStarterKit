@@ -285,8 +285,8 @@ Provides methods related to resources and unit deployment</p>
 <li>FIREWALL_TYPES (list): A list of the firewall units</li>
 <li>ARENA_SIZE (int): The size of the arena</li>
 <li>HALF_ARENA (int): Half the size of the arena</li>
-<li>BITS (int): A constant representing the bits resource</li>
-<li>CORES (int): A constant representing the cores resource</li>
+<li>BITS (int): A constant representing the bits resource, used in the get_resource function</li>
+<li>CORES (int): A constant representing the cores resource, used in the get_resource function</li>
 <li>game_map (:obj: GameMap): The current GameMap. To retrieve a list of GameUnits at a location, use game_map[x, y]</li>
 <li>turn_number (int): The current turn number. Starts at 0.</li>
 <li>my_health (int): Your current remaining health</li>
@@ -427,7 +427,7 @@ to get from it’s starting location to the best available end location</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>resource_type</strong> – self.CORES or self.BITS</li>
+<li><strong>resource_type</strong> – BITS (0) or CORES (1)</li>
 <li><strong>player_index</strong> – The index corresponding to the player whos resources you are querying, 0 for you 1 for the enemy</li>
 </ul>
 </td>
@@ -446,7 +446,7 @@ to get from it’s starting location to the best available end location</p>
 A Unit can often have many other units in range, and Units that attack do so once each frame.</p>
 <dl class="docutils">
 <dt>Their targeting priority is as follows:</dt>
-<dd>Infantry &gt; Nearest Unit &gt; Lowest Stability &gt; Lowest Y position &gt; Closest to edge (Highest distance of X from the boards center, 13.5)</dd>
+<dd>Infantry &gt; Nearest Unit &gt; Lowest Health &gt; Lowest Y position &gt; Closest to edge (Highest distance of X from the boards center, 13.5)</dd>
 </dl>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -617,7 +617,7 @@ Must be called at the end of your turn or the algo will hang.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>game_state</strong> (<em>*</em>) – A GameState object representing the gamestate we want to traverse</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>game_state</strong> – A GameState object representing the gamestate we want to traverse</td>
 </tr>
 </tbody>
 </table>
@@ -659,7 +659,7 @@ Note that this path can change if a tower is destroyed during pathing, or if you
 <span id="game-unit-gamelib-unit"></span><h2>Game Unit  (gamelib.unit)<a class="headerlink" href="#module-gamelib.unit" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="gamelib.unit.GameUnit">
-<em class="property">class </em><code class="descclassname">gamelib.unit.</code><code class="descname">GameUnit</code><span class="sig-paren">(</span><em>unit_type</em>, <em>config</em>, <em>player_index=None</em>, <em>stability=None</em>, <em>x=-1</em>, <em>y=-1</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.unit.GameUnit" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">gamelib.unit.</code><code class="descname">GameUnit</code><span class="sig-paren">(</span><em>unit_type</em>, <em>config</em>, <em>player_index=None</em>, <em>health=None</em>, <em>x=-1</em>, <em>y=-1</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.unit.GameUnit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Holds information about a Unit.</p>
 <dl class="docutils">
@@ -676,8 +676,8 @@ Note that this path can change if a tower is destroyed during pathing, or if you
 <li>damage_f (int): The amount of damage this information unit will deal to enemy firewalls.</li>
 <li>damage_i (int): The amount of damage this information unit will deal to enemy information.</li>
 <li>range (float): The effective range of this unit</li>
-<li>max_stability (float): The starting stability of this unit. Note than stability can be increased beyond this value by encryptors</li>
-<li>stability (float): The current health of this unit</li>
+<li>max_health (float): The starting health of this unit. Note than health can be increased beyond this value by encryptors</li>
+<li>health (float): The current health of this unit</li>
 <li>cost (int): The resource cost of this unit</li>
 </ul>
 </dd>
