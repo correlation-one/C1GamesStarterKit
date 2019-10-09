@@ -1,0 +1,1322 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>gamelib package &#8212; C1 Terminal Python Starterkit 1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="gamelib" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="gamelib-package">
+<h1>gamelib package<a class="headerlink" href="#gamelib-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-gamelib">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-gamelib" title="Permalink to this headline">¶</a></h2>
+<p>The gamelib package contains modules that assist in algo creation</p>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-gamelib.algocore">
+<span id="algo-core-gamelib-algocore"></span><h2>Algo Core (gamelib.algocore)<a class="headerlink" href="#module-gamelib.algocore" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gamelib.algocore.AlgoCore">
+<em class="property">class </em><code class="descclassname">gamelib.algocore.</code><code class="descname">AlgoCore</code><a class="headerlink" href="#gamelib.algocore.AlgoCore" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class handles communication with the game itself. Your strategy should subclass it.</p>
+<dl class="attribute">
+<dt>
+<code class="descname">* config</code></dt>
+<dd><p>json object containing information about the game</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">JSON</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.algocore.AlgoCore.on_action_frame">
+<code class="descname">on_action_frame</code><span class="sig-paren">(</span><em>turn_string</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.algocore.AlgoCore.on_action_frame" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is called every action frame and is passed a string containing
+the current game state, which can also be used to initialize a new GameMap.
+Be careful about going over your compute time as this is potentially called hundreds of
+times per turn</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.algocore.AlgoCore.on_game_start">
+<code class="descname">on_game_start</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.algocore.AlgoCore.on_game_start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override this to perform initial setup at the start of the game, based
+on the config, a json file which contains information about the game.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.algocore.AlgoCore.on_turn">
+<code class="descname">on_turn</code><span class="sig-paren">(</span><em>game_state</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.algocore.AlgoCore.on_turn" title="Permalink to this definition">¶</a></dt>
+<dd><p>This step function is called every turn and is passed a string containing
+the current game state, which can be used to initialize a new GameMap</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.algocore.AlgoCore.start">
+<code class="descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.algocore.AlgoCore.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start the parsing loop.
+Python will hang on the readline() statement so actually this program will run forever unless manually stopped or
+it receives the “End” turn message from the game.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.algocore.AlgoCore.submit_default_turn">
+<code class="descname">submit_default_turn</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.algocore.AlgoCore.submit_default_turn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-gamelib.game_map">
+<span id="game-map-gamelib-game-map"></span><h2>Game Map (gamelib.game_map)<a class="headerlink" href="#module-gamelib.game_map" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gamelib.game_map.GameMap">
+<em class="property">class </em><code class="descclassname">gamelib.game_map.</code><code class="descname">GameMap</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_map.GameMap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Holds data about the current game map and provides functions
+useful for getting information related to the map.</p>
+<p>game_map[x, y] will return a list of Units located at that location,
+or an empty list if there are no units at the location</p>
+<dl class="attribute">
+<dt>
+<code class="descname">* config</code></dt>
+<dd><p>Contains information about the game</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">JSON</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* ARENA_SIZE</code></dt>
+<dd><p>The size of the arena.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* HALF_ARENA</code></dt>
+<dd><p>Half of the size of the arena.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* TOP_RIGHT</code></dt>
+<dd><p>A constant that represents the top right edge</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* TOP_LEFT</code></dt>
+<dd><p>A constant that represents the top left edge</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* BOTTOM_LEFT</code></dt>
+<dd><p>Hidden challenge! Can you guess what this constant represents???</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* BOTTOM_RIGHT</code></dt>
+<dd><p>A constant that represents the bottom right edge</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.game_map.GameMap.add_unit">
+<code class="descname">add_unit</code><span class="sig-paren">(</span><em>unit_type</em>, <em>location</em>, <em>player_index=0</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_map.GameMap.add_unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a single GameUnit to the map at the given location.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>unit_type</strong> (<em>*</em>) – The type of the new unit</li>
+<li><strong>location</strong> (<em>*</em>) – The location of the new unit</li>
+<li><strong>player_index</strong> (<em>*</em>) – The index corresponding to the player controlling the new unit, 0 for you 1 for the enemy</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This function does not affect your turn and only changes the data stored in GameMap. The intended use of this function
+is to allow you to create arbitrary gamestates. Using this function on the GameMap inside game_state can cause your algo to crash.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.game_map.GameMap.distance_between_locations">
+<code class="descname">distance_between_locations</code><span class="sig-paren">(</span><em>location_1</em>, <em>location_2</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_map.GameMap.distance_between_locations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Euclidean distance</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>location_1</strong> (<em>*</em>) – An arbitrary location</li>
+<li><strong>location_2</strong> (<em>*</em>) – An arbitrary location</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The euclidean distance between the two locations</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.game_map.GameMap.get_edge_locations">
+<code class="descname">get_edge_locations</code><span class="sig-paren">(</span><em>quadrant_description</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_map.GameMap.get_edge_locations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes in an edge description and returns a list of locations.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>quadrant_description</strong> (<em>*</em>) – A constant corresponding to an edge. Valid quadrant descriptions are
+* GameMap.TOP_RIGHT
+* GameMap.TOP_LEFT
+* GameMap.BOTTOM_RIGHT
+* GameMap.BOTTOM_LEFT</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of locations corresponding to the requested edge</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.game_map.GameMap.get_edges">
+<code class="descname">get_edges</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_map.GameMap.get_edges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all of the edges and their edge locations</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list with four lists inside of it of locations corresponding to the four edges.
+[0] = top_right, [1] = top_left, [2] = bottom_left, [3] = bottom_right.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.game_map.GameMap.get_locations_in_range">
+<code class="descname">get_locations_in_range</code><span class="sig-paren">(</span><em>location</em>, <em>radius</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_map.GameMap.get_locations_in_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets locations in a circular area around a location</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>location</strong> (<em>*</em>) – The center of our search area</li>
+<li><strong>radius</strong> (<em>*</em>) – The radius of our search area</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The locations that are within our search area</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.game_map.GameMap.in_arena_bounds">
+<code class="descname">in_arena_bounds</code><span class="sig-paren">(</span><em>location</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_map.GameMap.in_arena_bounds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the given location is inside the diamond shaped game board.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>location</strong> (<em>*</em>) – A map location</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if the location is on the board, False otherwise</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.game_map.GameMap.remove_unit">
+<code class="descname">remove_unit</code><span class="sig-paren">(</span><em>location</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_map.GameMap.remove_unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove all units on the map in the given location.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>location</strong> (<em>*</em>) – The location that you will empty of units</td>
+</tr>
+</tbody>
+</table>
+<p>This function does not affect your turn and only changes the data stored in GameMap. The intended use of this function
+is to allow you to create arbitrary gamestates. Using this function on the GameMap inside game_state can cause your algo to crash.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.game_map.GameMap.warn">
+<code class="descname">warn</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_map.GameMap.warn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-gamelib.game_state">
+<span id="game-state-gamelib-game-state"></span><h2>Game State (gamelib.game_state)<a class="headerlink" href="#module-gamelib.game_state" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gamelib.game_state.GameState">
+<em class="property">class </em><code class="descclassname">gamelib.game_state.</code><code class="descname">GameState</code><span class="sig-paren">(</span><em>config</em>, <em>serialized_string</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_state.GameState" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents the entire gamestate for a given turn
+Provides methods related to resources and unit deployment</p>
+<dl class="attribute">
+<dt>
+<code class="descname">* UNIT_TYPE_TO_INDEX</code></dt>
+<dd><p>Maps a unit to a corresponding index</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* FILTER</code></dt>
+<dd><p>A constant representing the filter unit</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* ENCRYPTOR</code></dt>
+<dd><p>A constant representing the encryptor unit</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* DESTRUCTOR</code></dt>
+<dd><p>A constant representing the destructor unit</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* PING</code></dt>
+<dd><p>A constant representing the ping unit</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* EMP</code></dt>
+<dd><p>A constant representing the emp unit</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* SCRAMBLER</code></dt>
+<dd><p>A constant representing the scrambler unit</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* FIREWALL_TYPES</code></dt>
+<dd><p>A list of the firewall units</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* ARENA_SIZE</code></dt>
+<dd><p>The size of the arena</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* HALF_ARENA</code></dt>
+<dd><p>Half the size of the arena</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* BITS</code></dt>
+<dd><p>A constant representing the bits resource</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* CORES</code></dt>
+<dd><p>A constant representing the cores resource</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* game_map (</code></dt>
+<dd><p>obj: GameMap): The current GameMap. To retrieve a list of GameUnits at a location, use game_map[x, y]</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* turn_number</code></dt>
+<dd><p>The current turn number. Starts at 0.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* my_health</code></dt>
+<dd><p>Your current remaining health</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* my_time</code></dt>
+<dd><p>The time you took to submit your previous turn</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* enemy_health</code></dt>
+<dd><p>Your opponents current remaining health</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* enemy_time</code></dt>
+<dd><p>Your opponents current remaining time</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.game_state.GameState.attempt_remove">
+<code class="descname">attempt_remove</code><span class="sig-paren">(</span><em>locations</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_state.GameState.attempt_remove" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempts to remove existing friendly firewalls in the given locations.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>locations</strong> (<em>*</em>) – A location or list of locations we want to remove firewalls from</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The number of firewalls successfully flagged for removal</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.game_state.GameState.attempt_spawn">
+<code class="descname">attempt_spawn</code><span class="sig-paren">(</span><em>unit_type</em>, <em>locations</em>, <em>num=1</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_state.GameState.attempt_spawn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempts to spawn new units with the type given in the given locations.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>unit_type</strong> (<em>*</em>) – The type of unit we want to spawn</li>
+<li><strong>locations</strong> (<em>*</em>) – A single location or list of locations to spawn units at</li>
+<li><strong>num</strong> (<em>*</em>) – The number of units of unit_type to deploy at the given location(s)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The number of units successfully spawned</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.game_state.GameState.can_spawn">
+<code class="descname">can_spawn</code><span class="sig-paren">(</span><em>unit_type</em>, <em>location</em>, <em>num=1</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_state.GameState.can_spawn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if we can spawn a unit at a location.</p>
+<p>To units, we need to be able to afford them, and the location must be
+in bounds, unblocked, on our side of the map, not on top of a unit we can’t stack with,
+and on an edge if the unit is information.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>unit_type</strong> (<em>*</em>) – The type of the unit</li>
+<li><strong>location</strong> (<em>*</em>) – The location we want to spawn the unit</li>
+<li><strong>num</strong> (<em>*</em>) – The number of units we want to spawn</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">True if we can spawn the unit(s)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.game_state.GameState.contains_stationary_unit">
+<code class="descname">contains_stationary_unit</code><span class="sig-paren">(</span><em>location</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_state.GameState.contains_stationary_unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if a location is blocked</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>location</strong> (<em>*</em>) – The location to check</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if there is a stationary unit at the location, False otherwise</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.game_state.GameState.find_path_to_edge">
+<code class="descname">find_path_to_edge</code><span class="sig-paren">(</span><em>start_location</em>, <em>target_edge=None</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_state.GameState.find_path_to_edge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the path a unit at a given location would take</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>start_location</strong> (<em>*</em>) – The location of a hypothetical unit</li>
+<li><strong>target_edge</strong> (<em>*</em>) – The edge the unit wants to reach. game_map.TOP_LEFT, game_map.BOTTOM_RIGHT, etc. Will auto calculate if None.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A list of locations corresponding to the path the unit would take
+to get from it’s starting location to the best available end location</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.game_state.GameState.get_attackers">
+<code class="descname">get_attackers</code><span class="sig-paren">(</span><em>location</em>, <em>player_index</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_state.GameState.get_attackers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the destructors threatening a given location</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>location</strong> (<em>*</em>) – The location of a hypothetical defender</li>
+<li><strong>player_index</strong> (<em>*</em>) – The index corresponding to the defending player, 0 for you 1 for the enemy</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A list of destructors that would attack a unit controlled by the given player at the given location</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.game_state.GameState.get_resource">
+<code class="descname">get_resource</code><span class="sig-paren">(</span><em>resource_type</em>, <em>player_index=0</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_state.GameState.get_resource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a players resources</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>resource_type</strong> (<em>*</em>) – self.CORES or self.BITS</li>
+<li><strong>player_index</strong> (<em>*</em>) – The index corresponding to the player whos resources you are querying, 0 for you 1 for the enemy</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The number of the given resource the given player controls</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.game_state.GameState.get_target">
+<code class="descname">get_target</code><span class="sig-paren">(</span><em>attacking_unit</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_state.GameState.get_target" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns target of given unit based on current map of the game board.
+A Unit can often have many other units in range, and Units that attack do so once each frame.</p>
+<dl class="docutils">
+<dt>Their targeting priority is as follows:</dt>
+<dd>Infantry &gt; Nearest Unit &gt; Lowest Stability &gt; Lowest Y position &gt; Closest to edge (Highest distance of X from the boards center, 13.5)</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>attacking_unit</strong> (<em>*</em>) – A GameUnit</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The GameUnit this unit would choose to attack.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.game_state.GameState.get_target_edge">
+<code class="descname">get_target_edge</code><span class="sig-paren">(</span><em>start_location</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_state.GameState.get_target_edge" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="gamelib.game_state.GameState.number_affordable">
+<code class="descname">number_affordable</code><span class="sig-paren">(</span><em>unit_type</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_state.GameState.number_affordable" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of units of a given type we can afford</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>unit_type</strong> (<em>*</em>) – A unit type, PING, FILTER, etc.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The number of units affordable of the given unit_type.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.game_state.GameState.project_future_bits">
+<code class="descname">project_future_bits</code><span class="sig-paren">(</span><em>turns_in_future=1</em>, <em>player_index=0</em>, <em>current_bits=None</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_state.GameState.project_future_bits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predicts the number of bits we will have on a future turn</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>turns_in_future</strong> (<em>*</em>) – The number of turns in the future we want to look forward to predict</li>
+<li><strong>player_index</strong> (<em>*</em>) – The player whose bits we are tracking</li>
+<li><strong>current_bits</strong> (<em>*</em>) – If we pass a value here, we will use that value instead of the current bits of the given player.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The number of bits the given player will have after the given number of turns</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.game_state.GameState.submit_turn">
+<code class="descname">submit_turn</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_state.GameState.submit_turn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Submit and end your turn.
+Must be called at the end of your turn or the algo will hang.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.game_state.GameState.suppress_warnings">
+<code class="descname">suppress_warnings</code><span class="sig-paren">(</span><em>suppress</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_state.GameState.suppress_warnings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Suppress all warnings</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>suppress</strong> (<em>*</em>) – If true, disable warnings. If false, enable warnings.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.game_state.GameState.type_cost">
+<code class="descname">type_cost</code><span class="sig-paren">(</span><em>unit_type</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_state.GameState.type_cost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the cost of a unit based on its type</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>unit_type</strong> (<em>*</em>) – The units type</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The units cost</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.game_state.GameState.warn">
+<code class="descname">warn</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_state.GameState.warn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="gamelib.game_state.is_stationary">
+<code class="descclassname">gamelib.game_state.</code><code class="descname">is_stationary</code><span class="sig-paren">(</span><em>unit_type</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_state.is_stationary" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-gamelib.navigation">
+<span id="navigation-gamelib-navigation"></span><h2>Navigation (gamelib.navigation)<a class="headerlink" href="#module-gamelib.navigation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gamelib.navigation.Node">
+<em class="property">class </em><code class="descclassname">gamelib.navigation.</code><code class="descname">Node</code><a class="headerlink" href="#gamelib.navigation.Node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A pathfinding node</p>
+<dl class="attribute">
+<dt>
+<code class="descname">* visited_idealness</code></dt>
+<dd><p>Have we visited this node during the idealness search step?</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* visited_validate</code></dt>
+<dd><p>Have we visited this node during the validation step?</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* blocked</code></dt>
+<dd><p>Is there a firewall at this node’s location</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* pathlength</code></dt>
+<dd><p>The distance between this node and the target location</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="gamelib.navigation.ShortestPathFinder">
+<em class="property">class </em><code class="descclassname">gamelib.navigation.</code><code class="descname">ShortestPathFinder</code><a class="headerlink" href="#gamelib.navigation.ShortestPathFinder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Handles pathfinding</p>
+<dl class="attribute">
+<dt>
+<code class="descname">* HORIZONTAL</code></dt>
+<dd><p>A constant representing a horizontal movement</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* VERTICAL</code></dt>
+<dd><p>A constant representing a vertical movement</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* game_state (</code></dt>
+<dd><p>obj: GameState): The current gamestate</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* game_map (</code></dt>
+<dd><p>obj: GameMap): The current gamemap</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.navigation.ShortestPathFinder.initialize_map">
+<code class="descname">initialize_map</code><span class="sig-paren">(</span><em>game_state</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.navigation.ShortestPathFinder.initialize_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes the map</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>game_state</strong> (<em>*</em>) – A GameState object representing the gamestate we want to</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.navigation.ShortestPathFinder.navigate_multiple_endpoints">
+<code class="descname">navigate_multiple_endpoints</code><span class="sig-paren">(</span><em>start_point</em>, <em>end_points</em>, <em>game_state</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.navigation.ShortestPathFinder.navigate_multiple_endpoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the path a unit would take to reach a set of endpoints</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>start_point</strong> (<em>*</em>) – The starting location of the unit</li>
+<li><strong>end_points</strong> (<em>*</em>) – The end points of the unit, should be a list of edge locations</li>
+<li><strong>game_state</strong> (<em>*</em>) – The current game state</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The path a unit at start_point would take when trying to reach end_points given the current game state.
+Note that this path can change if a tower is destroyed during pathing, or if you or your enemy places firewalls.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gamelib.navigation.ShortestPathFinder.print_map">
+<code class="descname">print_map</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.navigation.ShortestPathFinder.print_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints an ASCII version of the current game map for debug purposes</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-gamelib.unit">
+<span id="game-unit-gamelib-unit"></span><h2>Game Unit  (gamelib.unit)<a class="headerlink" href="#module-gamelib.unit" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gamelib.unit.GameUnit">
+<em class="property">class </em><code class="descclassname">gamelib.unit.</code><code class="descname">GameUnit</code><span class="sig-paren">(</span><em>unit_type</em>, <em>config</em>, <em>player_index=None</em>, <em>stability=None</em>, <em>x=-1</em>, <em>y=-1</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.unit.GameUnit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Holds information about a Unit.</p>
+<dl class="attribute">
+<dt>
+<code class="descname">* unit_type</code></dt>
+<dd><p>This unit’s type</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* config</code></dt>
+<dd><p>Contains information about the game</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">JSON</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* player_index</code></dt>
+<dd><p>The player that controls this unit. 0 for you, 1 for your opponent.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">integer</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* x</code></dt>
+<dd><p>The x coordinate of the unit</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">integer</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* y</code></dt>
+<dd><p>The y coordinate of the unit</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">integer</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* stationary</code></dt>
+<dd><p>Whether or not this unit is a firewall</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* speed</code></dt>
+<dd><p>A unit will move once every 1/speed frames</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* damage</code></dt>
+<dd><p>The amount of damage this firewall unit will deal to enemy information.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* damage_f</code></dt>
+<dd><p>The amount of damage this information unit will deal to enemy firewalls.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* damage_i</code></dt>
+<dd><p>The amount of damage this information unit will deal to enemy information.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* range</code></dt>
+<dd><p>The effective range of this unit</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* max_stability</code></dt>
+<dd><p>The starting stability of this unit. Note than stability can be increased beyond this value by encryptors</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* stability</code></dt>
+<dd><p>The current health of this unit</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">* cost</code></dt>
+<dd><p>The resource cost of this unit</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="gamelib.unit.is_stationary">
+<code class="descclassname">gamelib.unit.</code><code class="descname">is_stationary</code><span class="sig-paren">(</span><em>unit_type</em>, <em>firewall_types</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.unit.is_stationary" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-gamelib.util">
+<span id="util-gamelib-util"></span><h2>Util  (gamelib.util)<a class="headerlink" href="#module-gamelib.util" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="gamelib.util.debug_write">
+<code class="descclassname">gamelib.util.</code><code class="descname">debug_write</code><span class="sig-paren">(</span><em>*msg</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.util.debug_write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints a message to the games debug output</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>msg</strong> (<em>*</em>) – The message to output</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="gamelib.util.get_command">
+<code class="descclassname">gamelib.util.</code><code class="descname">get_command</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.util.get_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets input from stdin</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="gamelib.util.send_command">
+<code class="descclassname">gamelib.util.</code><code class="descname">send_command</code><span class="sig-paren">(</span><em>cmd</em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.util.send_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends your turn to standard output.
+Should usually only be called by ‘GameState.submit_turn()’</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">C1 Terminal Python Starterkit</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">gamelib package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-gamelib">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-gamelib.algocore">Algo Core (gamelib.algocore)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-gamelib.game_map">Game Map (gamelib.game_map)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-gamelib.game_state">Game State (gamelib.game_state)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-gamelib.navigation">Navigation (gamelib.navigation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-gamelib.unit">Game Unit  (gamelib.unit)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-gamelib.util">Util  (gamelib.util)</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">gamelib</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Correlation One.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+      |
+      <a href="_sources/gamelib.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
