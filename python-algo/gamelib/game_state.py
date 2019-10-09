@@ -32,8 +32,8 @@ class GameState:
 
         * ARENA_SIZE (int): The size of the arena
         * HALF_ARENA (int): Half the size of the arena
-        * BITS (int): A constant representing the bits resource
-        * CORES (int): A constant representing the cores resource
+        * BITS (int): A constant representing the bits resource, used in the get_resource function
+        * CORES (int): A constant representing the cores resource, used in the get_resource function
          
         * game_map (:obj: GameMap): The current GameMap. To retrieve a list of GameUnits at a location, use game_map[x, y]
         * turn_number (int): The current turn number. Starts at 0.
@@ -172,7 +172,7 @@ class GameState:
         """Gets a players resources
 
         Args:
-            resource_type: self.CORES or self.BITS
+            resource_type: BITS (0) or CORES (1)
             player_index: The index corresponding to the player whos resources you are querying, 0 for you 1 for the enemy
 
         Returns:
@@ -183,7 +183,7 @@ class GameState:
             self._invalid_player_index(player_index)
             return
         if not resource_type == self.BITS and not resource_type == self.CORES:
-            self.warn("Invalid resource_type '{}'. Please use game_state.BITS or game_state.CORES".format(resource_type))
+            self.warn("Invalid resource_type '{}'. Please use BITS (0) or CORES (1)".format(resource_type))
             return
 
         if resource_type == self.BITS:
@@ -452,7 +452,7 @@ class GameState:
         A Unit can often have many other units in range, and Units that attack do so once each frame.
 
         Their targeting priority is as follows:
-            Infantry > Nearest Unit > Lowest Stability > Lowest Y position > Closest to edge (Highest distance of X from the boards center, 13.5)
+            Infantry > Nearest Unit > Lowest Health > Lowest Y position > Closest to edge (Highest distance of X from the boards center, 13.5)
 
         Args:
             attacking_unit: A GameUnit
@@ -471,7 +471,7 @@ class GameState:
         target = None
         target_stationary = True
         target_distance = sys.maxsize
-        target_stability = sys.maxsize
+        target_health = sys.maxsize
         target_y = self.ARENA_SIZE
         target_x_distance = 0
 
@@ -486,7 +486,7 @@ class GameState:
                 new_target = False
                 unit_stationary = unit.stationary
                 unit_distance = self.game_map.distance_between_locations(location, [attacking_unit.x, attacking_unit.y])
-                unit_stability = unit.stability
+                unit_health = unit.health
                 unit_y = unit.y
                 unit_x_distance = abs(self.HALF_ARENA - 0.5 - unit.x)
 
@@ -500,9 +500,9 @@ class GameState:
                 elif target_distance < unit_distance and not new_target:
                     continue
 
-                if target_stability > unit_stability:
+                if target_health > unit_health:
                     new_target = True
-                elif target_stability < unit_stability and not new_target:
+                elif target_health < unit_health and not new_target:
                     continue
 
                 # Compare height heuristic relative to attacking unit's player index
@@ -524,7 +524,7 @@ class GameState:
                     target = unit
                     target_stationary = unit_stationary
                     target_distance = unit_distance
-                    target_stability = unit_stability
+                    target_health = unit_health
                     target_y = unit_y
                     target_x_distance = unit_x_distance
         return target
