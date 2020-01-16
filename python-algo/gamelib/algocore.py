@@ -31,8 +31,8 @@ class AlgoCore(object):
         algo_strategy.py inherits from AlgoCore and overrides this on turn function. 
         Adjusting the on_turn function in algo_strategy is the main way to adjust your algo's logic. 
         """
-        send_command("")
-        send_command("") 
+        send_command("[]")
+        send_command("[]")
     
     def on_action_frame(self, action_frame_game_state):
         """
