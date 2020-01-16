@@ -56,7 +56,7 @@ class GameState:
         self.config = config
         self.enable_warnings = True
 
-        global FILTER, ENCRYPTOR, DESTRUCTOR, PING, EMP, SCRAMBLER, REMOVE, FIREWALL_TYPES, ALL_UNITS, UNIT_TYPE_TO_INDEX
+        global FILTER, ENCRYPTOR, DESTRUCTOR, PING, EMP, SCRAMBLER, REMOVE, UPGRADE, FIREWALL_TYPES, ALL_UNITS, UNIT_TYPE_TO_INDEX
         UNIT_TYPE_TO_INDEX = {}
         FILTER = config["unitInformation"][0]["shorthand"]
         UNIT_TYPE_TO_INDEX[FILTER] = 0
@@ -72,14 +72,19 @@ class GameState:
         UNIT_TYPE_TO_INDEX[SCRAMBLER] = 5
         REMOVE = config["unitInformation"][6]["shorthand"]
         UNIT_TYPE_TO_INDEX[REMOVE] = 6
+        UPGRADE = config["unitInformation"][7]["shorthand"]
+        UNIT_TYPE_TO_INDEX[UPGRADE] = 7
 
         ALL_UNITS = [PING, EMP, SCRAMBLER, FILTER, ENCRYPTOR, DESTRUCTOR]
         FIREWALL_TYPES = [FILTER, ENCRYPTOR, DESTRUCTOR]
 
         self.ARENA_SIZE = 28
         self.HALF_ARENA = int(self.ARENA_SIZE / 2)
-        self.BITS = 0
-        self.CORES = 1
+        self.BITS = 1
+        self.CORES = 0
+        global BITS, CORES
+        BITS = self.BITS
+        CORES = self.CORES
 
         self.game_map = GameMap(self.config)
         self._shortest_path_finder = ShortestPathFinder()
@@ -129,11 +134,14 @@ class GameState:
                 sx, sy, shp = uinfo[:3]
                 x, y = map(int, [sx, sy])
                 hp = float(shp)
-                # This depends on RM always being the last type to be processed
+                # This depends on RM and UP always being the last types to be processed
                 if unit_type == REMOVE:
                     # Quick fix will deploy engine fix soon
                     if self.contains_stationary_unit([x,y]):
                         self.game_map[x,y][0].pending_removal = True
+                elif unit_type == UPGRADE:
+                    if self.contains_stationary_unit([x,y]):
+                        self.game_map[x,y][0].upgrade()
                 else:
                     unit = GameUnit(unit_type, self.config, player_number, hp, x, y)
                     self.game_map[x,y].append(unit)
@@ -193,6 +201,26 @@ class GameState:
         resources = self._player_resources[player_index]
         return resources.get(resource_key, None)
 
+    def get_resources(self, player_index = 0):
+        """Gets a players resources
+
+        Args:
+            resource_type: BITS (0) or CORES (1)
+            player_index: The index corresponding to the player whos resources you are querying, 0 for you 1 for the enemy
+
+        Returns:
+            The number of the given resource the given player controls
+
+        """
+        if not player_index == 1 and not player_index == 0:
+            self._invalid_player_index(player_index)
+            return
+
+        resource_key1 = 'cores'
+        resource_key2 = 'bits'
+        resources = self._player_resources[player_index]
+        return [resources.get(resource_key1, None), resources.get(resource_key2, None)]
+
     def number_affordable(self, unit_type):
         """The number of units of a given type we can afford
 
@@ -207,10 +235,17 @@ class GameState:
             self._invalid_unit(unit_type)
             return
 
-        cost = self.type_cost(unit_type)
-        resource_type = self.__resource_required(unit_type)
-        player_held = self.get_resource(resource_type)
-        return math.floor(player_held / cost)
+        costs = self.type_cost(unit_type)
+        player_held = self.get_resources()
+        if costs[BITS] > 0 and costs[CORES] > 0:
+            return min(math.floor(player_held[CORES] / costs[CORES]), math.floor(player_held[BITS] / costs[BITS]))
+        elif costs[BITS] > 0:
+            return math.floor(player_held[BITS] / costs[BITS])
+        elif costs[CORES] > 0:
+            return math.floor(player_held[CORES] / costs[CORES])
+        else:
+            self.warn("Invalid costs for unit, cost is 0 for both resources, returning 0")
+            return 0
 
     def project_future_bits(self, turns_in_future=1, player_index=0, current_bits=None):
         """Predicts the number of bits we will have on a future turn
@@ -241,22 +276,27 @@ class GameState:
             bits = round(bits, 1)
         return bits
 
-    def type_cost(self, unit_type):
+    def type_cost(self, unit_type, upgrade=False):
         """Gets the cost of a unit based on its type
 
         Args:
-            unit_type: The units type
+            unit_type: The units type (string shorthand)
 
         Returns:
-            The units cost
+            The units costs as a list
 
         """
-        if unit_type not in ALL_UNITS:
+        if unit_type == REMOVE:
             self._invalid_unit(unit_type)
             return
-
+        
         unit_def = self.config["unitInformation"][UNIT_TYPE_TO_INDEX[unit_type]]
-        return unit_def.get('cost')
+        cost_base = [unit_def.get('cost1', 0), unit_def.get('cost2', 0)]
+        if upgrade:
+            return [unit_def.get('upgrade', {}).get('cost1', cost_base[CORES]), unit_def.get('upgrade', {}).get('cost2', cost_base[BITS])]
+
+        return cost_base
+
 
     def can_spawn(self, unit_type, location, num=1):
         """Check if we can spawn a unit at a location. 
@@ -332,15 +372,17 @@ class GameState:
             for i in range(num):
                 if self.can_spawn(unit_type, location, 1):
                     x, y = map(int, location)
-                    cost = self.type_cost(unit_type)
-                    resource_type = self.__resource_required(unit_type)
-                    self.__set_resource(resource_type, 0 - cost)
+                    costs = self.type_cost(unit_type)
+                    self.__set_resource(CORES, 0 - costs[CORES])
+                    self.__set_resource(BITS, 0 - costs[BITS])
                     self.game_map.add_unit(unit_type, location, 0)
                     if is_stationary(unit_type):
                         self._build_stack.append((unit_type, x, y))
                     else:
                         self._deploy_stack.append((unit_type, x, y))
                     spawned_units += 1
+                else:
+                    break
         return spawned_units
 
     def attempt_remove(self, locations):
@@ -364,6 +406,41 @@ class GameState:
             else:
                 self.warn("Could not remove a unit from {}. Location has no firewall or is enemy territory.".format(location))
         return removed_units
+
+    def attempt_upgrade(self, locations):
+        """Attempts to upgrade units in the given locations.
+
+        Args:
+            locations: A single location or list of locations to upgrade units at
+
+        Returns:
+            The number of units successfully upgraded
+
+        """
+
+        if type(locations[0]) == int:
+            locations = [locations]
+        spawned_units = 0
+        for location in locations:
+            if location[1] < self.HALF_ARENA and self.contains_stationary_unit(location):
+                x, y = map(int, location)
+                existing_unit = None
+                for unit in self.game_map[x,y]:
+                    if unit.stationary:
+                        existing_unit = unit
+
+                if self.config["unitInformation"][UNIT_TYPE_TO_INDEX[existing_unit.unit_type]].get("upgrade", None) is not None:
+                    costs = self.type_cost(existing_unit.unit_type, True)
+                    resources = self.get_resources()
+                    if resources[CORES] >= costs[CORES] and resources[BITS] >= costs[BITS]:
+                        self.__set_resource(CORES, 0 - costs[CORES])
+                        self.__set_resource(BITS, 0 - costs[BITS])
+                        existing_unit.upgrade()
+                        self._build_stack.append((UPGRADE, x, y))
+                        spawned_units += 1
+            else:
+                self.warn("Could not upgrade a unit from {}. Location has no firewall or is enemy territory.".format(location))
+        return spawned_units
 
     def get_target_edge(self, start_location):
         """Gets the target edge given a starting location
@@ -467,7 +544,7 @@ class GameState:
             return
 
         attacker_location = [attacking_unit.x, attacking_unit.y]
-        possible_locations = self.game_map.get_locations_in_range(attacker_location, attacking_unit.range)
+        possible_locations = self.game_map.get_locations_in_range(attacker_location, attacking_unit.attackRange)
         target = None
         target_stationary = True
         target_distance = sys.maxsize
@@ -477,10 +554,7 @@ class GameState:
 
         for location in possible_locations:
             for unit in self.game_map[location]:
-                """
-                NOTE: scrambler units cannot attack firewalls so skip them if unit is firewall
-                """
-                if unit.player_index == attacking_unit.player_index or (attacking_unit.unit_type == SCRAMBLER and is_stationary(unit.unit_type)):
+                if unit.player_index == attacking_unit.player_index or (attacking_unit.damage_f == 0 and is_stationary(unit.unit_type)) or (attacking_unit.damage_i == 0 and not(is_stationary(unit.unit_type))):
                     continue
 
                 new_target = False
@@ -530,14 +604,14 @@ class GameState:
         return target
 
     def get_attackers(self, location, player_index):
-        """Gets the destructors threatening a given location
+        """Gets the stationary units threatening a given location
 
         Args:
             location: The location of a hypothetical defender
             player_index: The index corresponding to the defending player, 0 for you 1 for the enemy
 
         Returns:
-            A list of destructors that would attack a unit controlled by the given player at the given location
+            A list of units that would attack a unit controlled by the given player at the given location
 
         """
 
@@ -550,9 +624,13 @@ class GameState:
         """
         Get locations in the range of DESTRUCTOR units
         """
-        possible_locations= self.game_map.get_locations_in_range(location, self.config["unitInformation"][UNIT_TYPE_TO_INDEX[DESTRUCTOR]]["range"])
-        for location in possible_locations:
-            for unit in self.game_map[location]:
-                if unit.unit_type == DESTRUCTOR and unit.player_index != player_index:
+        max_range = 0
+        for unit in self.config["unitInformation"]:
+            if unit.get('attackRange', 0) >= max_range:
+                max_range = unit.get('attackRange', 0)
+        possible_locations= self.game_map.get_locations_in_range(location, max_range)
+        for location_unit in possible_locations:
+            for unit in self.game_map[location_unit]:
+                if unit.damage_i + unit.damage_f > 0 and unit.player_index != player_index and self.game_map.distance_between_locations(location, location_unit) >= unit.attackRange:
                     attackers.append(unit)
         return attackers

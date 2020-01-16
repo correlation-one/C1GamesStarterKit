@@ -207,11 +207,12 @@ class GameMap:
         x, y = location
         locations = []
         search_radius = math.ceil(radius)
+        getHitRadius = self.config["unitInformation"][0]['getHitRadius']
         for i in range(int(x - search_radius), int(x + search_radius + 1)):
             for j in range(int(y - search_radius), int(y + search_radius + 1)):
                 new_location = [i, j]
-                # A unit with a given range affects all locations who's centers are within that range + 0.51 so we add 0.51 here
-                if self.in_arena_bounds(new_location) and self.distance_between_locations(location, new_location) < radius + 0.51:
+                # A unit with a given range affects all locations who's centers are within that range + get hit radius
+                if self.in_arena_bounds(new_location) and self.distance_between_locations(location, new_location) < radius + getHitRadius:
                     locations.append(new_location)
         return locations
 

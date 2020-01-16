@@ -8,6 +8,7 @@ def is_stationary(unit_type, firewall_types):
     """
     return unit_type in firewall_types
 
+
 class GameUnit:
     """Holds information about a Unit. 
 
@@ -36,6 +37,7 @@ class GameUnit:
         self.config = config
         self.player_index = player_index
         self.pending_removal = False
+        self.upgraded = False
         self.x = x
         self.y = y
         self.__serialize_type()
@@ -43,26 +45,35 @@ class GameUnit:
 
     def __serialize_type(self):
         from .game_state import FIREWALL_TYPES, UNIT_TYPE_TO_INDEX, ENCRYPTOR
-        self.stationary = is_stationary(self.unit_type, FIREWALL_TYPES)
         type_config = self.config["unitInformation"][UNIT_TYPE_TO_INDEX[self.unit_type]]
-        if self.stationary:
-            self.speed = 0
-            if self.unit_type == ENCRYPTOR:
-                self.damage = type_config["shieldAmount"]
-            else:
-                self.damage = type_config["damage"]
-        else:
-            self.speed = type_config["speed"]
-            self.damage_f = type_config["damageF"]
-            self.damage_i = type_config["damageI"]
-        self.range = type_config["range"]
-        self.max_health = type_config["stability"]
-        self.cost = type_config["cost"]
+        self.stationary = type_config["unitCategory"] == 0
+        self.speed = type_config.get("speed", 0)
+        self.damage_f = type_config.get("attackDamageTower", 0)
+        self.damage_i = type_config.get("attackDamageWalker", 0)
+        self.attackRange = type_config.get("attackRange", 0)
+        self.shieldRange = type_config.get("shieldRange", 0)
+        self.max_health = type_config.get("startHealth", 0)
+        self.shieldPerUnit = type_config.get("shieldPerUnit", 0)
+        self.cost = [type_config.get("cost1", 0), type_config.get("cost2", 0)]
+
+
+    def upgrade(self):
+        from .game_state import UNIT_TYPE_TO_INDEX
+        type_config = self.config["unitInformation"][UNIT_TYPE_TO_INDEX[self.unit_type]].get("upgrade", {})
+        self.speed = type_config.get("speed", self.speed)
+        self.damage_f = type_config.get("attackDamageTower", self.damage_f)
+        self.damage_i = type_config.get("attackDamageWalker", self.damage_i)
+        self.attackRange = type_config.get("attackRange", self.attackRange)
+        self.shieldRange = type_config.get("shieldRange", self.shieldRange)
+        self.max_health = type_config.get("startHealth", self.max_health)
+        self.shieldPerUnit = type_config.get("shieldPerUnit", self.shieldPerUnit)
+        self.cost = [type_config.get("cost1", 0) + self.cost[0], type_config.get("cost2", 0) + self.cost[1]]
+
 
     def __toString(self):
         owner = "Friendly" if self.player_index == 0 else "Enemy"
         removal = ", pending removal" if self.pending_removal else ""
-        return "{} {}, health: {} location: {}{} ".format(owner, self.unit_type, self.health, [self.x, self.y], removal)
+        return "{} {}, health: {} location: {} removal: {} upgrade: {} ".format(owner, self.unit_type, self.health, [self.x, self.y], removal, upgrade)
 
     def __str__(self):
         return self.__toString()

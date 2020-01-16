@@ -39,8 +39,8 @@ class AlgoStrategy(gamelib.AlgoCore):
         PING = config["unitInformation"][3]["shorthand"]
         EMP = config["unitInformation"][4]["shorthand"]
         SCRAMBLER = config["unitInformation"][5]["shorthand"]
-        BITS = 0
-        CORES = 1
+        BITS = 1
+        CORES = 0
         # This is a good place to do initial setup
         self.scored_on_locations = []
 
@@ -120,6 +120,8 @@ class AlgoStrategy(gamelib.AlgoCore):
         # Place filters in front of destructors to soak up damage for them
         filter_locations = [[8, 12], [19, 12]]
         game_state.attempt_spawn(FILTER, filter_locations)
+        # upgrade filters so they soak more damage
+        game_state.attempt_upgrade(filter_locations)
 
     def build_reactive_defense(self, game_state):
         """
@@ -144,7 +146,7 @@ class AlgoStrategy(gamelib.AlgoCore):
         deploy_locations = self.filter_blocked_locations(friendly_edges, game_state)
         
         # While we have remaining bits to spend lets send out scramblers randomly.
-        while game_state.get_resource(BITS) >= game_state.type_cost(SCRAMBLER) and len(deploy_locations) > 0:
+        while game_state.get_resource(BITS) >= game_state.type_cost(SCRAMBLER)[BITS] and len(deploy_locations) > 0:
             # Choose a random deploy location.
             deploy_index = random.randint(0, len(deploy_locations) - 1)
             deploy_location = deploy_locations[deploy_index]
@@ -165,7 +167,7 @@ class AlgoStrategy(gamelib.AlgoCore):
         cheapest_unit = FILTER
         for unit in stationary_units:
             unit_class = gamelib.GameUnit(unit, game_state.config)
-            if unit_class.cost < gamelib.GameUnit(cheapest_unit, game_state.config).cost:
+            if unit_class.cost[game_state.BITS] < gamelib.GameUnit(cheapest_unit, game_state.config).cost[game_state.BITS]:
                 cheapest_unit = unit
 
         # Now let's build out a line of stationary units. This will prevent our EMPs from running into the enemy base.
@@ -190,7 +192,7 @@ class AlgoStrategy(gamelib.AlgoCore):
             damage = 0
             for path_location in path:
                 # Get number of enemy destructors that can attack the final location and multiply by destructor damage
-                damage += len(game_state.get_attackers(path_location, 0)) * gamelib.GameUnit(DESTRUCTOR, game_state.config).damage
+                damage += len(game_state.get_attackers(path_location, 0)) * gamelib.GameUnit(DESTRUCTOR, game_state.config).damage_i
             damages.append(damage)
         
         # Now just return the location that takes the least damage
