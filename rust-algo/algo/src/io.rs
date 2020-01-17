@@ -1,13 +1,19 @@
 
-use super::messages::{FrameData, Config, frame};
-use super::map::{Map, GameState, MapParseError};
-use super::units::UnitTypeAtlas;
-
-
-use std::io::stdin;
-use std::io::BufRead;
-use std::sync::Arc;
-
+use crate::{
+    messages::{FrameData, Config, frame},
+    map::{
+        MapState,
+        parse::{
+            self,
+            MapParseError,
+        },
+    },
+    units::UnitTypeAtlas,
+};
+use std::{
+    io::{stdin, BufRead},
+    sync::Arc,
+};
 use serde_json;
 
 /// A IO object for receiving and storing the Config from the game engine, creating from the Config
@@ -15,6 +21,7 @@ use serde_json;
 pub struct GameDataReader {
     config: Option<(Arc<Config>, Arc<UnitTypeAtlas>)>,
 }
+
 impl GameDataReader {
     pub fn new() -> Self {
         GameDataReader {
@@ -56,19 +63,19 @@ impl GameDataReader {
     pub fn next_turn_frame(&mut self) -> Result<Box<FrameData>, serde_json::Error> {
         loop {
             let frame = self.next_frame_any_type()?;
-            if frame.turn_info.phase() == frame::Phase::Deploy {
+            if frame.turn_info.phase == frame::Phase::Deploy {
                 return Ok(frame);
             }
         }
     }
 
     /// Get the next frame of the deploy phase, and then use it in conjunction with the Config
-    /// and UnitTypeAtlas to attempt to parse a Map, then wrap that Map in a MoveBuilder.
-    pub fn next_move_builder(&mut self) -> Result<GameState, MapParseError> {
+    /// and UnitTypeAtlas to attempt to parse a Map.
+    pub fn next_turn_map(&mut self) -> Result<MapState, MapParseError> {
         let (config, atlas) = self.config()
             .map_err(|e| MapParseError::DeserializeError(e))?;
         let frame = self.next_turn_frame()
             .map_err(|e| MapParseError::DeserializeError(e))?;
-        Map::new(config, frame).map(move |map| map.builder(atlas))
+        parse::parse_frame(config, frame, atlas)
     }
 }

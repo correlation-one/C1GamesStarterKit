@@ -1,11 +1,9 @@
+//! Unit types in the game.
 
-/// Unit types in the game.
-
-use super::messages::config::UnitInformation;
-
+use crate::messages::config::UnitInformation;
+use std::collections::HashMap;
 use enum_iterator::IntoEnumIterator;
 
-use std::collections::HashMap;
 
 /// Any unit type, including the remove type.
 #[derive(Debug, Copy, Clone, Eq, PartialEq, PartialOrd, Ord, Hash, IntoEnumIterator)]
@@ -197,8 +195,8 @@ impl UnitTypeAtlas {
     }
 
     /// Convert a unit type into its shorthand.
-    pub fn type_into_shorthand(&self, unit_type: UnitType) -> &String {
-        self.unit_information[unit_type as u32 as usize].shorthand()
+    pub fn type_into_shorthand(&self, unit_type: UnitType) -> &str {
+        self.unit_information[unit_type as usize].shorthand()
     }
 }
 

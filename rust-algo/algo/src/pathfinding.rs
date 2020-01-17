@@ -1,15 +1,18 @@
 
-use super::map::*;
-use super::bounds::*;
-use super::units::*;
-use super::grid::Grid;
-use super::coords::*;
+use crate::{
+    map::*,
+    bounds::*,
+    units::*,
+    coords::*,
+    grid::Grid,
+};
 
-use std::collections::VecDeque;
-use std::u32;
-use std::cmp::Ordering;
-use std::fmt::{Debug, Formatter, Write};
-use std::fmt;
+use std::{
+    u32,
+    collections::VecDeque,
+    cmp::Ordering,
+    fmt::{self, Debug, Formatter, Write},
+};
 
 #[derive(Copy, Clone, Eq, PartialEq)]
 enum Node {
@@ -60,17 +63,17 @@ enum LastDirection {
 pub struct StartedAtWall(pub Coords, pub Unit<FirewallUnitType>);
 
 /// Attempt to pathfind from a particular tile on a map, to a certain map edge.
-pub fn pathfind(board: &Map, start: MapReadTile, target: MapEdge) -> Result<Vec<Coords>, StartedAtWall> {
+pub fn pathfind(board: &MapState, start: &MapTile, target: MapEdge) -> Result<Vec<Coords>, StartedAtWall> {
     // we cannot pathfind if we start at a wall
-    if let Some(wall) = start.get_wall() {
+    if let Some(wall) = start.wall_unit() {
         return Err(StartedAtWall(start.coords(), wall));
     }
 
     // create the grid of nodes
-    let mut grid = Grid::new(|c| {
-        board.tile(c)
+    let mut grid = Grid::from_generator(|c| {
+        board[c].if_valid()
             .map(|cell| {
-                if cell.get_wall().is_some() {
+                if cell.wall_unit().is_some() {
                     Node::Wall
                 } else {
                     Node::Open {
@@ -94,10 +97,10 @@ pub fn pathfind(board: &Map, start: MapReadTile, target: MapEdge) -> Result<Vec<
     Ok(path)
 }
 
-fn idealness_search(board: &Map, start: MapReadTile, target: MapEdge, grid: &mut Grid<Node>) -> Box<[Coords]> {
+fn idealness_search(board: &MapState, start: &MapTile, target: MapEdge, grid: &mut Grid<Node>) -> Box<[Coords]> {
     // short circuit if start is on the edge
-    if MAP_BOUNDS.on_edge(target, start.coords()) {
-        return Box::new(MAP_BOUNDS.edge(target).to_owned());
+    if MAP_BOUNDS.is_on_edge(target, start.coords()) {
+        return Box::new(MAP_BOUNDS.coords_on_edge(target).to_owned());
     }
 
     // set up variables
@@ -110,8 +113,8 @@ fn idealness_search(board: &Map, start: MapReadTile, target: MapEdge, grid: &mut
     // BFS the pocket
     while let Some(curr) = queue.pop_front() {
         for neighbor in curr.neighbors().iter().cloned()
-            .flat_map(|coord| board.tile(coord))
-            .filter(|cell| cell.get_wall().is_none())
+            .flat_map(|coord| board[coord].if_valid())
+            .filter(|cell| cell.wall_unit().is_none())
             .map(|cell| cell.coords()) {
 
             // don't enter an infinite loop
@@ -128,8 +131,8 @@ fn idealness_search(board: &Map, start: MapReadTile, target: MapEdge, grid: &mut
             };
 
             // short circuit if we've reached the edge
-            if MAP_BOUNDS.on_edge(target, neighbor) {
-                return Box::new(MAP_BOUNDS.edge(target).to_owned());
+            if MAP_BOUNDS.is_on_edge(target, neighbor) {
+                return Box::new(MAP_BOUNDS.coords_on_edge(target).to_owned());
             }
 
             // otherwise, possible replacement
@@ -150,8 +153,8 @@ fn idealness_search(board: &Map, start: MapReadTile, target: MapEdge, grid: &mut
 }
 
 fn idealness_of(coords: Coords, target: MapEdge) -> Result<u32, Coords> {
-    if MAP_BOUNDS.in_arena(coords) {
-        if MAP_BOUNDS.on_edge(target, coords) {
+    if MAP_BOUNDS.is_in_arena(coords) {
+        if MAP_BOUNDS.is_on_edge(target, coords) {
             Ok(u32::MAX)
         } else {
             let coords = [coords.x as u32, coords.y as u32];
@@ -174,7 +177,7 @@ fn idealness_of(coords: Coords, target: MapEdge) -> Result<u32, Coords> {
     }
 }
 
-fn validate(board: &Map, grid: &mut Grid<Node>, ideal_tiles: Box<[Coords]>) {
+fn validate(board: &MapState, grid: &mut Grid<Node>, ideal_tiles: Box<[Coords]>) {
     // set the first tiles' pathlength, mark them as validate-visited, and add them to a queue
     let mut queue: VecDeque<Coords> = VecDeque::new();
     for ideal_tile in ideal_tiles.iter().cloned() {
@@ -202,8 +205,8 @@ fn validate(board: &Map, grid: &mut Grid<Node>, ideal_tiles: Box<[Coords]>) {
         };
 
         for neighbor in curr.neighbors().iter().cloned()
-            .flat_map(|coord| board.tile(coord))
-            .filter(|cell| cell.get_wall().is_none())
+            .flat_map(|coord| board[coord].if_valid())
+            .filter(|cell| cell.wall_unit().is_none())
             .map(|cell| cell.coords()) {
 
             match grid.get_mut(neighbor).unwrap() {
@@ -255,7 +258,7 @@ fn get_path(start: Coords, target: MapEdge, grid: &Grid<Node>) -> Vec<Coords> {
 
 fn next_move(curr: Coords, target: MapEdge, grid: &Grid<Node>, curr_direction: Option<LastDirection>) -> Option<Coords> {
     let possible: Vec<(Coords, u32)> = curr.neighbors().iter().cloned()
-        .filter(|&neighbor| MAP_BOUNDS.in_arena(neighbor))
+        .filter(|&neighbor| MAP_BOUNDS.is_in_arena(neighbor))
         .flat_map(|neighbor| match grid.get(neighbor) {
             Some(&Node::Open {
                 pathlength: Some(pathlength),
