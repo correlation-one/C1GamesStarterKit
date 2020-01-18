@@ -1,30 +1,47 @@
 
-use coords::*;
-use super::bounds::BOARD_SIZE;
+use crate::{
+    coords::*,
+    bounds::BOARD_SIZE,
+};
 
-use std::mem;
-use std::ptr;
-use std::fmt::{Debug, Formatter};
-use std::fmt;
+use std::{
+    mem::{MaybeUninit, ManuallyDrop},
+    fmt::{self, Debug, Formatter},
+    ops::{Index, IndexMut},
+    ptr,
+};
 
 /// A grid of elements equal in size to the game board.
 ///
-/// The grid is designed to be pretty-printed.
-#[derive(Eq, PartialEq, Hash, Clone)]
+/// This type will pretty-print.
 pub struct Grid<T> {
     data: [[T; BOARD_SIZE]; BOARD_SIZE],
 }
+
 impl<T> Grid<T> {
-    /// Construct a new grid, initializing each element from a function of the coordinates.
-    pub fn new(mut generate: impl FnMut(Coords) -> T) -> Self {
+    /// Build a grid, using a callback to construct each element.
+    pub fn from_generator(mut generator: impl FnMut(Coords) -> T) -> Self {
         unsafe {
-            let mut data: [[T; BOARD_SIZE]; BOARD_SIZE] = mem::uninitialized();
+            let mut data: ManuallyDrop<MaybeUninit<[[T; BOARD_SIZE]; BOARD_SIZE]>> =
+                ManuallyDrop::new(MaybeUninit::uninit());
+
             for x in 0..BOARD_SIZE {
                 for y in 0..BOARD_SIZE {
-                    let elem = generate(Coords::from([x, y]));
-                    ptr::write(&mut data[x][y], elem);
+                    let value = generator(xy(x as i32, y as i32));
+
+                    let addr: *mut [[T; BOARD_SIZE]; BOARD_SIZE] = data.as_mut_ptr();
+                    let addr: *mut [T; BOARD_SIZE] = addr as _;
+                    let addr: *mut [T; BOARD_SIZE] = addr.offset(x as isize);
+                    let addr: *mut T = addr as _;
+                    let addr: *mut T = addr.offset(y as isize);
+
+                    ptr::write(addr, value);
                 }
             }
+
+            let data: [[T; BOARD_SIZE]; BOARD_SIZE] =
+                MaybeUninit::assume_init(ManuallyDrop::into_inner(data));
+
             Grid {
                 data
             }
@@ -46,10 +63,26 @@ impl<T> Grid<T> {
     }
 }
 
+impl<T> Index<Coords> for Grid<T> {
+    type Output = T;
+
+    fn index(&self, index: Coords) -> &T {
+        self.get(index)
+            .unwrap_or_else(|| panic!("index out of bounds: {}", index))
+    }
+}
+
+impl<T> IndexMut<Coords> for Grid<T> {
+    fn index_mut(&mut self, index: Coords) -> &mut T {
+        self.get_mut(index)
+            .unwrap_or_else(|| panic!("index out of bounds: {}", index))
+    }
+}
+
 impl<T: Debug> Debug for Grid<T> {
     fn fmt(&self, f: &mut Formatter) -> Result<(), fmt::Error> {
         let strings: Grid<String> =
-            Grid::new(|c| format!("{:?}", self.get(c).unwrap()));
+            Grid::from_generator(|c| format!("{:?}", self.get(c).unwrap()));
 
         let mut max_len = None;
         for x in 0..BOARD_SIZE {
@@ -72,7 +105,7 @@ impl<T: Debug> Debug for Grid<T> {
         for y in (0..BOARD_SIZE).rev() {
             builder.push_str("  [");
             for x in 0..BOARD_SIZE {
-                let mut elem = strings.get(Coords::from([x, y])).unwrap();
+                let elem = strings.get(Coords::from([x, y])).unwrap();
                 builder.push_str(elem);
                 let elem_len = elem.chars().collect::<Vec<char>>().len();
                 for _ in 0..max_len - elem_len {

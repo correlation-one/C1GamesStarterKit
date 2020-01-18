@@ -28,11 +28,6 @@ public class DefaultGameIO implements GameIO {
     }
 
     @Override
-    public PrintStream debug() {
-        return System.err;
-    }
-
-    @Override
     public Config config() {
         // make sure that the first line is read in and parsed as config.
         if (config == null) {

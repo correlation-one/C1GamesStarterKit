@@ -1,12 +1,11 @@
 package com.c1games.terminal.starteralgo;
 
-import com.c1games.terminal.algo.Config;
-import com.c1games.terminal.algo.Coords;
-import com.c1games.terminal.algo.GameIO;
+import com.c1games.terminal.algo.*;
 import com.c1games.terminal.algo.io.GameLoop;
 import com.c1games.terminal.algo.io.GameLoopDriver;
 import com.c1games.terminal.algo.map.GameState;
 import com.c1games.terminal.algo.map.MapBounds;
+import com.c1games.terminal.algo.map.Unit;
 import com.c1games.terminal.algo.units.UnitType;
 
 import java.util.*;
@@ -19,49 +18,37 @@ public class StarterAlgo implements GameLoop {
         new GameLoopDriver(new StarterAlgo()).run();
     }
 
-    private static final Coords[] firewallLocationsC = {
-            new Coords(8, 11),
-            new Coords(9, 11),
-            new Coords(7, 10),
-            new Coords(7, 9),
-            new Coords(7, 8),
-            new Coords(8, 7),
-            new Coords(9, 7)
-    };
-
-    private static final Coords[] firewallLocations1 = {
-            new Coords(17, 11),
-            new Coords(18, 11),
-            new Coords(18, 10),
-            new Coords(18, 9),
-            new Coords(18, 8),
-            new Coords(17, 7),
-            new Coords(18, 7),
-            new Coords(19, 7)
-    };
-
-    private static final Coords[] firewallLocationsDots = {
-            new Coords(11, 7),
-            new Coords(13, 9),
-            new Coords(15, 11)
+    private static final Coords[] filterProtectDestructors = {
+            new Coords(8, 12),
+            new Coords(19, 12)
     };
 
     private static final Coords[] defensiveDestructorLocations = {
             new Coords(0, 13),
-            new Coords(27, 13)
+            new Coords(27, 13),
+            new Coords(8, 11),
+            new Coords(19, 11),
+            new Coords(13, 11),
+            new Coords(14, 11)
     };
 
-    private static final Coords[] defensiveEncryptorLocations = {
-            new Coords(3, 11),
-            new Coords(4, 11),
-            new Coords(5, 11)
+    private static final Coords[] encryptorLocations = {
+            new Coords(13, 2),
+            new Coords(14, 2),
+            new Coords(13, 3),
+            new Coords(14, 3)
     };
 
     private final Random rand = new Random();
 
+    private ArrayList<Coords> scoredOnLocations = new ArrayList<>();
+
     @Override
     public void initialize(GameIO io, Config config) {
-        io.debug().println("Configuring your custom java algo strategy...");
+        GameIO.debug().println("Configuring your custom java algo strategy...");
+        long seed = rand.nextLong();
+        rand.setSeed(seed);
+        GameIO.debug().println("Set random seed to: " + seed);
     }
 
     /**
@@ -69,19 +56,45 @@ public class StarterAlgo implements GameLoop {
      */
     @Override
     public void onTurn(GameIO io, GameState move) {
-        io.debug().println("Performing turn " + move.data.turnInfo.turnNumber + " of your custom algo strategy");
-        buildC1Logo(move);
+        GameIO.debug().println("Performing turn " + move.data.turnInfo.turnNumber + " of your custom algo strategy");
+
         buildDefenses(move);
-        deployAttackers(move);
+        buildReactiveDefenses(move);
+
+        if (move.data.turnInfo.turnNumber < 5) {
+            deployRandomScramblers(move);
+        } else {
+            // If they have a lot of units in the first two of their rows, we can use the long range EMP to deal damage to them
+            if (detectEnemyUnits(move,null, List.of(14,15), null) > 10) {
+                empLineStrategy(move);
+            }
+            // Otherwise lets go with a ping rush strategy where we send a ton of fast scoring units.
+            else {
+                // We only send pings every other turn because its better to save up for a big attack.
+                if (move.data.turnInfo.turnNumber % 2 == 1) {
+                    // Lets dynamically choose which side to attack based on the expected path the units will take
+                    Coords bestLoc = leastDamageSpawnLocation(move, List.of(new Coords(13, 0), new Coords(14, 0)));
+                    for (int i = 0; i < 100; i++) {
+                        move.attemptSpawn(bestLoc,UnitType.Ping);
+                    }
+                }
+                // Lastly, lets build Encryptors to boost our pings health if we have spare cores
+                move.attemptSpawnMultiple(Arrays.asList(encryptorLocations),UnitType.Encryptor);
+            }
+        }
     }
 
     /**
-     * Make the C1 logo.
+     * Save process action frames. Careful there are many action frames per turn!
      */
-    private void buildC1Logo(GameState move) {
-        move.attemptSpawnMultiple(Arrays.asList(firewallLocationsC), UnitType.Filter);
-        move.attemptSpawnMultiple(Arrays.asList(firewallLocations1), UnitType.Filter);
-        move.attemptSpawnMultiple(Arrays.asList(firewallLocationsDots), UnitType.Destructor);
+    @Override
+    public void onActionFrame(GameIO io, GameState move) {
+        // Save locations that the enemy scored on against us to reactively build defenses
+        for (FrameData.Events.BreachEvent breach : move.data.events.breach) {
+            if (breach.unitOwner != PlayerId.Player1) {
+                scoredOnLocations.add(breach.coords);
+            }
+        }
     }
 
     /**
@@ -94,66 +107,31 @@ public class StarterAlgo implements GameLoop {
         move.attemptSpawnMultiple(Arrays.asList(defensiveDestructorLocations), UnitType.Destructor);
 
         /*
-        Then lets boost our offense by building some encryptors to shield
-        our information units. Lets put them near the front because the
-        shields decay over time, so shields closer to the action
-        are more effective.
+        Lets protect our destructors with some filters.
          */
-        move.attemptSpawnMultiple(Arrays.asList(defensiveEncryptorLocations), UnitType.Encryptor);
-
+        move.attemptSpawnMultiple(Arrays.asList(filterProtectDestructors), UnitType.Filter);
         /*
-        Lastly lets build encryptors in random locations. Normally building
-        randomly is a bad idea but we'll leave it to you to figure out better
-        strategies.
-
-        First we get all locations on the bottom half of the map
-        that are in the arena bounds.
+        Lastly, lets upgrade those important filters that protect our destructors.
          */
-        List<Coords> possibleSpawnPoints = new ArrayList<>();
-        for (int x = 0; x < MapBounds.BOARD_SIZE; x++) {
-            for (int y = 0; y < MapBounds.BOARD_SIZE; y++) {
-                Coords c = new Coords(x, y);
-                if (move.canSpawn(c, UnitType.Encryptor, 1).affirmative())
-                    possibleSpawnPoints.add(c);
-            }
-        }
-        Collections.shuffle(possibleSpawnPoints);
-        while (move.numberAffordable(UnitType.Encryptor) > 0) {
-            Coords c = possibleSpawnPoints.remove(possibleSpawnPoints.size() - 1);
-            move.spawn(c, UnitType.Encryptor);
+        move.attemptUpgradeMultiple(Arrays.asList(filterProtectDestructors));
+    }
+
+    /**
+     * Build defenses reactively based on where we got scored on
+     */
+    private void buildReactiveDefenses(GameState move) {
+        for (Coords loc : scoredOnLocations) {
+            // Build 1 space above the breach location so that it doesn't block our spawn locations
+            move.attemptSpawn(new Coords(loc.x, loc.y +1), UnitType.Destructor);
         }
     }
 
     /**
      * Deploy offensive units.
      */
-    private void deployAttackers(GameState move) {
+    private void deployRandomScramblers(GameState move) {
         /*
-        First lets check if we have 10 bits, if we don't we lets wait for
-        a turn where we do.
-         */
-        if (move.data.p1Stats.bits < 10)
-            return;
-
-        /*
-        Then lets deploy an EMP long range unit to destroy firewalls for us.
-         */
-        move.attemptSpawn(new Coords(3, 10), UnitType.EMP);
-
-        /*
-        Now lets send out 3 Pings to hopefully score, we can spawn multiple
-        information units in the same location.
-        */
-        for (int i = 0; i < 3; i++) {
-            move.attemptSpawn(new Coords(14, 0), UnitType.Ping);
-        }
-
-        /*
-        NOTE: the locations we used above to spawn information units may become
-        blocked by our own firewalls. We'll leave it to you to fix that issue
-        yourselves.
-
-        Lastly lets send out Scramblers to help destroy enemy information units.
+        Lets send out Scramblers to help destroy enemy information units.
         A complex algo would predict where the enemy is going to send units and
         develop its strategy around that. But this algo is simple so lets just
         send out scramblers in random locations and hope for the best.
@@ -168,14 +146,121 @@ public class StarterAlgo implements GameLoop {
         /*
         While we have remaining bits to spend lets send out scramblers randomly.
         */
-        while (move.numberAffordable(UnitType.Scrambler) > 1) {
+        while (move.numberAffordable(UnitType.Scrambler) >= 1) {
             Coords c = friendlyEdges.get(rand.nextInt(friendlyEdges.size()));
             move.attemptSpawn(c, UnitType.Scrambler);
-
             /*
             We don't have to remove the location since multiple information
-            units can occupy the same space.
+            units can occupy the same space. Note however, if all edge locations are blocked this will infinite loop!
              */
+        }
+    }
+
+    /**
+     * Goes through the list of locations, gets the path taken from them,
+     * and loosely calculates how much damage will be taken by traveling that path assuming speed of 1.
+     * @param move
+     * @param locations
+     * @return
+     */
+    private Coords leastDamageSpawnLocation(GameState move, List<Coords> locations) {
+        List<Float> damages = new ArrayList<>();
+
+        for (Coords location : locations) {
+            List<Coords> path = move.pathfind(location, MapBounds.getEdgeFromStart(location));
+            float totalDamage = 0;
+            for (Coords dmgLoc : path) {
+                List<Unit> attackers = move.getAttackers(dmgLoc);
+                for (Unit unit : attackers) {
+                    totalDamage += unit.unitInformation.attackDamageWalker.orElse(0);
+                }
+            }
+            GameIO.debug().println("Got dmg:" + totalDamage + " for " + location);
+            damages.add(totalDamage);
+        }
+
+        int minIndex = 0;
+        float minDamage = 9999999;
+        for (int i = 0; i < damages.size(); i++) {
+            if (damages.get(i) <= minDamage) {
+                minDamage = damages.get(i);
+                minIndex = i;
+            }
+        }
+        return locations.get(minIndex);
+    }
+
+    /**
+     * Counts the number of a units found with optional parameters to specify what locations and unit types to count.
+     * @param move GameState
+     * @param xLocations Can be null, list of x locations to check for units
+     * @param yLocations Can be null, list of y locations to check for units
+     * @param units Can be null, list of units to look for, null will check all
+     * @return count of the number of units seen at the specified locations
+     */
+    private int detectEnemyUnits(GameState move, List<Integer> xLocations, List<Integer> yLocations, List<UnitType> units) {
+        if (xLocations == null) {
+            xLocations = new ArrayList<Integer>();
+            for (int x = 0; x < MapBounds.BOARD_SIZE; x++) {
+                xLocations.add(x);
+            }
+        }
+        if (yLocations == null) {
+            yLocations = new ArrayList<Integer>();
+            for (int y = 0; y < MapBounds.BOARD_SIZE; y++) {
+                yLocations.add(y);
+            }
+        }
+
+        if (units == null) {
+            units = new ArrayList<>();
+            for (Config.UnitInformation unit : move.config.unitInformation) {
+                if (unit.startHealth.isPresent()) {
+                    units.add(move.unitTypeFromShorthand(unit.shorthand.get()));
+                }
+            }
+        }
+
+        int count = 0;
+        for (int x : xLocations) {
+            for (int y : yLocations) {
+                Coords loc = new Coords(x,y);
+                if (MapBounds.inArena(loc)) {
+                    for (Unit u : move.allUnits[x][y]) {
+                        if (units.contains(u.type)) {
+                            count++;
+                        }
+                    }
+                }
+            }
+        }
+        return count;
+    }
+
+    private void empLineStrategy(GameState move) {
+        /*
+        First lets fine the cheapest type of firewall stationary unit. We could hardcode this to FILTER probably
+        depending on the config but lets demonstrate how to use java-algo features.
+         */
+        Config.UnitInformation cheapestUnit = null;
+        for (Config.UnitInformation uinfo : move.config.unitInformation) {
+            if (move.isFirewall(uinfo.unitCategory.getAsInt())) {
+                float[] costUnit = uinfo.cost();
+                if((cheapestUnit == null || costUnit[0] + costUnit[1] <= cheapestUnit.cost()[0] + cheapestUnit.cost()[1])) {
+                    cheapestUnit = uinfo;
+                }
+            }
+        }
+        if (cheapestUnit == null) {
+            GameIO.debug().println("There are no firewalls?");
+        }
+
+        for (int x = 27; x>=5; x--) {
+            move.attemptSpawn(new Coords(x, 11), move.unitTypeFromShorthand(cheapestUnit.shorthand.get()));
+        }
+
+        for (int i = 0; i<22; i++) {
+            move.attemptSpawn(new Coords(24, 10), UnitType.EMP);
         }
     }
 

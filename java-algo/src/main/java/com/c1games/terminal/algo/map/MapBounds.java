@@ -50,6 +50,22 @@ public class MapBounds {
         }
     }
 
+    public static int getEdgeFromStart(Coords start) {
+        if (start.x < BOARD_SIZE/2) {
+            if(start.y < BOARD_SIZE/2) {
+                return EDGE_TOP_RIGHT;
+            } else {
+                return EDGE_BOTTOM_RIGHT;
+            }
+        } else {
+            if(start.y < BOARD_SIZE/2) {
+                return EDGE_TOP_LEFT;
+            } else {
+                return EDGE_BOTTOM_LEFT;
+            }
+        }
+    }
+
     /**
      * The valid area in which all units can go during the entire game.
      */

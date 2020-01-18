@@ -28,7 +28,10 @@
 ### Creating an algo
 
 For starters, simply modify the `starteralgo/StarterAlgo.java` file. You will be mostly using functions in the `GameState`
-and `FrameData` classes.
+and `FrameData` classes. To build locally simple run `./gradlew build` (use gradlew.bat for windows) in this directory.
+Your algo will build to the folder `algo-target`. Use the run scripts in `C1GamesStarterKit/scripts` and point to the 
+`algo-target` folder.
+To submit to terminal.c1games.com just zip the parent folder `java-algo`.
 
 All that is necessary to create an algo is to implement `GameLoop`, and create a main method 
 which wraps your `GameLoop` in a `GameLoopDriver` and `.run()`s it.

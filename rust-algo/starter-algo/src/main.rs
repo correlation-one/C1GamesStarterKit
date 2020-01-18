@@ -6,6 +6,10 @@ extern crate rand;
 use algo::prelude::*;
 use rand::prelude::*;
 
+fn main() {
+    run_game_loop(StarterAlgo);
+}
+
 const FIREWALL_LOCATIONS_C: &[Coords] = &[
    xy!(8, 11),
    xy!(9, 11),
@@ -46,41 +50,45 @@ const DEFENSIVE_ENCRYPTOR_LOCATIONS: &[Coords] = &[
 
 /// Rust implementation of the standard starter algo.
 struct StarterAlgo;
+
 impl GameLoop for StarterAlgo {
     fn initialize(&mut self, _: Arc<Config>) {
         eprintln!("Configuring your custom rust algo strategy...");
     }
 
-    fn on_action_frame(&mut self, _: Arc<Config>, _: Map) {}
-
-    fn on_turn(&mut self, _: Arc<Config>, state: &mut GameState) {
-        eprintln!("Performing turn {} of your custom algo strategy", state.map().data().turn_info.turn_number());     
-        build_c1_logo(state);
-        build_defenses(state);
-        deploy_attackers(state);
+    fn on_turn(&mut self, _: Arc<Config>, map: &MapState) {
+        eprintln!("Performing turn {} of your custom algo strategy",
+                  map.frame_data().turn_info.turn_number);
+        build_c1_logo(map);
+        build_defenses(map);
+        deploy_attackers(map);
     }
 }
 
 /// Make the C1 logo.
-fn build_c1_logo(state: &mut GameState) {
+fn build_c1_logo(map: &MapState) {
     for &coord in FIREWALL_LOCATIONS_C {
-        state.tile(coord).unwrap().attempt_spawn(FirewallUnitType::Filter);
+        map[coord].try_spawn(FirewallUnitType::Filter);
     }
     for &coord in FIREWALL_LOCATIONS_1 {
-        state.tile(coord).unwrap().attempt_spawn(FirewallUnitType::Filter);
+        map[coord].try_spawn(FirewallUnitType::Filter);
+    }
+    for &coord in FIREWALL_LOCATIONS_1 {
+        map[coord].try_upgrade();
     }
     for &coord in FIREWALL_LOCATIONS_DOTS {
-        state.tile(coord).unwrap().attempt_spawn(FirewallUnitType::Destructor);
+        map[coord].try_spawn(FirewallUnitType::Destructor);
     }
 }
 
 /// Once the C1 logo is made, attempt to build some defenses.
-fn build_defenses(state: &mut GameState) {
+fn build_defenses(map: &MapState) {
     /*
     First lets protect ourselves a little with destructors.
      */
-    state.attempt_spawn_multiple(DEFENSIVE_DESTRUCTOR_LOCATIONS,
-                                        FirewallUnitType::Destructor).unwrap();
+    for &c in DEFENSIVE_DESTRUCTOR_LOCATIONS {
+        map[c].try_spawn(FirewallUnitType::Destructor);
+    }
 
     /*
     Then lets boost our offense by building some encryptors to shield
@@ -88,8 +96,9 @@ fn build_defenses(state: &mut GameState) {
     shields decay over time, so shields closer to the action
     are more effective.
      */
-    state.attempt_spawn_multiple(DEFENSIVE_ENCRYPTOR_LOCATIONS,
-                                        FirewallUnitType::Encryptor).unwrap();
+    for &c in DEFENSIVE_ENCRYPTOR_LOCATIONS {
+        map[c].try_spawn(FirewallUnitType::Encryptor);
+    }
 
     /*
     Lastly lets build encryptors in random locations. Normally building
@@ -103,43 +112,44 @@ fn build_defenses(state: &mut GameState) {
     for x in 0..BOARD_SIZE {
         for y in 0..BOARD_SIZE {
             let coords = Coords::from([x, y]);
-            if let Some(cell) = state.tile(coords) {
-                if cell.can_spawn(FirewallUnitType::Encryptor, 1).affirmative() {
+            if let Some(tile) = map[coords].if_valid() {
+                if tile.can_spawn(FirewallUnitType::Encryptor, 1).yes() {
                     possible_spawn_points.push(coords);
                 }
             }
         }
     }
     thread_rng().shuffle(&mut possible_spawn_points);
-    while state.map().number_affordable(FirewallUnitType::Encryptor) > 0 &&
-        possible_spawn_points.len() > 0 {
-
+    while map.number_affordable(FirewallUnitType::Encryptor) > 0 &&
+        possible_spawn_points.len() > 0
+    {
         let coords = possible_spawn_points.pop().unwrap();
-        state.tile(coords).unwrap().attempt_spawn(FirewallUnitType::Encryptor);
+        map[coords].try_spawn(FirewallUnitType::Encryptor);
     }
 }
 
 /// Deploy offensive units.
-fn deploy_attackers(state: &mut GameState) {
+fn deploy_attackers(map: &MapState) {
     /*
     First lets check if we have 10 bits, if we don't we lets wait for
     a turn where we do.
      */
-    if state.map().data().p1_stats.bits() < 10.0 {
+
+    if map.frame_data().p1_stats.bits < 10.0 {
         return;
     }
 
     /*
     Then lets deploy an EMP long range unit to destroy firewalls for us.
      */
-    state.tile(xy(3, 10)).unwrap().attempt_spawn(InfoUnitType::Emp);
+    map[xy(3, 10)].try_spawn(InfoUnitType::Emp);
 
     /*
     Now lets send out 3 Pings to hopefully score, we can spawn multiple
     information units in the same location.
     */
     for _ in 0..3 {
-        state.tile(xy(14, 0)).unwrap().attempt_spawn(InfoUnitType::Ping);
+        map[xy(14, 0)].try_spawn(InfoUnitType::Ping);
     }
 
     /*
@@ -156,21 +166,14 @@ fn deploy_attackers(state: &mut GameState) {
     list of those locations.
      */
     let mut friendly_edges = Vec::new();
-    friendly_edges.extend(MAP_BOUNDS.edge(MapEdge::BottomLeft).iter().cloned());
-    friendly_edges.extend(MAP_BOUNDS.edge(MapEdge::BottomRight).iter().cloned());
+    friendly_edges.extend(MAP_BOUNDS.coords_on_edge(MapEdge::BottomLeft).iter().cloned());
+    friendly_edges.extend(MAP_BOUNDS.coords_on_edge(MapEdge::BottomRight).iter().cloned());
 
     /*
     While we have remaining bits to spend lets send out scramblers randomly.
     */
-    while {
-        let affordable = state.map().number_affordable(InfoUnitType::Scrambler);
-        affordable >= 1
-    } {
+    while map.number_affordable(InfoUnitType::Scrambler) >= 1 {
         let coords = friendly_edges[thread_rng().gen::<usize>() % friendly_edges.len()];
-        state.tile(coords).unwrap().attempt_spawn(InfoUnitType::Scrambler);
+        map[coords].try_spawn(InfoUnitType::Scrambler);
     }
-}
-
-fn main() {
-    run_game_loop(StarterAlgo);
 }

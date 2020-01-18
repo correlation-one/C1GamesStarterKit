@@ -1,4 +1,6 @@
 {
+  "seasonCompatibilityModeP1": 5,
+  "seasonCompatibilityModeP2": 5,
   "debug":{
     "printMapString":false,
     "printTStrings":false,
@@ -8,74 +10,115 @@
     "printBotErrors":true,
     "printPlayerGetHitStrings":false
   },
-  "unitInformation":[
+  "unitInformation": [
     {
-      "damage":0.0,
-      "cost":1.0,
-      "getHitRadius":0.51,
+      "cost1": 1.0,
+      "getHitRadius":0.01,
       "display":"Filter",
-      "range":0.0,
       "shorthand":"FF",
-      "stability":60.0
+      "startHealth":60.0,
+      "unitCategory": 0,
+      "refundPercentage": 0.75,
+      "turnsRequiredToRemove": 1,
+      "upgrade": {
+        "startHealth": 120.0
+      }
     },
     {
-      "damage":0.0,
-      "cost":4.0,
-      "getHitRadius":0.51,
-      "shieldAmount":3.0,
+      "cost1":4.0,
+      "getHitRadius":0.01,
+      "shieldPerUnit":3.0,
       "display":"Encryptor",
-      "range":3.0,
+      "shieldRange":3.5,
       "shorthand":"EF",
-      "stability":30.0
+      "startHealth":30.0,
+      "unitCategory": 0,
+      "shieldBonusPerY": 0.0,
+      "refundPercentage": 0.75,
+      "shieldDecay": 0.0,
+      "turnsRequiredToRemove": 1,
+      "upgrade": {
+        "shieldRange": 7,
+        "shieldPerUnit":4
+      }
     },
     {
-      "damage":16.0,
-      "cost":6.0,
-      "getHitRadius":0.51,
+      "attackDamageWalker":16.0,
+      "cost1":6.0,
+      "getHitRadius":0.01,
       "display":"Destructor",
-      "range":3.0,
+      "attackRange":3.5,
       "shorthand":"DF",
-      "stability":75.0
+      "startHealth":75.0,
+      "unitCategory": 0,
+      "refundPercentage": 0.75,
+      "turnsRequiredToRemove": 1,
+      "upgrade": {
+        "attackDamageWalker":32.0
+      }
     },
+
+
     {
-      "damageI":2.0,
-      "damageToPlayer":1.0,
-      "cost":1.0,
-      "getHitRadius":0.51,
-      "damageF":2.0,
+      "attackDamageTower":2.0,
+      "attackDamageWalker":2.0,
+      "playerBreachDamage":1.0,
+      "cost2":1.0,
+      "getHitRadius":0.01,
       "display":"Ping",
-      "range":3.0,
+      "attackRange":3.5,
       "shorthand":"PI",
-      "stability":15.0,
-      "speed":1
+      "startHealth":15.0,
+      "speed":1,
+      "unitCategory": 1,
+      "selfDestructDamageWalker": 15.0,
+      "selfDestructDamageTower": 15.0,
+      "metalForBreach": 1.0,
+      "selfDestructRange": 1.5,
+      "selfDestructStepsRequired": 5
     },
     {
-      "damageI":8.0,
-      "damageToPlayer":1.0,
-      "cost":3.0,
-      "getHitRadius":0.51,
-      "damageF":8.0,
+      "attackDamageWalker":8.0,
+      "attackDamageTower":8.0,
+      "playerBreachDamage":1.0,
+      "cost2":3.0,
+      "getHitRadius":0.01,
       "display":"EMP",
-      "range":4.0,
+      "attackRange":4.5,
       "shorthand":"EI",
-      "stability":5.0,
-      "speed":0.5
+      "startHealth":5.0,
+      "speed":0.5,
+      "unitCategory": 1,
+      "selfDestructDamageWalker": 5.0,
+      "selfDestructDamageTower": 5.0,
+      "metalForBreach": 1.0,
+      "selfDestructRange": 1.5,
+      "selfDestructStepsRequired": 5
     },
     {
-      "damageI":20.0,
-      "damageToPlayer":1.0,
-      "cost":1.0,
-      "getHitRadius":0.51,
-      "damageF":0.0,
+      "attackDamageWalker":20.0,
+      "playerBreachDamage":1.0,
+      "cost2":1.0,
+      "getHitRadius":0.01,
       "display":"Scrambler",
-      "range":4.0,
+      "attackRange":4.5,
       "shorthand":"SI",
-      "stability":40.0,
-      "speed":0.25
+      "startHealth":40.0,
+      "speed":0.25,
+      "unitCategory": 1,
+      "selfDestructDamageWalker": 40.0,
+      "selfDestructDamageTower": 40.0,
+      "metalForBreach": 1.0,
+      "selfDestructRange": 1.5,
+      "selfDestructStepsRequired": 5
     },
     {
       "display":"Remove",
       "shorthand":"RM"
+    },
+    {
+      "display":"Upgrade",
+      "shorthand":"UP"
     }
   ],
   "timingAndReplay":{
@@ -105,19 +148,5 @@
     "startingBits":5.0,
     "bitDecayPerRound":0.25,
     "startingCores":40.0
-  },
-  "mechanics":{
-    "basePlayerHealthDamage":1.0,
-    "damageGrowthBasedOnY":0.0,
-    "bitsCanStackOnDeployment":true,
-    "destroyOwnUnitRefund":0.75,
-    "destroyOwnUnitsEnabled":true,
-    "stepsRequiredSelfDestruct":5,
-    "selfDestructRadius":1.5,
-    "shieldDecayPerFrame":0.0,
-    "meleeMultiplier":0,
-    "destroyOwnUnitDelay":1,
-    "rerouteMidRound":true,
-    "firewallBuildTime":0
   }
 }

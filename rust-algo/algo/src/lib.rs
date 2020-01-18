@@ -1,14 +1,13 @@
 
-extern crate serde;
-extern crate serde_json;
-#[macro_use]
-extern crate serde_derive;
 #[macro_use]
 extern crate lazy_static;
-#[macro_use]
-pub extern crate enum_iterator;
+extern crate serde;
+extern crate serde_json;
+extern crate enum_iterator;
+extern crate num_enum;
 extern crate num_traits;
 
+#[macro_use]
 pub mod messages;
 pub mod units;
 #[macro_use]
@@ -20,6 +19,9 @@ pub mod gameloop;
 pub mod pathfinding;
 pub mod coords;
 
+pub use enum_iterator::IntoEnumIterator;
+
+/// Common re-exports.
 pub mod prelude {
     pub use super::units::*;
     pub use super::map::*;
@@ -30,4 +32,5 @@ pub mod prelude {
     pub use super::grid::Grid;
     pub use super::coords::*;
     pub use std::sync::Arc;
+    pub use enum_iterator::IntoEnumIterator;
 }
