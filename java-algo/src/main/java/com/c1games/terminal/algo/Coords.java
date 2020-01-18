@@ -27,4 +27,8 @@ public class Coords {
     public String toString() {
         return "<" + x + ", " + y + ">";
     }
+
+    public float distance(Coords other) {
+        return (float)Math.sqrt(((x - other.x) * (x - other.x)) + ((y - other.y) * (y - other.y)));
+    }
 }

@@ -1,6 +1,7 @@
 package com.c1games.terminal.algo.pathfinding;
 
 import com.c1games.terminal.algo.Coords;
+import com.c1games.terminal.algo.GameIO;
 import com.c1games.terminal.algo.map.MapBounds;
 import com.c1games.terminal.algo.map.GameState;
 
@@ -229,7 +230,7 @@ public class Pathfinder {
      * Get the computed path that a unit at the start point will follow.
      */
     public List<Coords> getPath() {
-        //debugPrint();
+        // debugPrint();
 
         List<Coords> path = new ArrayList<>();
         path.add(start);

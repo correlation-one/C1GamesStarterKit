@@ -17,7 +17,9 @@ public interface GameIO {
     /**
      * A printstream to log data which will become visible to the client/user.
      */
-    PrintStream debug();
+    static PrintStream debug() {
+        return System.err;
+    };
 
     /**
      * Get the deserialized config file, possibly waiting to receive this from the game. This many block initially, since the game needs time to

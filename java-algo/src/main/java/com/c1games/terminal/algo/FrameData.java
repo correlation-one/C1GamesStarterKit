@@ -81,6 +81,7 @@ public class FrameData {
         public PlayerUnitList emp;
         public PlayerUnitList scrambler;
         public PlayerUnitList remove;
+        public PlayerUnitList upgrade;
 
         @Override
         public String toString() {
@@ -92,6 +93,7 @@ public class FrameData {
                     ", emp=" + emp +
                     ", scrambler=" + scrambler +
                     ", remove=" + remove +
+                    ", remove=" + upgrade +
                     '}';
         }
     }
@@ -362,8 +364,6 @@ public class FrameData {
         return new GsonBuilder()
                 .registerTypeAdapter(Coords.class, new JsonDeserializeClassFromTuple<>(Coords.class, () -> new Coords(-1, -1)))
                 .registerTypeAdapter(UnitType.class, new UnitTypeDeserializer(atlas))
-                .registerTypeAdapter(InfoUnitType.class, new InfoUnitTypeDeserializer(atlas))
-                .registerTypeAdapter(FirewallUnitType.class, new FirewallUnitTypeDeserializer(atlas))
                 .registerTypeAdapter(TurnInfo.Phase.class, new JsonDeserializeEnumFromInt<>(TurnInfo.Phase.class))
                 .registerTypeAdapter(TurnInfo.class, new JsonDeserializeClassFromTuple<>(TurnInfo.class, TurnInfo::new))
                 .registerTypeAdapter(PlayerStats.class, new JsonDeserializeClassFromTuple<>(PlayerStats.class, PlayerStats::new))

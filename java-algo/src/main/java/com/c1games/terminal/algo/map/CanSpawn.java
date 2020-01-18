@@ -11,6 +11,7 @@ public enum CanSpawn {
     NotOnEdge,
     NotEnoughResources,
     UnitAlreadyPresent,
+    NoUnitPresent,
     ;
 
     public boolean affirmative() {
