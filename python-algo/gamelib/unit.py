@@ -20,7 +20,6 @@ class GameUnit:
         * y (integer): The y coordinate of the unit
         * stationary (bool): Whether or not this unit is a firewall
         * speed (float): A unit will move once every 1/speed frames
-        * damage (int): The amount of damage this firewall unit will deal to enemy information.
         * damage_f (int): The amount of damage this information unit will deal to enemy firewalls.
         * damage_i (int): The amount of damage this information unit will deal to enemy information.
         * range (float): The effective range of this unit
