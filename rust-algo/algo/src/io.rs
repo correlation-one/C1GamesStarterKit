@@ -14,12 +14,17 @@ use std::{
     io::{stdin, BufRead},
     sync::Arc,
 };
+use serde::Deserialize;
 use serde_json;
 
 /// A IO object for receiving and storing the Config from the game engine, creating from the Config
 /// and UnitTypeAtlas, and then receiving all subsequent frames.
 pub struct GameDataReader {
     config: Option<(Arc<Config>, Arc<UnitTypeAtlas>)>,
+}
+
+fn deser_json<'a, T: Deserialize<'a>>(string: &'a str) -> Result<T, serde_json::Error> {
+    serde_json::from_str(string)
 }
 
 impl GameDataReader {
@@ -39,7 +44,7 @@ impl GameDataReader {
                 let mut lines = lock.lines();
                 let line = lines.next();
                 let line = line.unwrap().unwrap();
-                let config: Arc<Config> = Arc::new(serde_json::from_str(line.as_ref())?);
+                let config: Arc<Config> = Arc::new(deser_json(line.as_ref())?);
                 let atlas = Arc::new(UnitTypeAtlas::new(config.unit_information.clone()));
                 *config_holder = Some((config.clone(), atlas.clone()));
                 Ok((config, atlas))
@@ -55,7 +60,7 @@ impl GameDataReader {
         let stdin = stdin();
         let line = stdin.lock().lines().next().unwrap().unwrap();
 
-        serde_json::from_str(line.as_ref())
+        deser_json(line.as_ref())
             .map(|data| Box::new(data))
     }
 

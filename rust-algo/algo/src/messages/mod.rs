@@ -19,9 +19,8 @@ pub mod frame;
 #[serde(rename_all = "camelCase")]
 pub struct Config {
     pub debug: config::Debug,
-    pub unit_information: [config::UnitInformation; 7],
+    pub unit_information: [config::UnitInformation; 8],
     pub resources: config::Resources,
-    pub mechanics: config::Mechanics,
 }
 
 

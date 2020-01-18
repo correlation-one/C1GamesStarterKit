@@ -11,16 +11,23 @@ pub struct TurnInfo {
     pub phase: Phase,
     pub turn_number: i64,
     pub action_phase_frame_number: i64,
+    pub total_number_frames: i64,
 }
 
 impl DeserializeAs for TurnInfo {
-    type Model = (Phase, RoundNumber, RoundNumber);
+    type Model = (Phase, RoundNumber, RoundNumber, RoundNumber);
 
-    fn from_model((phase, turn_number, action_phase_frame_number): Self::Model) -> Self {
+    fn from_model((
+                      phase,
+                      turn_number,
+                      action_phase_frame_number,
+                      total_number_frames,
+                  ): Self::Model) -> Self {
         TurnInfo {
             phase,
             turn_number: turn_number.int(),
             action_phase_frame_number: action_phase_frame_number.int(),
+            total_number_frames: total_number_frames.int(),
         }
     }
 }
@@ -88,6 +95,7 @@ pub struct PlayerUnits {
     pub emp: Vec<PlayerUnit>,
     pub scrambler: Vec<PlayerUnit>,
     pub remove: Vec<PlayerUnit>,
+    pub upgrade: Vec<PlayerUnit>,
 }
 
 deser_as_tuple!(PlayerUnits, (
@@ -98,6 +106,7 @@ deser_as_tuple!(PlayerUnits, (
     emp: Vec<PlayerUnit>,
     scrambler: Vec<PlayerUnit>,
     remove: Vec<PlayerUnit>,
+    upgrade: Vec<PlayerUnit>,
 ));
 
 

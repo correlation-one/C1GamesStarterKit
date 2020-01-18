@@ -73,6 +73,9 @@ fn build_c1_logo(map: &MapState) {
     for &coord in FIREWALL_LOCATIONS_1 {
         map[coord].try_spawn(FirewallUnitType::Filter);
     }
+    for &coord in FIREWALL_LOCATIONS_1 {
+        map[coord].try_upgrade();
+    }
     for &coord in FIREWALL_LOCATIONS_DOTS {
         map[coord].try_spawn(FirewallUnitType::Destructor);
     }
@@ -131,6 +134,7 @@ fn deploy_attackers(map: &MapState) {
     First lets check if we have 10 bits, if we don't we lets wait for
     a turn where we do.
      */
+
     if map.frame_data().p1_stats.bits < 10.0 {
         return;
     }

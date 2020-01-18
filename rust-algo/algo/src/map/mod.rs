@@ -7,7 +7,10 @@ use crate::{
         FrameData,
         Config,
         frame,
-        config::UnitInformation
+        config::{
+            UnitCategory,
+            UnitInformation,
+        },
     },
     bounds::{
         MAP_BOUNDS,
@@ -20,6 +23,7 @@ use crate::{
 };
 
 use std::{
+    u32,
     sync::Arc,
     rc::Rc,
     cell::RefCell,
@@ -46,8 +50,9 @@ struct MapStateInner {
     frame: Box<FrameData>,
 
     walls: Grid<Option<Unit<FirewallUnitType>>>,
-    remove: Grid<Option<Unit<RemoveUnitType>>>,
     info: Grid<Vec<Unit<InfoUnitType>>>,
+    remove: Grid<Option<Unit<RemoveUnitType>>>,
+    upgrade: Grid<Option<Unit<UpgradeUnitType>>>,
 
     atlas: Arc<UnitTypeAtlas>,
     build_stack: Vec<SpawnCommand>,
@@ -104,6 +109,21 @@ impl MapTile {
     }
 }
 
+#[derive(Copy, Clone, Debug, PartialEq, PartialOrd)]
+pub struct Cost {
+    pub bits: Option<f32>,
+    pub cores: Option<f32>,
+}
+
+impl Cost {
+    pub fn filter_nonzero(self) -> Self {
+        Cost {
+            bits: self.bits.filter(|&n| n != 0.0),
+            cores: self.cores.filter(|&n| n != 0.0),
+        }
+    }
+}
+
 impl MapStateInner {
     /// How much of a specific resource do we currently own.
     fn resource_owned(&self, resource: Resource) -> f32 {
@@ -114,20 +134,31 @@ impl MapStateInner {
     }
 
     /// How much does a certain unit type cost to spawn, in its respective resource unit.
-    fn cost_of(&self, unit_type: impl Into<SpawnableUnitType>) -> f32 {
+    fn cost_of(&self, unit_type: impl Into<SpawnableUnitType>) -> Cost {
         let unit_type: UnitType = unit_type.into().into();
-        self.config.unit_information[unit_type as usize].cost().unwrap()
+        let unit = &self.config.unit_information[unit_type as usize];
+
+        Cost {
+            cores: unit.cost1.filter(|&n| n != 0.0),
+            bits: unit.cost2.filter(|&n| n != 0.0),
+        }
     }
 
     /// How many of a certain unit type can we afford to spawn.
     fn number_affordable(&self, unit_type: impl Into<SpawnableUnitType>) -> u32 {
         let unit_type: SpawnableUnitType = unit_type.into();
         let cost = self.cost_of(unit_type);
-        let wealth = match unit_type {
-            SpawnableUnitType::Info(_) => self.frame.p1_stats.bits,
-            SpawnableUnitType::Firewall(_) => self.frame.p1_stats.cores,
-        };
-        (wealth / cost) as u32
+
+        u32::min(
+            cost.bits
+                .map(|cost| self.frame.p1_stats.bits / cost)
+                .map(|n| n as u32)
+                .unwrap_or(99),
+            cost.cores
+                .map(|cost| self.frame.p1_stats.cores / cost)
+                .map(|n| n as u32)
+                .unwrap_or(99),
+        )
     }
 
     /// Inner frame data.
@@ -183,24 +214,38 @@ impl MapTileInner {
         map.remove[c].clone()
     }
 
+    /// Get optional upgrade unit at tile.
+    fn upgrade_unit(c: Coords, map: &MapStateInner) -> Option<Unit<UpgradeUnitType>> {
+        map.upgrade[c].clone()
+    }
+
     /// Can the given number of a given unit type be spawned at this tile? If not, why?
     fn can_spawn(c: Coords, map: &MapStateInner, unit_type: impl Into<UnitType>, quantity: u32) -> CanSpawn {
         let unit_type = unit_type.into();
         if let Some(not_enough_resources) = {
+
             unit_type.as_spawnable().and_then(|spawnable| {
-                let resource = Resource::which_buys(spawnable);
-                let have = map.resource_owned(resource);
-                let need = map.cost_of(spawnable) * quantity as f32;
-                if need > have {
+                let cost = map.cost_of(spawnable);
+
+                let need_bits = cost.bits.unwrap_or(0.0) * quantity as f32;
+                let need_cores = cost.cores.unwrap_or(0.0) * quantity as f32;
+
+                let have_bits = map.resource_owned(Resource::Bits);
+                let have_cores = map.resource_owned(Resource::Cores);
+
+                if need_bits > have_bits || need_cores > have_cores {
                     Some(CanSpawn::NotEnoughResources {
-                        resource,
-                        have,
-                        need
+                        need_bits,
+                        need_cores,
+                        have_bits,
+                        have_cores,
                     })
                 } else {
                     None
                 }
+
             })
+
         } {
             not_enough_resources
         } else if unit_type != UnitType::Remove && Self::wall_unit(c, map).is_some() {
@@ -242,6 +287,63 @@ impl MapTileInner {
         }
     }
 
+    fn upgrade_cost(unit_info: &UnitInformation) -> Cost {
+        let cores = unit_info.upgrade.as_ref()
+            .and_then(|info| info.cost1)
+            .unwrap_or(unit_info.cost1
+                .unwrap_or(0.0));
+        let bits = unit_info.upgrade.as_ref()
+            .and_then(|info| info.cost2)
+            .unwrap_or(unit_info.cost2
+                .unwrap_or(0.0));
+
+        Cost {
+            cores: Some(cores),
+            bits: Some(bits),
+        }.filter_nonzero()
+    }
+
+    fn can_upgrade(c: Coords, map: &MapStateInner) -> CanUpgrade {
+
+        if !MAP_BOUNDS.is_in_arena(c) {
+            CanUpgrade::OutOfBounds(c)
+        } else if c.y >= BOARD_SIZE as i32 / 2 {
+            CanUpgrade::WrongSideOfMap(c)
+        } else if Self::info_units(c, map).len() > 0 {
+            CanUpgrade::InfoUnitPresent(c)
+        } else if Self::wall_unit(c, map).is_none() {
+            CanUpgrade::NoUnitPresent(c)
+        } else if let Some(err) = {
+            let unit = Self::wall_unit(c, map).unwrap();
+            let atlas = map.atlas();
+            let info = atlas.type_info(unit.unit_type.into());
+            let cost = Self::upgrade_cost(info);
+
+            let need_bits = cost.bits.unwrap_or(0.0);
+            let need_cores = cost.cores.unwrap_or(0.0);
+
+            let have_bits = map.resource_owned(Resource::Bits);
+            let have_cores = map.resource_owned(Resource::Cores);
+
+            if need_bits > have_bits || need_cores > have_cores {
+                Some(CanUpgrade::NotEnoughResources {
+                    need_bits,
+                    need_cores,
+                    have_bits,
+                    have_cores,
+                })
+            } else {
+                None
+            }
+        } {
+            err
+        } else if map.upgrade[c].is_some() {
+            CanUpgrade::AlreadyUpgraded
+        } else {
+            CanUpgrade::Yes
+        }
+    }
+
     /// Attempt to spawn a unit on the board.
     fn spawn(c: Coords, map: &mut MapStateInner, unit_type: impl Into<SpawnableUnitType>) -> Result<(), CanSpawn> {
         let coords = c;
@@ -254,37 +356,34 @@ impl MapTileInner {
         };
 
         // subtract the cost from our wealth
-        let resource = Resource::which_buys(unit_type);
         let cost = map.cost_of(unit_type);
-        match resource {
-            Resource::Cores => map.frame.p1_stats.cores -= cost,
-            Resource::Bits => map.frame.p1_stats.bits -= cost,
-        };
+        map.frame.p1_stats.cores -= cost.cores.unwrap_or(0.0);
+        map.frame.p1_stats.bits -= cost.bits.unwrap_or(0.0);
 
-        match unit_type {
-            SpawnableUnitType::Firewall(unit_type) => {
-                if let UnitInformation::Wall { stability, .. } = map.atlas.type_info(unit_type.into()) {
-                    let unit = Unit {
-                        unit_type,
-                        stability: *stability,
-                        id: None,
-                        owner: PlayerId::Player1
-                    };
-                    map.walls[coords] = Some(unit);
-                } else { panic!("A SpawnableUnitType::Firewall isn't a UnitInformation::Wall - is something wrong with the Atlas?") }
+        let unit_info =  map.atlas.type_info(unit_type.into());
+        match unit_info.unit_category {
+            Some(UnitCategory::Firewall) => {
+                let unit = Unit {
+                    unit_type: unit_type.into_firewall().unwrap(),
+                    health: unit_info.start_health.unwrap_or(0.0),
+                    id: None,
+                    owner: PlayerId::Player1,
+                };
+                map.walls[coords] = Some(unit);
             },
-            SpawnableUnitType::Info(unit_type) => {
-                if let UnitInformation::Data { stability, .. } = map.atlas.type_info(unit_type.into()) {
-                    let unit = Unit {
-                        unit_type,
-                        stability: *stability,
-                        id: None,
-                        owner: PlayerId::Player1
-                    };
-                    map.info[coords].push(unit);
-                } else { panic!("A SpawnableUnitType::Info isn't a UnitInformation::Data - is something wrong with the Atlas?") }
-            }
-        }
+
+            Some(UnitCategory::Info) => {
+                let unit = Unit {
+                    unit_type: unit_type.into_info().unwrap(),
+                    health: unit_info.start_health.unwrap_or(0.0),
+                    id: None,
+                    owner: PlayerId::Player1,
+                };
+                map.info[coords].push(unit);
+            },
+
+            None => panic!("unit info of spawnable unit does not have unit category"),
+        };
 
         // add it to the command stack
         let unit_type: UnitType = unit_type.into();
@@ -304,6 +403,33 @@ impl MapTileInner {
         Self::spawn(c, map, unit_type).is_ok()
     }
 
+    fn upgrade(c: Coords, map: &mut MapStateInner) -> Result<(), CanUpgrade> {
+        match Self::can_upgrade(c, map) {
+            CanUpgrade::Yes => (),
+            cannot => return Err(cannot),
+        };
+
+        map.upgrade[c] = Some(Unit {
+            unit_type: UpgradeUnitType,
+            health: 1.0,
+            id: None,
+            owner: PlayerId::Player1,
+        });
+
+        let wall = map.walls[c].as_ref().unwrap();
+        let atlas = map.atlas();
+        let unit_info = atlas.type_info(wall.unit_type.into());
+        let cost = Self::upgrade_cost(unit_info);
+        map.frame.p1_stats.cores -= cost.cores.unwrap_or(0.0);
+        map.frame.p1_stats.bits -= cost.bits.unwrap_or(0.0);
+
+        map.build_stack.push(SpawnCommand::new(
+            UnitType::Upgrade, c, &*map.atlas
+        ));
+
+        Ok(())
+    }
+
     /// Attempt to remove a firewall from a location on the board.
     fn remove_firewall(c: Coords, map: &mut MapStateInner) -> Result<(), CanRemove> {
         let coords = c;
@@ -313,28 +439,18 @@ impl MapTileInner {
             cannot => return Err(cannot),
         };
 
-        // remove the unit, saving the unit type and asserting that the unit previously existed
-        let unit_type = map.walls[coords].take().unwrap().unit_type;
-
         // add the remove unit
         map.remove[coords] = Some(Unit {
             unit_type: RemoveUnitType,
-            stability: 1.0,
+            health: 1.0,
             id: None,
-            owner: PlayerId::Player1
+            owner: PlayerId::Player1,
         });
-
-        // refund the cost
-        let resource = Resource::which_buys(unit_type);
-        let cost = map.cost_of(unit_type);
-        match resource {
-            Resource::Cores => map.frame.p1_stats.cores += cost,
-            Resource::Bits => map.frame.p1_stats.bits += cost,
-        };
 
         // add it to the command stack
         map.build_stack.push(SpawnCommand::new(
-            UnitType::Remove, coords, &*map.atlas));
+            UnitType::Remove, coords, &*map.atlas
+        ));
 
         // success
         Ok(())
@@ -343,6 +459,10 @@ impl MapTileInner {
     /// Attempt to remove a firewall from a location on the board, returning whether successful.
     fn try_remove_firewall(c: Coords, map: &mut MapStateInner) -> bool {
         Self::remove_firewall(c, map).is_ok()
+    }
+
+    fn try_upgrade(c: Coords, map: &mut MapStateInner) -> bool {
+        Self::upgrade(c, map).is_ok()
     }
 }
 
@@ -356,9 +476,10 @@ pub enum CanSpawn {
     WrongSideOfMap(Coords),
     NotOnEdge(Coords),
     NotEnoughResources {
-        resource: Resource,
-        have: f32,
-        need: f32,
+        have_bits: f32,
+        need_bits: f32,
+        have_cores: f32,
+        need_cores: f32,
     },
     UnitAlreadyPresent {
         coords: Coords,
@@ -374,6 +495,22 @@ pub enum CanRemove {
     WrongSideOfMap(Coords),
     NoUnitPresent(Coords),
     InfoUnitPresent(Coords),
+}
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub enum CanUpgrade {
+    Yes,
+    OutOfBounds(Coords),
+    WrongSideOfMap(Coords),
+    NoUnitPresent(Coords),
+    InfoUnitPresent(Coords),
+    AlreadyUpgraded,
+    NotEnoughResources {
+        have_bits: f32,
+        need_bits: f32,
+        have_cores: f32,
+        need_cores: f32,
+    },
 }
 
 /// Details on a possible unit spawn being blocked by another unit.
@@ -396,7 +533,7 @@ pub enum Resource {
 #[derive(Clone, Debug)]
 pub struct Unit<T: Into<UnitType>> {
     pub unit_type: T,
-    pub stability: f32,
+    pub health: f32,
     pub id: Option<String>,
     pub owner: PlayerId,
 }
@@ -406,9 +543,9 @@ impl<T: Into<UnitType>> Unit<T> {
     pub fn unspecialize(self) -> Unit<UnitType> {
         Unit {
             unit_type: self.unit_type.into(),
-            stability: self.stability,
+            health: self.health,
             id: self.id,
-            owner: self.owner
+            owner: self.owner,
         }
     }
 }
@@ -424,6 +561,13 @@ impl CanRemove {
     /// Whether self is CanRemove::Yes
     pub fn yes(self) -> bool {
         self == CanRemove::Yes
+    }
+}
+
+impl CanUpgrade {
+    /// Whether self is CanUpgrade::Yes
+    pub fn yes(self) -> bool {
+        self == CanUpgrade::Yes
     }
 }
 
@@ -520,6 +664,8 @@ map_tile_delegate! {
     /// Get optional wall unit at tile.
     fn wall_unit(c: Coords, map: &MapStateInner) -> Option<Unit<FirewallUnitType>>;
 
+    fn upgrade_unit(c: Coords, map: &MapStateInner) -> Option<Unit<UpgradeUnitType>>;
+
     /// Get optional remove unit at tile.
     fn remove_unit(c: Coords, map: &MapStateInner) -> Option<Unit<RemoveUnitType>>;
 
@@ -528,6 +674,10 @@ map_tile_delegate! {
 
     /// Can a firewall be removed at this tile? If not, why?
     fn can_remove_firewall(c: Coords, map: &MapStateInner) -> CanRemove;
+
+    fn can_upgrade(c: Coords, map: &MapStateInner) -> CanUpgrade;
+
+    fn upgrade(c: Coords, map: &mut MapStateInner) -> Result<(), CanUpgrade>;
 
     /// Attempt to spawn a unit on the board.
     fn spawn(c: Coords, map: &mut MapStateInner, unit_type: impl Into<SpawnableUnitType>) -> Result<(), CanSpawn>;
@@ -540,6 +690,8 @@ map_tile_delegate! {
 
     /// Attempt to remove a firewall from a location on the board, returning whether successful.
     fn try_remove_firewall(c: Coords, map: &mut MapStateInner) -> bool;
+
+    fn try_upgrade(c: Coords, map: &mut MapStateInner) -> bool;
 }
 
 macro_rules! map_state_delegate {
@@ -564,7 +716,7 @@ map_state_delegate! {
     fn resource_owned(&self, resource: Resource) -> f32;
 
     /// How much does a certain unit type cost to spawn, in its respective resource unit.
-    fn cost_of(&self, unit_type: impl Into<SpawnableUnitType>) -> f32;
+    fn cost_of(&self, unit_type: impl Into<SpawnableUnitType>) -> Cost;
 
     /// How many of a certain unit type can we afford to spawn.
     fn number_affordable(&self, unit_type: impl Into<SpawnableUnitType>) -> u32;

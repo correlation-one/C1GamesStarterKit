@@ -11,6 +11,8 @@ pub fn parse_frame(
         Grid::from_generator(|_| None);
     let mut remove: Grid<Option<Unit<RemoveUnitType>>> =
         Grid::from_generator(|_| None);
+    let mut upgrade: Grid<Option<Unit<UpgradeUnitType>>> =
+        Grid::from_generator(|_| None);
     let mut info: Grid<Vec<Unit<InfoUnitType>>> =
         Grid::from_generator(|_| Vec::new());
 
@@ -33,7 +35,7 @@ pub fn parse_frame(
                     .ok_or(MapParseError::UnitInIllegalPosition(unit_data.coords))?
                     .push(Unit {
                         unit_type,
-                        stability: unit_data.stability,
+                        health: unit_data.stability,
                         id: Some(unit_data.unit_id.clone()),
                         owner: player,
                     });
@@ -55,7 +57,7 @@ pub fn parse_frame(
                 }
                 *slot = Some(Unit {
                     unit_type,
-                    stability: unit_data.stability,
+                    health: unit_data.stability,
                     id: Some(unit_data.unit_id.clone()),
                     owner: player
                 });
@@ -71,11 +73,28 @@ pub fn parse_frame(
             }
             *slot = Some(Unit {
                 unit_type: RemoveUnitType,
-                stability: unit_data.stability,
+                health: unit_data.stability,
                 id: Some(unit_data.unit_id.clone()),
                 owner: player
             });
         }
+
+        // fill in the upgrade units
+        for unit_data in &units.upgrade {
+            let slot: &mut Option<Unit<UpgradeUnitType>> = upgrade.get_mut(unit_data.coords)
+                .ok_or(MapParseError::UnitInIllegalPosition(unit_data.coords))?;
+            if slot.is_some() {
+                return Err(MapParseError::MultipleUpgradesSamePosition(unit_data.coords));
+            }
+            *slot = Some(Unit {
+                unit_type: UpgradeUnitType,
+                health: unit_data.stability,
+                id: Some(unit_data.unit_id.clone()),
+                owner: player
+            });
+        }
+
+
     }
 
     let inner = MapStateInner {
@@ -85,6 +104,7 @@ pub fn parse_frame(
         walls,
         remove,
         info,
+        upgrade,
 
         atlas,
         build_stack: Vec::new(),
@@ -115,5 +135,6 @@ pub enum MapParseError {
     UnitInIllegalPosition(Coords),
     MultipleWallsSamePosition(Coords),
     MultipleRemovesSamePosition(Coords),
+    MultipleUpgradesSamePosition(Coords),
     DeserializeError(serde_json::Error),
 }

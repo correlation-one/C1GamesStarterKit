@@ -16,6 +16,7 @@ pub enum UnitType {
     Emp,
     Scrambler,
     Remove,
+    Upgrade,
 }
 impl UnitType {
     /// Attempt to convert to a FirewallUnitType.
@@ -128,6 +129,15 @@ impl Into<UnitType> for RemoveUnitType {
     }
 }
 
+/// A unit-like struct which represents the upgrade unit type.
+#[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
+pub struct UpgradeUnitType;
+impl Into<UnitType> for UpgradeUnitType {
+    fn into(self) -> UnitType {
+        UnitType::Upgrade
+    }
+}
+
 /// The unit types which can be spawned; a union if InfoUnitType and FirewallUnitType.
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
 pub enum SpawnableUnitType {
@@ -150,6 +160,20 @@ impl SpawnableUnitType {
             &SpawnableUnitType::Firewall(_) => true,
         }
     }
+
+    pub fn into_info(self) -> Option<InfoUnitType> {
+        match self {
+            SpawnableUnitType::Info(inner) => Some(inner),
+            SpawnableUnitType::Firewall(_) => None,
+        }
+    }
+
+    pub fn into_firewall(self) -> Option<FirewallUnitType> {
+        match self {
+            SpawnableUnitType::Firewall(inner) => Some(inner),
+            SpawnableUnitType::Info(_) => None,
+        }
+    }
 }
 impl Into<UnitType> for SpawnableUnitType {
     fn into(self) -> UnitType {
@@ -162,16 +186,19 @@ impl Into<UnitType> for SpawnableUnitType {
 
 /// Translations between unit types, integers, and shorthand strings.
 pub struct UnitTypeAtlas {
-    unit_information: [UnitInformation; 7],
+    unit_information: [UnitInformation; 8],
     unit_type_lookup: HashMap<String, UnitType>,
 }
+
 impl UnitTypeAtlas {
     /// Construct a UnitTypeAtlas from the array of 7 UnitInformation found in the Config.
-    pub fn new(unit_information: [UnitInformation; 7]) -> Self {
+    pub fn new(unit_information: [UnitInformation; 8]) -> Self {
         let mut lookup = HashMap::new();
         for unit_type in UnitType::into_enum_iter() {
-            lookup.insert(unit_information[unit_type as usize].shorthand().to_owned(),
-                          unit_type);
+            lookup.insert(
+                unit_information[unit_type as usize].shorthand.clone().unwrap(),
+                unit_type,
+            );
         }
         UnitTypeAtlas {
             unit_information,
@@ -196,7 +223,7 @@ impl UnitTypeAtlas {
 
     /// Convert a unit type into its shorthand.
     pub fn type_into_shorthand(&self, unit_type: UnitType) -> &str {
-        self.unit_information[unit_type as usize].shorthand()
+        self.unit_information[unit_type as usize].shorthand.as_ref().unwrap()
     }
 }
 
