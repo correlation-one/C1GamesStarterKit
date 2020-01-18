@@ -2,12 +2,13 @@
 name = "algo"
 version = "0.1.0"
 authors = ["Phoenix Kahlo <phoenix@correlation-one.com>"]
+edition = "2018"
 
 [dependencies]
-serde = "1.0.79"
-serde_json = "1.0.31"
-serde_derive = "1.0.79"
-lazy_static = "1.1.0"
-enum-iterator = "0.2.0"
+serde = { version = "1.0.104", features = ["derive"] }
+serde_json = "1.0.44"
+lazy_static = "1.4.0"
+enum-iterator = "0.5.0"
+num_enum = "0.4.2"
 num-traits = "0.2.6"
 
