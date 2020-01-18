@@ -10,7 +10,7 @@ plugins {
     id 'application'
 
     // Apply the shadow plugin to add support for fat, self-sufficient jars
-    id 'com.github.johnrengelman.shadow' version '4.0.3'
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
 }
 
 // This is necessary for successful compilation on our servers
