@@ -1,8 +1,6 @@
 package com.c1games.terminal.algo;
 
 import com.c1games.terminal.algo.serialization.*;
-import com.c1games.terminal.algo.units.FirewallUnitType;
-import com.c1games.terminal.algo.units.InfoUnitType;
 import com.c1games.terminal.algo.units.UnitType;
 import com.c1games.terminal.algo.units.UnitTypeAtlas;
 import com.google.gson.*;
