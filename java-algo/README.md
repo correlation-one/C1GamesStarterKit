@@ -136,6 +136,8 @@ your algo, you will have to modify the `mainClassName` in the `build.gradle` fil
 If you change your build process such that you are no longer building to the directory `algo-target`, you can
 configure the path which will be packaged with the `compile-target` field in `algo.json`.
 
+To build the doc strings: `./gradlew javadoc`
+
 ### Unit tests
 
 The gradle build script is set up to perform `JUnit` unit tests. These test are in the `src/test/java` directory. 
