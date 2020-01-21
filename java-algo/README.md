@@ -121,7 +121,7 @@ left less than maximally optimized.
 
 Java algos use gradle build scripts for compilation. Gradle is already set up in the starter algo, but 
 the scripts can be modified if necessary, such as to add dependencies. When your algo is compiled on 
-our servers, the command `gradle build` will be executed, which will build `algo-target/algo.jar`. Next to 
+our servers, the command `./gradlew build` will be executed, which will build `algo-target/algo.jar`. Next to 
 `algo-target/algo.jar` is `algo-target/run.sh`. Any algo from any language uses a `run.sh` script as an entry point, 
 and this `run.sh` simply starts `algo.jar`. After this command finishes, the entire `algo-target` directory will 
 be zipped, and this will be distributed to playground and ranked matches.
@@ -139,4 +139,4 @@ configure the path which will be packaged with the `compile-target` field in `al
 ### Unit tests
 
 The gradle build script is set up to perform `JUnit` unit tests. These test are in the `src/test/java` directory. 
-To run unit tests, simple call `gradle test`.
+To run unit tests, simple call `./gradlew test`.
