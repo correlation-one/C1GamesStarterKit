@@ -244,7 +244,7 @@ public class StarterAlgo implements GameLoop {
          */
         Config.UnitInformation cheapestUnit = null;
         for (Config.UnitInformation uinfo : move.config.unitInformation) {
-            if (move.isFirewall(uinfo.unitCategory.getAsInt())) {
+            if (uinfo.unitCategory.isPresent() && move.isFirewall(uinfo.unitCategory.getAsInt())) {
                 float[] costUnit = uinfo.cost();
                 if((cheapestUnit == null || costUnit[0] + costUnit[1] <= cheapestUnit.cost()[0] + cheapestUnit.cost()[1])) {
                     cheapestUnit = uinfo;
