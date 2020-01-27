@@ -635,6 +635,6 @@ class GameState:
         possible_locations= self.game_map.get_locations_in_range(location, max_range)
         for location_unit in possible_locations:
             for unit in self.game_map[location_unit]:
-                if unit.damage_i + unit.damage_f > 0 and unit.player_index != player_index and self.game_map.distance_between_locations(location, location_unit) >= unit.attackRange:
+                if unit.damage_i + unit.damage_f > 0 and unit.player_index != player_index and self.game_map.distance_between_locations(location, location_unit) <= unit.attackRange:
                     attackers.append(unit)
         return attackers
