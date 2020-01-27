@@ -29,6 +29,8 @@ class GameState:
         * PING (str): A constant representing the ping unit
         * EMP (str): A constant representing the emp unit
         * SCRAMBLER (str): A constant representing the scrambler unit
+        * REMOVE (str): A constant representing removing your own unit
+        * UPGRADE (str): A constant representing upgrading a unit
         * FIREWALL_TYPES (list): A list of the firewall units
 
         * ARENA_SIZE (int): The size of the arena
@@ -153,7 +155,8 @@ class GameState:
     def __set_resource(self, resource_type, amount, player_index=0):
         """
         Sets the resources for the given player_index and resource_type.
-        Is automatically called by other provided functions. 
+        Is automatically called by other provided functions.
+        Adds the value amount to the current held resources
         """
         if resource_type == self.BITS:
             resource_key = 'bits'
@@ -181,7 +184,7 @@ class GameState:
         """Gets a players resources
 
         Args:
-            resource_type: BITS (0) or CORES (1)
+            resource_type: BITS (1) or CORES (0)
             player_index: The index corresponding to the player whos resources you are querying, 0 for you 1 for the enemy
 
         Returns:
@@ -203,14 +206,13 @@ class GameState:
         return resources.get(resource_key, None)
 
     def get_resources(self, player_index = 0):
-        """Gets a players resources
+        """Gets a players resources as a list
 
         Args:
-            resource_type: BITS (0) or CORES (1)
             player_index: The index corresponding to the player whos resources you are querying, 0 for you 1 for the enemy
 
         Returns:
-            The number of the given resource the given player controls
+            [Float, Float] list where the first entry is cores the second bits
 
         """
         if not player_index == 1 and not player_index == 0:
@@ -284,7 +286,7 @@ class GameState:
             unit_type: The units type (string shorthand)
 
         Returns:
-            The units costs as a list
+            The units costs as a list [CORES, BITS]
 
         """
         if unit_type == REMOVE:
@@ -430,7 +432,7 @@ class GameState:
                     if unit.stationary:
                         existing_unit = unit
 
-                if self.config["unitInformation"][UNIT_TYPE_TO_INDEX[existing_unit.unit_type]].get("upgrade", None) is not None:
+                if not existing_unit.upgraded and self.config["unitInformation"][UNIT_TYPE_TO_INDEX[existing_unit.unit_type]].get("upgrade", None) is not None:
                     costs = self.type_cost(existing_unit.unit_type, True)
                     resources = self.get_resources()
                     if resources[CORES] >= costs[CORES] and resources[BITS] >= costs[BITS]:
@@ -450,7 +452,7 @@ class GameState:
             start_location: The location of a hypothetical unit
 
         Returns: 
-            The edge this unit would attempt to reach if it was spawned at this location
+            The edge this unit would attempt to reach if it was spawned at this location (int)
         """
 
         left = start_location[0] < self.HALF_ARENA
@@ -467,7 +469,8 @@ class GameState:
             return self.game_map.BOTTOM_LEFT
 
     def find_path_to_edge(self, start_location, target_edge=None):
-        """Gets the path a unit at a given location would take
+        """Gets the path a unit at a given location would take. 
+        If final point is not on an edge, it is a self destruct path
 
         Args:
             start_location: The location of a hypothetical unit
@@ -489,13 +492,13 @@ class GameState:
         return self._shortest_path_finder.navigate_multiple_endpoints(start_location, end_points, self)
 
     def contains_stationary_unit(self, location):
-        """Check if a location is blocked
+        """Check if a location is blocked, return firewall unit if it is
 
         Args:
             location: The location to check
 
         Returns:
-            True if there is a stationary unit at the location, False otherwise
+            A firewall unit if there is a stationary unit at the location, False otherwise
             
         """
         if not self.game_map.in_arena_bounds(location):
