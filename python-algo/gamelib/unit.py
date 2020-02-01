@@ -22,10 +22,14 @@ class GameUnit:
         * speed (float): A unit will move once every 1/speed frames
         * damage_f (int): The amount of damage this information unit will deal to enemy firewalls.
         * damage_i (int): The amount of damage this information unit will deal to enemy information.
-        * range (float): The effective range of this unit
+        * attackRange (float): The effective range of this unit for attacking
+        * shieldRange (float): The effective range of this unit for shielding
         * max_health (float): The starting health of this unit. Note than health can be increased beyond this value by encryptors
         * health (float): The current health of this unit
-        * cost (int): The resource cost of this unit
+        * cost ([int, int]): The resource costs of this unit first is cores second is bits
+        * shieldPerUnit (float): how much shield is given per unit
+        * pending_removal (boolean): If this unit is marked for removal by its owner
+        * upgraded (boolean): If this unit is upgraded
 
     """
     def __init__(self, unit_type, config, player_index=None, health=None, x=-1, y=-1):
@@ -67,6 +71,7 @@ class GameUnit:
         self.max_health = type_config.get("startHealth", self.max_health)
         self.shieldPerUnit = type_config.get("shieldPerUnit", self.shieldPerUnit)
         self.cost = [type_config.get("cost1", 0) + self.cost[0], type_config.get("cost2", 0) + self.cost[1]]
+        self.upgraded = True
 
 
     def __toString(self):
