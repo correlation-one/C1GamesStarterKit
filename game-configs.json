@@ -39,22 +39,25 @@
       "turnsRequiredToRemove": 1,
       "upgrade": {
         "shieldRange": 7,
-        "shieldPerUnit":4
+        "shieldPerUnit": 4,
+        "shieldBonusPerY": 0.25
       }
     },
     {
-      "attackDamageWalker":16.0,
-      "cost1":6.0,
+      "attackDamageWalker":5.0,
+      "cost1":2.0,
       "getHitRadius":0.01,
       "display":"Destructor",
-      "attackRange":3.5,
+      "attackRange":2.5,
       "shorthand":"DF",
       "startHealth":75.0,
       "unitCategory": 0,
       "refundPercentage": 0.75,
       "turnsRequiredToRemove": 1,
       "upgrade": {
-        "attackDamageWalker":32.0
+        "cost1": 4.0,
+        "attackRange":3.5,
+        "attackDamageWalker":16.0
       }
     },
 
