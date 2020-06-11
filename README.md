@@ -39,12 +39,7 @@ And don't forget to run the PowerShell as admin.
 
 ## Uploading Algos
 
-Zip your algo with the platform-appropriate `zipalgo` binary, found in the `scripts` directory. This
-will generate a deflated zip archive, details are provided in the [documentation in the scripts directory](https://github.com/correlation-one/AIGamesStarterKit/tree/master/scripts). 
-
-For example, you can run:
-
-./scripts/zipalgo_mac python-algo my-python-algo.zip
+Simply select the folder of your algo when prompted on the [Terminal](https://terminal.c1games.com) website. Make sure to select the specific language folder such as "python-algo" do not select the entire starterkit itself.
 
 ## Troubleshooting
 
