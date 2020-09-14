@@ -67,6 +67,10 @@ public final class Config {
         public Optional<String> display = Optional.empty();
         public Optional<String> shorthand = Optional.empty();
 
+        public Optional<String> icon = Optional.empty();
+        public OptionalDouble iconxScale = OptionalDouble.empty();
+        public OptionalDouble iconyScale = OptionalDouble.empty();
+
         public Optional<UnitInformation> upgrade = Optional.empty(); // stats that will change when you upgrade
         // Not this only covers most commonly used information about a unit,
         // there are missing variables like selfDestructRange that shouldn't be needed for most strategies and leave you to add.
@@ -96,6 +100,10 @@ public final class Config {
             copyFrom.cost1.ifPresent(newVal -> this.cost1 = OptionalDouble.of(newVal));
             copyFrom.cost2.ifPresent(newVal -> this.cost2 = OptionalDouble.of(newVal));
 
+            copyFrom.icon.ifPresent(newVal -> this.icon = Optional.of(newVal));
+            copyFrom.iconxScale.ifPresent(newVal -> this.iconxScale = OptionalDouble.of(newVal));
+            copyFrom.iconyScale.ifPresent(newVal -> this.iconyScale = OptionalDouble.of(newVal));
+
             copyFrom.upgrade.ifPresent(newVal -> this.upgrade = Optional.of(new UnitInformation(newVal)));
 
             copyFrom.display.ifPresent(newVal -> this.display = Optional.of(newVal));
@@ -105,6 +113,9 @@ public final class Config {
         @Override
         public String toString() {
             return "UnitInformation{" +
+                    "icon='" + icon + "''" + 
+                    "iconxScale=" + iconxScale +
+                    "iconyScale=" + iconyScale +
                     "display='" + display + "'" +
                     "shorthand='" + shorthand + "'" +
                     "attackDamageTower=" + attackDamageTower +
