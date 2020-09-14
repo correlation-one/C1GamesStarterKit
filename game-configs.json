@@ -12,63 +12,69 @@
   },
   "unitInformation": [
     {
+      "icon": "S3_filter",
+      "iconxScale": 0.4,
+      "iconyScale": 0.4,
       "cost1": 1.0,
       "getHitRadius":0.01,
-      "display":"Filter",
+      "display":"filter",
       "shorthand":"FF",
-      "startHealth":60.0,
+      "startHealth":75.0,
       "unitCategory": 0,
       "refundPercentage": 0.75,
       "turnsRequiredToRemove": 1,
       "upgrade": {
-        "startHealth": 120.0
+        "startHealth": 150.0
       }
     },
     {
+      "icon": "S3_encryptor",
+      "iconxScale": 0.5,
+      "iconyScale": 0.5,
       "cost1":4.0,
       "getHitRadius":0.01,
-      "shieldPerUnit":3.0,
-      "display":"Encryptor",
-      "shieldRange":3.5,
+      "display":"encryptor",
       "shorthand":"EF",
       "startHealth":30.0,
       "unitCategory": 0,
       "shieldBonusPerY": 0.0,
       "refundPercentage": 0.75,
-      "shieldDecay": 0.0,
       "turnsRequiredToRemove": 1,
+      "generatesResource1": 1,
       "upgrade": {
-        "shieldRange": 7,
-        "shieldPerUnit": 4,
-        "shieldBonusPerY": 0.25
+        "generatesResource2": 1
       }
     },
     {
+      "icon": "S3_destructor",
+      "iconxScale": 0.5,
+      "iconyScale": 0.5,
       "attackDamageWalker":5.0,
       "cost1":2.0,
       "getHitRadius":0.01,
-      "display":"Destructor",
+      "display":"destructor",
       "attackRange":2.5,
       "shorthand":"DF",
-      "startHealth":75.0,
+      "startHealth":90.0,
       "unitCategory": 0,
       "refundPercentage": 0.75,
       "turnsRequiredToRemove": 1,
       "upgrade": {
         "cost1": 4.0,
         "attackRange":3.5,
-        "attackDamageWalker":16.0
+        "attackDamageWalker":15.0
       }
     },
-
-
     {
+      "icon": "S3_ping",
+      "iconxScale": 0.7,
+      "iconyScale": 0.7,
       "attackDamageTower":2.0,
       "attackDamageWalker":2.0,
       "playerBreachDamage":1.0,
       "cost2":1.0,
       "getHitRadius":0.01,
-      "display":"Ping",
+      "display":"ping",
       "attackRange":3.5,
       "shorthand":"PI",
       "startHealth":15.0,
@@ -81,12 +87,15 @@
       "selfDestructStepsRequired": 5
     },
     {
-      "attackDamageWalker":8.0,
-      "attackDamageTower":8.0,
+      "icon": "S3_emp",
+      "iconxScale": 0.47,
+      "iconyScale": 0.47,
+      "attackDamageWalker":6.0,
+      "attackDamageTower":6.0,
       "playerBreachDamage":1.0,
       "cost2":3.0,
       "getHitRadius":0.01,
-      "display":"EMP",
+      "display":"emp",
       "attackRange":4.5,
       "shorthand":"EI",
       "startHealth":5.0,
@@ -99,11 +108,14 @@
       "selfDestructStepsRequired": 5
     },
     {
+      "icon": "S3_scrambler",
+      "iconxScale": 0.5,
+      "iconyScale": 0.5,
       "attackDamageWalker":20.0,
       "playerBreachDamage":1.0,
       "cost2":1.0,
       "getHitRadius":0.01,
-      "display":"Scrambler",
+      "display":"scrambler",
       "attackRange":4.5,
       "shorthand":"SI",
       "startHealth":40.0,
@@ -117,11 +129,17 @@
     },
     {
       "display":"Remove",
-      "shorthand":"RM"
+      "shorthand":"RM",
+      "icon": "S3_removal",
+      "iconxScale": 0.4,
+      "iconyScale": 0.4
     },
     {
       "display":"Upgrade",
-      "shorthand":"UP"
+      "shorthand":"UP",
+      "icon": "S3_upgrade",
+      "iconxScale": 0.4,
+      "iconyScale": 0.4
     }
   ],
   "timingAndReplay":{
@@ -143,13 +161,18 @@
     "bitRampBitCapGrowthRate":5.0,
     "roundStartBitRamp":10,
     "bitGrowthRate":1.0,
-    "startingHP":30.0,
+    "startingHP":40.0,
     "maxBits":150.0,
     "bitsPerRound":5.0,
     "coresPerRound":5.0,
     "coresForPlayerDamage":1.0,
     "startingBits":5.0,
     "bitDecayPerRound":0.25,
-    "startingCores":40.0
+    "startingCores":20.0
+  },
+  "misc":{
+    "numBlockedLocations": 0,
+    "blockedLocations": [
+    ]
   }
 }
