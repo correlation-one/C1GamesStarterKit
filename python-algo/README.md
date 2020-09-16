@@ -42,6 +42,7 @@ If your algo requires initialization then you should also implement the
 A directory containing the sphinx generated documentation, as well as the files required
 to build it. You can view the docs at https://docs.c1games.com, or by opening index.html
 in documents/_build. You can remake the documentation by running 'make html' in the documentation folder.
+You will need to install sphinx for this command to work.
 
 ### `run.sh`
 
@@ -95,5 +96,5 @@ Helper functions and values that do not yet have a better place to live.
 
 The starter strategy is designed to highlight a few common `GameMap` functions
 and give the user a functioning example to work with. It's gameplan is to 
-draw the C1 logo, place destructors in its corners, and randomly spawn encryptors
+draw the C1 logo, place turrets in its corners, and randomly spawn factories
 and units.

@@ -1,7 +1,0 @@
-algo_strategy
-=============
-
-.. automodule:: algo_strategy
-    :members:
-    :undoc-members:
-    :show-inheritance:

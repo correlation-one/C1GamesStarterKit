@@ -10,7 +10,7 @@ class Node:
     Attributes :
         * visited_idealness (bool): Have we visited this node during the idealness search step?
         * visited_validate (bool): Have we visited this node during the validation step?
-        * blocked (bool): Is there a firewall at this node's location
+        * blocked (bool): Is there a structures at this node's location
         * pathlength: The distance between this node and the target location
 
     """
@@ -62,7 +62,7 @@ class ShortestPathFinder:
 
         Returns:
             The path a unit at start_point would take when trying to reach end_points given the current game state.
-            Note that this path can change if a tower is destroyed during pathing, or if you or your enemy places firewalls.
+            Note that this path can change if a tower is destroyed during pathing, or if you or your enemy places structures.
 
         """
         if game_state.contains_stationary_unit(start_point):

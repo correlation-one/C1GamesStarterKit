@@ -1,4 +1,4 @@
-def is_stationary(unit_type, firewall_types):
+def is_stationary(unit_type, structure_types):
     """
         Args:
             unit_type: A unit type
@@ -6,7 +6,7 @@ def is_stationary(unit_type, firewall_types):
         Returns: 
             Boolean, True if the unit is stationary, False otherwise.
     """
-    return unit_type in firewall_types
+    return unit_type in structure_types
 
 
 class GameUnit:
@@ -18,15 +18,15 @@ class GameUnit:
         * player_index (integer): The player that controls this unit. 0 for you, 1 for your opponent.
         * x (integer): The x coordinate of the unit
         * y (integer): The y coordinate of the unit
-        * stationary (bool): Whether or not this unit is a firewall
+        * stationary (bool): Whether or not this unit is a structures
         * speed (float): A unit will move once every 1/speed frames
-        * damage_f (int): The amount of damage this information unit will deal to enemy firewalls.
-        * damage_i (int): The amount of damage this information unit will deal to enemy information.
+        * damage_f (int): The amount of damage this mobile unit will deal to enemy structures.
+        * damage_i (int): The amount of damage this mobile unit will deal to enemy mobile units.
         * attackRange (float): The effective range of this unit for attacking
         * shieldRange (float): The effective range of this unit for shielding
-        * max_health (float): The starting health of this unit. Note than health can be increased beyond this value by encryptors
+        * max_health (float): The starting health of this unit. Note than 'health' can be increased beyond this value by shielding in some game configurations.
         * health (float): The current health of this unit
-        * cost ([int, int]): The resource costs of this unit first is cores second is bits
+        * cost ([int, int]): The resource costs of this unit first is SP second is MP
         * shieldPerUnit (float): how much shield is given per unit
         * pending_removal (boolean): If this unit is marked for removal by its owner
         * upgraded (boolean): If this unit is upgraded
@@ -47,7 +47,7 @@ class GameUnit:
         self.health = self.max_health if not health else health
 
     def __serialize_type(self):
-        from .game_state import FIREWALL_TYPES, UNIT_TYPE_TO_INDEX, ENCRYPTOR
+        from .game_state import STRUCTURE_TYPES, UNIT_TYPE_TO_INDEX, FACTORY
         type_config = self.config["unitInformation"][UNIT_TYPE_TO_INDEX[self.unit_type]]
         self.stationary = type_config["unitCategory"] == 0
         self.speed = type_config.get("speed", 0)
