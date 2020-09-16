@@ -15,7 +15,7 @@ def is_stationary(unit_type):
         Returns: 
             Boolean, True if the unit is stationary, False otherwise.
     """
-    return unit_type in FIREWALL_TYPES
+    return unit_type in STRUCTURE_TYPES
 
 class GameState:
     """Represents the entire gamestate for a given turn
@@ -23,20 +23,20 @@ class GameState:
 
     Attributes :
         * UNIT_TYPE_TO_INDEX (dict): Maps a unit to a corresponding index
-        * FILTER (str): A constant representing the filter unit
-        * ENCRYPTOR (str): A constant representing the encryptor unit
-        * DESTRUCTOR (str): A constant representing the destructor unit
-        * PING (str): A constant representing the ping unit
-        * EMP (str): A constant representing the emp unit
-        * SCRAMBLER (str): A constant representing the scrambler unit
+        * WALL (str): A constant representing the wall unit
+        * FACTORY (str): A constant representing the factory unit
+        * TURRET (str): A constant representing the turret unit
+        * SCOUT (str): A constant representing the scout unit
+        * DEMOLISHER (str): A constant representing the demolisher unit
+        * INTERCEPTOR (str): A constant representing the interceptor unit
         * REMOVE (str): A constant representing removing your own unit
         * UPGRADE (str): A constant representing upgrading a unit
-        * FIREWALL_TYPES (list): A list of the firewall units
+        * STRUCTURE_TYPES (list): A list of the structure units
 
         * ARENA_SIZE (int): The size of the arena
         * HALF_ARENA (int): Half the size of the arena
-        * BITS (int): A constant representing the bits resource, used in the get_resource function
-        * CORES (int): A constant representing the cores resource, used in the get_resource function
+        * MP (int): A constant representing the Mobile Points resource, used in the get_resource function
+        * SP (int): A constant representing the SP resource, used in the get_resource function
          
         * game_map (:obj: GameMap): The current GameMap. To retrieve a list of GameUnits at a location, use game_map[x, y]
         * turn_number (int): The current turn number. Starts at 0.
@@ -59,43 +59,43 @@ class GameState:
         self.config = config
         self.enable_warnings = True
 
-        global FILTER, ENCRYPTOR, DESTRUCTOR, PING, EMP, SCRAMBLER, REMOVE, UPGRADE, FIREWALL_TYPES, ALL_UNITS, UNIT_TYPE_TO_INDEX
+        global WALL, FACTORY, TURRET, SCOUT, DEMOLISHER, INTERCEPTOR, REMOVE, UPGRADE, STRUCTURE_TYPES, ALL_UNITS, UNIT_TYPE_TO_INDEX
         UNIT_TYPE_TO_INDEX = {}
-        FILTER = config["unitInformation"][0]["shorthand"]
-        UNIT_TYPE_TO_INDEX[FILTER] = 0
-        ENCRYPTOR = config["unitInformation"][1]["shorthand"]
-        UNIT_TYPE_TO_INDEX[ENCRYPTOR] = 1
-        DESTRUCTOR = config["unitInformation"][2]["shorthand"]
-        UNIT_TYPE_TO_INDEX[DESTRUCTOR] = 2
-        PING = config["unitInformation"][3]["shorthand"]
-        UNIT_TYPE_TO_INDEX[PING] = 3
-        EMP = config["unitInformation"][4]["shorthand"]
-        UNIT_TYPE_TO_INDEX[EMP] = 4
-        SCRAMBLER = config["unitInformation"][5]["shorthand"]
-        UNIT_TYPE_TO_INDEX[SCRAMBLER] = 5
+        WALL = config["unitInformation"][0]["shorthand"]
+        UNIT_TYPE_TO_INDEX[WALL] = 0
+        FACTORY = config["unitInformation"][1]["shorthand"]
+        UNIT_TYPE_TO_INDEX[FACTORY] = 1
+        TURRET = config["unitInformation"][2]["shorthand"]
+        UNIT_TYPE_TO_INDEX[TURRET] = 2
+        SCOUT = config["unitInformation"][3]["shorthand"]
+        UNIT_TYPE_TO_INDEX[SCOUT] = 3
+        DEMOLISHER = config["unitInformation"][4]["shorthand"]
+        UNIT_TYPE_TO_INDEX[DEMOLISHER] = 4
+        INTERCEPTOR = config["unitInformation"][5]["shorthand"]
+        UNIT_TYPE_TO_INDEX[INTERCEPTOR] = 5
         REMOVE = config["unitInformation"][6]["shorthand"]
         UNIT_TYPE_TO_INDEX[REMOVE] = 6
         UPGRADE = config["unitInformation"][7]["shorthand"]
         UNIT_TYPE_TO_INDEX[UPGRADE] = 7
 
-        ALL_UNITS = [PING, EMP, SCRAMBLER, FILTER, ENCRYPTOR, DESTRUCTOR]
-        FIREWALL_TYPES = [FILTER, ENCRYPTOR, DESTRUCTOR]
+        ALL_UNITS = [SCOUT, DEMOLISHER, INTERCEPTOR, WALL, FACTORY, TURRET]
+        STRUCTURE_TYPES = [WALL, FACTORY, TURRET]
 
         self.ARENA_SIZE = 28
         self.HALF_ARENA = int(self.ARENA_SIZE / 2)
-        self.BITS = 1
-        self.CORES = 0
-        global BITS, CORES
-        BITS = self.BITS
-        CORES = self.CORES
+        self.MP = 1
+        self.SP = 0
+        global MP, SP
+        MP = self.MP
+        SP = self.SP
 
         self.game_map = GameMap(self.config)
         self._shortest_path_finder = ShortestPathFinder()
         self._build_stack = []
         self._deploy_stack = []
         self._player_resources = [
-                {'cores': 0, 'bits': 0},  # player 0, which is you
-                {'cores': 0, 'bits': 0}]  # player 1, which is the opponent
+                {'SP': 0, 'MP': 0},  # player 0, which is you
+                {'SP': 0, 'MP': 0}]  # player 1, which is the opponent
         self.__parse_state(serialized_string)
 
     def __parse_state(self, state_line):
@@ -108,8 +108,8 @@ class GameState:
         turn_info = state["turnInfo"]
         self.turn_number = int(turn_info[1])
 
-        p1_health, p1_cores, p1_bits, p1_time = map(float, state["p1Stats"][:4])
-        p2_health, p2_cores, p2_bits, p2_time = map(float, state["p2Stats"][:4])
+        p1_health, p1_SP, p1_MP, p1_time = map(float, state["p1Stats"][:4])
+        p2_health, p2_SP, p2_MP, p2_time = map(float, state["p2Stats"][:4])
 
         self.my_health = p1_health
         self.my_time = p1_time
@@ -117,8 +117,8 @@ class GameState:
         self.enemy_time = p2_time
 
         self._player_resources = [
-            {'cores': p1_cores, 'bits': p1_bits},
-            {'cores': p2_cores, 'bits': p2_bits}]
+            {'SP': p1_SP, 'MP': p1_MP},
+            {'SP': p2_SP, 'MP': p2_MP}]
 
         p1units = state["p1Units"]
         p2units = state["p2Units"]
@@ -150,7 +150,7 @@ class GameState:
                     self.game_map[x,y].append(unit)
 
     def __resource_required(self, unit_type):
-        return self.CORES if is_stationary(unit_type) else self.BITS
+        return self.SP if is_stationary(unit_type) else self.MP
 
     def __set_resource(self, resource_type, amount, player_index=0):
         """
@@ -158,10 +158,10 @@ class GameState:
         Is automatically called by other provided functions.
         Adds the value amount to the current held resources
         """
-        if resource_type == self.BITS:
-            resource_key = 'bits'
-        elif resource_type == self.CORES:
-            resource_key = 'cores'
+        if resource_type == self.MP:
+            resource_key = 'MP'
+        elif resource_type == self.SP:
+            resource_key = 'SP'
         held_resource = self.get_resource(resource_type, player_index)
         self._player_resources[player_index][resource_key] = held_resource + amount
 
@@ -184,7 +184,7 @@ class GameState:
         """Gets a players resources
 
         Args:
-            resource_type: BITS (1) or CORES (0)
+            resource_type: MP (1) or SP (0)
             player_index: The index corresponding to the player whos resources you are querying, 0 for you 1 for the enemy
 
         Returns:
@@ -194,14 +194,14 @@ class GameState:
         if not player_index == 1 and not player_index == 0:
             self._invalid_player_index(player_index)
             return
-        if not resource_type == self.BITS and not resource_type == self.CORES:
-            self.warn("Invalid resource_type '{}'. Please use BITS (0) or CORES (1)".format(resource_type))
+        if not resource_type == self.MP and not resource_type == self.SP:
+            self.warn("Invalid resource_type '{}'. Please use MP (0) or SP (1)".format(resource_type))
             return
 
-        if resource_type == self.BITS:
-            resource_key = 'bits'
-        elif resource_type == self.CORES:
-            resource_key = 'cores'
+        if resource_type == self.MP:
+            resource_key = 'MP'
+        elif resource_type == self.SP:
+            resource_key = 'SP'
         resources = self._player_resources[player_index]
         return resources.get(resource_key, None)
 
@@ -212,15 +212,15 @@ class GameState:
             player_index: The index corresponding to the player whos resources you are querying, 0 for you 1 for the enemy
 
         Returns:
-            [Float, Float] list where the first entry is cores the second bits
+            [Float, Float] list where the first entry is SP the second is MP
 
         """
         if not player_index == 1 and not player_index == 0:
             self._invalid_player_index(player_index)
             return
 
-        resource_key1 = 'cores'
-        resource_key2 = 'bits'
+        resource_key1 = 'SP'
+        resource_key2 = 'MP'
         resources = self._player_resources[player_index]
         return [resources.get(resource_key1, None), resources.get(resource_key2, None)]
 
@@ -228,7 +228,7 @@ class GameState:
         """The number of units of a given type we can afford
 
         Args:
-            unit_type: A unit type, PING, FILTER, etc.
+            unit_type: A unit type, SCOUT, WALL, etc.
 
         Returns:
             The number of units affordable of the given unit_type.
@@ -240,26 +240,26 @@ class GameState:
 
         costs = self.type_cost(unit_type)
         player_held = self.get_resources()
-        if costs[BITS] > 0 and costs[CORES] > 0:
-            return min(math.floor(player_held[CORES] / costs[CORES]), math.floor(player_held[BITS] / costs[BITS]))
-        elif costs[BITS] > 0:
-            return math.floor(player_held[BITS] / costs[BITS])
-        elif costs[CORES] > 0:
-            return math.floor(player_held[CORES] / costs[CORES])
+        if costs[MP] > 0 and costs[SP] > 0:
+            return min(math.floor(player_held[SP] / costs[SP]), math.floor(player_held[MP] / costs[MP]))
+        elif costs[MP] > 0:
+            return math.floor(player_held[MP] / costs[MP])
+        elif costs[SP] > 0:
+            return math.floor(player_held[SP] / costs[SP])
         else:
             self.warn("Invalid costs for unit, cost is 0 for both resources, returning 0")
             return 0
 
-    def project_future_bits(self, turns_in_future=1, player_index=0, current_bits=None):
-        """Predicts the number of bits we will have on a future turn
+    def project_future_MP(self, turns_in_future=1, player_index=0, current_MP=None):
+        """Predicts the number of MP we will have on a future turn
 
         Args:
             turns_in_future: The number of turns in the future we want to look forward to predict
-            player_index: The player whose bits we are tracking
-            current_bits: If we pass a value here, we will use that value instead of the current bits of the given player.
+            player_index: The player whose MP we are tracking
+            current_MP: If we pass a value here, we will use that value instead of the current MP of the given player.
 
         Returns:
-            The number of bits the given player will have after the given number of turns
+            The number of MP the given player will have after the given number of turns
 
         """
 
@@ -267,17 +267,20 @@ class GameState:
             self.warn("Invalid turns in future used ({}). Turns in future should be between 1 and 99".format(turns_in_future))
         if not player_index == 1 and not player_index == 0:
             self._invalid_player_index(player_index)
-        if type(current_bits) == int and current_bits < 0:
-            self.warn("Invalid current bits ({}). Current bits cannot be negative.".format(current_bits))
+        if type(current_MP) == int and current_MP < 0:
+            self.warn("Invalid current MP ({}). Current MP cannot be negative.".format(current_MP))
 
-        bits = self.get_resource(self.BITS, player_index) if not current_bits else current_bits
+        MP = self.get_resource(self.MP, player_index) if not current_MP else current_MP
         for increment in range(1, turns_in_future + 1):
             current_turn = self.turn_number + increment
-            bits *= (1 - self.config["resources"]["bitDecayPerRound"])
-            bits_gained = self.config["resources"]["bitsPerRound"] + (self.config["resources"]["bitGrowthRate"] * (current_turn // self.config["resources"]["turnIntervalForBitSchedule"]))
-            bits += bits_gained
-            bits = round(bits, 1)
-        return bits
+            MP *= (1 - self.config["resources"]["bitDecayPerRound"])
+            MP_per_round = self.config["resources"]["bitsPerRound"]
+            MP_ramp_ups = current_turn // self.config["resources"]["turnIntervalForBitSchedule"]
+            MP_per_round_growth = self.config["resources"]["bitGrowthRate"]
+            MP_gained = MP_per_round + (MP_per_round_growth * MP_ramp_ups)
+            MP += MP_gained
+            MP = round(MP, 1)
+        return MP
 
     def type_cost(self, unit_type, upgrade=False):
         """Gets the cost of a unit based on its type
@@ -286,7 +289,7 @@ class GameState:
             unit_type: The units type (string shorthand)
 
         Returns:
-            The units costs as a list [CORES, BITS]
+            The units costs as a list [SP, MP]
 
         """
         if unit_type == REMOVE:
@@ -296,7 +299,7 @@ class GameState:
         unit_def = self.config["unitInformation"][UNIT_TYPE_TO_INDEX[unit_type]]
         cost_base = [unit_def.get('cost1', 0), unit_def.get('cost2', 0)]
         if upgrade:
-            return [unit_def.get('upgrade', {}).get('cost1', cost_base[CORES]), unit_def.get('upgrade', {}).get('cost2', cost_base[BITS])]
+            return [unit_def.get('upgrade', {}).get('cost1', cost_base[SP]), unit_def.get('upgrade', {}).get('cost2', cost_base[MP])]
 
         return cost_base
 
@@ -306,7 +309,7 @@ class GameState:
 
         To units, we need to be able to afford them, and the location must be
         in bounds, unblocked, on our side of the map, not on top of a unit we can't stack with, 
-        and on an edge if the unit is information.
+        and on an edge if the unit is mobile.
 
         Args:
             unit_type: The type of the unit
@@ -376,8 +379,8 @@ class GameState:
                 if self.can_spawn(unit_type, location, 1):
                     x, y = map(int, location)
                     costs = self.type_cost(unit_type)
-                    self.__set_resource(CORES, 0 - costs[CORES])
-                    self.__set_resource(BITS, 0 - costs[BITS])
+                    self.__set_resource(SP, 0 - costs[SP])
+                    self.__set_resource(MP, 0 - costs[MP])
                     self.game_map.add_unit(unit_type, location, 0)
                     if is_stationary(unit_type):
                         self._build_stack.append((unit_type, x, y))
@@ -389,13 +392,13 @@ class GameState:
         return spawned_units
 
     def attempt_remove(self, locations):
-        """Attempts to remove existing friendly firewalls in the given locations.
+        """Attempts to remove existing friendly structures in the given locations.
 
         Args:
-            locations: A location or list of locations we want to remove firewalls from
+            locations: A location or list of locations we want to remove structures from
 
         Returns:
-            The number of firewalls successfully flagged for removal
+            The number of structures successfully flagged for removal
 
         """
         if type(locations[0]) == int:
@@ -407,7 +410,7 @@ class GameState:
                 self._build_stack.append((REMOVE, x, y))
                 removed_units += 1
             else:
-                self.warn("Could not remove a unit from {}. Location has no firewall or is enemy territory.".format(location))
+                self.warn("Could not remove a unit from {}. Location has no structures or is enemy territory.".format(location))
         return removed_units
 
     def attempt_upgrade(self, locations):
@@ -435,14 +438,14 @@ class GameState:
                 if not existing_unit.upgraded and self.config["unitInformation"][UNIT_TYPE_TO_INDEX[existing_unit.unit_type]].get("upgrade", None) is not None:
                     costs = self.type_cost(existing_unit.unit_type, True)
                     resources = self.get_resources()
-                    if resources[CORES] >= costs[CORES] and resources[BITS] >= costs[BITS]:
-                        self.__set_resource(CORES, 0 - costs[CORES])
-                        self.__set_resource(BITS, 0 - costs[BITS])
+                    if resources[SP] >= costs[SP] and resources[MP] >= costs[MP]:
+                        self.__set_resource(SP, 0 - costs[SP])
+                        self.__set_resource(MP, 0 - costs[MP])
                         existing_unit.upgrade()
                         self._build_stack.append((UPGRADE, x, y))
                         spawned_units += 1
             else:
-                self.warn("Could not upgrade a unit from {}. Location has no firewall or is enemy territory.".format(location))
+                self.warn("Could not upgrade a unit from {}. Location has no structures or is enemy territory.".format(location))
         return spawned_units
 
     def get_target_edge(self, start_location):
@@ -492,13 +495,13 @@ class GameState:
         return self._shortest_path_finder.navigate_multiple_endpoints(start_location, end_points, self)
 
     def contains_stationary_unit(self, location):
-        """Check if a location is blocked, return firewall unit if it is
+        """Check if a location is blocked, return structures unit if it is
 
         Args:
             location: The location to check
 
         Returns:
-            A firewall unit if there is a stationary unit at the location, False otherwise
+            A structures unit if there is a stationary unit at the location, False otherwise
             
         """
         if not self.game_map.in_arena_bounds(location):
@@ -626,7 +629,7 @@ class GameState:
 
         attackers = []
         """
-        Get locations in the range of DESTRUCTOR units
+        Get locations in the range of TURRET units
         """
         max_range = 0
         for unit in self.config["unitInformation"]:
