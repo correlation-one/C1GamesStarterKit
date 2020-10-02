@@ -13,9 +13,10 @@ before you start your algo. Check out [the playground](https://terminal.c1games.
 
 ## Algo Development
 
-To test your algo locally, you should use the new test_algo_[OS] scripts in the scripts folder. Details on its use is documented in the README.md file in the scripts folder. Using this script and the website features are enough for most users to play the game.
+To test your algo locally, you should use the test_algo_[OS] scripts in the scripts folder. Details on its use is documented in the README.md file in the scripts folder.
 
-For documentation on the all official algos check out [the doc server](https://docs.c1games.com). This site also details useful configuration settings, and advanced details on the input formatting under "Json Format".
+For programming documentation of language specific algos, see each language specific README
+For documentation of the game-config or the json format the engine uses to communicate the current game state, see json-docs.html
 
 For advanced users you can install java and run the game engine locally, however its recommended to use the website for proper analysis as it has visualization features to help you understand.
 Java 10 or above is required: [Java Development Kit 10 or above](http://www.oracle.com/technetwork/java/javase/downloads/jdk10-downloads-4416644.html), if you cannot download java 10 just download the most recent java version.

@@ -16,7 +16,7 @@ This allows you to compare your algo to, and run your algo against, the original
 You can test your algo locally for simple syntax and semantic errors without having to run the game engine by using our new test_algo scripts: test_algo_mac test_algo_linux test_algo_windows depending on your operating system.
 Code for this script located at https://github.com/correlation-one/test_algo
 
-To run the script simply follow this format: ./scripts/test_algo_mac {algo directory} {replay location (Optional)}
+To run the script follow this format: ./scripts/test_algo_mac {algo directory} {replay location (Optional)}
 The way the script works is that it runs your algo and feeds it test states from a replay file. Your algo will send its turns but the states will be based on the replay not what your algo does. So you should be able to quickly test for syntax and semantic errors before you upload to the website for detailed strategic testing.
 
 You can also use this script to test what your algo does given a specific state by pointing it to a replay that contains that state. So if your algo seems to crash in a specific replay, just download the replay and use this script to see the errors in your algo locally.
