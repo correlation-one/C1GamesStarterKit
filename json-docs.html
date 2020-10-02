@@ -1,0 +1,1323 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Correlation One API Reference</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <style>#api-reference,#api-reference #header #language .language-toggle{overflow:hidden}a,abbr,acronym,address,applet,big,blockquote,body,caption,cite,code,dd,del,dfn,div,dl,dt,em,fieldset,form,h1,h2,h3,h4,h5,h6,html,iframe,img,ins,kbd,label,legend,li,object,ol,p,pre,q,s,samp,small,span,strike,strong,sub,sup,table,tbody,td,tfoot,th,thead,tr,tt,ul,var{margin:0;padding:0;border:0;outline:0;font-weight:inherit;font-style:inherit;font-family:inherit;font-size:100%;vertical-align:baseline}#api-reference,#api-reference #header .select-field select{font-family:Whitney SSm A,Whitney SSm B,Helvetica,Arial,sans-serif}body{line-height:1;color:#000;background:#fff}ol,ul{list-style:none}table{border-collapse:separate;border-spacing:0}caption,table,td,th{vertical-align:middle}caption,td,th{text-align:left;font-weight:400}a img{border:none}@font-face{font-family:Source Code Pro;font-weight:500;src:url(/fonts/sourcecodepro/SourceCodePro-Medium.otf.woff)}@font-face{font-family:Source Code Pro;font-weight:600;src:url(/fonts/sourcecodepro/SourceCodePro-Semibold.otf.woff)}#api-reference{box-sizing:border-box;background:#fff;color:#4c555a;font-size:14px;font-weight:500;line-height:26px;text-transform:none;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}#api-reference h1,#api-reference h2,#api-reference h3,#api-reference h4,#api-reference h5{margin:0;color:#292e31;font-family:Whitney SSm A,Whitney SSm B,Helvetica,Arial,sans-serif}#api-reference h1{font-weight:400;font-size:24px;line-height:32px}#api-reference h2{font-weight:500;font-size:18px;line-height:26px}#api-reference h3{font-weight:500;font-size:16px;line-height:22px}#api-reference h4,#api-reference h5{font-size:12px;font-weight:500;line-height:18px;text-transform:uppercase}#api-reference h4{color:#4c555a}#api-reference h5{color:#939da3}#api-reference p{margin-bottom:0;margin-top:20px}#api-reference a{color:#0099e5;text-decoration:none}#api-reference a:hover{color:#292e31;text-decoration:none}#api-reference .method-example-declaration .language-bash,#api-reference .method-example-declaration .language-bash .token{color:#d0d0d0!important}#api-reference .include-prompt code.language-bash:before{content:'$ ';color:#939da3}#api-reference #version-check{left:0;position:fixed;right:0;top:0;z-index:200;padding:0 20px;background:#0099e5;color:#fff;vertical-align:middle}#api-reference #version-check .version-check-large{display:block}#api-reference #version-check .version-check-small{display:none}#api-reference #version-check p{margin:0;color:hsla(0,0%,100%,.9);font-size:12px;font-weight:500;line-height:33px;text-shadow:0 1px 0 rgba(0,0,0,.1)}#api-reference #version-check p a{color:#fff;font-weight:600}#api-reference #version-check p a:after{position:relative;top:-1px;display:inline-block;height:6px;margin-left:3px;width:4px;content:"";background-image:url(/img/documentation/api/learn-more.png)}@media (min--moz-device-pixel-ratio:1.5),(min-device-pixel-ratio:1.5),(min-resolution:1.5dppx),(min-resolution:138dpi),all and (-webkit-min-device-pixel-ratio:1.5){#api-reference #version-check p a:after{background-image:url(/img/documentation/api/learn-more@2x.png);background-size:4px 6px}}#api-reference #version-check p a:hover{opacity:.8;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";filter:alpha(opacity=80)}#api-reference #loading-bar{background:#0099e5;height:3px;position:absolute;top:0;left:0;z-index:2000;-webkit-transition:opacity .25s ease-in-out,width .4s ease-in-out;transition:opacity .25s ease-in-out,width .4s ease-in-out;width:0;-webkit-transform-origin:0 0;transform-origin:0 0;will-change:opacity,width}#api-reference #loading-bar.hidden{opacity:0;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";filter:alpha(opacity=0);-webkit-transition:opacity .25s ease-in-out;transition:opacity .25s ease-in-out;pointer-events:none}#api-reference #header{left:221px;position:absolute;right:0;top:0;z-index:100}#api-reference #header .header-section{position:absolute;top:0;box-sizing:border-box;height:49px}#api-reference #header .header-section.header-section-sidebar{left:-221px;z-index:30;width:220px;border-bottom:1px solid #f0f4f7}#api-reference #header .header-section.header-section-copy{z-index:20}#api-reference #header .header-section.header-section-example{left:45%;right:0;z-index:10;height:50px;min-width:464px;padding-left:40px;background:#242729;color:#d0d4d7}#api-reference #header .logo{left:20px;position:relative;top:14px;height:22px}#api-reference #header .logo a{float:left;display:block;height:22px}#api-reference #header .logo a:hover{opacity:.8;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";filter:alpha(opacity=80)}#api-reference #header .logo a.site{width:51px;background-repeat:no-repeat;background-image:url(/img/documentation/api/logo.png)}@media (min--moz-device-pixel-ratio:1.5),(min-device-pixel-ratio:1.5),(min-resolution:1.5dppx),(min-resolution:138dpi),all and (-webkit-min-device-pixel-ratio:1.5){#api-reference #header .logo a.site{background-image:url(/img/documentation/api/logo@2x.png);background-size:51px 22px}}#api-reference #header .logo a.docs{padding-left:4px;font-size:18px;line-height:20px}#api-reference #header .logo a.docs:hover{color:#0099e5}#api-reference #header .select-field{float:left;position:relative;margin-top:10px}#api-reference #header .select-field select{position:relative;z-index:50;box-sizing:border-box;display:block;height:29px;padding-left:10px;padding-right:38px;-webkit-appearance:none;-moz-appearance:none;appearance:none;background:#fff;border:1px solid #d6dee5;border-radius:5px;color:#4c555a;cursor:pointer;font-size:12px;font-weight:400;line-height:28px;outline:0;white-space:nowrap;overflow:hidden;text-indent:.01px;text-overflow:'';vertical-align:middle}#api-reference #header .select-field:before{position:absolute;right:28px;top:7px;z-index:100;display:block;height:15px;width:1px;background:#d6dee5;content:''}#api-reference #header .select-field:after{position:absolute;right:13px;top:13px;z-index:75;display:block;height:4px;width:6px;content:'';background-image:url(/img/documentation/api/jump-menu-arrow.png)}@media (min--moz-device-pixel-ratio:1.5),(min-device-pixel-ratio:1.5),(min-resolution:1.5dppx),(min-resolution:138dpi),all and (-webkit-min-device-pixel-ratio:1.5){#api-reference #header .select-field:after{background-image:url(/img/documentation/api/jump-menu-arrow@2x.png);background-size:6px 4px}}#api-reference #header .select-field:hover select{color:#292e31}#api-reference #header .select-field.jump-menu{float:right}#api-reference #header .jump-menu{display:none}#api-reference #header #language .language-toggle li{float:left;position:relative;margin:8px 2px 0}#api-reference #header #language .language-toggle li:first-child{margin-left:0}#api-reference #header #language .language-toggle li:last-child{margin-right:0}#api-reference #header #language .language-toggle li .language-toggle-source{bottom:0;left:0;position:absolute;right:0;top:0;z-index:100;display:block;height:100%;margin:0;padding:0;width:100%;background:0 0;border:0;cursor:pointer;opacity:0;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";filter:alpha(opacity=0)}#api-reference #header #language .language-toggle li .language-toggle-button{position:relative;z-index:50;display:block;padding:0 10px;border:1px solid transparent;border-radius:4px;color:#d0d4d7;cursor:pointer;font-size:13px;line-height:29px}#api-reference #header #language .language-toggle li:hover .language-toggle-button{border-color:#373b3e}#api-reference #header #language .language-toggle li:active .language-toggle-button{background:#33373a;border-color:#373b3e;color:#dde4e8}#api-reference #header #language .language-toggle .language-toggle-source:checked+.language-toggle-button,#api-reference #header #language .language-toggle .language-toggle-source:checked+.language-toggle-button:active,#api-reference #header #language .language-toggle .language-toggle-source:checked+.language-toggle-button:hover{background:-webkit-linear-gradient(top,#5abaf0,#4aafed);background:linear-gradient(180deg,#5abaf0,#4aafed);border-color:transparent;color:#fff;text-shadow:0 0 0 hsla(0,0%,100%,.5),0 1px 1px #0e74c3;-webkit-animation:languageToggleShows .25s 1 ease-out;animation:languageToggleShows .25s 1 ease-out}#api-reference #sidebar{bottom:0;left:0;position:absolute;top:0;z-index:75;width:220px;background:#fafcfc;border-right:1px solid #f0f4f7}#api-reference #sidebar .sidebar-nav{bottom:0;left:0;position:absolute;right:0;top:49px;overflow:scroll}#api-reference #sidebar .sidebar-nav .sidebar-nav-heading{padding:0 20px 4px}#api-reference #sidebar .sidebar-nav .sidebar-nav-heading:first-child{padding-top:20px}#api-reference #sidebar .sidebar-nav .sidebar-nav-items{margin:0;padding:0 0 26px;line-height:20px;list-style:none}#api-reference #sidebar .sidebar-nav .sidebar-nav-items li{line-height:20px;list-style-type:none}#api-reference #sidebar .sidebar-nav .sidebar-nav-items li .sidebar-nav-item{display:block;margin:0;padding:6px 20px;color:#4c555a;cursor:pointer;font-size:14px;list-style-type:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#api-reference #sidebar .sidebar-nav .sidebar-nav-items li .sidebar-nav-item+.sidebar-nav-items{margin:0;padding:0}#api-reference #sidebar .sidebar-nav .sidebar-nav-items li .sidebar-nav-item+.sidebar-nav-items .sidebar-nav-item{padding-left:36px;font-size:13px}#api-reference #sidebar .sidebar-nav .sidebar-nav-items li .sidebar-nav-item.disabled{color:#939da3;pointer-events:none}#api-reference #sidebar .sidebar-nav .sidebar-nav-items li .sidebar-nav-item:not(.disabled):hover{color:#292e31;text-decoration:underline}#api-reference #content .method .method-copy .method-list .method-list-group .method-list-item .method-list-item-label a.header-anchor:hover,#api-reference #sidebar .sidebar-nav .sidebar-nav-items li .sidebar-nav-item:not(.disabled).selected:hover{text-decoration:none}#api-reference #sidebar .sidebar-nav .sidebar-nav-items li .sidebar-nav-item:not(.disabled).selected{color:#0099e5}#api-reference #sidebar .sidebar-nav .sidebar-nav-items li .sidebar-nav-item.expandable+.sidebar-nav-items{opacity:0;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";filter:alpha(opacity=0);overflow:hidden;visibility:hidden;position:absolute}#api-reference #sidebar .sidebar-nav .sidebar-nav-items li .sidebar-nav-item.expandable+.sidebar-nav-items.loaded{visibility:visible;height:0;position:relative;-webkit-transition:all .25s cubic-bezier(.6,0,.4,1);transition:all .25s cubic-bezier(.6,0,.4,1);-webkit-transform:translateY(-10px);transform:translateY(-10px)}#api-reference #sidebar .sidebar-nav .sidebar-nav-items li.expanded .sidebar-nav-item.expandable+.sidebar-nav-items{opacity:1;-ms-filter:none;filter:none;-webkit-transform:translateY(0);transform:translateY(0)}#api-reference #sidebar .sidebar-nav .sidebar-nav-items li.expanded .sidebar-nav-items.loaded,#api-reference #sidebar .sidebar-nav .sidebar-nav-items li.expanded+li .sidebar-nav-items.loaded,#api-reference #sidebar .sidebar-nav .sidebar-nav-items li:hover .sidebar-nav-items.loaded{will-change:transform,height,opacity}#api-reference #background{bottom:0;left:221px;position:fixed;right:0;top:0;z-index:1}#api-reference #background .background-actual{bottom:0;left:45%;position:absolute;right:0;top:0;background:#2d3134}#api-reference #content{bottom:0;right:0;position:absolute;left:221px;top:0;z-index:50;box-sizing:border-box;overflow-x:hidden;overflow-y:scroll;-webkit-overflow-scrolling:touch}#api-reference #content .method:first-child{margin-top:1px}#api-reference #content .method{position:relative;z-index:2;display:block;overflow:hidden}#api-reference #content .method:last-child{min-height:100vh}#api-reference #content .method .method-area{overflow:hidden}#api-reference #content .method .method-area:first-child .method-copy{padding-top:30px}#api-reference #content .method .method-area:first-child .method-example{padding-top:72px}#api-reference #content .method.first-of-group:not(:first-child) .method-copy{border-top:1px solid #f0f4f7}#api-reference #content .method.first-of-group:not(:first-child) .method-example{border-top:1px solid #33383b}#api-reference #content .method .method-copy{float:left;padding:0 0 50px;width:45%}#api-reference #content .method .method-copy .method-copy-padding{padding:20px 40px}#api-reference #content .method .method-copy .method-copy-padding+.method-list{padding-bottom:40px}#api-reference #content .method .method-copy .method-copy-padding:last-child{padding-bottom:0}#api-reference #content .method .method-copy .method-copy-notice{display:block;margin-top:20px;padding:16px 20px;border:1px solid rgba(224,153,76,.5);border-radius:6px;color:#e0994c}#api-reference #content .method .method-copy .method-copy-notice p,#api-reference #content .method .method-copy h1{margin-top:0}#api-reference #content .method .method-copy .method-copy-notice ul li{padding-top:10px}#api-reference #content .method .method-copy .method-copy-notice code{color:#ab5719}#api-reference #content .method .method-copy h1 .method-badge{display:inline-block;padding:0 11px;border:1px solid rgba(0,153,229,.5);border-radius:24px;color:#0099e5;font-size:11px;font-weight:600;line-height:24px;text-transform:uppercase;vertical-align:middle}#api-reference #content .method .method-copy h1 .method-badge.method-badge-deprecated{border:1px solid rgba(224,76,76,.5);color:#e04c4c}#api-reference #content .method .method-copy strong{font-weight:600}#api-reference #content .method .method-copy code,#api-reference #content .method .method-copy tt{box-sizing:border-box;display:inline-block;padding:0 5px;background:#fafcfc;border:1px solid #f0f4f7;border-radius:4px;color:#b93d6a;font-family:Source Code Pro,Menlo,monospace;font-size:13px;line-height:20px}#api-reference #content .method .method-copy .method-list{padding:40px 40px 0}#api-reference #content .method .method-copy .method-list .method-list-group{margin-top:8px;border-top:1px solid #e1e8ed}#api-reference #content .method .method-copy .method-list .method-list-group .method-list-item{padding:17px 0;border-bottom:1px solid #f0f4f7;line-height:24px}#api-reference #content .method .method-copy .method-list .method-list-group .method-list-item:last-child{border-bottom:1px solid #e1e8ed}#api-reference #content .method .method-copy .method-list .method-list-group .method-list-item .method-copy-notice{margin:0 0 17px;font-size:13px;line-height:21px}#api-reference #content .method .method-copy .method-list .method-list-group .method-list-item .method-list-item-label{font-size:13px;line-height:21px;word-break:break-all;white-space:normal}#api-reference #content .method .method-copy .method-list .method-list-group .method-list-item .method-list-item-label a.header-anchor{display:inline-block;opacity:0;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";filter:alpha(opacity=0);position:relative;top:3px;width:15px;height:14px;background-repeat:no-repeat;background-image:url(/img/documentation/anchor.png);background-position:50% 50%;left:-15px;margin-right:-15px;isolation:isolate}@media (min--moz-device-pixel-ratio:1.5),(min-device-pixel-ratio:1.5),(min-resolution:1.5dppx),(min-resolution:138dpi),all and (-webkit-min-device-pixel-ratio:1.5){#api-reference #content .method .method-copy .method-list .method-list-group .method-list-item .method-list-item-label a.header-anchor{background-image:url(/img/documentation/anchor@2x.png);background-size:9px 8px}}#api-reference #content .method .method-copy .method-list .method-list-group .method-list-item .method-list-item-label:hover a.header-anchor{opacity:1;-ms-filter:none;filter:none}#api-reference #content .method .method-copy .method-list .method-list-group .method-list-item .method-list-item-label .method-list-item-label-changes{position:relative;display:inline-block;height:12px;margin:4px 5px 0 0;vertical-align:top;width:13px;background-repeat:no-repeat;background-image:url(/img/documentation/api/change-notice.png)}@media (min--moz-device-pixel-ratio:1.5),(min-device-pixel-ratio:1.5),(min-resolution:1.5dppx),(min-resolution:138dpi),all and (-webkit-min-device-pixel-ratio:1.5){#api-reference #content .method .method-copy .method-list .method-list-group .method-list-item .method-list-item-label .method-list-item-label-changes{background-image:url(/img/documentation/api/change-notice@2x.png);background-size:13px 12px}}#api-reference #content .method .method-copy .method-list .method-list-group .method-list-item .method-list-item-label .method-list-item-label-badge{display:inline-block;margin-left:5px;padding:0 8px;vertical-align:top;border:1px solid rgba(255,174,84,.5);border-radius:11px;color:#ffae54;font-size:10px;font-weight:600;line-height:20px;text-transform:uppercase}#api-reference #content .method .method-copy .method-list .method-list-group .method-list-item .method-list-item-label .method-list-item-label-details{color:#939da3;font-size:12px;font-weight:400;text-transform:none;word-break:normal}#api-reference #content .method .method-copy .method-list .method-list-group .method-list-item .method-list-item-label .method-list-item-validation{color:#939da3;font-size:12px;font-weight:500;text-transform:none;word-break:normal}#api-reference #content .method .method-copy .method-list .method-list-group .method-list-item .method-list-item-label .method-list-item-label-promote{font-weight:600}#api-reference #content .method .method-copy .method-list .method-list-group .method-list-item .method-list-item-description{font-size:13px;line-height:21px}#api-reference #content .method .method-copy .method-list .method-list-group .method-list-item .method-list-item-description code,#api-reference #content .method .method-copy .method-list .method-list-group .method-list-item .method-list-item-description tt{font-size:12px}#api-reference #content .method .method-copy .method-list .method-list-group .method-list-item .method-list-item-clearfix{zoom:1}#api-reference #content .method .method-copy .method-list .method-list-group .method-list-item .method-list-item-clearfix:after,#api-reference #content .method .method-copy .method-list .method-list-group .method-list-item .method-list-item-clearfix:before{content:"";display:table}#api-reference #content .method .method-copy .method-list .method-list-group .method-list-item .method-list-item-clearfix:after{clear:both}#api-reference #content .method .method-copy .method-list .method-list-group .method-list-item.method-list-item-expandable .method-list-item-description:after{display:block;margin-top:4px;width:80px;background:#fafcfc;border:1px solid #f0f4f7;border-radius:5px;color:#292e31;content:"Expandable";font-size:11px;font-weight:600;text-align:center}#api-reference #content .method .method-copy .method-list.method-list-child{position:relative;margin-top:16px;padding:0;border:1px solid #e9edf0;border-radius:6px}#api-reference #content .method .method-copy .method-list.method-list-child:before{left:30px;position:absolute;top:-9px;display:block;height:9px;width:14px;background-color:#fff;background-repeat:no-repeat;content:'';background-image:url(/img/documentation/api/child-list-tail.png)}@media (min--moz-device-pixel-ratio:1.5),(min-device-pixel-ratio:1.5),(min-resolution:1.5dppx),(min-resolution:138dpi),all and (-webkit-min-device-pixel-ratio:1.5){#api-reference #content .method .method-copy .method-list.method-list-child:before{background-image:url(/img/documentation/api/child-list-tail@2x.png);background-size:14px 9px}}#api-reference #content .method .method-copy .method-list.method-list-child .method-list-title{padding:10px 20px;color:#49e500;cursor:pointer;font-weight:500;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;text-transform:none}#api-reference #content .method .method-copy .method-list.method-list-child .method-list-title:hover{text-decoration:underline}#api-reference #content .method .method-copy .method-list.method-list-child .method-list-title:hover .method-list-child-parent{color:#0099e5}#api-reference #content .method .method-copy .method-list.method-list-child .method-list-title:before{content:"Show"}#api-reference #content .method .method-copy .method-list.method-list-child .method-list-title.expanded:before{content:"Hide"}#api-reference #content .method .method-copy .method-list.method-list-child .method-list-title .method-list-child-parent{color:#4c555a}#api-reference #content .method .method-copy .method-list.method-list-child .method-list-group{display:none;margin-top:0;border-color:#e9edf0}#api-reference #content .method .method-copy .method-list.method-list-child .method-list-group .method-list-item{padding-left:20px;padding-right:20px}#api-reference #content .method .method-copy .method-list.method-list-child .method-list-group .method-list-item:last-child{border-bottom:0}#api-reference #content .method .method-copy .method-list.method-list-empty .method-list-group .method-list-item .method-list-item-label{color:#939da3;font-weight:400;text-align:center}#api-reference #content .method .method-example{position:relative;z-index:2;margin-left:45%;padding:42px 0 50px;color:#dde4e8}#api-reference #content .method .method-example h1,#api-reference #content .method .method-example h2,#api-reference #content .method .method-example h3,#api-reference #content .method .method-example h4,#api-reference #content .method .method-example h5{max-width:768px;color:#d0d4d7}#api-reference #content .method .method-example p{max-width:768px}#api-reference #content .method .method-example a:hover{color:#5db8ed}#api-reference #content .method .method-example .method-example-part{padding:30px 40px}#api-reference #content .method .method-example .method-example-part:last-child:after{display:none}#api-reference #content .method .method-example .method-example-part .method-example-declaration,#api-reference #content .method .method-example .method-example-part .method-example-endpoint,#api-reference #content .method .method-example .method-example-part .method-example-object,#api-reference #content .method .method-example .method-example-part .method-example-request,#api-reference #content .method .method-example .method-example-part .method-example-response{display:block;padding:20px 0}#api-reference #content .method .method-example .method-example-part .method-example-declaration:first-child,#api-reference #content .method .method-example .method-example-part .method-example-endpoint:first-child,#api-reference #content .method .method-example .method-example-part .method-example-object:first-child,#api-reference #content .method .method-example .method-example-part .method-example-request:first-child,#api-reference #content .method .method-example .method-example-part .method-example-response:first-child{padding-top:0}#api-reference #content .method .method-example .method-example-part .method-example-declaration:last-child,#api-reference #content .method .method-example .method-example-part .method-example-endpoint:last-child,#api-reference #content .method .method-example .method-example-part .method-example-object:last-child,#api-reference #content .method .method-example .method-example-part .method-example-request:last-child,#api-reference #content .method .method-example .method-example-part .method-example-response:last-child{padding-bottom:0}#api-reference #content .method .method-example .method-example-part .method-example-declaration:before,#api-reference #content .method .method-example .method-example-part .method-example-endpoint:before,#api-reference #content .method .method-example .method-example-part .method-example-object:before,#api-reference #content .method .method-example .method-example-part .method-example-request:before,#api-reference #content .method .method-example .method-example-part .method-example-response:before{display:block;padding-bottom:8px;content:'Definition';color:#d0d4d7;font-family:Whitney SSm A,Whitney SSm B,Helvetica,Arial,sans-serif;font-size:14px;font-weight:500}#api-reference #content .method .method-example .method-example-part .method-example-endpoint:before{content:'API Endpoint'}#api-reference #content .method .method-example .method-example-part .method-example-request:before{content:'Example Request'}#api-reference #content .method .method-example .method-example-part .method-example-object:before,#api-reference #content .method .method-example .method-example-part .method-example-object:first-child:before,#api-reference #content .method .method-example .method-example-part .method-example-response:before{content:'Example:'}#api-reference #content .method .method-example .method-example-part .method-example-object,#api-reference #content .method .method-example .method-example-part .method-example-object:first-child{padding-top:20px}#api-reference #content .method .method-example .method-example-part .method-example-switcher{position:relative;height:31px;padding-bottom:40px}#api-reference #content .method .method-example .method-example-part .method-example-switcher .method-example-switcher-position{left:20px;position:absolute;top:0;z-index:10;padding:0 10px;background:#2d3134}#api-reference #content .method .method-example .method-example-part .method-example-switcher .method-example-switcher-position .method-example-switcher-switch{position:relative;z-index:20;display:block;float:left;height:29px;margin-right:10px;padding:0 14px;border:1px solid #33383b;border-radius:29px;color:#d0d4d7;font-size:13px;line-height:29px}#api-reference #content .method .method-example .method-example-part .method-example-switcher .method-example-switcher-position .method-example-switcher-switch:last-child{margin-right:0}#api-reference #content .method .method-example .method-example-part .method-example-switcher .method-example-switcher-position .method-example-switcher-switch:hover{background:#33383b;color:#dde4e8}#api-reference #content .method .method-example .method-example-part .method-example-switcher .method-example-switcher-position .method-example-switcher-switch.selected{z-index:30;background:rgba(0,153,229,.7);border-color:#0099e5;color:#dde4e8;cursor:default;text-shadow:0 1px 0 rgba(0,0,0,.1)}#api-reference #content .method .method-example .method-example-part .method-example-switcher .method-example-switcher-position .method-example-switcher-switch.selected:active,#api-reference #content .method .method-example .method-example-part .method-example-switcher .method-example-switcher-position .method-example-switcher-switch.selected:hover{cursor:default}#api-reference #content .method .method-example .method-example-part .method-example-switcher:after{left:0;position:absolute;right:0;top:14px;z-index:5;display:block;height:1px;background:#33383b;content:""}#api-reference #content .method .method-example .method-example-part .method-example-specific.hide{display:none}#api-reference #content .method .method-example .table{margin:30px 0 45px;max-width:768px;overflow:hidden;background:#33373a;border:1px solid #373b3e;border-radius:5px;color:#d0d4d7}#api-reference #content .method .method-example .table .table-header{padding:14px 20px;border-bottom:1px solid #373b3e;color:#d0d4d7;font-size:12px;font-weight:600;line-height:18px;text-transform:uppercase}#api-reference #content .method .method-example .table .table-header code{box-sizing:border-box;display:inline-block;padding:0 5px;background:#373b3e;border:1px solid #414547;border-radius:4px;color:#ebde68;font-family:Source Code Pro,Menlo,monospace;font-size:12px;font-weight:400;line-height:20px;text-transform:none}#api-reference #content .method .method-example .table .table-header+.table-container{border-top:0}#api-reference #content .method .method-example .table .table-container{table-layout:fixed;width:100%;background-clip:padding-box}#api-reference #content .method .method-example .table .table-container tr td,#api-reference #content .method .method-example .table .table-container tr th{display:table-cell;padding:9px 20px;font-size:13px;vertical-align:top}#api-reference #content .method .method-example .table .table-container tr td.table-row-property,#api-reference #content .method .method-example .table .table-container tr th.table-row-property{width:140px;font-weight:600;text-align:right}#api-reference #content .method .method-example .table .table-container tr:nth-child(odd){background:rgba(0,0,0,.1)}#api-reference #content .method .method-example .table .table-container tr:first-child td,#api-reference #content .method .method-example .table .table-container tr:first-child th{padding-top:16px}#api-reference #content .method .method-example .table .table-container tr:last-child td,#api-reference #content .method .method-example .table .table-container tr:last-child th{padding-bottom:16px}#api-reference #content .method .method-example .table .table-footer{padding:14px 20px;border-top:1px solid #373b3e;font-size:13px}#api-reference #content .method .method-example pre{margin:0;padding:20px 40px;background:#272b2d;border-radius:5px;font-family:Source Code Pro,Menlo,monospace;font-size:13px;line-height:1.5em;font-weight:500}#api-reference #content .method .method-example code,#api-reference #content .method .method-example pre{color:#d0d0d0;direction:ltr;text-align:left;white-space:pre-wrap;word-break:break-word;word-spacing:normal;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}#api-reference #content .method .method-example code .token.cdata,#api-reference #content .method .method-example code .token.comment,#api-reference #content .method .method-example code .token.doctype,#api-reference #content .method .method-example code .token.prolog,#api-reference #content .method .method-example pre .token.cdata,#api-reference #content .method .method-example pre .token.comment,#api-reference #content .method .method-example pre .token.doctype,#api-reference #content .method .method-example pre .token.prolog{color:#777279}#api-reference #content .method .method-example code .namespace,#api-reference #content .method .method-example code .token.punctuation,#api-reference #content .method .method-example pre .namespace,#api-reference #content .method .method-example pre .token.punctuation{color:#d0d4d7}#api-reference #content .method .method-example code .token.constant,#api-reference #content .method .method-example code .token.deleted,#api-reference #content .method .method-example code .token.property,#api-reference #content .method .method-example code .token.symbol,#api-reference #content .method .method-example code .token.tag,#api-reference #content .method .method-example pre .token.constant,#api-reference #content .method .method-example pre .token.deleted,#api-reference #content .method .method-example pre .token.property,#api-reference #content .method .method-example pre .token.symbol,#api-reference #content .method .method-example pre .token.tag{color:#ebde68}#api-reference #content .method .method-example code .token.boolean,#api-reference #content .method .method-example code .token.number,#api-reference #content .method .method-example pre .token.boolean,#api-reference #content .method .method-example pre .token.number{color:#77bcd7}#api-reference #content .method .method-example code .token.attr-name,#api-reference #content .method .method-example code .token.builtin,#api-reference #content .method .method-example code .token.char,#api-reference #content .method .method-example code .token.inserted,#api-reference #content .method .method-example code .token.selector,#api-reference #content .method .method-example pre .token.attr-name,#api-reference #content .method .method-example pre .token.builtin,#api-reference #content .method .method-example pre .token.char,#api-reference #content .method .method-example pre .token.inserted,#api-reference #content .method .method-example pre .token.selector{color:#ebde68}#api-reference #content .method .method-example code .token.json-key,#api-reference #content .method .method-example code .token.string,#api-reference #content .method .method-example pre .token.json-key,#api-reference #content .method .method-example pre .token.string{color:#c1ef65}#api-reference #content .method .method-example code .language-css .token.string,#api-reference #content .method .method-example code .style .token.string,#api-reference #content .method .method-example code .token.entity,#api-reference #content .method .method-example code .token.url,#api-reference #content .method .method-example code .token.variable,#api-reference #content .method .method-example pre .language-css .token.string,#api-reference #content .method .method-example pre .style .token.string,#api-reference #content .method .method-example pre .token.entity,#api-reference #content .method .method-example pre .token.url,#api-reference #content .method .method-example pre .token.variable{color:#d0d4d7}#api-reference #content .method .method-example code .token.operator,#api-reference #content .method .method-example pre .token.operator{color:#f099a6}#api-reference #content .method .method-example code .token.json-string,#api-reference #content .method .method-example pre .token.json-string{color:#d0d0d0}#api-reference #content .method .method-example code .token.atrule,#api-reference #content .method .method-example code .token.attr-value,#api-reference #content .method .method-example pre .token.atrule,#api-reference #content .method .method-example pre .token.attr-value{color:#ebde68}#api-reference #content .method .method-example code .token.api-key,#api-reference #content .method .method-example code .token.request-url,#api-reference #content .method .method-example code .token.request-value,#api-reference #content .method .method-example pre .token.api-key,#api-reference #content .method .method-example pre .token.request-url,#api-reference #content .method .method-example pre .token.request-value{color:#c1ef65}#api-reference #content .method .method-example code .token.keyword,#api-reference #content .method .method-example pre .token.keyword{color:#ebde68}#api-reference #content .method .method-example code .token.request-flag,#api-reference #content .method .method-example pre .token.request-flag{color:#d0d0d0}#api-reference #content .method .method-example code .token.request-param,#api-reference #content .method .method-example pre .token.request-param{color:#f099a6}#api-reference #content .method .method-example code .token.important,#api-reference #content .method .method-example code .token.regex,#api-reference #content .method .method-example pre .token.important,#api-reference #content .method .method-example pre .token.regex{color:#ebde68}#api-reference #content .method .method-example code .token.important,#api-reference #content .method .method-example pre .token.important{font-weight:700}#api-reference #content .method .method-example code .token.entity,#api-reference #content .method .method-example pre .token.entity{cursor:help}#api-reference .changes-tooltip{left:218px;position:absolute;top:313px;z-index:9999;box-sizing:border-box;display:block;padding:16px 20px;width:340px;background:#fff;border-radius:6px;box-shadow:0 0 0 1px rgba(0,0,0,.1),0 0 8px rgba(75,84,89,.1),0 1px 4px rgba(75,84,89,.25);color:#4c555a;font-size:13px;line-height:21px}#api-reference .changes-tooltip:before{left:50%;position:absolute;top:-11px;display:block;height:12px;margin-left:-10px;width:20px;content:'';background-image:url(/img/documentation/api/change-notice-tail.png)}@media (min--moz-device-pixel-ratio:1.5),(min-device-pixel-ratio:1.5),(min-resolution:1.5dppx),(min-resolution:138dpi),all and (-webkit-min-device-pixel-ratio:1.5){#api-reference .changes-tooltip:before{background-image:url(/img/documentation/api/change-notice-tail@2x.png);background-size:20px 12px}}#api-reference .changes-tooltip code,#api-reference .changes-tooltip tt{box-sizing:border-box;display:inline-block;padding:0 5px;background:#fafcfc;border:1px solid #f0f4f7;border-radius:4px;color:#b93d6a;font-family:Source Code Pro,Menlo,monospace;font-size:13px;line-height:20px}#api-reference .changes-tooltip ul li{padding-top:10px}#api-reference.has-version-check #loading-bar{background:hsla(0,0%,100%,.9)}#api-reference.has-version-check #content,#api-reference.has-version-check #header,#api-reference.has-version-check #sidebar{top:33px}@media screen and (min-width:2020px){#api-reference #header{left:281px}#api-reference #header .header-section.header-section-sidebar{left:-281px;width:280px}#api-reference #header .header-section.header-section-example{left:780px}#api-reference #sidebar{width:280px}#api-reference #background{left:281px}#api-reference #background .background-actual{left:780px}#api-reference #content{left:281px}#api-reference #content .method .method-area .method-copy{width:780px}#api-reference #content .method .method-area .method-example{margin-left:780px}}@media screen and (min-width:1200px){#api-reference #content .method .method-copy .method-list .method-list-group .method-list-item .method-list-item-label{width:180px;position:relative;z-index:5;float:left;text-align:right}#api-reference #content .method .method-copy .method-list .method-list-group .method-list-item .method-list-item-label:after{left:200px}#api-reference #content .method .method-copy .method-list .method-list-group .method-list-item .method-list-item-description{margin:0 0 0 200px}#api-reference #content .method .method-copy .method-list.method-list-child:before{left:170px}#api-reference #content .method .method-copy .method-list.method-list-child .method-list-group .method-list-item .method-list-item-label,#api-reference #content .method .method-copy .method-list.method-list-child .method-list-title{width:159px}#api-reference #content .method .method-copy .method-list.method-list-child .method-list-group .method-list-item .method-list-item-label:after{left:179px}#api-reference #content .method .method-copy .method-list.method-list-child .method-list-group .method-list-item .method-list-item-description{margin:0 0 0 179px}#api-reference #content .method .method-copy .method-list.method-list-child .method-list-group .method-list-item .method-list.method-list-child:before{left:149px}#api-reference #content .method .method-copy .method-list.method-list-child .method-list-group .method-list-item .method-list.method-list-child .method-list-group .method-list-item .method-list-item-label,#api-reference #content .method .method-copy .method-list.method-list-child .method-list-group .method-list-item .method-list.method-list-child .method-list-title{width:138px}#api-reference #content .method .method-copy .method-list.method-list-child .method-list-group .method-list-item .method-list.method-list-child .method-list-group .method-list-item .method-list-item-label:after{left:158px}#api-reference #content .method .method-copy .method-list.method-list-child .method-list-group .method-list-item .method-list.method-list-child .method-list-group .method-list-item .method-list-item-description{margin:0 0 0 158px}#api-reference #content .method .method-copy .method-list .method-list-group .method-list-item{zoom:1}#api-reference #content .method .method-copy .method-list .method-list-group .method-list-item:after,#api-reference #content .method .method-copy .method-list .method-list-group .method-list-item:before{content:"";display:table}#api-reference #content .method .method-copy .method-list .method-list-group .method-list-item:after{clear:both}#api-reference #content .method .method-copy .method-list .method-list-group .method-list-item .method-list-item-label:after{position:absolute;top:0;display:block;color:#dde4e8;content:'\2014';font-weight:400;text-align:left}#api-reference #content .method .method-copy .method-list .method-list-group .method-list-item .method-list-item-label .method-list-item-label-badge{display:block;margin-left:0;padding:4px 0 0;border:0;border-radius:0;line-height:1.2em}#api-reference #content .method .method-copy .method-list .method-list-group .method-list-item .method-list-item-label .method-list-item-label-details,#api-reference #content .method .method-copy .method-list .method-list-group .method-list-item .method-list-item-label .method-list-item-validation{display:block}#api-reference #content .method .method-copy .method-list .method-list-group .method-list-item .method-list-item-description{position:relative;z-index:10;background:#fff}#api-reference #content .method .method-copy .method-list.method-list-empty .method-list-group .method-list-item .method-list-item-label{width:100%;text-align:center}#api-reference #content .method .method-copy .method-list.method-list-empty .method-list-group .method-list-item .method-list-item-label:after{display:none}#api-reference #content .method .method-copy .method-list.method-list-child{margin-top:22px}#api-reference #content .method .method-copy .method-list.method-list-child .method-list-title{text-align:right}#api-reference #content .method#dispute_evidence_object .method-copy .method-list .method-list-group .method-list-item .method-list-item-label{width:220px}#api-reference #content .method#dispute_evidence_object .method-copy .method-list .method-list-group .method-list-item .method-list-item-label:after{left:240px}#api-reference #content .method#dispute_evidence_object .method-copy .method-list .method-list-group .method-list-item .method-list-item-description{margin:0 0 0 240px}#api-reference #content .method#dispute_evidence_object .method-copy .method-list.method-list-child:before{left:210px}#api-reference #content .method#dispute_evidence_object .method-copy .method-list.method-list-child .method-list-group .method-list-item .method-list-item-label,#api-reference #content .method#dispute_evidence_object .method-copy .method-list.method-list-child .method-list-title{width:199px}#api-reference #content .method#dispute_evidence_object .method-copy .method-list.method-list-child .method-list-group .method-list-item .method-list-item-label:after{left:219px}#api-reference #content .method#dispute_evidence_object .method-copy .method-list.method-list-child .method-list-group .method-list-item .method-list-item-description{margin:0 0 0 219px}#api-reference #content .method#dispute_evidence_object .method-copy .method-list.method-list-child .method-list-group .method-list-item .method-list.method-list-child:before{left:189px}#api-reference #content .method#dispute_evidence_object .method-copy .method-list.method-list-child .method-list-group .method-list-item .method-list.method-list-child .method-list-group .method-list-item .method-list-item-label,#api-reference #content .method#dispute_evidence_object .method-copy .method-list.method-list-child .method-list-group .method-list-item .method-list.method-list-child .method-list-title{width:178px}#api-reference #content .method#dispute_evidence_object .method-copy .method-list.method-list-child .method-list-group .method-list-item .method-list.method-list-child .method-list-group .method-list-item .method-list-item-label:after{left:198px}#api-reference #content .method#dispute_evidence_object .method-copy .method-list.method-list-child .method-list-group .method-list-item .method-list.method-list-child .method-list-group .method-list-item .method-list-item-description{margin:0 0 0 198px}#api-reference #content .method#event_types .method-copy .method-list .method-list-group .method-list-item .method-list-item-label{width:240px}#api-reference #content .method#event_types .method-copy .method-list .method-list-group .method-list-item .method-list-item-label:after{left:260px}#api-reference #content .method#event_types .method-copy .method-list .method-list-group .method-list-item .method-list-item-description{margin:0 0 0 260px}#api-reference #content .method#event_types .method-copy .method-list.method-list-child:before{left:230px}#api-reference #content .method#event_types .method-copy .method-list.method-list-child .method-list-group .method-list-item .method-list-item-label,#api-reference #content .method#event_types .method-copy .method-list.method-list-child .method-list-title{width:219px}#api-reference #content .method#event_types .method-copy .method-list.method-list-child .method-list-group .method-list-item .method-list-item-label:after{left:239px}#api-reference #content .method#event_types .method-copy .method-list.method-list-child .method-list-group .method-list-item .method-list-item-description{margin:0 0 0 239px}#api-reference #content .method#event_types .method-copy .method-list.method-list-child .method-list-group .method-list-item .method-list.method-list-child:before{left:209px}#api-reference #content .method#event_types .method-copy .method-list.method-list-child .method-list-group .method-list-item .method-list.method-list-child .method-list-group .method-list-item .method-list-item-label,#api-reference #content .method#event_types .method-copy .method-list.method-list-child .method-list-group .method-list-item .method-list.method-list-child .method-list-title{width:198px}#api-reference #content .method#event_types .method-copy .method-list.method-list-child .method-list-group .method-list-item .method-list.method-list-child .method-list-group .method-list-item .method-list-item-label:after{left:218px}#api-reference #content .method#event_types .method-copy .method-list.method-list-child .method-list-group .method-list-item .method-list.method-list-child .method-list-group .method-list-item .method-list-item-description{margin:0 0 0 218px}}@media screen and (max-width:1300px){#api-reference #header{left:181px}#api-reference #header .header-section.header-section-sidebar{left:-181px;width:180px}#api-reference #sidebar{width:180px}#api-reference #background,#api-reference #content{left:181px}}@media screen and (max-width:1030px){#api-reference #header{left:0;height:49px;background:#fff;border-bottom:1px solid #f0f4f7}#api-reference #header .header-section.header-section-sidebar{left:0;border-bottom:0}#api-reference #header .header-section.header-section-sidebar .logo{left:40px}#api-reference #header .header-section.header-section-copy{right:55%}#api-reference #header .header-section.header-section-copy .select-field.jump-menu{display:block;margin-right:30px}#api-reference #sidebar{display:none}#api-reference #background{left:0}#api-reference #content{left:0;top:50px}#api-reference .changes-tooltip{left:66px;top:266px}#api-reference .changes-tooltip:before{left:-11px;top:50%;height:20px;margin-left:0;margin-top:-10px;width:12px;background-image:url(/img/documentation/api/change-notice-tail-side.png)}@media (min--moz-device-pixel-ratio:1.5),(min-device-pixel-ratio:1.5),(min-resolution:1.5dppx),(min-resolution:138dpi),all and (-webkit-min-device-pixel-ratio:1.5){#api-reference .changes-tooltip:before{background-image:url(/img/documentation/api/change-notice-tail-side@2x.png);background-size:12px 20px}}#api-reference.has-version-check #header,#api-reference.has-version-check #sidebar{top:33px}#api-reference.has-version-check #content{top:82px}}@media screen and (max-width:848px){#api-reference #version-check .version-check-large{display:none}#api-reference #version-check .version-check-small{display:block}#api-reference #header .header-section.header-section-sidebar{left:0;position:fixed;padding:0 20px;width:140px;background:#fff;border-bottom:1px solid #f0f4f7}#api-reference #header .header-section.header-section-sidebar .logo{left:0;position:relative}#api-reference #header .header-section.header-section-copy{left:140px;position:fixed;right:0;z-index:70;padding:0 20px;background:#fff;border-bottom:1px solid #f0f4f7}#api-reference #header .header-section.header-section-copy .select-field.jump-menu{margin-right:0;max-width:320px;width:100%}#api-reference #header .header-section.header-section-copy .select-field.jump-menu select{max-width:320px;width:100%}#api-reference #header .header-section.header-section-example{left:0;position:relative;top:49px;z-index:60;height:41px;min-width:0;padding-left:0}#api-reference #header .header-section.header-section-example #language{height:41px;min-width:0;padding:0;text-align:center}#api-reference #header .header-section.header-section-example #language .language-toggle li{display:inline-block;float:none;margin:0}#api-reference #header .header-section.header-section-example #language .language-toggle li .language-toggle-button{height:41px;padding:0 7px;border:0;border-radius:0;line-height:41px}#api-reference #background{display:none}#api-reference #content{top:90px}#api-reference #content .method .method-area .method-copy{float:none;width:100%}#api-reference #content .method .method-area .method-copy .method-copy-padding,#api-reference #content .method .method-area .method-copy .method-list{padding-left:20px;padding-right:20px}#api-reference #content .method .method-area .method-copy .method-list .method-list-child{padding-left:0;padding-right:0}#api-reference #content .method .method-area .method-example{margin-left:0;background:#2d3134}#api-reference #content .method .method-area .method-example .method-example-part{padding-left:20px;padding-right:20px}#api-reference #content .method .method-area .method-example .method-example-part .table{max-width:none}#api-reference #content .method .method-area .method-example .method-example-part .table .table-container tr td,#api-reference #content .method .method-area .method-example .method-example-part .table .table-container tr th{display:block;text-align:left}#api-reference #content .method .method-area .method-example .method-example-part .table .table-container tr th{padding-bottom:0}#api-reference #content .method .method-area .method-example .method-example-part .table .table-container tr td{padding-top:0}#api-reference.has-version-check #header .header-section.header-section-copy,#api-reference.has-version-check #header .header-section.header-section-sidebar,#api-reference.has-version-check #sidebar{top:33px}#api-reference.has-version-check #content{top:123px}}@-webkit-keyframes languageToggleShows{0%,to{-webkit-transform:scale(1);transform:scale(1)}70%{-webkit-transform:scale(1.04);transform:scale(1.04)}}@keyframes languageToggleShows{0%,to{-webkit-transform:scale(1);transform:scale(1)}70%{-webkit-transform:scale(1.04);transform:scale(1.04)}}</style>
+  </head>
+  <body id="api-reference">
+    <!-- header -->
+    <div id="header">
+      <div class="header-section header-section-sidebar">
+        <div class="logo">
+          <a class="docs">>_Terminal</a>
+        </div>
+      </div>
+      <div class="header-section header-section-copy">
+        <div class="select-field jump-menu">
+          <select>
+              <optgroup label="Topics">
+                  <option value="intro">Introduction</option>
+                  <option value="authentication">Authentication</option>
+                  <option value="errors">Errors</option>
+                  <option value="expanding_objects">Expanding Objects</option>
+                  <option value="idempotent_requests">Idempotent Requests</option>
+                  <option value="metadata">Metadata</option>
+                  <option value="pagination">Pagination</option>
+                  <option value="request_ids">Request IDs</option>
+                  <option value="versioning">Versioning</option>
+              </optgroup>
+              <optgroup label="Core Resources">
+                  <option value="balance">Balance</option>
+                  <option value="charges">Charges</option>
+                  <option value="customers">Customers</option>
+                  <option value="disputes">Disputes</option>
+                  <option value="events">Events</option>
+                  <option value="file_uploads">File Uploads</option>
+                  <option value="payouts">Payouts</option>
+                  <option value="refunds">Refunds</option>
+                  <option value="tokens">Tokens</option>
+              </optgroup>
+              <optgroup label="Payment Methods">
+                  <option value="bank_accounts">Bank Accounts</option>
+                  <option value="cards">Cards</option>
+                  <option value="sources">Sources</option>
+              </optgroup>
+              <optgroup label="Subscriptions">
+                  <option value="coupons">Coupons</option>
+                  <option value="discounts">Discounts</option>
+                  <option value="invoices">Invoices</option>
+                  <option value="invoiceitems">Invoice Items</option>
+                  <option value="plans">Plans</option>
+                  <option value="subscriptions">Subscriptions</option>
+                  <option value="subscription_items">Subscription Items</option>
+              </optgroup>
+              <optgroup label="Connect">
+                  <option value="account">Account</option>
+                  <option value="fee_refunds">Application Fee Refunds</option>
+                  <option value="application_fees">Application Fees</option>
+                  <option value="country_specs">Country Specs</option>
+                  <option value="external_accounts">External Accounts</option>
+                  <option value="recipients">Recipients</option>
+                  <option value="transfers">Transfers</option>
+                  <option value="transfer_reversals">Transfer Reversals</option>
+              </optgroup>
+              <optgroup label="Radar">
+                  <option value="reviews">Reviews</option>
+              </optgroup>
+              <optgroup label="Relay">
+                  <option value="orders">Orders</option>
+                  <option value="order_items">Order Items</option>
+                  <option value="products">Products</option>
+                  <option value="order_returns">Returns</option>
+                  <option value="skus">SKUs</option>
+              </optgroup>
+          </select>
+        </div>
+
+      </div>
+      
+    </div>
+    <!-- /header -->
+
+    <!-- sidebar -->
+    <div id="sidebar">
+      <nav role="navigation" class="sidebar-nav">
+          <ul class="sidebar-nav-items loaded">
+              <li>
+                <a class="sidebar-nav-item expanded" href="">
+                  Documentation
+                </a>
+                  <ul class="sidebar-nav-items loaded" data-height="384">
+                      <li><a class="sidebar-nav-item" href="#frame_state">Frame State</a></li>
+                      <li><a class="sidebar-nav-item" href="#config">Config</a></li>
+                  </ul>
+              </li>
+          </ul>
+      </nav>
+    </div>
+
+    <!-- example background -->
+    <div id="background">
+      <div class="background-actual"></div>
+    </div>
+
+    <!-- api docs -->
+    <div id="content">
+
+
+        <section class="method" id="frame_state"><div class="method-area">
+  <div class="method-copy">
+    <div class="method-copy-padding">
+      <h1>Frame State</h1>
+    </div>
+    <div class="method-list">
+    <h5 class="method-list-title">
+        Note dictionary key ordering will change in a real replay file
+    </h5>
+  <ul class="method-list-group">
+      <li class="method-list-item" id="frame-turninfo">
+        <h3 class="method-list-item-label"><a href="#account_card_object-id" class="header-anchor"></a>
+          turnInfo
+            <span class="method-list-item-validation">
+              [ int, int, int ]
+            </span>
+        </h3>
+          <p class="method-list-item-description">
+            [0] : Turn type, can be either: 0, 1 or 2. 0 = Deploy Phase, 1 = Action Phase, 2 = End Game.
+          </p>
+          <p class="method-list-item-description">
+            [1] : Turn number, an integer representing the turn number, the game starts on turn 0.
+          </p>
+          <p class="method-list-item-description">  
+            [2] : Action phase frame number, starts with 0 every action phase, is -1 when a turn frame since not in action phase.
+          </p>
+
+      </li>
+
+      <li class="method-list-item" id="frame-pstats">
+        <h3 class="method-list-item-label"><a href="#account_card_object-object" class="header-anchor"></a>
+          p1Stats,
+          p2Stats
+            <span class="method-list-item-validation">
+                [ int, float, float, int ]
+            </span>
+        </h3>
+            <p class="method-list-item-description">
+              [0] : Player Health
+            </p>
+            <p class="method-list-item-description">
+              [1] : Structure Points (SP)
+            </p>
+            <p class="method-list-item-description">  
+              [2] : Mobile Unit Points (MP)
+            </p>
+            <p class="method-list-item-description">  
+              [3] : Time taken last turn in milliseconds
+            </p>
+      </li>
+
+      <li class="method-list-item" id="frame-punits">
+        <h3 class="method-list-item-label"><a href="#account_card_object-object" class="header-anchor"></a>
+          p1Units,
+          p2Units
+            <span class="method-list-item-validation">
+                [ [], [], [], [], [], [], [] ]
+            </span>
+        </h3>
+            <p class="method-list-item-description">
+              See <a class="sidebar-nav-item" href="#frame-unitstats">UnitStats</a> below for how units are formatted.
+            </p>
+
+            <p class="method-list-item-description">
+              [0] : List of <code class=" language-undefined">WALL</code> units.
+            </p>
+            <p class="method-list-item-description">
+              [1] : List of <code class=" language-undefined">FACTORY</code> units.
+            </p>
+            <p class="method-list-item-description">  
+              [2] : List of <code class=" language-undefined">TURRET</code> units.
+            </p>
+            <p class="method-list-item-description">  
+              [3] : List of <code class=" language-undefined">SCOUT</code> units.
+            </p>
+            <p class="method-list-item-description">  
+              [4] : List of <code class=" language-undefined">DEMOLISHER</code> units.
+            </p>
+            <p class="method-list-item-description">  
+              [5] : List of <code class=" language-undefined">INTERCEPTOR</code> units.
+            </p>
+            <p class="method-list-item-description">  
+              [6] : List of firewall locations marked to <code class=" language-undefined">REMOVE</code>.
+            </p>
+      </li>
+
+      <li class="method-list-item" id="frame-unitstats">
+        <h3 class="method-list-item-label"><a href="#account_card_object-object" class="header-anchor"></a>
+          <span class="method-list-item-label-badge">Unit Stats</span>
+            <span class="method-list-item-validation">
+                [ int, int, float, string ]
+            </span>
+        </h3>
+          <p class="method-list-item-description">
+              A single unit's stats are represented as a list as follows: [
+            </p>
+            <p class="method-list-item-description">
+              [0] : X coordinate.
+            </p>
+            <p class="method-list-item-description">
+              [1] : Y coordinate.
+            </p>
+            <p class="method-list-item-description">  
+              [2] : Unit health. For <code class=" language-undefined">REMOVE</code> this is number of turns before removal.
+            </p>
+            <p class="method-list-item-description">  
+              [3] : Unique string identifier for each game object. Will stay the same between frames throughout the game.
+            </p>
+            <p class="method-list-item-description">  
+              ]
+            </p>
+      </li>
+
+      <li class="method-list-item" id="frame-events">
+        <h3 class="method-list-item-label"><a href="#account_card_object-object" class="header-anchor"></a>
+          events
+            <span class="method-list-item-validation">
+                { string: [] }
+            </span>
+        </h3>
+            <p class="method-list-item-description">
+              Contains various events that can trigger during the action phase.
+            </p>
+            <p class="method-list-item-description">
+              {
+            </p>
+            <p class="method-list-item-description">
+              &ensp; "<a class="sidebar-nav-item" href="#frame-selfdestruct">selfDestruct</a>": [],
+            </p>
+            <p class="method-list-item-description">
+              &ensp; "<a class="sidebar-nav-item" href="#frame-breach">breach</a>": [],
+            </p>
+            <p class="method-list-item-description">
+              &ensp; "<a class="sidebar-nav-item" href="#frame-damage">damage</a>": [],
+            </p>
+            <p class="method-list-item-description">
+              &ensp; "<a class="sidebar-nav-item" href="#frame-shield">shield</a>": [],
+            </p>
+            <p class="method-list-item-description">
+              &ensp; "<a class="sidebar-nav-item" href="#frame-move">move</a>": [],
+            </p>
+            <p class="method-list-item-description">
+              &ensp; "<a class="sidebar-nav-item" href="#frame-spawn">spawn</a>": [],
+            </p>
+            <p class="method-list-item-description">
+              &ensp; "<a class="sidebar-nav-item" href="#frame-death">death</a>": [],
+            </p>
+            <p class="method-list-item-description">
+              &ensp; "<a class="sidebar-nav-item" href="#frame-attack">attack</a>": [],
+            </p>
+            <p class="method-list-item-description">
+              &ensp; "<a class="sidebar-nav-item" href="#frame-melee">melee</a>": [],
+            </p>
+            <p class="method-list-item-description">
+              }
+            </p>
+      </li>
+
+      <li class="method-list-item" id="frame-unittype">
+        <h3 class="method-list-item-label"><a href="#account_card_object-object" class="header-anchor"></a>
+          <span class="method-list-item-label-badge">Unit Type</span>
+            <span class="method-list-item-validation">
+                int
+            </span>
+        </h3>
+            <p class="method-list-item-description">
+              Integer that corresponds to the array index of unit list in <a class="sidebar-nav-item" href="#frame-punits">p1Units and p2Units</a> and <a class="sidebar-nav-item" href="#frame-config-unitInformation">Unit Information</a>. For example, 3 would correspond to a <code class=" language-undefined">SCOUT</code>.
+            </p>
+      </li>
+
+      <li class="method-list-item" id="frame-selfdestruct">
+        <h3 class="method-list-item-label"><a href="#account_card_object-object" class="header-anchor"></a>
+          selfDestruct
+            <span class="method-list-item-validation">
+                [ [ [], [] , float, int, string, int ] , ... ]
+            </span>
+        </h3>
+            <p class="method-list-item-description">
+              List of self destruct events. Self destructs occur when a unit's path is blocked. Each occurance is its own list.
+            </p>
+            <p class="method-list-item-description">
+              List describing single self destruct event: [
+            </p>
+            <p class="method-list-item-description">
+              [0] : [ X, Y ] Formatted location of self destructing unit.
+            </p>
+            <p class="method-list-item-description">
+              [1] : [ [ X1, Y1 ], [ X2, Y2 ] ... ] List of formatted locations of targets affected by self destruct damage.
+            </p>
+            <p class="method-list-item-description">  
+              [2] : Damage done by self destruct as a float.
+            </p>
+            <p class="method-list-item-description">  
+              [3] : Integer <a class="sidebar-nav-item" href="#frame-unittype">UnitType</a> of unit that self destructed. 
+            </p>
+            <p class="method-list-item-description">  
+              [4] : ID for unit that self destructs. Unique string identifier for each game object. Will stay the same between frames throughout the game.
+            </p>
+            <p class="method-list-item-description">  
+              [5] : Player number for player that owns the unit that self destructed. Either 1 or 2.
+            </p>
+            <p class="method-list-item-description">
+              ]
+            </p>
+      </li>
+
+      <li class="method-list-item" id="frame-breach">
+        <h3 class="method-list-item-label"><a href="#account_card_object-object" class="header-anchor"></a>
+          breach
+            <span class="method-list-item-validation">
+                [ [ [] , float, int, string, int ] , ... ]
+            </span>
+        </h3>
+            <p class="method-list-item-description">
+              List of breach events. A breach occurs when a unit scores by reaching the opposite side. Each occurance is its own list.
+            </p>
+            <p class="method-list-item-description">
+              List describing single breach event: [
+            </p>
+            <p class="method-list-item-description">
+              [0] : [ X, Y ] Formatted location of breaching unit.
+            </p>
+            <p class="method-list-item-description">
+              [1] : Player health damage done by breach. Currently, will always be 1.
+            </p>
+            <p class="method-list-item-description">  
+              [2] : Integer <a class="sidebar-nav-item" href="#frame-unittype">UnitType</a> of unit that breached. 
+            </p>
+            <p class="method-list-item-description">  
+              [3] : ID for unit that breaches. Unique string identifier for each game object. Will stay the same between frames throughout the game.
+            </p>
+            <p class="method-list-item-description">  
+              [4] : Player number for player that owns the unit that breached. Either 1 or 2.
+            </p>
+            <p class="method-list-item-description">
+              ]
+            </p>
+      </li>
+
+      <li class="method-list-item" id="frame-damage">
+        <h3 class="method-list-item-label"><a href="#account_card_object-object" class="header-anchor"></a>
+          damage
+            <span class="method-list-item-validation">
+                [ [ [] , float, int, string, int ] , ... ]
+            </span>
+        </h3>
+            <p class="method-list-item-description">
+              List of damage events. Damage occurs when a unit takes damage from any source.
+            </p>
+            <p class="method-list-item-description">
+              List describing single damage event: [
+            </p>
+            <p class="method-list-item-description">
+              [0] : [ X, Y ] Formatted location of damaged unit.
+            </p>
+            <p class="method-list-item-description">
+              [1] : Damage, as a float, taken by unit.
+            </p>
+            <p class="method-list-item-description">  
+              [2] : Integer <a class="sidebar-nav-item" href="#frame-unittype">UnitType</a> of unit that was damaged. 
+            </p>
+            <p class="method-list-item-description">  
+              [3] : ID for unit that got damaged. Unique string identifier for each game object. Will stay the same between frames throughout the game.
+            </p>
+            <p class="method-list-item-description">  
+              [4] : Player number for player that owns the unit that was damaged. Either 1 or 2.
+            </p>
+            <p class="method-list-item-description">
+              ]
+            </p>
+      </li>
+
+
+      <li class="method-list-item" id="frame-shield">
+        <h3 class="method-list-item-label"><a href="#account_card_object-object" class="header-anchor"></a>
+          shield
+            <span class="method-list-item-validation">
+                [ [ [] , [] , float, int, string, int ] , ... ]
+            </span>
+        </h3>
+            <p class="method-list-item-description">
+              List of shield events. Shield events occur when a <code class=" language-undefined">STRUCTURE</code> gives a shield to a mobile unit. Note that in some configs, the shield mechanic is not used.
+            </p>
+            <p class="method-list-item-description">
+              List describing single shield event: [
+            </p>
+            <p class="method-list-item-description">
+              [0] : [ X, Y ] Formatted location of unit that is giving the shield.
+            </p>
+            <p class="method-list-item-description">
+              [1] : [ X, Y ] Formatted location of target tile that is being given a shield.
+            </p>
+            <p class="method-list-item-description">
+              [2] : Shield amount, as a float.
+            </p>
+            <p class="method-list-item-description">  
+              [3] : Integer <a class="sidebar-nav-item" href="#frame-unittype">UnitType</a> of unit that is being shielded. 
+            </p>
+            <p class="method-list-item-description">  
+              [4] : ID for unit that gives the shield. Unique string identifier for each game object. Will stay the same between frames throughout the game.
+            </p>
+            <p class="method-list-item-description">  
+              [5] : ID for unit that receives the shield. Unique string identifier for each game object. Will stay the same between frames throughout the game.
+            </p>
+            <p class="method-list-item-description">  
+              [6] : Player number for player that owns the unit that gives sheild. Either 1 or 2.
+            </p>
+            <p class="method-list-item-description">
+              ]
+            </p>
+      </li>
+
+      <li class="method-list-item" id="frame-move">
+        <h3 class="method-list-item-label"><a href="#account_card_object-object" class="header-anchor"></a>
+          move
+            <span class="method-list-item-validation">
+                [ [ [] , [] , [] , int, string, int ] , ... ]
+            </span>
+        </h3>
+            <p class="method-list-item-description">
+              List of move events. Move events occur when a unit moves from one position to another.
+            </p>
+            <p class="method-list-item-description">
+              List describing single move event: [
+            </p>
+            <p class="method-list-item-description">
+              [0] : [ X, Y ] Formatted location of unit before it moved.
+            </p>
+            <p class="method-list-item-description">
+              [1] : [ X, Y ] Formatted location of unit, now, after it moved.
+            </p>
+            <p class="method-list-item-description">
+              [2] : [ X, Y ] <b>No longer used, deprecated</b>. Was previously where the unit planned to move next.
+            </p>
+            <p class="method-list-item-description">  
+              [3] : Integer <a class="sidebar-nav-item" href="#frame-unittype">UnitType</a> of unit that has moved. 
+            </p>
+            <p class="method-list-item-description">  
+              [4] : ID for unit that has moved. Unique string identifier for each game object. Will stay the same between frames throughout the game.
+            </p>
+            <p class="method-list-item-description">  
+              [5] : Player number for player that owns the unit that has moved. Either 1 or 2.
+            </p>
+            <p class="method-list-item-description">
+              ]
+            </p>
+      </li>
+
+       <li class="method-list-item" id="frame-spawn">
+        <h3 class="method-list-item-label"><a href="#account_card_object-object" class="header-anchor"></a>
+          spawn
+            <span class="method-list-item-validation">
+                [ [ [] , int, string, int ] , ... ]
+            </span>
+        </h3>
+            <p class="method-list-item-description">
+              List of spawn events. Spawn occurs when a new unit is added to the game.
+            </p>
+            <p class="method-list-item-description">
+              List describing single spawn event: [
+            </p>
+            <p class="method-list-item-description">
+              [0] : [ X, Y ] Formatted location of newly spawned unit.
+            </p>
+            <p class="method-list-item-description">  
+              [1] : Integer <a class="sidebar-nav-item" href="#frame-unittype">UnitType</a> of unit that spawned. 
+            </p>
+            <p class="method-list-item-description">  
+              [2] : ID for unit that spawned. Unique string identifier for each game object. Will stay the same between frames throughout the game.
+            </p>
+            <p class="method-list-item-description">  
+              [3] : Player number for player that owns the unit that spawned. Either 1 or 2.
+            </p>
+            <p class="method-list-item-description">
+              ]
+            </p>
+      </li>
+
+
+      <li class="method-list-item" id="frame-death">
+        <h3 class="method-list-item-label"><a href="#account_card_object-object" class="header-anchor"></a>
+          death
+            <span class="method-list-item-validation">
+                [ [ [] , int, string, int, bool ] , ... ]
+            </span>
+        </h3>
+            <p class="method-list-item-description">
+              List of death events. Death occurs when a unit is removed from the game through getting damaged, player removal, or breaching.
+            </p>
+            <p class="method-list-item-description">
+              List describing single death event: [
+            </p>
+            <p class="method-list-item-description">
+              [0] : [ X, Y ] Formatted location of dead unit.
+            </p>
+            <p class="method-list-item-description">  
+              [1] : Integer <a class="sidebar-nav-item" href="#frame-unittype">UnitType</a> of unit that died. 
+            </p>
+            <p class="method-list-item-description">  
+              [2] : ID for unit that died. Unique string identifier for each game object. Will stay the same between frames throughout the game.
+            </p>
+            <p class="method-list-item-description">  
+              [3] : Player number for player that owns the unit that died. Either 1 or 2.
+            </p>
+            <p class="method-list-item-description">  
+              [4] : Boolean, if true was a player removing their own firewall.
+            </p>
+            <p class="method-list-item-description">
+              ]
+            </p>
+      </li>
+
+
+      <li class="method-list-item" id="frame-attack">
+        <h3 class="method-list-item-label"><a href="#account_card_object-object" class="header-anchor"></a>
+          attack
+            <span class="method-list-item-validation">
+                [ [ [] , [] , float, int, string, string, int ] , ... ]
+            </span>
+        </h3>
+            <p class="method-list-item-description">
+              List of attack events. Attack events occur when a unit attacks another unit. Does not include self destructs.
+            </p>
+            <p class="method-list-item-description">
+              List describing single attack event: [
+            </p>
+            <p class="method-list-item-description">
+              [0] : [ X, Y ] Formatted location of unit that is attacking.
+            </p>
+            <p class="method-list-item-description">
+              [1] : [ X, Y ] Formatted location of target tile that is being attacked.
+            </p>
+            <p class="method-list-item-description">
+              [2] : Damage, as a float, done by unit attacking.
+            </p>
+            <p class="method-list-item-description">  
+              [3] : Integer <a class="sidebar-nav-item" href="#frame-unittype">UnitType</a> of unit that is doing the attack.
+            </p>
+            <p class="method-list-item-description">  
+              [4] : ID for unit that performs the attack. Unique string identifier for each game object. Will stay the same between frames throughout the game.
+            </p>
+            <p class="method-list-item-description">  
+              [5] : ID for unit that gets attacked. Unique string identifier for each game object. Will stay the same between frames throughout the game.
+            </p>
+            <p class="method-list-item-description">  
+              [6] : Player number for player that owns the unit that is attacking. Either 1 or 2.
+            </p>
+            <p class="method-list-item-description">
+              ]
+            </p>
+       </li>
+
+
+      <li class="method-list-item" id="frame-melee">
+        <h3 class="method-list-item-label"><a href="#account_card_object-object" class="header-anchor"></a>
+          melee
+            <span class="method-list-item-validation">
+                [ [ [] , [] , float, int, string, int ] , ... ]
+            </span>
+        </h3>
+            <p class="method-list-item-description">
+              List of melee events. Melee is <b>no longer used, deprecated</b>. Melee previously occured when two opposing units occupied the same or adjacent spaces.
+            </p>
+            <p class="method-list-item-description">
+              List describing single melee event: [
+            </p>
+            <p class="method-list-item-description">
+              [0] : [ X, Y ] Formatted location of unit that is attacking with a melee.
+            </p>
+            <p class="method-list-item-description">
+              [1] : [ X, Y ] Formatted location of target tile that is being attacked by melee.
+            </p>
+            <p class="method-list-item-description">
+              [2] : Damage, as a float, done by unit in the melee.
+            </p>
+            <p class="method-list-item-description">  
+              [3] : Integer <a class="sidebar-nav-item" href="#frame-unittype">UnitType</a> of unit that is doing a melee attack. 
+            </p>
+            <p class="method-list-item-description">  
+              [4] : ID for unit that performs the melee attack. Unique string identifier for each game object. Will stay the same between frames throughout the game.
+            </p>
+            <p class="method-list-item-description">  
+              [5] : Player number for player that owns the unit melee attacking. Either 1 or 2.
+            </p>
+            <p class="method-list-item-description">
+              ]
+            </p>
+      </li>
+
+      <li class="method-list-item" id="frame-endStats">
+        <h3 class="method-list-item-label"><a href="#account_card_object-object" class="header-anchor"></a>
+          endStats
+            <span class="method-list-item-validation">
+                { ... }
+            </span>
+        </h3>
+            <p class="method-list-item-description">
+              Contains various stats about the finished game.
+            </p>
+            <p class="method-list-item-description">
+              {
+            </p>
+            <p class="method-list-item-description">
+              &ensp; "duration": Integer representing time in milliseconds that the game took to compute.
+            </p>
+            <p class="method-list-item-description">
+              &ensp; "winner": Integer representing player who won the game 1 for player1, 2 for player2.
+            </p>
+            <p class="method-list-item-description">
+              &ensp; "turns": Integer representing turns taken for game to finish.
+            </p>
+            <p class="method-list-item-description">
+              &ensp; "frames": Integer representing total number of action frames that occurred during the game.
+            </p>
+
+            <p class="method-list-item-description">
+              &ensp; "<a class="sidebar-nav-item" href="#frame-playerEndStats">player1</a>": { ... },
+            </p>
+            <p class="method-list-item-description">
+              &ensp; "<a class="sidebar-nav-item" href="#frame-playerEndStats">player2</a>": { ... },
+            </p>
+            <p class="method-list-item-description">
+              }
+            </p>
+      </li>
+
+      <li class="method-list-item" id="frame-playerEndStats">
+        <h3 class="method-list-item-label"><a href="#account_card_object-object" class="header-anchor"></a>
+          <span class="method-list-item-label-badge">Player End Stats</span>
+            <span class="method-list-item-validation">
+                { ... }
+            </span>
+        </h3>
+            <p class="method-list-item-description">
+              Contains various stats about the player after a finished game.
+            </p>
+            <p class="method-list-item-description">
+              {
+            </p>
+            <p class="method-list-item-description">
+              "stationary_resource_spent": Float representing how many stationary units worth of resources were deployed.
+            </p>
+            <p class="method-list-item-description">
+              "dynamic_resource_spoiled": Float representing how many resources used to deploy moving units were wasted from decay.
+            </p>
+            <p class="method-list-item-description">
+              "crashed": Boolean describing if the algo crashed or timed out.
+            </p>
+            <p class="method-list-item-description">
+              "name": String for the name of the algo, based on the folder the algo is saved in.
+            </p>
+
+            <p class="method-list-item-description">
+              "dynamic_resource_destroyed": Float representing amount of resources spent on moving units who died before breaching.
+            </p>
+            <p class="method-list-item-description">
+              "time_damage_taken": Float representing damage taken from going over the time limit.
+            </p>
+            <p class="method-list-item-description">
+              "dynamic_resource_spent": Float representing total resources spent deploying moving units.
+            </p>
+            <p class="method-list-item-description">
+              "stationary_resource_left_on_board": Float describing how many resources worth of stationary units remain on the board belonging to this player.
+            </p>
+
+            <p class="method-list-item-description">
+              "timeout_death": Boolean representing if the algo failed to submit a move in time and was forced to skip its turn completely.
+            </p>
+            <p class="method-list-item-description">
+              "points_scored": Float representing total amount of player health done to the enemy player.
+            </p>
+            <p class="method-list-item-description">
+              "total_computation_time": Integer for the time in milliseconds the algo took to compute in total for the entire match.
+            </p>
+            <p class="method-list-item-description">
+              }
+            </p>
+      </li>
+
+  </ul>
+</div>
+
+  </div>
+  <div class="method-example">
+    <div class="method-example-part">
+
+      <code class="method-example-object language-undefined"><pre class=" language-json"><code class=" language-json">
+          <img src="https://i.ibb.co/NLMyBCh/frame-Example.png" alt="frame-Example" border="0" />
+
+<span class="token punctuation">{</span>
+  <span class="token json-key">"turnInfo"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token token number"> 1</span><span class="token punctuation">,</span><span class="token token number"> 2</span><span class="token punctuation">,</span><span class="token token number"> 57</span><span class="token punctuation"> ]</span><span class="token punctuation">,</span>
+  <span class="token json-key">"p1Stats"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token token number"> 22</span><span class="token punctuation">,</span><span class="token token number"> 12.4</span><span class="token punctuation">,</span><span class="token token number"> 2.3</span><span class="token punctuation">,<span class="token token number"> 52933</span> ]</span><span class="token punctuation">,</span>
+  <span class="token json-key">"p2Stats"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token token number"> 25</span><span class="token punctuation">,</span><span class="token token number"> 9.5</span><span class="token punctuation">,</span><span class="token token number"> 0.3</span><span class="token punctuation">,<span class="token token number"> 82365</span> ]</span><span class="token punctuation">,</span>
+  <span class="token json-key">"p1Units"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[ </span>
+      <span class="token punctuation">[ </span><span class="token token number">24</span><span class="token punctuation">,</span><span class="token token number"> 13</span><span class="token punctuation">,</span><span class="token token number"> 75</span><span class="token punctuation">,</span><span class="token json-string"> "2"</span><span class="token punctuation"> ]</span><span class="token punctuation">,</span>
+      <span class="token punctuation">[ </span><span class="token token number">22</span><span class="token punctuation">,</span><span class="token token number"> 11</span><span class="token punctuation">,</span><span class="token token number"> 75</span><span class="token punctuation">,</span><span class="token json-string"> "8"</span><span class="token punctuation"> ]</span><span class="token punctuation">,</span>
+      <span class="token punctuation">[ </span><span class="token token number">10</span><span class="token punctuation">,</span><span class="token token number"> 9</span><span class="token punctuation">,</span><span class="token token number"> 28</span><span class="token punctuation">,</span><span class="token json-string"> "10"</span><span class="token punctuation"> ]</span><span class="token punctuation">,</span>
+      <span class="token punctuation">[ </span><span class="token token number">17</span><span class="token punctuation">,</span><span class="token token number"> 9</span><span class="token punctuation">,</span><span class="token token number"> 75</span><span class="token punctuation">,</span><span class="token json-string"> "12"</span><span class="token punctuation"> ]</span><span class="token punctuation">,</span>
+      <span class="token punctuation">[ </span><span class="token token number">14</span><span class="token punctuation">,</span><span class="token token number"> 6</span><span class="token punctuation">,</span><span class="token token number"> 75</span><span class="token punctuation">,</span><span class="token json-string"> "14"</span><span class="token punctuation"> ]</span><span class="token punctuation">,</span>
+      <span class="token punctuation">[ </span><span class="token token number">13</span><span class="token punctuation">,</span><span class="token token number"> 6</span><span class="token punctuation">,</span><span class="token token number"> 75</span><span class="token punctuation">,</span><span class="token json-string"> "44"</span><span class="token punctuation"> ]</span>
+      <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[</span><span class="token punctuation">]</span>
+  <span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token json-key">"p2Units"</span><span class="token punctuation"><span class="token punctuation">:</span> <span class="token punctuation">[ </span>
+    <span class="token punctuation">[ </span><span class="token punctuation">[ </span><span class="token token number">4</span><span class="token punctuation"><span class="token punctuation">,</span><span class="token token number"> 14</span><span class="token punctuation"><span class="token punctuation">,</span><span class="token token number"> 60</span><span class="token punctuation"><span class="token punctuation">,</span><span class="token json-string"> "51"</span><span class="token punctuation"> ]</span><span class="token punctuation"> ]</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[ </span><span class="token punctuation">[ </span><span class="token token number">3</span><span class="token punctuation"><span class="token punctuation">,</span><span class="token token number"> 17</span><span class="token punctuation"><span class="token punctuation">,</span><span class="token token number"> 30</span><span class="token punctuation"><span class="token punctuation">,</span><span class="token json-string"> "18"</span><span class="token punctuation"> ]</span><span class="token punctuation">,</span>
+      <span class="token punctuation">[ </span>
+        <span class="token punctuation">[ </span><span class="token token number">0</span><span class="token punctuation"><span class="token punctuation">,</span><span class="token token number"> 14</span><span class="token punctuation"><span class="token punctuation">,</span><span class="token token number"> 30</span><span class="token punctuation"><span class="token punctuation">,</span><span class="token json-string"> "20"</span><span class="token punctuation"> ]</span><span class="token punctuation">,</span>
+        <span class="token punctuation">[ </span><span class="token token number">1</span><span class="token punctuation"><span class="token punctuation">,</span><span class="token token number"> 15</span><span class="token punctuation"><span class="token punctuation">,</span><span class="token token number"> 30</span><span class="token punctuation"><span class="token punctuation">,</span><span class="token json-string"> "22"</span><span class="token punctuation"> ]</span><span class="token punctuation">,</span>
+        <span class="token punctuation">[ </span><span class="token token number">1</span><span class="token punctuation"><span class="token punctuation">,</span><span class="token token number"> 14</span><span class="token punctuation"><span class="token punctuation">,</span><span class="token token number"> 30</span><span class="token punctuation"><span class="token punctuation">,</span><span class="token json-string"> "24"</span><span class="token punctuation"> ]</span><span class="token punctuation">,</span>
+        <span class="token punctuation">[ </span><span class="token token number">2</span><span class="token punctuation"><span class="token punctuation">,</span><span class="token token number"> 14</span><span class="token punctuation"><span class="token punctuation">,</span><span class="token token number"> 30</span><span class="token punctuation"><span class="token punctuation">,</span><span class="token json-string"> "26"</span><span class="token punctuation"> ]</span><span class="token punctuation">,</span>
+        <span class="token punctuation">[ </span><span class="token token number">2</span><span class="token punctuation"><span class="token punctuation">,</span><span class="token token number"> 15</span><span class="token punctuation"><span class="token punctuation">,</span><span class="token token number"> 30</span><span class="token punctuation"><span class="token punctuation">,</span><span class="token json-string"> "28"</span><span class="token punctuation"> ]</span><span class="token punctuation">,</span>
+        <span class="token punctuation">[ </span><span class="token token number">3</span><span class="token punctuation"><span class="token punctuation">,</span><span class="token token number"> 14</span><span class="token punctuation"><span class="token punctuation">,</span><span class="token token number"> 39</span><span class="token punctuation"><span class="token punctuation">,</span><span class="token json-string"> "47"</span><span class="token punctuation"> ]</span><span class="token punctuation">,</span>
+        <span class="token punctuation">[ </span><span class="token token number">3</span><span class="token punctuation"><span class="token punctuation">,</span><span class="token token number"> 15</span><span class="token punctuation"><span class="token punctuation">,</span><span class="token token number"> 75</span><span class="token punctuation"><span class="token punctuation">,</span><span class="token json-string"> "49"</span><span class="token punctuation"> ]</span>
+      <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[ </span><span class="token punctuation">[</span><span class="token token number"> 4</span><span class="token punctuation"><span class="token punctuation">,</span><span class="token token number"> 14</span><span class="token punctuation"><span class="token punctuation">,</span><span class="token token number"> 0</span><span class="token punctuation"><span class="token punctuation">,</span><span class="token punctuation"><span class="token json-string"> "52"</span><span class="token punctuation"> ]</span><span class="token punctuation"> ]</span>
+  <span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token json-key">"events"</span><span class="token punctuation">: </span><span class="token punctuation">{</span>
+    <span class="token json-key">"selfDestruct"</span><span class="token punctuation">: </span><span class="token punctuation">[</span><span class="token punctuation">]</span>,
+    <span class="token json-key">"breach"</span><span class="token punctuation">: </span><span class="token punctuation">[ </span>
+      <span class="token punctuation">[ </span><span class="token punctuation">[ </span><span class="token token number">2</span>,<span class="token token number"> <span class="token token number">11</span></span><span class="token punctuation"> ]</span>,<span class="token token number"> 1</span>,<span class="token token number"> 3</span>,<span class="token json-string"> "55"</span>,<span class="token token number"> 2</span><span class="token punctuation"> ]</span>,
+      <span class="token punctuation">[ </span><span class="token punctuation">[ </span><span class="token token number">2</span>,<span class="token token number"> <span class="token token number">11</span></span><span class="token punctuation"> ]</span>,<span class="token token number"> 1</span>,<span class="token token number"> 3</span>,<span class="token json-string"> "56"</span>,<span class="token token number"> 2</span><span class="token punctuation"> ]</span>,
+      <span class="token punctuation">[ </span><span class="token punctuation">[ </span><span class="token token number">2</span>,<span class="token token number"> <span class="token token number">11</span></span><span class="token punctuation"> ]</span>,<span class="token token number"> 1</span>,<span class="token token number"> 3</span>,<span class="token json-string"> "57"</span>,<span class="token token number"> 2</span><span class="token punctuation"> ]</span>,
+      <span class="token punctuation">[ </span><span class="token punctuation">[ </span><span class="token token number">2</span>,<span class="token token number"> <span class="token token number">11</span></span><span class="token punctuation"> ]</span>,<span class="token token number"> 1</span>,<span class="token token number"> 3</span>,<span class="token json-string"> "58"</span>,<span class="token token number"> 2</span><span class="token punctuation"> ]</span>,
+      <span class="token punctuation">[ </span><span class="token punctuation">[ </span><span class="token token number">2</span>,<span class="token token number"> <span class="token token number">11</span></span><span class="token punctuation"> ]</span>,<span class="token token number"> 1</span>,<span class="token token number"> 3</span>,<span class="token json-string"> "59"</span>,<span class="token token number"> 2</span><span class="token punctuation"> ]</span>,
+      <span class="token punctuation">[ </span><span class="token punctuation">[ </span><span class="token token number">2</span>,<span class="token token number"> <span class="token token number">11</span></span><span class="token punctuation"> ]</span>,<span class="token token number"> 1</span>,<span class="token token number"> 3</span>,<span class="token json-string"> "60"</span>,<span class="token token number"> 2</span><span class="token punctuation"> ]</span>,
+      <span class="token punctuation">[ </span><span class="token punctuation">[ </span><span class="token token number">2</span>,<span class="token token number"> <span class="token token number">11</span></span><span class="token punctuation"> ]</span>,<span class="token token number"> 1</span>,<span class="token token number"> 3</span>,<span class="token json-string"> "61"</span>,<span class="token token number"> 2</span><span class="token punctuation"> ]</span>,
+      <span class="token punctuation">[ </span><span class="token punctuation">[ </span><span class="token token number">2</span>,<span class="token token number"> <span class="token token number">11</span></span><span class="token punctuation"> ]</span>,<span class="token token number"> 1</span>,<span class="token token number"> 3</span>,<span class="token json-string"> "62"</span>,<span class="token token number"> 2</span><span class="token punctuation"> ]</span>
+    <span class="token punctuation">]</span>,
+    <span class="token json-key">"damage"</span><span class="token punctuation">: </span><span class="token punctuation">[</span><span class="token punctuation">]</span>,
+    <span class="token json-key">"shield"</span><span class="token punctuation">: </span><span class="token punctuation">[</span><span class="token punctuation">]</span>,
+    <span class="token json-key">"move"</span><span class="token punctuation">: </span><span class="token punctuation">[</span><span class="token punctuation">]</span>,
+    <span class="token json-key">"spawn"</span><span class="token punctuation">: </span><span class="token punctuation">[</span><span class="token punctuation">]</span>,
+    <span class="token json-key">"death"</span><span class="token punctuation">: </span><span class="token punctuation">[</span>
+      <span class="token punctuation">[ </span><span class="token punctuation">[ </span><span class="token token number">2</span>,<span class="token token number"> <span class="token token number">11</span></span><span class="token punctuation"> ]</span>,<span class="token token number"> 3</span>,<span class="token json-string"> "55"</span>,<span class="token token number"> 2</span>,<span class="token keyword"> false</span><span class="token punctuation"> ]</span>,
+      <span class="token punctuation">[ </span><span class="token punctuation">[ </span><span class="token token number">2</span>,<span class="token token number"> <span class="token token number">11</span></span><span class="token punctuation"> ]</span>,<span class="token token number"> 3</span>,<span class="token json-string"> "56"</span>,<span class="token token number"> 2</span>,<span class="token keyword"> false</span><span class="token punctuation"> ]</span>,
+      <span class="token punctuation">[ </span><span class="token punctuation">[ </span><span class="token token number">2</span>,<span class="token token number"> <span class="token token number">11</span></span><span class="token punctuation"> ]</span>,<span class="token token number"> 3</span>,<span class="token json-string"> "57"</span>,<span class="token token number"> 2</span>,<span class="token keyword"> false</span><span class="token punctuation"> ]</span>,
+      <span class="token punctuation">[ </span><span class="token punctuation">[ </span><span class="token token number">2</span>,<span class="token token number"> <span class="token token number">11</span></span><span class="token punctuation"> ]</span>,<span class="token token number"> 3</span>,<span class="token json-string"> "58"</span>,<span class="token token number"> 2</span>,<span class="token keyword"> false</span><span class="token punctuation"> ]</span>,
+      <span class="token punctuation">[ </span><span class="token punctuation">[ </span><span class="token token number">2</span>,<span class="token token number"> <span class="token token number">11</span></span><span class="token punctuation"> ]</span>,<span class="token token number"> 3</span>,<span class="token json-string"> "59"</span>,<span class="token token number"> 2</span>,<span class="token keyword"> false</span><span class="token punctuation"> ]</span>,
+      <span class="token punctuation">[ </span><span class="token punctuation">[ </span><span class="token token number">2</span>,<span class="token token number"> <span class="token token number">11</span></span><span class="token punctuation"> ]</span>,<span class="token token number"> 3</span>,<span class="token json-string"> "60"</span>,<span class="token token number"> 2</span>,<span class="token keyword"> false</span><span class="token punctuation"> ]</span>,
+      <span class="token punctuation">[ </span><span class="token punctuation">[ </span><span class="token token number">2</span>,<span class="token token number"> <span class="token token number">11</span></span><span class="token punctuation"> ]</span>,<span class="token token number"> 3</span>,<span class="token json-string"> "61"</span>,<span class="token token number"> 2</span>,<span class="token keyword"> false</span><span class="token punctuation"> ]</span>,
+      <span class="token punctuation">[ </span><span class="token punctuation">[ </span><span class="token token number">2</span>,<span class="token token number"> <span class="token token number">11</span></span><span class="token punctuation"> ]</span>,<span class="token token number"> 3</span>,<span class="token json-string"> "62"</span>,<span class="token token number"> 2</span>,<span class="token keyword"> false</span><span class="token punctuation"> ]</span>
+    <span class="token punctuation">]</span>,
+    <span class="token json-key">"attack"</span><span class="token punctuation">: </span><span class="token punctuation">[</span><span class="token punctuation">]</span>,
+    <span class="token json-key">"melee"</span><span class="token punctuation">: </span><span class="token punctuation">[</span><span class="token punctuation">]</span>,
+  <span class="token punctuation">}</span>
+  // Note endStats will only appear as an attribute in the last frame of the replay file called End Game 
+  // The endStats example shown below is taken from a different frame than the one above:
+  <span class="token json-key">"endStats"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    <span class="token json-key">"duration"</span><span class="token punctuation">:</span><span class="token token number"> 2299433</span><span class="token punctuation">,</span>
+    <span class="token json-key">"winner"</span><span class="token punctuation">:</span><span class="token token number"> 1</span><span class="token punctuation">,</span>
+    <span class="token json-key">"turns"</span><span class="token punctuation">:</span><span class="token token number"> 3</span><span class="token punctuation">,</span>
+    <span class="token json-key">"frames"</span><span class="token punctuation">:</span><span class="token token number"> 176</span><span class="token punctuation">,</span>
+    <span class="token json-key">"player1"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+        <span class="token json-key">"stationary_resource_spent"</span><span class="token punctuation">:</span><span class="token token number"> 27</span><span class="token punctuation">,</span>
+        <span class="token json-key">"dynamic_resource_spoiled"</span><span class="token punctuation">:</span><span class="token token number"> 2.5</span><span class="token punctuation">,</span>
+        <span class="token json-key">"crashed"</span><span class="token punctuation">:</span><span class="token keyword"> false</span><span class="token punctuation">,</span>
+        <span class="token json-key">"name"</span><span class="token punctuation">:</span><span class="token json-string"> "ByHand"</span><span class="token punctuation">,</span>
+        <span class="token json-key">"dynamic_resource_destroyed"</span><span class="token punctuation">:</span><span class="token token number"> 6</span><span class="token punctuation">,</span>
+        <span class="token json-key">"time_damage_taken"</span><span class="token punctuation">:</span><span class="token token number"> 0</span><span class="token punctuation">,</span>
+        <span class="token json-key">"dynamic_resource_spent"</span><span class="token punctuation">:</span><span class="token token number"> 11</span><span class="token punctuation">,</span>
+        <span class="token json-key">"stationary_resource_left_on_board"</span><span class="token punctuation">:</span><span class="token token number"> 18</span><span class="token punctuation">,</span>
+        <span class="token json-key">"timeout_death"</span><span class="token punctuation">:</span><span class="token keyword"> false</span><span class="token punctuation">,</span>
+        <span class="token json-key">"points_scored"</span><span class="token punctuation">:</span><span class="token token number"> 36</span><span class="token punctuation">,</span>
+        <span class="token json-key">"total_computation_time"</span><span class="token punctuation">:</span><span class="token token number"> 1951276</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token json-key">"player2"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+        <span class="token json-key">"stationary_resource_spent"</span><span class="token punctuation">:</span><span class="token token number"> 32</span><span class="token punctuation">,</span>
+        <span class="token json-key">"dynamic_resource_spoiled"</span><span class="token punctuation">:</span><span class="token token number"> 1.8</span><span class="token punctuation">,</span>
+        <span class="token json-key">"crashed"</span><span class="token punctuation">:</span><span class="token keyword"> true</span><span class="token punctuation">,</span>
+        <span class="token json-key">"name"</span><span class="token punctuation">:</span><span class="token json-string"> "ByHand"</span><span class="token punctuation">,</span>
+        <span class="token json-key">"dynamic_resource_destroyed"</span><span class="token punctuation">:</span><span class="token token number"> 5</span><span class="token punctuation">,</span>
+        <span class="token json-key">"time_damage_taken"</span><span class="token punctuation">:</span><span class="token token number"> 31</span><span class="token punctuation">,</span>
+        <span class="token json-key">"dynamic_resource_spent"</span><span class="token punctuation">:</span><span class="token token number"> 13</span><span class="token punctuation">,</span>
+        <span class="token json-key">"stationary_resource_left_on_board"</span><span class="token punctuation">:</span><span class="token token number"> 30</span><span class="token punctuation">,</span>
+        <span class="token json-key">"timeout_death"</span><span class="token punctuation">:</span><span class="token keyword"> true</span><span class="token punctuation">,</span>
+        <span class="token json-key">"points_scored"</span><span class="token punctuation">:</span><span class="token token number"> 8</span><span class="token punctuation">,</span>
+        <span class="token json-key">"total_computation_time"</span><span class="token punctuation">:</span><span class="token token number"> 2296282</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre></code>
+
+    </div>
+  </div>
+</div></section>
+
+
+
+
+<section class="method" id="config"><div class="method-area">
+  <div class="method-copy">
+    <div class="method-copy-padding">
+      <h1>Config File</h1>
+    </div>
+    <div class="method-list">
+    <h5 class="method-list-title">
+        Attributes
+    </h5>
+  <ul class="method-list-group">
+    <li class="method-list-item" id="frame-config-debug">
+      <h3 class="method-list-item-label"><a href="#account_card_object-object" class="header-anchor"></a>
+        debug
+          <span class="method-list-item-validation">
+              { ... }
+          </span>
+      </h3>
+        <p class="method-list-item-description">
+          Contains various booleans that enable or disable what is printed when running a game.
+        </p>
+        <p class="method-list-item-description">
+          {
+        </p>
+        <p class="method-list-item-description">
+          "printMapString": Boolean, if true will print a text version of the map to console.
+        </p>
+        <p class="method-list-item-description">
+          "printTStrings": Boolean, if true will print a list of all units currently on the board at the start of every turn.
+        </p>
+        <p class="method-list-item-description">
+          "printActStrings": Boolean, if true will print a list of all units currently on the board at the start of every action frame.
+        </p>
+        <p class="method-list-item-description">
+          "printHitStrings": Boolean, if true will print whenever a unit attacks another unit.
+        </p>
+        <p class="method-list-item-description">
+          "printPlayerInputStrings": Boolean, if true will print the string received by the each player at the end of every turn.
+        </p>
+        <p class="method-list-item-description">
+          "printBotErrors": Boolean, if true will print the standard error printed by each algo.
+        </p>
+        <p class="method-list-item-description">
+          "printPlayerGetHitStrings": Boolean, if true will print whenever a unit breaches and does player health damage.
+        </p>
+        <p class="method-list-item-description">
+          }
+        </p>
+      </li>
+
+      <li class="method-list-item" id="frame-config-unitInformation">
+          <h3 class="method-list-item-label"><a href="#account_card_object-object" class="header-anchor"></a>
+            unitInformation
+              <span class="method-list-item-validation">
+                  [ {}, {}, {}, {}, {}, {}, {} ]
+              </span>
+          </h3>
+              <p class="method-list-item-description">
+                List containing dictionary objects describing stats about each unit. The list index corresponds to a units <a class="sidebar-nav-item" href="#frame-unittype">UnitType</a>.
+              </p>
+              <p class="method-list-item-description">
+                {
+              </p>
+              <p class="method-list-item-description">
+                [0]: <a class="sidebar-nav-item" href="#frame-config-stationaryconfig">Stationary unit config</a> describing <code class=" language-undefined">WALL</code>.
+              </p>
+              <p class="method-list-item-description">
+                [1]: <a class="sidebar-nav-item" href="#frame-config-stationaryconfig">Stationary unit config</a> describing <code class=" language-undefined">FACTORY</code>.
+              </p>
+              <p class="method-list-item-description">
+                [2]: <a class="sidebar-nav-item" href="#frame-config-stationaryconfig">Stationary unit config</a> describing <code class=" language-undefined">TURRET</code>.
+              </p>
+              <p class="method-list-item-description">
+                [3]: <a class="sidebar-nav-item" href="#frame-config-moveconfig">Moving unit config</a> describing <code class=" language-undefined">SCOUT</code>.
+              </p>
+              <p class="method-list-item-description">
+                [4]: <a class="sidebar-nav-item" href="#frame-config-moveconfig">Moving unit config</a> describing <code class=" language-undefined">DEMOLISHER</code>.
+              </p>
+              <p class="method-list-item-description">
+                [5]: <a class="sidebar-nav-item" href="#frame-config-moveconfig">Moving unit config</a> describing <code class=" language-undefined">INTERCEPTOR</code>.
+              </p>
+              <p class="method-list-item-description">
+                [6]: <a class="sidebar-nav-item" href="#frame-config-removeconfig">Remove config</a> describing <code class=" language-undefined">REMOVE</code>.
+              </p>
+              <p class="method-list-item-description">
+                }
+              </p>
+        </li>
+
+      <li class="method-list-item" id="frame-config-stationaryconfig">
+          <h3 class="method-list-item-label"><a href="#account_card_object-object" class="header-anchor"></a>
+            <span class="method-list-item-label-badge">Stationary Unit Config</span>
+              <span class="method-list-item-validation">
+                  { ... }
+              </span>
+          </h3>
+              <p class="method-list-item-description">
+                Contains config variables for stationary units in the game <code class=" language-undefined">WALL</code>, <code class=" language-undefined">FACTORY</code>, <code class=" language-undefined">TURRET</code>.
+              </p>
+              <p class="method-list-item-description">
+                {
+              </p>
+              <p class="method-list-item-description">
+                "damage": Float describing how much damage the unit will do to enemies if they are in range.
+              </p>
+              <p class="method-list-item-description">
+                "cost": Float representing how many stationary resources are required to deploy the unit.
+              </p>
+              <p class="method-list-item-description">
+                "getHitRadius": Float describing how big this units hitbox is.
+              </p>
+              <p class="method-list-item-description">
+                "display": String for the name of the unit.
+              </p>
+              <p class="method-list-item-description">
+                "range": Float for the range of the unit.
+              </p>
+              <p class="method-list-item-description">
+                "shorthand": String for the shorthand of the unit, is used to communicate what units an algo wishes to deploy.
+              </p>
+              <p class="method-list-item-description">
+                "stability": Float for the health of the unit. When it is 0 or below the unit will die.
+              </p>
+              <p class="method-list-item-description">
+                "generatesResource1": Float for the amount of MP this unit will generate each round
+              </p>
+              <p class="method-list-item-description">
+                "generatesResource2": Float for the amount of SP this unit will generate each round
+              </p>
+              <p class="method-list-item-description">
+                }
+              </p>
+      </li>
+
+      <li class="method-list-item" id="frame-config-moveconfig">
+          <h3 class="method-list-item-label"><a href="#account_card_object-object" class="header-anchor"></a>
+            <span class="method-list-item-label-badge">Moving Unit Config</span>
+              <span class="method-list-item-validation">
+                  { ... }
+              </span>
+          </h3>
+              <p class="method-list-item-description">
+                Contains config variables for dynamic moving units in the game <code class=" language-undefined">SCOUT</code>, <code class=" language-undefined">DEMOLISHER</code>, <code class=" language-undefined">INTERCEPTOR</code>.
+              </p>
+              <p class="method-list-item-description">
+                {
+              </p>
+              <p class="method-list-item-description">
+                "icon": String used on playground to select an icon for the unit.
+              </p>
+              <p class="method-list-item-description">
+                "iconxScale": Float used on playground to scale the unit icon
+              </p>
+              <p class="method-list-item-description">
+                "iconyScale": Float used on playground to scale the unit icon
+              </p>
+              <p class="method-list-item-description">
+                "damageI": Float describing how much damage the unit will do to moving units in range.
+              </p>
+              <p class="method-list-item-description">
+                "damageToPlayer": Float describing how much damage the unit will do to player health if it breaches.
+              </p>
+              <p class="method-list-item-description">
+                "cost": Float representing how many dynamic resources are required to deploy the unit.
+              </p>
+              <p class="method-list-item-description">
+                "getHitRadius": Float describing how big this units hitbox is.
+              </p>
+              <p class="method-list-item-description">
+                "damageF": Float describing how much damage the unit will do to stationary units in range.
+              </p>
+              <p class="method-list-item-description">
+                "display": String for the name of the unit.
+              </p>
+              <p class="method-list-item-description">
+                "range": Float for the range of the unit.
+              </p>
+              <p class="method-list-item-description">
+                "shorthand": String for the shorthand of the unit, is used to communicate what units an algo wishes to deploy.
+              </p>
+              <p class="method-list-item-description">
+                "stability": Float for the health of the unit. When it is 0 or below the unit will die.
+              </p>
+              <p class="method-list-item-description">
+                "speed": Float for the speed of a unit, (1 / speed) determines how many frames it takes before the unit will move.
+              </p>
+              <p class="method-list-item-description">
+                }
+              </p>
+      </li>
+
+      <li class="method-list-item" id="frame-config-removeconfig">
+          <h3 class="method-list-item-label"><a href="#account_card_object-object" class="header-anchor"></a>
+            <span class="method-list-item-label-badge">Removal Config</span>
+              <span class="method-list-item-validation">
+                  { ... }
+              </span>
+          </h3>
+              <p class="method-list-item-description">
+                Contains config variables for <code class=" language-undefined">REMOVE</code>.
+              </p>
+              <p class="method-list-item-description">
+                {
+              </p>
+              <p class="method-list-item-description">
+                "display": String for the name of the unit.
+              </p>
+              <p class="method-list-item-description">
+                "shorthand": String for the shorthand of the unit, is used to communicate what units an algo wishes to deploy.
+              </p>
+              <p class="method-list-item-description">
+                }
+              </p>
+      </li>
+
+
+      <li class="method-list-item" id="frame-config-timingAndReplay">
+          <h3 class="method-list-item-label"><a href="#account_card_object-object" class="header-anchor"></a>
+            timingAndReplay
+              <span class="method-list-item-validation">
+                  { ... }
+              </span>
+          </h3>
+              <p class="method-list-item-description">
+                Contains various variables relating to how long each algo has per turn and whether replays are saved. Note times are split between <code class=" language-undefined">PLAY-MODE</code>, values used for playground games, and <code class=" language-undefined">WORK-MODE</code> used for ranked games. When running the engine locally it uses <code class=" language-undefined">WORK-MODE</code> values, play values can be ignored.
+              </p>
+              <p class="method-list-item-description">
+                {
+              </p>
+              <p class="method-list-item-description">
+                "waitTimeBotMax": Integer, time in milliseconds before an algo will skip its turn for <code class=" language-undefined">WORK-MODE</code>.
+              </p>
+              <p class="method-list-item-description">
+                "playWaitTimeBotMax": Integer, time in milliseconds before an algo will skip its turn for <code class=" language-undefined">PLAY-MODE</code>.
+              </p>
+              <p class="method-list-item-description">
+                "waitTimeManual": Integer, time in milliseconds before a player playing by hand will skip their turn in <code class=" language-undefined">PLAY-MODE</code>.
+              </p>
+              <p class="method-list-item-description">
+                "waitForever": Boolean, if true will grant infinite time for all modes and all player types.
+              </p>
+              <p class="method-list-item-description">
+                "waitTimeBotSoft": Integer, time in milliseconds before an algo will start taking damage for taking too long for its turn in <code class=" language-undefined">WORK-MODE</code>.
+              </p>
+              <p class="method-list-item-description">
+                "playWaitTimeBotSoft": Integer, time in milliseconds before an algo will start taking damage for taking too long for its turn in <code class=" language-undefined">PLAY-MODE</code>.
+              </p>
+              <p class="method-list-item-description">
+                "replaySave": Integer, for <code class=" language-undefined">WORK-MODE</code>. If set to 0 will not save any replays, if set to 1 will save replays in player1's perspective, if set to 2 will save in player2's perspective, and 3 will save two replays for both player1 and player2 perspectives.
+              </p>
+              <p class="method-list-item-description">
+                "playReplaySave": Integer, for <code class=" language-undefined">PLAY-MODE</code>. If set to 0 will not save any replays, if set to 1 will save replays in player1's perspective, if set to 2 will save in player2's perspective, and 3 will save two replays for both player1 and player2 perspectives.
+              </p>
+              <p class="method-list-item-description">
+                "storeBotTimes": Boolean, if true will save how long each algo took in milliseconds last turn. Turning this to false can cause problems in algo frame parsing so it is advised to always keep this set to true.
+              </p>
+              <p class="method-list-item-description">
+                "waitTimeStartGame": Integer, time in milliseconds spent waiting before a game starts. Is set to allow algos time to initialze and load in dependencies.
+              </p>
+              <p class="method-list-item-description">
+                "waitTimeEndGame": Integer, time in milliseconds after the game ends before the process will terminate. Is set to allow time for all socket messages to send to their destinations including algo error logs and buffered frames. Also allows algos to save any information as algos will terminate when the engine terminates. For local play can be set to a much lower value.
+              </p>
+              <p class="method-list-item-description">
+                }
+              </p>
+        </li>
+
+        <li class="method-list-item" id="frame-config-resources">
+            <h3 class="method-list-item-label"><a href="#account_card_object-object" class="header-anchor"></a>
+              resources
+                <span class="method-list-item-validation">
+                    { ... }
+                </span>
+            </h3>
+              <p class="method-list-item-description">
+                Contains various variables related to resources given to players throughout the game. Bits and Cores are legacy terms for MP and SP.
+              </p>
+              <p class="method-list-item-description">
+                {
+              </p>
+              <p class="method-list-item-description">
+                "turnIntervalForBitCapSchedule": Integer, <b>deprecated</b> was previously used for a slowly ramping maximum MP.
+              </p>
+              <p class="method-list-item-description">
+                "turnIntervalForBitSchedule": Integer, every time this number of turns occurs, MP given per turn increases by the amount given by "bitGrowthRate".
+              </p>
+              <p class="method-list-item-description">
+                "bitRampBitCapGrowthRate": Float, <b>deprecated</b> was previously used for a slowly ramping maximum MP.
+              </p>
+              <p class="method-list-item-description">
+                "bitGrowthRate": Float, determines how many additional MP per turn players get every "turnIntervalForBitSchedule".
+              </p>
+              <p class="method-list-item-description">
+                "startingHP": Float, determines how much starting player health each player gets.
+              </p>
+              <p class="method-list-item-description">
+                "maxBits": Float, maximum amount of MP a player can hold. In most configs, the bit decay mechanic is the limiting factor on MP a player can store.
+              </p>
+              <p class="method-list-item-description">
+                "bitsPerRound": Float, amount of MP per round a player will receive at the start of a match. The actual amount the player receives later in the game will be influenced by the current turn number, "turnIntervalForBitSchedule" and "bitGrowthRate".
+              </p>
+              <p class="method-list-item-description">
+                "coresPerRound": Float, amount of SP per round a player will receive throughout the match.
+              </p>
+              <p class="method-list-item-description">
+                "coresForPlayerDamage": Depricated, replaced by "metalForBreach" so it can be customized per-unit. Metal is another legacy term for SP.
+              </p>
+              <p class="method-list-item-description">
+                "startingBits": Float, amount of MP players receive when starting the match.
+              </p>
+              <p class="method-list-item-description">
+                "bitDecayPerRound": Float, at the end of every round before extra MP are allocated a percentage of the players current MP are discarded. This mechanic is to balance deploying a large stack of units all at once and give a tradeoff between saving MP and deploying them periodically.
+              </p>
+              <p class="method-list-item-description">
+                "startingCores": Float, amount of SP given to each player at the start of a match.
+              </p>
+              <p class="method-list-item-description">
+                }
+              </p>
+            </li>
+      
+        <li class="method-list-item" id="frame-config-mechanics">
+            <h3 class="method-list-item-label"><a href="#account_card_object-object" class="header-anchor"></a>
+              mechanics
+                <span class="method-list-item-validation">
+                    { ... }
+                </span>
+            </h3>
+              <p class="method-list-item-description">
+                Contains various variables that influence gameplay mechanics.
+              </p>
+              <p class="method-list-item-description">
+                {
+              </p>
+              <p class="method-list-item-description">
+                "basePlayerHealthDamage": Float, how much player health damage will be received on a breach.
+              </p>
+              <p class="method-list-item-description">
+                "damageGrowthBasedOnY": Float, <b>depracated</b> determined how much player health damage was done based on how deep the unit was in enemy territory when breaching.
+              </p>
+              <p class="method-list-item-description">
+                "bitsCanStackOnDeployment": Boolean, if true will allow more than one moving unit to be deployed on the same location.
+              </p>
+              <p class="method-list-item-description">
+                "destroyOwnUnitRefund": Float, determines what fraction of a unit's cost is refunded when a stationary unit is removed by the player who owns it.
+              </p>
+              <p class="method-list-item-description">
+                "destroyOwnUnitsEnabled": Boolean, if true allows players to remove their own stationary units.
+              </p>
+              <p class="method-list-item-description">
+                "stepsRequiredSelfDestruct": Integer, minimum number of steps a unit has to take before its self destruct does damage. Used to balance the self destruct mechanic.
+              </p>
+              <p class="method-list-item-description">
+                "selfDestructRadius": Float, radius from the self destructing unit's center that determines what units will be damaged by a self destruct.
+              </p>
+              <p class="method-list-item-description">
+                "shieldDecayPerFrame": Float, what fraction of a shield will decay per frame.
+              </p>
+              <p class="method-list-item-description">
+                "meleeMultiplier": Float, <b>depracated</b> determines how much damage a melee attack does, melee attacks are no longer used.
+              </p>
+              <p class="method-list-item-description">
+                "destroyOwnUnitDelay": Integer, number of turns before a unit will be removed when a player attempts to remove their own stationary unit.
+              </p>
+              <p class="method-list-item-description">
+                "rerouteMidRound": Boolean, <b>deprecated</b> determines if a unit will reroute when a stationary unit is destroyed in the middle of a round. This is not currently supported, setting this to false will cause undefined behavior.
+              </p>
+              <p class="method-list-item-description">
+                "firewallBuildTime": Integer, <b>deprecated</b> determines how many turns a stationary unit will take to spawn. This is not currently supported, setting this variable higher than 0 may cause undefined behavior.
+              </p>
+              <p class="method-list-item-description">
+                }
+              </p>
+            </li>
+
+  </ul>
+</div>
+
+  </div>
+  <div class="method-example">
+    <div class="method-example-part">
+      <code class="method-example-object language-undefined"><pre class=" language-json"><code class=" language-json">
+<span class="token punctuation">{</span>
+  <span class="token json-key">"debug"</span><span class="token punctuation">: </span><span class="token punctuation">{</span>
+    <span class="token json-key">"printMapString"</span><span class="token punctuation">: </span><span class="token keyword">false</span><span class="token punctuation">,</span>
+    <span class="token json-key">"printTStrings"</span><span class="token punctuation">: </span><span class="token keyword">false</span><span class="token punctuation">,</span>
+    <span class="token json-key">"printActStrings"</span><span class="token punctuation">: </span><span class="token keyword">false</span><span class="token punctuation">,</span>
+    <span class="token json-key">"printHitStrings"</span><span class="token punctuation">: </span><span class="token keyword">false</span><span class="token punctuation">,</span>
+    <span class="token json-key">"printPlayerInputStrings"</span><span class="token punctuation">: </span><span class="token keyword">true</span><span class="token punctuation">,</span>
+    <span class="token json-key">"printBotErrors"</span><span class="token punctuation">: </span><span class="token keyword">true</span><span class="token punctuation">,</span>
+    <span class="token json-key">"printPlayerGetHitStrings"</span><span class="token punctuation">: </span><span class="token keyword">false</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token json-key">"unitInformation"</span><span class="token punctuation">: </span><span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+      <span class="token json-key">"damage"</span><span class="token punctuation">: </span><span class="token token number">0.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"cost"</span><span class="token punctuation">: </span><span class="token token number">1.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"getHitRadius"</span><span class="token punctuation">: </span><span class="token token number">0.51</span><span class="token punctuation">,</span>
+      <span class="token json-key">"display"</span><span class="token punctuation">: </span><span class="token json-string">"Filter"</span>
+      <span class="token json-key">"range"</span><span class="token punctuation">: </span><span class="token token number">0.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"shorthand"</span><span class="token punctuation">: </span><span class="token json-string">"FF"</span>
+      <span class="token json-key">"stability"</span><span class="token punctuation">: </span><span class="token token number">60.0</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      <span class="token json-key">"damage"</span><span class="token punctuation">: </span><span class="token token number">0.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"cost"</span><span class="token punctuation">: </span><span class="token token number">4.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"getHitRadius"</span><span class="token punctuation">: </span><span class="token token number">0.51</span><span class="token punctuation">,</span>
+      <span class="token json-key">"shieldAmount"</span><span class="token punctuation">: </span><span class="token token number">10.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"display"</span><span class="token punctuation">: </span><span class="token json-string">"Encryptor"</span>
+      <span class="token json-key">"range"</span><span class="token punctuation">: </span><span class="token token number">3.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"shorthand"</span><span class="token punctuation">: </span><span class="token json-string">"EF"</span>
+      <span class="token json-key">"stability"</span><span class="token punctuation">: </span><span class="token token number">30.0</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      <span class="token json-key">"damage"</span><span class="token punctuation">: </span><span class="token token number">4.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"cost"</span><span class="token punctuation">: </span><span class="token token number">3.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"getHitRadius"</span><span class="token punctuation">: </span><span class="token token number">0.51</span><span class="token punctuation">,</span>
+      <span class="token json-key">"display"</span><span class="token punctuation">: </span><span class="token json-string">"Destructor"</span>
+      <span class="token json-key">"range"</span><span class="token punctuation">: </span><span class="token token number">3.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"shorthand"</span><span class="token punctuation">: </span><span class="token json-string">"DF"</span>
+      <span class="token json-key">"stability"</span><span class="token punctuation">: </span><span class="token token number">75.0</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      <span class="token json-key">"damageI"</span><span class="token punctuation">: </span><span class="token token number">1.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"damageToPlayer"</span><span class="token punctuation">: </span><span class="token token number">1.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"cost"</span><span class="token punctuation">: </span><span class="token token number">1.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"getHitRadius"</span><span class="token punctuation">: </span><span class="token token number">0.51</span><span class="token punctuation">,</span>
+      <span class="token json-key">"damageF"</span><span class="token punctuation">: </span><span class="token token number">1.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"display"</span><span class="token punctuation">: </span><span class="token json-string">"Ping"</span>
+      <span class="token json-key">"range"</span><span class="token punctuation">: </span><span class="token token number">3.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"shorthand"</span><span class="token punctuation">: </span><span class="token json-string">"PI"</span>
+      <span class="token json-key">"stability"</span><span class="token punctuation">: </span><span class="token token number">15.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"speed"</span><span class="token punctuation">: </span><span class="token token number">0.5</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      <span class="token json-key">"damageI"</span><span class="token punctuation">: </span><span class="token token number">3.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"damageToPlayer"</span><span class="token punctuation">: </span><span class="token token number">1.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"cost"</span><span class="token punctuation">: </span><span class="token token number">3.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"getHitRadius"</span><span class="token punctuation">: </span><span class="token token number">0.51</span><span class="token punctuation">,</span>
+      <span class="token json-key">"damageF"</span><span class="token punctuation">: </span><span class="token token number">3.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"display"</span><span class="token punctuation">: </span><span class="token json-string">"EMP"</span>
+      <span class="token json-key">"range"</span><span class="token punctuation">: </span><span class="token token number">5.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"shorthand"</span><span class="token punctuation">: </span><span class="token json-string">"EI"</span>
+      <span class="token json-key">"stability"</span><span class="token punctuation">: </span><span class="token token number">5.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"speed"</span><span class="token punctuation">: </span><span class="token token number">0.25</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      <span class="token json-key">"damageI"</span><span class="token punctuation">: </span><span class="token token number">10.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"damageToPlayer"</span><span class="token punctuation">: </span><span class="token token number">1.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"cost"</span><span class="token punctuation">: </span><span class="token token number">1.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"getHitRadius"</span><span class="token punctuation">: </span><span class="token token number">0.51</span><span class="token punctuation">,</span>
+      <span class="token json-key">"damageF"</span><span class="token punctuation">: </span><span class="token token number">0.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"display"</span><span class="token punctuation">: </span><span class="token json-string">"Scrambler"</span>
+      <span class="token json-key">"range"</span><span class="token punctuation">: </span><span class="token token number">3.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"shorthand"</span><span class="token punctuation">: </span><span class="token json-string">"SI"</span>
+      <span class="token json-key">"stability"</span><span class="token punctuation">: </span><span class="token token number">40.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"speed"</span><span class="token punctuation">: </span><span class="token token number">0.25</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      <span class="token json-key">"display"</span><span class="token punctuation">: </span><span class="token json-string">"Remove"</span>
+      <span class="token json-key">"shorthand"</span><span class="token punctuation">: </span><span class="token json-string">"RM"</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token json-key">"timingAndReplay"</span><span class="token punctuation">: </span><span class="token punctuation">{</span>
+    <span class="token json-key">"waitTimeBotMax"</span><span class="token punctuation">: </span><span class="token token number">35000</span><span class="token punctuation">,</span>
+    <span class="token json-key">"playWaitTimeBotMax"</span><span class="token punctuation">: </span><span class="token token number">40000</span><span class="token punctuation">,</span>
+    <span class="token json-key">"waitTimeManual"</span><span class="token punctuation">: </span><span class="token token number">1820000</span><span class="token punctuation">,</span>
+    <span class="token json-key">"waitForever"</span><span class="token punctuation">: </span><span class="token keyword">false</span><span class="token punctuation">,</span>
+    <span class="token json-key">"waitTimeBotSoft"</span><span class="token punctuation">: </span><span class="token token number">5000</span><span class="token punctuation">,</span>
+    <span class="token json-key">"playWaitTimeBotSoft"</span><span class="token punctuation">: </span><span class="token token number">10000</span><span class="token punctuation">,</span>
+    <span class="token json-key">"replaySave"</span><span class="token punctuation">: </span><span class="token token number">1</span><span class="token punctuation">,</span>
+    <span class="token json-key">"playReplaySave"</span><span class="token punctuation">: </span><span class="token token number">0</span><span class="token punctuation">,</span>
+    <span class="token json-key">"storeBotTimes"</span><span class="token punctuation">: </span><span class="token keyword">true</span><span class="token punctuation">,</span>
+    <span class="token json-key">"waitTimeStartGame"</span><span class="token punctuation">: </span><span class="token token number">3000</span><span class="token punctuation">,</span>
+    <span class="token json-key">"waitTimeEndGame"</span><span class="token punctuation">: </span><span class="token token number">3000</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token json-key">"resources"</span><span class="token punctuation">: </span><span class="token punctuation">{</span>
+    <span class="token json-key">"turnIntervalForBitCapSchedule"</span><span class="token punctuation">: </span><span class="token token number">10</span><span class="token punctuation">,</span>
+    <span class="token json-key">"turnIntervalForBitSchedule"</span><span class="token punctuation">: </span><span class="token token number">10</span><span class="token punctuation">,</span>
+    <span class="token json-key">"bitRampBitCapGrowthRate"</span><span class="token punctuation">: </span><span class="token token number">5.0</span><span class="token punctuation">,</span>
+    <span class="token json-key">"roundStartBitRamp"</span><span class="token punctuation">: </span><span class="token token number">10</span><span class="token punctuation">,</span>
+    <span class="token json-key">"bitGrowthRate"</span><span class="token punctuation">: </span><span class="token token number">1.0</span><span class="token punctuation">,</span>
+    <span class="token json-key">"startingHP"</span><span class="token punctuation">: </span><span class="token token number">30.0</span><span class="token punctuation">,</span>
+    <span class="token json-key">"maxBits"</span><span class="token punctuation">: </span><span class="token token number">999999.0</span><span class="token punctuation">,</span>
+    <span class="token json-key">"bitsPerRound"</span><span class="token punctuation">: </span><span class="token token number">5.0</span><span class="token punctuation">,</span>
+    <span class="token json-key">"coresPerRound"</span><span class="token punctuation">: </span><span class="token token number">4.0</span><span class="token punctuation">,</span>
+    <span class="token json-key">"coresForPlayerDamage"</span><span class="token punctuation">: </span><span class="token token number">1.0</span><span class="token punctuation">,</span>
+    <span class="token json-key">"startingBits"</span><span class="token punctuation">: </span><span class="token token number">5.0</span><span class="token punctuation">,</span>
+    <span class="token json-key">"bitDecayPerRound"</span><span class="token punctuation">: </span><span class="token token number">0.33333</span><span class="token punctuation">,</span>
+    <span class="token json-key">"startingCores"</span><span class="token punctuation">: </span><span class="token token number">25.0</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token json-key">"mechanics"</span><span class="token punctuation">: </span><span class="token punctuation">{</span>
+    <span class="token json-key">"basePlayerHealthDamage"</span><span class="token punctuation">: </span><span class="token token number">1.0</span><span class="token punctuation">,</span>
+    <span class="token json-key">"damageGrowthBasedOnY"</span><span class="token punctuation">: </span><span class="token token number">0.0</span><span class="token punctuation">,</span>
+    <span class="token json-key">"bitsCanStackOnDeployment"</span><span class="token punctuation">: </span><span class="token keyword">true</span><span class="token punctuation">,</span>
+    <span class="token json-key">"destroyOwnUnitRefund"</span><span class="token punctuation">: </span><span class="token token number">0.5</span><span class="token punctuation">,</span>
+    <span class="token json-key">"destroyOwnUnitsEnabled"</span><span class="token punctuation">: </span><span class="token keyword">true</span><span class="token punctuation">,</span>
+    <span class="token json-key">"stepsRequiredSelfDestruct"</span><span class="token punctuation">: </span><span class="token token number">5</span><span class="token punctuation">,</span>
+    <span class="token json-key">"selfDestructRadius"</span><span class="token punctuation">: </span><span class="token token number">1.5</span><span class="token punctuation">,</span>
+    <span class="token json-key">"shieldDecayPerFrame"</span><span class="token punctuation">: </span><span class="token token number">0.15</span><span class="token punctuation">,</span>
+    <span class="token json-key">"meleeMultiplier"</span><span class="token punctuation">: </span><span class="token token number">0</span><span class="token punctuation">,</span>
+    <span class="token json-key">"destroyOwnUnitDelay"</span><span class="token punctuation">: </span><span class="token token number">1</span><span class="token punctuation">,</span>
+    <span class="token json-key">"rerouteMidRound"</span><span class="token punctuation">: </span><span class="token keyword">true</span><span class="token punctuation">,</span>
+    <span class="token json-key">"firewallBuildTime"</span><span class="token punctuation">: </span><span class="token token number">0</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+          
+          
+
+</code></pre></code>
+    </div>
+  </div>
+</div></section>
+
+
+  </div>
+  <div class="footer"></div>
+</body>
+</html>

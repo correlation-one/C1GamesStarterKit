@@ -216,7 +216,7 @@ class AlgoStrategy(gamelib.AlgoCore):
         This is the action frame of the game. This function could be called 
         hundreds of times per turn and could slow the algo down so avoid putting slow code here.
         Processing the action frames is complicated so we only suggest it if you have time and experience.
-        Full doc on format of a game frame at: https://docs.c1games.com/json-docs.html
+        Full doc on format of a game frame at in json-docs.html in the root of the Starterkit.
         """
         # Let's record at what position we get scored on
         state = json.loads(turn_string)

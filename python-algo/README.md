@@ -39,21 +39,21 @@ If your algo requires initialization then you should also implement the
 
 ### `documentation`
 
-A directory containing the sphinx generated documentation, as well as the files required
-to build it. You can view the docs at https://docs.c1games.com, or by opening index.html
-in documents/_build. You can remake the documentation by running 'make html' in the documentation folder.
+A directory containing the sphinx generated programming documentation, as well as the files required
+to build it. You can view the docs by opening index.html in documents/_build.
+You can remake the documentation by running 'make html' in the documentation folder.
 You will need to install sphinx for this command to work.
 
 ### `run.sh`
 
 A script that contains logic to invoke your code. You do not need to run this directly.
-See the 'scripts' folder in the Starterkit for information about testing locally. 
+See the 'scripts' folder in the Starterkit for information about testing locally.
 
 ### `run.ps1`
 
 A script that contains logic to invoke your code. You shouldn't need to change
 this unless you change file structure or require a more customized process
-startup. 
+startup.
 
 ### `gamelib/__init__.py`
 
