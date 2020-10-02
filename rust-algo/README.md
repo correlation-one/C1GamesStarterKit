@@ -33,8 +33,6 @@ Our servers will essentially do the same thing when you upload your algo.
 To upload your algo, upload the entire rust-algo folder on the myalgos page of the terminal site.
 Note that the max upload size is limited, be carful not to include large build artifacts.
 
-To upload your
-
 The simplest way to create an algo is to create a data type which stores your algo state,
 implement `GameLoop` on it, and create a main function which calls `run_game_loop` on that
 type.
