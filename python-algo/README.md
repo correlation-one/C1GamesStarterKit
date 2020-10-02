@@ -24,7 +24,8 @@ starter-algo
 
 ### Creating an Algo
 
-To create an algo, simply modify the `algo_strategy.py` file.
+To create an algo, simply modify the `algo_strategy.py` file. 
+To upload to terminal, upload the entire python-algo folder.
 
 ### `algo_strategy.py`
 
