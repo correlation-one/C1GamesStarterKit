@@ -27,11 +27,14 @@ methods of `GameState` and `FrameData`.
 The easiest way to test your algo locally is to run the `build_local.py` script with a Python
 interpreter, then run the engine with the path `rust-algo/algo-target`. The `build_local.py`
 script will build your algo based on the content in `algo.json`, then move the resultant
-binary to the algo target directory. Our servers will essentially do the same thing when you
-upload your algo.
+binary to the algo target directory. 
 
-The simplest way to create an algo is to create a data type which stores your algo state, 
-implement `GameLoop` on it, and create a main function which calls `run_game_loop` on that 
+Our servers will essentially do the same thing when you upload your algo.
+To upload your algo, upload the entire rust-algo folder on the myalgos page of the terminal site.
+Note that the max upload size is limited, be carful not to include large build artifacts.
+
+The simplest way to create an algo is to create a data type which stores your algo state,
+implement `GameLoop` on it, and create a main function which calls `run_game_loop` on that
 type.
 
 The are three callbacks for `GameLoop` which you must implement:
