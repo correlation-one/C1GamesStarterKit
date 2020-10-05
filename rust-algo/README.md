@@ -54,6 +54,8 @@ The `make_move` callback is called every turn frame, and is given mutable access
 moves, such as spawning and removing units. The `MapState` records each spawn command that is
 used to mutate it, and when `make_move` returns, those spawn commands will be submitted to the engine.
 
+To generate programming documentation, run cargo doc in rust-algo. Then open index.html in rust-algo/target/doc/starter_algo
+
 **The standard output is used to communicate with the game engine, and must not be printed to.**
 For this reason, debugging must be done through `eprintln!`, and never `println!`. The standard
 error messages are available on the playground.
