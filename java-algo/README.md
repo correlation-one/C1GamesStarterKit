@@ -49,6 +49,8 @@ convenient access to the game board, and the ability to perform actions, such as
 unit, which will mutate the `GameState` game state, as well as record that action. When 
 `onTurn` returns, the recorded actions will be submitted to the game.
 
+To generate programming documentation, run gradle javadoc in java-algo. Then open index.html in java-algo/build/docs/javadoc
+
 **The standard output is used to communicate with the game engine, and must not be printed to.**
 For this reason, debugging must be done with the standard error. The standard error messages are 
 available on the playground. As an abstraction over this logic, the `GameIO` method `debug()` 
