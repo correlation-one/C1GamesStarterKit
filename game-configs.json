@@ -31,7 +31,7 @@
       "icon": "S3_encryptor",
       "iconxScale": 0.5,
       "iconyScale": 0.5,
-      "cost1":4.0,
+      "cost1":7.0,
       "getHitRadius":0.01,
       "display":"encryptor",
       "shieldRange":0,
@@ -42,7 +42,7 @@
       "turnsRequiredToRemove": 1,
       "generatesResource1": 1,
       "upgrade": {
-        "generatesResource2": 1
+        "generatesResource2": 2
       }
     },
     {
@@ -116,7 +116,7 @@
       "cost2":1.0,
       "getHitRadius":0.01,
       "display":"scrambler",
-      "attackRange":4.5,
+      "attackRange":3.5,
       "shorthand":"SI",
       "startHealth":40.0,
       "speed":0.25,
@@ -168,7 +168,7 @@
     "coresForPlayerDamage":1.0,
     "startingBits":5.0,
     "bitDecayPerRound":0.25,
-    "startingCores":20.0
+    "startingCores":40.0
   },
   "misc":{
     "numBlockedLocations": 0,
