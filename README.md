@@ -15,11 +15,14 @@ before you start your algo. Check out [the playground](https://terminal.c1games.
 
 To test your algo locally, you should use the test_algo_[OS] scripts in the scripts folder. Details on its use is documented in the README.md file in the scripts folder.
 
-For programming documentation of language specific algos, see each language specific README
+For programming documentation of language specific algos, see each language specific README.
 For documentation of the game-config or the json format the engine uses to communicate the current game state, see json-docs.html
 
-For advanced users you can install java and run the game engine locally, however its recommended to use the website for proper analysis as it has visualization features to help you understand.
-Java 10 or above is required: [Java Development Kit 10 or above](http://www.oracle.com/technetwork/java/javase/downloads/jdk10-downloads-4416644.html), if you cannot download java 10 just download the most recent java version.
+For advanced users you can install java and run the game engine locally. Java 10 or above is required: [Java Development Kit 10 or above](http://www.oracle.com/technetwork/java/javase/downloads/jdk10-downloads-4416644.html).
+
+All code provided in the starterkit is meant to be used as a starting point, and can be overwritten completely by more advanced players to improve performance or provide additional utility.
+
+## Windows Setup
 
 If you are running Windows, you will need Windows PowerShell installed. This comes pre-installed on Windows 10.
 Some windows users might need to run the following PowerShell commands in adminstrator mode (right-click the 
