@@ -68,21 +68,21 @@ returns a `PrintStream` which can be safely used for logging.
         // callback to make a move in the game
         @Override
         public void onTurn(GameIO io, GameState move) {
-            // try to place as many of four filters as possible
+            // try to place as many of four walls as possible
             List<Coords> wallLocations = List.of(new Coords(12, 5), new Coords(13, 5),
                     new Coords(14, 5), new Coords(15, 5));
-            int wallsPlaced = move.attemptSpawnMultiple(wallLocations, UnitType.Filter);
+            int wallsPlaced = move.attemptSpawnMultiple(wallLocations, UnitType.Wall);
             io.debug().println("Placed " + wallsPlaced + " walls");
     
-            // try to atomically place four pings in two locations
+            // try to atomically place four scouts in two locations
             if (
-                    move.canSpawn(new Coords(6, 7), UnitType.Ping, 2).affirmative() &&
-                            move.canSpawn(new Coords(21, 7), UnitType.Ping, 2).affirmative()
+                    move.canSpawn(new Coords(6, 7), UnitType.Scout, 2).affirmative() &&
+                            move.canSpawn(new Coords(21, 7), UnitType.Scout, 2).affirmative()
             ) {
                 try {
                     for (int i = 0; i < 2; i++) {
-                        move.spawn(new Coords(6, 7), UnitType.Ping);
-                        move.spawn(new Coords(21, 7), UnitType.Ping);
+                        move.spawn(new Coords(6, 7), UnitType.Scout);
+                        move.spawn(new Coords(21, 7), UnitType.Scout);
                     }
                 } catch (CannotSpawnException e) {
                     // debug on failure
@@ -91,9 +91,9 @@ returns a `PrintStream` which can be safely used for logging.
                 }
             }
     
-            // if our cores are low, try to delete a firewall
-            if (move.data.p1Stats.cores < 5 && move.canRemoveFirewall(new Coords(5, 5)).affirmative()) {
-                move.removeFirewall(new Coords(5, 5));
+            // if our cores are low, try to delete a Structure
+            if (move.data.p1Stats.cores < 5 && move.canRemoveStructure(new Coords(5, 5)).affirmative()) {
+                move.removeStructure(new Coords(5, 5));
             }
     
             // print the path that an enemy unit would take if spawned at a particular location
@@ -115,7 +115,7 @@ the four integer edge direction constants, `EDGE_TOP_LEFT`, `EDGE_BOTTOM_RIGHT`,
 ### Path Finding
 
 The `GameState` method `pathfind(Coords start, int targetEdge)` returns the path that a particular 
-info unit will take through the current configuration of the board, where `targetEdge` is one 
+mobile unit will take through the current configuration of the board, where `targetEdge` is one 
 direction constant from `MapBounds`. This is guaranteed to produce accurate results, but is intentionally 
 left less than maximally optimized.
 

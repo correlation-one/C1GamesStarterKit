@@ -9,6 +9,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.InvalidPropertiesFormatException;
 import java.util.List;
+import java.util.OptionalDouble;
 
 /**
  * An object derived from frame data which can be used to compose a move, before eventually sending it into the GameIO object.
@@ -19,8 +20,8 @@ import java.util.List;
  * This object keeps a buffer of unit placements, which will be serialized and sent to the game engine upon making of the move.
  */
 public class GameState {
-    public static final int TowerUnitCategory = 0; // tower units
-    public static final int WalkerUnitCategory = 1; // info units
+    public static final int TowerUnitCategory = 0; // structures
+    public static final int WalkerUnitCategory = 1; // mobile units
     public final Config config;
     public final FrameData data;
 
@@ -55,15 +56,15 @@ public class GameState {
             else
                 throw new RuntimeException("unreachable");
 
-            // fill in the info units
-            for (UnitType type : List.of(UnitType.Ping, UnitType.EMP, UnitType.Scrambler)) {
+            // fill in the mobile units
+            for (UnitType type : List.of(UnitType.Scout, UnitType.Demolisher, UnitType.Interceptor)) {
                 List<FrameData.PlayerUnit> list;
-                if (type == UnitType.Ping)
-                    list = units.ping;
-                else if (type == UnitType.EMP)
-                    list = units.emp;
-                else if (type == UnitType.Scrambler)
-                    list = units.scrambler;
+                if (type == UnitType.Scout)
+                    list = units.scout;
+                else if (type == UnitType.Demolisher)
+                    list = units.demolisher;
+                else if (type == UnitType.Interceptor)
+                    list = units.interceptor;
                 else
                     throw new RuntimeException("unreachable");
 
@@ -72,15 +73,15 @@ public class GameState {
                 }
             }
 
-            // fill in the wall units
-            for (UnitType type : List.of(UnitType.Filter, UnitType.Encryptor, UnitType.Destructor)) {
+            // fill in the structures
+            for (UnitType type : List.of(UnitType.Wall, UnitType.Support, UnitType.Turret)) {
                 List<FrameData.PlayerUnit> list;
-                if (type == UnitType.Filter)
-                    list = units.filter;
-                else if (type == UnitType.Encryptor)
-                    list = units.encryptor;
-                else if (type == UnitType.Destructor)
-                    list = units.destructor;
+                if (type == UnitType.Wall)
+                    list = units.wall;
+                else if (type == UnitType.Support)
+                    list = units.support;
+                else if (type == UnitType.Turret)
+                    list = units.turret;
                 else
                     throw new RuntimeException("unreachable");
 
@@ -120,7 +121,7 @@ public class GameState {
         return ret;
     }
 
-    public boolean isFirewall(UnitType type) {
+    public boolean isStructure(UnitType type) {
         return config.unitInformation.get(type.ordinal()).unitCategory.orElse(-1) == TowerUnitCategory;
     }
 
@@ -128,7 +129,7 @@ public class GameState {
         return config.unitInformation.get(type.ordinal()).unitCategory.orElse(-1) == WalkerUnitCategory;
     }
 
-    public boolean isFirewall(int category) {
+    public boolean isStructure(int category) {
         return category == TowerUnitCategory;
     }
 
@@ -160,7 +161,8 @@ public class GameState {
     /**
      * Nullable.
      *
-     * Only checks whether there is a remove unit at that particular location, denoting whether we have removed a firewall at that unit.
+     * Only checks whether there is a remove unit at that particular location, 
+     * denoting whether we have removed a structure at that unit.
      * Does not actually remove the unit.
      */
     public boolean getRemoveAt(Coords coords) {
@@ -181,7 +183,7 @@ public class GameState {
             return CanSpawn.UnitAlreadyPresent;
         if (type == UnitType.Upgrade && numberAffordable(getWallAt(coords).type, true) < quantity)
             return CanSpawn.NotEnoughResources;
-        if (isFirewall(type) && !getInfoAt(coords).isEmpty())
+        if (isStructure(type) && !getInfoAt(coords).isEmpty())
             return CanSpawn.UnitAlreadyPresent;
         if (coords.y >= MapBounds.BOARD_SIZE / 2)
             return CanSpawn.WrongSideOfMap;
@@ -203,7 +205,7 @@ public class GameState {
      */
     public void spawn(Coords coords, UnitType type) throws CannotSpawnException {
         if (type == UnitType.Remove) {
-            throw new IllegalArgumentException("Cannot spawn removal use attemptRemoveFirewall function instead");
+            throw new IllegalArgumentException("Cannot spawn removal use attemptRemoveStructure function instead");
         }
         if (type == UnitType.Upgrade) {
             throw new IllegalArgumentException("Cannot spawn upgrade use attemptUpgrade function instead");
@@ -220,14 +222,15 @@ public class GameState {
         data.p1Stats.cores -= cost[0];
 
         // add the unit to the data
-        Unit unit = new Unit(type, 1, "spawned", PlayerId.Player1, config);
+        float[] unitHealth = new float[1];
+        unitHealth[0] = 1;
+        config.unitInformation.get(type.ordinal()).startHealth.ifPresent(s -> unitHealth[0] = (float)s);
+        Unit unit = new Unit(type, unitHealth[0], "spawned", PlayerId.Player1, config);
         allUnits[coords.x][coords.y].add(unit);
-
-
 
         // add it to the stack of spawn commands to send in
         SpawnCommand command = new SpawnCommand(type, coords.x, coords.y);
-        if (isFirewall(type))
+        if (isStructure(type))
             buildStack.add(command);
         else
             deployStack.add(command);
@@ -260,9 +263,9 @@ public class GameState {
     }
 
     /**
-     * Result of whether a firewall can be removed at a location.
+     * Result of whether a structure can be removed at a location.
      */
-    public CanRemove canRemoveFirewall(Coords coords) {
+    public CanRemove canRemoveStructure(Coords coords) {
         if (!MapBounds.ARENA[coords.x][coords.y])
             return CanRemove.OutOfBounds;
         if (coords.y >= MapBounds.BOARD_SIZE / 2)
@@ -273,16 +276,16 @@ public class GameState {
     }
 
     /**
-     * Attempt to remove an existing firewall that we own, or throw an exception if unable.
+     * Attempt to remove an existing structure that we own, or throw an exception if unable.
      *
      * This will alter the data within GameState and FrameData as if this operation proceeded (unless an exception is thrown) so that further
      * operations can be applied correctly.
      *
      * This should be paired with @code canRemove to avoid the exception.
      */
-    public void removeFirewall(Coords coords) throws CannotRemoveException {
+    public void removeStructure(Coords coords) throws CannotRemoveException {
         // check the ability to remove
-        CanRemove canRemove = canRemoveFirewall(coords);
+        CanRemove canRemove = canRemoveStructure(coords);
         if (!canRemove.affirmative())
             throw new CannotRemoveException(canRemove);
 
@@ -292,26 +295,26 @@ public class GameState {
         buildStack.add(new SpawnCommand(UnitType.Remove, coords.x, coords.y));
     }
 
-    public int attemptRemoveFirewall(Coords coords) {
+    public int attemptRemoveStructure(Coords coords) {
         int successful = 0;
-        if (canRemoveFirewall(coords).affirmative()) {
-            removeFirewall(coords);
+        if (canRemoveStructure(coords).affirmative()) {
+            removeStructure(coords);
             successful++;
         }
         return successful;
     }
 
-    public int attemptRemoveFirewallMultiple(List<Coords> coords) {
+    public int attemptRemoveStructureMultiple(List<Coords> coords) {
         int successful = 0;
         for (Coords c : coords) {
-            successful += attemptRemoveFirewall(c);
+            successful += attemptRemoveStructure(c);
         }
         return successful;
     }
 
     public int attemptUpgrade(Coords coords) {
         int successful = 0;
-        if (canSpawn(coords, UnitType.Upgrade, 1).affirmative() && numberAffordable(getWallAt(coords).type, true) >= 1) {
+        if (canSpawn(coords, UnitType.Upgrade, 1).affirmative()) {
             placeUpgrade(coords);
             successful++;
         }
@@ -350,7 +353,7 @@ public class GameState {
      */
     public int numberAffordable(UnitType type, boolean upgrade) {
         if (type == UnitType.Remove) {
-            throw new IllegalArgumentException("Cannot query number affordable of remove unit type use removeFirewall");
+            throw new IllegalArgumentException("Cannot query number affordable of remove unit type use removeStructure");
         }
         if (type == UnitType.Upgrade) {
             throw new IllegalArgumentException("Cannot query number affordable of upgrades this way, put type of unit to upgrade and upgrade=true");
@@ -393,7 +396,8 @@ public class GameState {
     }
 
     /**
-     * Use the code within the pathfinding package to compute the path that an info unit would take if placed on a particular coordinate,
+     * Use the code within the pathfinding package to compute the path that a mobile unit
+     * would take if placed on a particular coordinate,
      * assuming that the layout of the walls do not change.
      *
      * Throws an IllegalPathStartExceptions if a unit could not be placed in that location.s

@@ -72,26 +72,26 @@ public class FrameData {
         }
     }
     public static final class PlayerUnits {
-        public PlayerUnitList filter;
-        public PlayerUnitList encryptor;
-        public PlayerUnitList destructor;
-        public PlayerUnitList ping;
-        public PlayerUnitList emp;
-        public PlayerUnitList scrambler;
+        public PlayerUnitList wall;
+        public PlayerUnitList support;
+        public PlayerUnitList turret;
+        public PlayerUnitList scout;
+        public PlayerUnitList demolisher;
+        public PlayerUnitList interceptor;
         public PlayerUnitList remove;
         public PlayerUnitList upgrade;
 
         @Override
         public String toString() {
             return "PlayerUnits{" +
-                    "filter=" + filter +
-                    ", encryptor=" + encryptor +
-                    ", destructor=" + destructor +
-                    ", ping=" + ping +
-                    ", emp=" + emp +
-                    ", scrambler=" + scrambler +
+                    "wall=" + wall +
+                    ", support=" + support +
+                    ", turret=" + turret +
+                    ", scout=" + scout +
+                    ", demolisher=" + demolisher +
+                    ", interceptor=" + interceptor +
                     ", remove=" + remove +
-                    ", remove=" + upgrade +
+                    ", upgrade=" + upgrade +
                     '}';
         }
     }
@@ -290,24 +290,24 @@ public class FrameData {
         }
         public List<SelfDestructEvent> selfDestruct;
         public static final class ShieldEvent {
-            public Coords encryptorCoords;
+            public Coords supportCoords;
             public Coords infoCoords;
             public float shieldAmount;
-            public UnitType encryptorType;
-            public String encryptorUnitId;
+            public UnitType supportType;
+            public String supportUnitId;
             public String infoUnitId;
-            public PlayerId encryptorOwner;
+            public PlayerId supportOwner;
 
             @Override
             public String toString() {
                 return "ShieldEvent{" +
-                        "encryptorCoords=" + encryptorCoords +
+                        "supportCoords=" + supportCoords +
                         ", infoCoords=" + infoCoords +
                         ", shieldAmount=" + shieldAmount +
-                        ", encryptorType=" + encryptorType +
-                        ", encryptorUnitId='" + encryptorUnitId + '\'' +
+                        ", supportType=" + supportType +
+                        ", supportUnitId='" + supportUnitId + '\'' +
                         ", infoUnitId='" + infoUnitId + '\'' +
-                        ", encryptorOwner=" + encryptorOwner +
+                        ", supportOwner=" + supportOwner +
                         '}';
             }
         }

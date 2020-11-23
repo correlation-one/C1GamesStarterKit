@@ -18,12 +18,12 @@ public class StarterAlgo implements GameLoop {
         new GameLoopDriver(new StarterAlgo()).run();
     }
 
-    private static final Coords[] filterProtectDestructors = {
+    private static final Coords[] wallProtectTurrets = {
             new Coords(8, 12),
             new Coords(19, 12)
     };
 
-    private static final Coords[] defensiveDestructorLocations = {
+    private static final Coords[] defensiveTurretLocations = {
             new Coords(0, 13),
             new Coords(27, 13),
             new Coords(8, 11),
@@ -32,7 +32,7 @@ public class StarterAlgo implements GameLoop {
             new Coords(14, 11)
     };
 
-    private static final Coords[] encryptorLocations = {
+    private static final Coords[] supportLocations = {
             new Coords(13, 2),
             new Coords(14, 2),
             new Coords(13, 3),
@@ -62,24 +62,24 @@ public class StarterAlgo implements GameLoop {
         buildReactiveDefenses(move);
 
         if (move.data.turnInfo.turnNumber < 5) {
-            deployRandomScramblers(move);
+            deployRandomInterceptors(move);
         } else {
-            // If they have a lot of units in the first two of their rows, we can use the long range EMP to deal damage to them
+            // If they have a lot of units in the first two of their rows, we can use the long range Demolisher to deal damage to them
             if (detectEnemyUnits(move,null, List.of(14,15), null) > 10) {
-                empLineStrategy(move);
+                demolisherLineStrategy(move);
             }
-            // Otherwise lets go with a ping rush strategy where we send a ton of fast scoring units.
+            // Otherwise lets go with a scout rush strategy where we send a ton of fast scoring units.
             else {
-                // We only send pings every other turn because its better to save up for a big attack.
+                // We only send scouts every other turn because its better to save up for a big attack.
                 if (move.data.turnInfo.turnNumber % 2 == 1) {
                     // Lets dynamically choose which side to attack based on the expected path the units will take
                     Coords bestLoc = leastDamageSpawnLocation(move, List.of(new Coords(13, 0), new Coords(14, 0)));
                     for (int i = 0; i < 100; i++) {
-                        move.attemptSpawn(bestLoc,UnitType.Ping);
+                        move.attemptSpawn(bestLoc,UnitType.Scout);
                     }
                 }
-                // Lastly, lets build Encryptors to boost our pings health if we have spare cores
-                move.attemptSpawnMultiple(Arrays.asList(encryptorLocations),UnitType.Encryptor);
+                // Lastly, lets build Supports
+                move.attemptSpawnMultiple(Arrays.asList(supportLocations),UnitType.Support);
             }
         }
     }
@@ -97,23 +97,14 @@ public class StarterAlgo implements GameLoop {
         }
     }
 
-    /**
-     * Once the C1 logo is made, attempt to build some defenses.
-     */
+    // Once the C1 logo is made, attempt to build some defenses.
     private void buildDefenses(GameState move) {
-        /*
-        First lets protect ourselves a little with destructors.
-         */
-        move.attemptSpawnMultiple(Arrays.asList(defensiveDestructorLocations), UnitType.Destructor);
-
-        /*
-        Lets protect our destructors with some filters.
-         */
-        move.attemptSpawnMultiple(Arrays.asList(filterProtectDestructors), UnitType.Filter);
-        /*
-        Lastly, lets upgrade those important filters that protect our destructors.
-         */
-        move.attemptUpgradeMultiple(Arrays.asList(filterProtectDestructors));
+        // First lets protect ourselves a little with turrets.
+        move.attemptSpawnMultiple(Arrays.asList(defensiveTurretLocations), UnitType.Turret);
+        // Lets protect our turrets with some walls.
+        move.attemptSpawnMultiple(Arrays.asList(wallProtectTurrets), UnitType.Wall);
+        // Lastly, lets upgrade those important walls that protect our turrets.
+        move.attemptUpgradeMultiple(Arrays.asList(wallProtectTurrets));
     }
 
     /**
@@ -122,36 +113,36 @@ public class StarterAlgo implements GameLoop {
     private void buildReactiveDefenses(GameState move) {
         for (Coords loc : scoredOnLocations) {
             // Build 1 space above the breach location so that it doesn't block our spawn locations
-            move.attemptSpawn(new Coords(loc.x, loc.y +1), UnitType.Destructor);
+            move.attemptSpawn(new Coords(loc.x, loc.y +1), UnitType.Turret);
         }
     }
 
     /**
      * Deploy offensive units.
      */
-    private void deployRandomScramblers(GameState move) {
+    private void deployRandomInterceptors(GameState move) {
         /*
-        Lets send out Scramblers to help destroy enemy information units.
+        Lets send out Interceptors to help destroy enemy mobile units.
         A complex algo would predict where the enemy is going to send units and
         develop its strategy around that. But this algo is simple so lets just
-        send out scramblers in random locations and hope for the best.
+        send out interceptors in random locations and hope for the best.
 
-        Firstly information units can only deploy on our edges. So lets get a
-        list of those locations.
+        Mobile units can only deploy on our edges. 
+        So lets get a list of those locations.
          */
         List<Coords> friendlyEdges = new ArrayList<>();
         friendlyEdges.addAll(Arrays.asList(MapBounds.EDGE_LISTS[MapBounds.EDGE_BOTTOM_LEFT]));
         friendlyEdges.addAll(Arrays.asList(MapBounds.EDGE_LISTS[MapBounds.EDGE_BOTTOM_RIGHT]));
 
         /*
-        While we have remaining bits to spend lets send out scramblers randomly.
+        While we have remaining bits to spend lets send out interceptors randomly.
         */
-        while (move.numberAffordable(UnitType.Scrambler) >= 1) {
+        while (move.numberAffordable(UnitType.Interceptor) >= 1) {
             Coords c = friendlyEdges.get(rand.nextInt(friendlyEdges.size()));
-            move.attemptSpawn(c, UnitType.Scrambler);
+            move.attemptSpawn(c, UnitType.Interceptor);
             /*
-            We don't have to remove the location since multiple information
-            units can occupy the same space. Note however, if all edge locations are blocked this will infinite loop!
+            We don't have to remove the location since multiple mobile units can occupy the same space. 
+            Note that if all edge locations are blocked this will infinite loop!
              */
         }
     }
@@ -237,14 +228,14 @@ public class StarterAlgo implements GameLoop {
         return count;
     }
 
-    private void empLineStrategy(GameState move) {
+    private void demolisherLineStrategy(GameState move) {
         /*
-        First lets fine the cheapest type of firewall stationary unit. We could hardcode this to FILTER probably
-        depending on the config but lets demonstrate how to use java-algo features.
+        First lets find the cheapest structure. We could hardcode this to "Wall",
+        but lets demonstrate how to use java-algo features.
          */
         Config.UnitInformation cheapestUnit = null;
         for (Config.UnitInformation uinfo : move.config.unitInformation) {
-            if (uinfo.unitCategory.isPresent() && move.isFirewall(uinfo.unitCategory.getAsInt())) {
+            if (uinfo.unitCategory.isPresent() && move.isStructure(uinfo.unitCategory.getAsInt())) {
                 float[] costUnit = uinfo.cost();
                 if((cheapestUnit == null || costUnit[0] + costUnit[1] <= cheapestUnit.cost()[0] + cheapestUnit.cost()[1])) {
                     cheapestUnit = uinfo;
@@ -252,7 +243,7 @@ public class StarterAlgo implements GameLoop {
             }
         }
         if (cheapestUnit == null) {
-            GameIO.debug().println("There are no firewalls?");
+            GameIO.debug().println("There are no structures?");
         }
 
         for (int x = 27; x>=5; x--) {
@@ -260,7 +251,7 @@ public class StarterAlgo implements GameLoop {
         }
 
         for (int i = 0; i<22; i++) {
-            move.attemptSpawn(new Coords(24, 10), UnitType.EMP);
+            move.attemptSpawn(new Coords(24, 10), UnitType.Demolisher);
         }
     }
 
