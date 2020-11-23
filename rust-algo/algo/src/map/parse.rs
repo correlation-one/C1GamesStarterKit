@@ -7,13 +7,13 @@ pub fn parse_frame(
     atlas: Arc<UnitTypeAtlas>,
 ) -> Result<MapState, MapParseError> {
 // create the grids
-    let mut walls: Grid<Option<Unit<FirewallUnitType>>> =
+    let mut walls: Grid<Option<Unit<StructureUnitType>>> =
         Grid::from_generator(|_| None);
     let mut remove: Grid<Option<Unit<RemoveUnitType>>> =
         Grid::from_generator(|_| None);
     let mut upgrade: Grid<Option<Unit<UpgradeUnitType>>> =
         Grid::from_generator(|_| None);
-    let mut info: Grid<Vec<Unit<InfoUnitType>>> =
+    let mut mobile: Grid<Vec<Unit<MobileUnitType>>> =
         Grid::from_generator(|_| Vec::new());
 
     // for each player
@@ -23,15 +23,15 @@ pub fn parse_frame(
             PlayerId::Player2 => &frame.p2_units,
         };
 
-        // fill in the info units
-        for unit_type in InfoUnitType::into_enum_iter() {
+        // fill in the mobile units
+        for unit_type in MobileUnitType::into_enum_iter() {
             let unit_data_vec: &[frame::PlayerUnit] = match unit_type {
-                InfoUnitType::Ping => &units.ping,
-                InfoUnitType::Emp => &units.emp,
-                InfoUnitType::Scrambler => &units.scrambler,
+                MobileUnitType::Scout => &units.scout,
+                MobileUnitType::Demolisher => &units.Demolisher,
+                MobileUnitType::Interceptor => &units.interceptor,
             };
             for unit_data in unit_data_vec {
-                info.get_mut(unit_data.coords)
+                mobile.get_mut(unit_data.coords)
                     .ok_or(MapParseError::UnitInIllegalPosition(unit_data.coords))?
                     .push(Unit {
                         unit_type,
@@ -43,14 +43,14 @@ pub fn parse_frame(
         }
 
         // fill in the wall units
-        for unit_type in FirewallUnitType::into_enum_iter() {
+        for unit_type in StructureUnitType::into_enum_iter() {
             let unit_data_vec: &[frame::PlayerUnit] = match unit_type {
-                FirewallUnitType::Filter => &units.filter,
-                FirewallUnitType::Encryptor => &units.encryptor,
-                FirewallUnitType::Destructor => &units.destructor,
+                StructureUnitType::Wall => &units.wall,
+                StructureUnitType::Support => &units.support,
+                StructureUnitType::Turret => &units.turret,
             };
             for unit_data in unit_data_vec {
-                let slot: &mut Option<Unit<FirewallUnitType>> = walls.get_mut(unit_data.coords)
+                let slot: &mut Option<Unit<StructureUnitType>> = walls.get_mut(unit_data.coords)
                     .ok_or(MapParseError::UnitInIllegalPosition(unit_data.coords))?;
                 if slot.is_some() {
                     return Err(MapParseError::MultipleWallsSamePosition(unit_data.coords));
@@ -103,7 +103,7 @@ pub fn parse_frame(
 
         walls,
         remove,
-        info,
+        mobile,
         upgrade,
 
         atlas,

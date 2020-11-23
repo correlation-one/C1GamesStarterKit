@@ -88,23 +88,23 @@ deser_as!(PlayerUnit);
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct PlayerUnits {
-    pub filter: Vec<PlayerUnit>,
-    pub encryptor: Vec<PlayerUnit>,
-    pub destructor: Vec<PlayerUnit>,
-    pub ping: Vec<PlayerUnit>,
-    pub emp: Vec<PlayerUnit>,
-    pub scrambler: Vec<PlayerUnit>,
+    pub wall: Vec<PlayerUnit>,
+    pub support: Vec<PlayerUnit>,
+    pub turret: Vec<PlayerUnit>,
+    pub scout: Vec<PlayerUnit>,
+    pub demolisher: Vec<PlayerUnit>,
+    pub interceptor: Vec<PlayerUnit>,
     pub remove: Vec<PlayerUnit>,
     pub upgrade: Vec<PlayerUnit>,
 }
 
 deser_as_tuple!(PlayerUnits, (
-    filter: Vec<PlayerUnit>,
-    encryptor: Vec<PlayerUnit>,
-    destructor: Vec<PlayerUnit>,
-    ping: Vec<PlayerUnit>,
-    emp: Vec<PlayerUnit>,
-    scrambler: Vec<PlayerUnit>,
+    wall: Vec<PlayerUnit>,
+    support: Vec<PlayerUnit>,
+    turret: Vec<PlayerUnit>,
+    scout: Vec<PlayerUnit>,
+    demolisher: Vec<PlayerUnit>,
+    interceptor: Vec<PlayerUnit>,
     remove: Vec<PlayerUnit>,
     upgrade: Vec<PlayerUnit>,
 ));
@@ -303,23 +303,23 @@ deser_as_tuple!(SelfDestructEvent, (
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct ShieldEvent {
-    pub encryptor_coords: Coords,
-    pub info_coords: Coords,
+    pub support_coords: Coords,
+    pub mobile_coords: Coords,
     pub shield_amount: f32,
-    pub encryptor_type: u8,
-    pub encryptor_unit_id: String,
-    pub info_unit_id: String,
-    pub encryptor_owner: PlayerId,
+    pub support_type: u8,
+    pub support_unit_id: String,
+    pub mobile_unit_id: String,
+    pub support_owner: PlayerId,
 }
 
 deser_as_tuple!(ShieldEvent, (
-    encryptor_coords: Coords,
-    info_coords: Coords,
+    support_coords: Coords,
+    mobile_coords: Coords,
     shield_amount: f32,
-    encryptor_type: u8,
-    encryptor_unit_id: String,
-    info_unit_id: String,
-    encryptor_owner: PlayerId,
+    support_type: u8,
+    support_unit_id: String,
+    mobile_unit_id: String,
+    support_owner: PlayerId,
 ));
 
 

@@ -291,22 +291,22 @@ public class FrameData {
         public List<SelfDestructEvent> selfDestruct;
         public static final class ShieldEvent {
             public Coords supportCoords;
-            public Coords infoCoords;
+            public Coords mobileUnitCoords;
             public float shieldAmount;
             public UnitType supportType;
             public String supportUnitId;
-            public String infoUnitId;
+            public String mobileUnitId;
             public PlayerId supportOwner;
 
             @Override
             public String toString() {
                 return "ShieldEvent{" +
                         "supportCoords=" + supportCoords +
-                        ", infoCoords=" + infoCoords +
+                        ", mobileUnitCoords=" + mobileUnitCoords +
                         ", shieldAmount=" + shieldAmount +
                         ", supportType=" + supportType +
                         ", supportUnitId='" + supportUnitId + '\'' +
-                        ", infoUnitId='" + infoUnitId + '\'' +
+                        ", mobileUnitId='" + mobileUnitId + '\'' +
                         ", supportOwner=" + supportOwner +
                         '}';
             }
