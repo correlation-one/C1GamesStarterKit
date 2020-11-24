@@ -15,12 +15,12 @@ public class UnitTypeAtlas {
 
     public UnitTypeAtlas(Config config) {
         byUnitType = new HashMap<>();
-        byUnitType.put(UnitType.Filter, config.unitInformation.get(0).getShorthand());
-        byUnitType.put(UnitType.Encryptor, config.unitInformation.get(1).getShorthand());
-        byUnitType.put(UnitType.Destructor, config.unitInformation.get(2).getShorthand());
-        byUnitType.put(UnitType.Ping, config.unitInformation.get(3).getShorthand());
-        byUnitType.put(UnitType.EMP, config.unitInformation.get(4).getShorthand());
-        byUnitType.put(UnitType.Scrambler, config.unitInformation.get(5).getShorthand());
+        byUnitType.put(UnitType.Wall, config.unitInformation.get(0).getShorthand());
+        byUnitType.put(UnitType.Support, config.unitInformation.get(1).getShorthand());
+        byUnitType.put(UnitType.Turret, config.unitInformation.get(2).getShorthand());
+        byUnitType.put(UnitType.Scout, config.unitInformation.get(3).getShorthand());
+        byUnitType.put(UnitType.Demolisher, config.unitInformation.get(4).getShorthand());
+        byUnitType.put(UnitType.Interceptor, config.unitInformation.get(5).getShorthand());
         byUnitType.put(UnitType.Remove, config.unitInformation.get(6).getShorthand());
         byUnitType.put(UnitType.Upgrade, config.unitInformation.get(7).getShorthand());
         toUnitType = byUnitType

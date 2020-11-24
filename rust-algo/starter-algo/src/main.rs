@@ -10,7 +10,7 @@ fn main() {
     run_game_loop(StarterAlgo);
 }
 
-const FIREWALL_LOCATIONS_C: &[Coords] = &[
+const STRUCTURE_LOCATIONS_C: &[Coords] = &[
    xy!(8, 11),
    xy!(9, 11),
    xy!(7, 10),
@@ -20,7 +20,7 @@ const FIREWALL_LOCATIONS_C: &[Coords] = &[
    xy!(9, 7),
 ];
 
-const FIREWALL_LOCATIONS_1: &[Coords] = &[
+const STRUCTURE_LOCATIONS_1: &[Coords] = &[
    xy!(17, 11),
    xy!(18, 11),
    xy!(18, 10),
@@ -31,18 +31,18 @@ const FIREWALL_LOCATIONS_1: &[Coords] = &[
    xy!(19, 7),
 ];
 
-const FIREWALL_LOCATIONS_DOTS: &[Coords] = &[
+const STRUCTURE_LOCATIONS_DOTS: &[Coords] = &[
    xy!(11, 7),
    xy!(13, 9),
    xy!(15, 11),
 ];
 
-const DEFENSIVE_DESTRUCTOR_LOCATIONS: &[Coords] = &[
+const DEFENSIVE_TURRET_LOCATIONS: &[Coords] = &[
    xy!(0, 13),
    xy!(27, 13),
 ];
 
-const DEFENSIVE_ENCRYPTOR_LOCATIONS: &[Coords] = &[
+const DEFENSIVE_SUPPORT_LOCATIONS: &[Coords] = &[
    xy!(3, 11),
    xy!(4, 11),
    xy!(5, 11),
@@ -67,43 +67,41 @@ impl GameLoop for StarterAlgo {
 
 /// Make the C1 logo.
 fn build_c1_logo(map: &MapState) {
-    for &coord in FIREWALL_LOCATIONS_C {
-        map[coord].try_spawn(FirewallUnitType::Filter);
+    for &coord in STRUCTURE_LOCATIONS_C {
+        map[coord].try_spawn(StructureUnitType::Wall);
     }
-    for &coord in FIREWALL_LOCATIONS_1 {
-        map[coord].try_spawn(FirewallUnitType::Filter);
+    for &coord in STRUCTURE_LOCATIONS_1 {
+        map[coord].try_spawn(StructureUnitType::Wall);
     }
-    for &coord in FIREWALL_LOCATIONS_1 {
+    for &coord in STRUCTURE_LOCATIONS_1 {
         map[coord].try_upgrade();
     }
-    for &coord in FIREWALL_LOCATIONS_DOTS {
-        map[coord].try_spawn(FirewallUnitType::Destructor);
+    for &coord in STRUCTURE_LOCATIONS_DOTS {
+        map[coord].try_spawn(StructureUnitType::Turret);
     }
 }
 
 /// Once the C1 logo is made, attempt to build some defenses.
 fn build_defenses(map: &MapState) {
     /*
-    First lets protect ourselves a little with destructors.
+    First lets protect ourselves a little with turrets.
      */
-    for &c in DEFENSIVE_DESTRUCTOR_LOCATIONS {
-        map[c].try_spawn(FirewallUnitType::Destructor);
+    for &c in DEFENSIVE_TURRET_LOCATIONS {
+        map[c].try_spawn(StructureUnitType::Turret);
     }
 
     /*
-    Then lets boost our offense by building some encryptors to shield
-    our information units. Lets put them near the front because the
-    shields decay over time, so shields closer to the action
-    are more effective.
+    Then lets boost our offense by building some supports to shield
+    our mobile units.
      */
-    for &c in DEFENSIVE_ENCRYPTOR_LOCATIONS {
-        map[c].try_spawn(FirewallUnitType::Encryptor);
+    for &c in DEFENSIVE_SUPPORT_LOCATIONS {
+        map[c].try_spawn(StructureUnitType::Support);
     }
 
     /*
-    Lastly lets build encryptors in random locations. Normally building
-    randomly is a bad idea but we'll leave it to you to figure out better
-    strategies.
+    Lastly lets build supports in random locations. 
+    Building randomly is not effective, but we'll leave 
+    it to you to figure out better strategies.
 
     First we get all locations on the bottom half of the map
     that are in the arena bounds.
@@ -113,18 +111,18 @@ fn build_defenses(map: &MapState) {
         for y in 0..BOARD_SIZE {
             let coords = Coords::from([x, y]);
             if let Some(tile) = map[coords].if_valid() {
-                if tile.can_spawn(FirewallUnitType::Encryptor, 1).yes() {
+                if tile.can_spawn(StructureUnitType::Support, 1).yes() {
                     possible_spawn_points.push(coords);
                 }
             }
         }
     }
     thread_rng().shuffle(&mut possible_spawn_points);
-    while map.number_affordable(FirewallUnitType::Encryptor) > 0 &&
+    while map.number_affordable(StructureUnitType::Support) > 0 &&
         possible_spawn_points.len() > 0
     {
         let coords = possible_spawn_points.pop().unwrap();
-        map[coords].try_spawn(FirewallUnitType::Encryptor);
+        map[coords].try_spawn(StructureUnitType::Support);
     }
 }
 
@@ -140,29 +138,29 @@ fn deploy_attackers(map: &MapState) {
     }
 
     /*
-    Then lets deploy an EMP long range unit to destroy firewalls for us.
+    Then lets deploy an Demolisher long range unit to destroy structures for us.
      */
-    map[xy(3, 10)].try_spawn(InfoUnitType::Emp);
+    map[xy(3, 10)].try_spawn(MobileUnitType::Demolisher);
 
     /*
-    Now lets send out 3 Pings to hopefully score, we can spawn multiple
-    information units in the same location.
+    Now lets send out 3 Scouts to hopefully score, we can spawn multiple
+    mobile units in the same location.
     */
     for _ in 0..3 {
-        map[xy(14, 0)].try_spawn(InfoUnitType::Ping);
+        map[xy(14, 0)].try_spawn(MobileUnitType::Scout);
     }
 
     /*
-    NOTE: the locations we used above to spawn information units may become
-    blocked by our own firewalls. We'll leave it to you to fix that issue
+    NOTE: the locations we used above to spawn mobile units may become
+    blocked by our own structures. We'll leave it to you to fix that issue
     yourselves.
 
-    Lastly lets send out Scramblers to help destroy enemy information units.
+    Lastly lets send out Interceptors to help destroy enemy mobile units.
     A complex algo would predict where the enemy is going to send units and
     develop its strategy around that. But this algo is simple so lets just
-    send out scramblers in random locations and hope for the best.
+    send out interceptors in random locations and hope for the best.
 
-    Firstly information units can only deploy on our edges. So lets get a
+    Firstly mobile units can only deploy on our edges. So lets get a
     list of those locations.
      */
     let mut friendly_edges = Vec::new();
@@ -170,10 +168,10 @@ fn deploy_attackers(map: &MapState) {
     friendly_edges.extend(MAP_BOUNDS.coords_on_edge(MapEdge::BottomRight).iter().cloned());
 
     /*
-    While we have remaining bits to spend lets send out scramblers randomly.
+    While we have remaining bits to spend lets send out interceptors randomly.
     */
-    while map.number_affordable(InfoUnitType::Scrambler) >= 1 {
+    while map.number_affordable(MobileUnitType::Interceptors) >= 1 {
         let coords = friendly_edges[thread_rng().gen::<usize>() % friendly_edges.len()];
-        map[coords].try_spawn(InfoUnitType::Scrambler);
+        map[coords].try_spawn(MobileUnitType::Interceptors);
     }
 }

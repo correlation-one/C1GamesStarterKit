@@ -106,9 +106,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/Config.UnitInformation.html#attackRange">attackRange</a></span> - Variable in class com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/Config.UnitInformation.html" title="class in com.c1games.terminal.algo">Config.UnitInformation</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/map/GameState.html#attemptRemoveFirewall(com.c1games.terminal.algo.Coords)">attemptRemoveFirewall(Coords)</a></span> - Method in class com.c1games.terminal.algo.map.<a href="com/c1games/terminal/algo/map/GameState.html" title="class in com.c1games.terminal.algo.map">GameState</a></dt>
+<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/map/GameState.html#attemptRemoveStructure(com.c1games.terminal.algo.Coords)">attemptRemoveStructure(Coords)</a></span> - Method in class com.c1games.terminal.algo.map.<a href="com/c1games/terminal/algo/map/GameState.html" title="class in com.c1games.terminal.algo.map">GameState</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/map/GameState.html#attemptRemoveFirewallMultiple(java.util.List)">attemptRemoveFirewallMultiple(List&lt;Coords&gt;)</a></span> - Method in class com.c1games.terminal.algo.map.<a href="com/c1games/terminal/algo/map/GameState.html" title="class in com.c1games.terminal.algo.map">GameState</a></dt>
+<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/map/GameState.html#attemptRemoveStructureMultiple(java.util.List)">attemptRemoveStructureMultiple(List&lt;Coords&gt;)</a></span> - Method in class com.c1games.terminal.algo.map.<a href="com/c1games/terminal/algo/map/GameState.html" title="class in com.c1games.terminal.algo.map">GameState</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/map/GameState.html#attemptSpawn(com.c1games.terminal.algo.Coords,com.c1games.terminal.algo.units.UnitType)">attemptSpawn(Coords, UnitType)</a></span> - Method in class com.c1games.terminal.algo.map.<a href="com/c1games/terminal/algo/map/GameState.html" title="class in com.c1games.terminal.algo.map">GameState</a></dt>
 <dd>
@@ -174,7 +174,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dl>
 <dt><a href="com/c1games/terminal/algo/map/CannotRemoveException.html" title="class in com.c1games.terminal.algo.map"><span class="typeNameLink">CannotRemoveException</span></a> - Exception in <a href="com/c1games/terminal/algo/map/package-summary.html">com.c1games.terminal.algo.map</a></dt>
 <dd>
-<div class="block">Exception thrown when a move builder is used to attempt to remove a firewall, which cannot be removed.</div>
+<div class="block">Exception thrown when a move builder is used to attempt to remove a structrue, which cannot be removed.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/map/CannotRemoveException.html#%3Cinit%3E(com.c1games.terminal.algo.map.CanRemove)">CannotRemoveException(CanRemove)</a></span> - Constructor for exception com.c1games.terminal.algo.map.<a href="com/c1games/terminal/algo/map/CannotRemoveException.html" title="class in com.c1games.terminal.algo.map">CannotRemoveException</a></dt>
 <dd>&nbsp;</dd>
@@ -186,12 +186,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><a href="com/c1games/terminal/algo/map/CanRemove.html" title="enum in com.c1games.terminal.algo.map"><span class="typeNameLink">CanRemove</span></a> - Enum in <a href="com/c1games/terminal/algo/map/package-summary.html">com.c1games.terminal.algo.map</a></dt>
 <dd>
-<div class="block">The result of querying whether a firewall can be removed at a particular location, denoting either that it can be removed, or the reason
+<div class="block">The result of querying whether a structure can be removed at a particular location, 
+ denoting either that it can be removed, or the reason
  why it cannot.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/map/GameState.html#canRemoveFirewall(com.c1games.terminal.algo.Coords)">canRemoveFirewall(Coords)</a></span> - Method in class com.c1games.terminal.algo.map.<a href="com/c1games/terminal/algo/map/GameState.html" title="class in com.c1games.terminal.algo.map">GameState</a></dt>
+<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/map/GameState.html#canRemoveStructure(com.c1games.terminal.algo.Coords)">canRemoveStructure(Coords)</a></span> - Method in class com.c1games.terminal.algo.map.<a href="com/c1games/terminal/algo/map/GameState.html" title="class in com.c1games.terminal.algo.map">GameState</a></dt>
 <dd>
-<div class="block">Result of whether a firewall can be removed at a location.</div>
+<div class="block">Result of whether a structure can be removed at a location.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/map/GameState.html#canSpawn(com.c1games.terminal.algo.Coords,com.c1games.terminal.algo.units.UnitType,int)">canSpawn(Coords, UnitType, int)</a></span> - Method in class com.c1games.terminal.algo.map.<a href="com/c1games/terminal/algo/map/GameState.html" title="class in com.c1games.terminal.algo.map">GameState</a></dt>
 <dd>
@@ -320,6 +321,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/io/DefaultGameIO.html#%3Cinit%3E()">DefaultGameIO()</a></span> - Constructor for class com.c1games.terminal.algo.io.<a href="com/c1games/terminal/algo/io/DefaultGameIO.html" title="class in com.c1games.terminal.algo.io">DefaultGameIO</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/FrameData.PlayerUnits.html#demolisher">demolisher</a></span> - Variable in class com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/FrameData.PlayerUnits.html" title="class in com.c1games.terminal.algo">FrameData.PlayerUnits</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/units/UnitType.html#Demolisher">Demolisher</a></span> - com.c1games.terminal.algo.units.<a href="com/c1games/terminal/algo/units/UnitType.html" title="enum in com.c1games.terminal.algo.units">UnitType</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/FrameData.TurnInfo.Phase.html#Deploy">Deploy</a></span> - com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/FrameData.TurnInfo.Phase.html" title="enum in com.c1games.terminal.algo">FrameData.TurnInfo.Phase</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/serialization/JsonDeserializeClassFromTuple.html#deserialize(com.google.gson.JsonElement,java.lang.reflect.Type,com.google.gson.JsonDeserializationContext)">deserialize(JsonElement, Type, JsonDeserializationContext)</a></span> - Method in class com.c1games.terminal.algo.serialization.<a href="com/c1games/terminal/algo/serialization/JsonDeserializeClassFromTuple.html" title="class in com.c1games.terminal.algo.serialization">JsonDeserializeClassFromTuple</a></dt>
@@ -339,10 +344,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/Config.Mechanics.html#destroyOwnUnitRefund">destroyOwnUnitRefund</a></span> - Variable in class com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/Config.Mechanics.html" title="class in com.c1games.terminal.algo">Config.Mechanics</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/Config.Mechanics.html#destroyOwnUnitsEnabled">destroyOwnUnitsEnabled</a></span> - Variable in class com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/Config.Mechanics.html" title="class in com.c1games.terminal.algo">Config.Mechanics</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/FrameData.PlayerUnits.html#destructor">destructor</a></span> - Variable in class com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/FrameData.PlayerUnits.html" title="class in com.c1games.terminal.algo">FrameData.PlayerUnits</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/units/UnitType.html#Destructor">Destructor</a></span> - com.c1games.terminal.algo.units.<a href="com/c1games/terminal/algo/units/UnitType.html" title="enum in com.c1games.terminal.algo.units">UnitType</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/Config.UnitInformation.html#display">display</a></span> - Variable in class com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/Config.UnitInformation.html" title="class in com.c1games.terminal.algo">Config.UnitInformation</a></dt>
 <dd>&nbsp;</dd>
@@ -374,22 +375,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/map/MapBounds.html#EDGE_TOP_RIGHT">EDGE_TOP_RIGHT</a></span> - Static variable in class com.c1games.terminal.algo.map.<a href="com/c1games/terminal/algo/map/MapBounds.html" title="class in com.c1games.terminal.algo.map">MapBounds</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/FrameData.PlayerUnits.html#emp">emp</a></span> - Variable in class com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/FrameData.PlayerUnits.html" title="class in com.c1games.terminal.algo">FrameData.PlayerUnits</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/units/UnitType.html#EMP">EMP</a></span> - com.c1games.terminal.algo.units.<a href="com/c1games/terminal/algo/units/UnitType.html" title="enum in com.c1games.terminal.algo.units">UnitType</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/FrameData.PlayerUnits.html#encryptor">encryptor</a></span> - Variable in class com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/FrameData.PlayerUnits.html" title="class in com.c1games.terminal.algo">FrameData.PlayerUnits</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/units/UnitType.html#Encryptor">Encryptor</a></span> - com.c1games.terminal.algo.units.<a href="com/c1games/terminal/algo/units/UnitType.html" title="enum in com.c1games.terminal.algo.units">UnitType</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/FrameData.Events.ShieldEvent.html#encryptorCoords">encryptorCoords</a></span> - Variable in class com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/FrameData.Events.ShieldEvent.html" title="class in com.c1games.terminal.algo">FrameData.Events.ShieldEvent</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/FrameData.Events.ShieldEvent.html#encryptorOwner">encryptorOwner</a></span> - Variable in class com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/FrameData.Events.ShieldEvent.html" title="class in com.c1games.terminal.algo">FrameData.Events.ShieldEvent</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/FrameData.Events.ShieldEvent.html#encryptorType">encryptorType</a></span> - Variable in class com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/FrameData.Events.ShieldEvent.html" title="class in com.c1games.terminal.algo">FrameData.Events.ShieldEvent</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/FrameData.Events.ShieldEvent.html#encryptorUnitId">encryptorUnitId</a></span> - Variable in class com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/FrameData.Events.ShieldEvent.html" title="class in com.c1games.terminal.algo">FrameData.Events.ShieldEvent</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/FrameData.TurnInfo.Phase.html#EndGame">EndGame</a></span> - com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/FrameData.TurnInfo.Phase.html" title="enum in com.c1games.terminal.algo">FrameData.TurnInfo.Phase</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/FrameData.html#endStats">endStats</a></span> - Variable in class com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/FrameData.html" title="class in com.c1games.terminal.algo">FrameData</a></dt>
@@ -412,12 +397,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </a>
 <h2 class="title">F</h2>
 <dl>
-<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/FrameData.PlayerUnits.html#filter">filter</a></span> - Variable in class com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/FrameData.PlayerUnits.html" title="class in com.c1games.terminal.algo">FrameData.PlayerUnits</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/units/UnitType.html#Filter">Filter</a></span> - com.c1games.terminal.algo.units.<a href="com/c1games/terminal/algo/units/UnitType.html" title="enum in com.c1games.terminal.algo.units">UnitType</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/Config.Mechanics.html#firewallBuildTime">firewallBuildTime</a></span> - Variable in class com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/Config.Mechanics.html" title="class in com.c1games.terminal.algo">Config.Mechanics</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/c1games/terminal/algo/FrameData.html" title="class in com.c1games.terminal.algo"><span class="typeNameLink">FrameData</span></a> - Class in <a href="com/c1games/terminal/algo/package-summary.html">com.c1games.terminal.algo</a></dt>
 <dd>
 <div class="block">GSON-based representation of the data received every frame denoting the game state.</div>
@@ -583,17 +562,21 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/FrameData.PlayerStats.html#integrity">integrity</a></span> - Variable in class com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/FrameData.PlayerStats.html" title="class in com.c1games.terminal.algo">FrameData.PlayerStats</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/FrameData.PlayerUnits.html#interceptor">interceptor</a></span> - Variable in class com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/FrameData.PlayerUnits.html" title="class in com.c1games.terminal.algo">FrameData.PlayerUnits</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/units/UnitType.html#Interceptor">Interceptor</a></span> - com.c1games.terminal.algo.units.<a href="com/c1games/terminal/algo/units/UnitType.html" title="enum in com.c1games.terminal.algo.units">UnitType</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/map/MapBounds.html#IS_ON_EDGE">IS_ON_EDGE</a></span> - Static variable in class com.c1games.terminal.algo.map.<a href="com/c1games/terminal/algo/map/MapBounds.html" title="class in com.c1games.terminal.algo.map">MapBounds</a></dt>
 <dd>
 <div class="block">For each direction constant, declared above, a boolean grid denoting whether this cell is on the corresponding edge.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/map/GameState.html#isFirewall(int)">isFirewall(int)</a></span> - Method in class com.c1games.terminal.algo.map.<a href="com/c1games/terminal/algo/map/GameState.html" title="class in com.c1games.terminal.algo.map">GameState</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/map/GameState.html#isFirewall(com.c1games.terminal.algo.units.UnitType)">isFirewall(UnitType)</a></span> - Method in class com.c1games.terminal.algo.map.<a href="com/c1games/terminal/algo/map/GameState.html" title="class in com.c1games.terminal.algo.map">GameState</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/map/GameState.html#isInfo(int)">isInfo(int)</a></span> - Method in class com.c1games.terminal.algo.map.<a href="com/c1games/terminal/algo/map/GameState.html" title="class in com.c1games.terminal.algo.map">GameState</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/map/GameState.html#isInfo(com.c1games.terminal.algo.units.UnitType)">isInfo(UnitType)</a></span> - Method in class com.c1games.terminal.algo.map.<a href="com/c1games/terminal/algo/map/GameState.html" title="class in com.c1games.terminal.algo.map">GameState</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/map/GameState.html#isStructure(int)">isStructure(int)</a></span> - Method in class com.c1games.terminal.algo.map.<a href="com/c1games/terminal/algo/map/GameState.html" title="class in com.c1games.terminal.algo.map">GameState</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/map/GameState.html#isStructure(com.c1games.terminal.algo.units.UnitType)">isStructure(UnitType)</a></span> - Method in class com.c1games.terminal.algo.map.<a href="com/c1games/terminal/algo/map/GameState.html" title="class in com.c1games.terminal.algo.map">GameState</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <a id="I:J">
@@ -761,7 +744,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/map/GameState.html#pathfind(com.c1games.terminal.algo.Coords,int)">pathfind(Coords, int)</a></span> - Method in class com.c1games.terminal.algo.map.<a href="com/c1games/terminal/algo/map/GameState.html" title="class in com.c1games.terminal.algo.map">GameState</a></dt>
 <dd>
-<div class="block">Use the code within the pathfinding package to compute the path that an info unit would take if placed on a particular coordinate,
+<div class="block">Use the code within the pathfinding package to compute the path that a mobile unit
+ would take if placed on a particular coordinate,
  assuming that the layout of the walls do not change.</div>
 </dd>
 <dt><a href="com/c1games/terminal/algo/pathfinding/Pathfinder.html" title="class in com.c1games.terminal.algo.pathfinding"><span class="typeNameLink">Pathfinder</span></a> - Class in <a href="com/c1games/terminal/algo/pathfinding/package-summary.html">com.c1games.terminal.algo.pathfinding</a></dt>
@@ -776,10 +760,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="com/c1games/terminal/pathtest/PathTest.html#%3Cinit%3E()">PathTest()</a></span> - Constructor for class com.c1games.terminal.pathtest.<a href="com/c1games/terminal/pathtest/PathTest.html" title="class in com.c1games.terminal.pathtest">PathTest</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/FrameData.TurnInfo.html#phase">phase</a></span> - Variable in class com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/FrameData.TurnInfo.html" title="class in com.c1games.terminal.algo">FrameData.TurnInfo</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/FrameData.PlayerUnits.html#ping">ping</a></span> - Variable in class com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/FrameData.PlayerUnits.html" title="class in com.c1games.terminal.algo">FrameData.PlayerUnits</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/units/UnitType.html#Ping">Ping</a></span> - com.c1games.terminal.algo.units.<a href="com/c1games/terminal/algo/units/UnitType.html" title="enum in com.c1games.terminal.algo.units">UnitType</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/map/GameState.html#placeUpgrade(com.c1games.terminal.algo.Coords)">placeUpgrade(Coords)</a></span> - Method in class com.c1games.terminal.algo.map.<a href="com/c1games/terminal/algo/map/GameState.html" title="class in com.c1games.terminal.algo.map">GameState</a></dt>
 <dd>&nbsp;</dd>
@@ -843,9 +823,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/units/UnitType.html#Remove">Remove</a></span> - com.c1games.terminal.algo.units.<a href="com/c1games/terminal/algo/units/UnitType.html" title="enum in com.c1games.terminal.algo.units">UnitType</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/map/GameState.html#removeFirewall(com.c1games.terminal.algo.Coords)">removeFirewall(Coords)</a></span> - Method in class com.c1games.terminal.algo.map.<a href="com/c1games/terminal/algo/map/GameState.html" title="class in com.c1games.terminal.algo.map">GameState</a></dt>
+<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/map/GameState.html#removeStructure(com.c1games.terminal.algo.Coords)">removeStructure(Coords)</a></span> - Method in class com.c1games.terminal.algo.map.<a href="com/c1games/terminal/algo/map/GameState.html" title="class in com.c1games.terminal.algo.map">GameState</a></dt>
 <dd>
-<div class="block">Attempt to remove an existing firewall that we own, or throw an exception if unable.</div>
+<div class="block">Attempt to remove an existing structure that we own, or throw an exception if unable.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/map/Unit.html#removing">removing</a></span> - Variable in class com.c1games.terminal.algo.map.<a href="com/c1games/terminal/algo/map/Unit.html" title="class in com.c1games.terminal.algo.map">Unit</a></dt>
 <dd>&nbsp;</dd>
@@ -871,9 +851,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dl>
 <dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/io/DefaultGameIO.html#scanner">scanner</a></span> - Variable in class com.c1games.terminal.algo.io.<a href="com/c1games/terminal/algo/io/DefaultGameIO.html" title="class in com.c1games.terminal.algo.io">DefaultGameIO</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/FrameData.PlayerUnits.html#scrambler">scrambler</a></span> - Variable in class com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/FrameData.PlayerUnits.html" title="class in com.c1games.terminal.algo">FrameData.PlayerUnits</a></dt>
+<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/FrameData.PlayerUnits.html#scout">scout</a></span> - Variable in class com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/FrameData.PlayerUnits.html" title="class in com.c1games.terminal.algo">FrameData.PlayerUnits</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/units/UnitType.html#Scrambler">Scrambler</a></span> - com.c1games.terminal.algo.units.<a href="com/c1games/terminal/algo/units/UnitType.html" title="enum in com.c1games.terminal.algo.units">UnitType</a></dt>
+<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/units/UnitType.html#Scout">Scout</a></span> - com.c1games.terminal.algo.units.<a href="com/c1games/terminal/algo/units/UnitType.html" title="enum in com.c1games.terminal.algo.units">UnitType</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/FrameData.Events.html#selfDestruct">selfDestruct</a></span> - Variable in class com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/FrameData.Events.html" title="class in com.c1games.terminal.algo">FrameData.Events</a></dt>
 <dd>&nbsp;</dd>
@@ -959,11 +939,25 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/Config.Mechanics.html#stepsRequiredSelfDestruct">stepsRequiredSelfDestruct</a></span> - Variable in class com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/Config.Mechanics.html" title="class in com.c1games.terminal.algo">Config.Mechanics</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/Config.Mechanics.html#structureBuildTime">structureBuildTime</a></span> - Variable in class com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/Config.Mechanics.html" title="class in com.c1games.terminal.algo">Config.Mechanics</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/GameIO.html#submitTurn(com.c1games.terminal.algo.map.GameState)">submitTurn(GameState)</a></span> - Method in interface com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/GameIO.html" title="interface in com.c1games.terminal.algo">GameIO</a></dt>
 <dd>
 <div class="block">Given a set of moves created by a move buider, submit those to the engine as our actions for this turn.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/io/DefaultGameIO.html#submitTurn(com.c1games.terminal.algo.map.GameState)">submitTurn(GameState)</a></span> - Method in class com.c1games.terminal.algo.io.<a href="com/c1games/terminal/algo/io/DefaultGameIO.html" title="class in com.c1games.terminal.algo.io">DefaultGameIO</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/FrameData.PlayerUnits.html#support">support</a></span> - Variable in class com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/FrameData.PlayerUnits.html" title="class in com.c1games.terminal.algo">FrameData.PlayerUnits</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/units/UnitType.html#Support">Support</a></span> - com.c1games.terminal.algo.units.<a href="com/c1games/terminal/algo/units/UnitType.html" title="enum in com.c1games.terminal.algo.units">UnitType</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/FrameData.Events.ShieldEvent.html#supportCoords">supportCoords</a></span> - Variable in class com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/FrameData.Events.ShieldEvent.html" title="class in com.c1games.terminal.algo">FrameData.Events.ShieldEvent</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/FrameData.Events.ShieldEvent.html#supportOwner">supportOwner</a></span> - Variable in class com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/FrameData.Events.ShieldEvent.html" title="class in com.c1games.terminal.algo">FrameData.Events.ShieldEvent</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/FrameData.Events.ShieldEvent.html#supportType">supportType</a></span> - Variable in class com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/FrameData.Events.ShieldEvent.html" title="class in com.c1games.terminal.algo">FrameData.Events.ShieldEvent</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/FrameData.Events.ShieldEvent.html#supportUnitId">supportUnitId</a></span> - Variable in class com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/FrameData.Events.ShieldEvent.html" title="class in com.c1games.terminal.algo">FrameData.Events.ShieldEvent</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <a id="I:T">
@@ -1054,6 +1048,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/FrameData.TurnInfo.html#turnNumber">turnNumber</a></span> - Variable in class com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/FrameData.TurnInfo.html" title="class in com.c1games.terminal.algo">FrameData.TurnInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/FrameData.EndStats.html#turns">turns</a></span> - Variable in class com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/FrameData.EndStats.html" title="class in com.c1games.terminal.algo">FrameData.EndStats</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/FrameData.PlayerUnits.html#turret">turret</a></span> - Variable in class com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/FrameData.PlayerUnits.html" title="class in com.c1games.terminal.algo">FrameData.PlayerUnits</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/units/UnitType.html#Turret">Turret</a></span> - com.c1games.terminal.algo.units.<a href="com/c1games/terminal/algo/units/UnitType.html" title="enum in com.c1games.terminal.algo.units">UnitType</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/map/SpawnCommand.html#type">type</a></span> - Variable in class com.c1games.terminal.algo.map.<a href="com/c1games/terminal/algo/map/SpawnCommand.html" title="class in com.c1games.terminal.algo.map">SpawnCommand</a></dt>
 <dd>&nbsp;</dd>
@@ -1233,6 +1231,10 @@ the order they are declared.</div>
 <h2 class="title">W</h2>
 <dl>
 <dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/map/GameState.html#WalkerUnitCategory">WalkerUnitCategory</a></span> - Static variable in class com.c1games.terminal.algo.map.<a href="com/c1games/terminal/algo/map/GameState.html" title="class in com.c1games.terminal.algo.map">GameState</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/FrameData.PlayerUnits.html#wall">wall</a></span> - Variable in class com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/FrameData.PlayerUnits.html" title="class in com.c1games.terminal.algo">FrameData.PlayerUnits</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/units/UnitType.html#Wall">Wall</a></span> - com.c1games.terminal.algo.units.<a href="com/c1games/terminal/algo/units/UnitType.html" title="enum in com.c1games.terminal.algo.units">UnitType</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/c1games/terminal/algo/FrameData.EndStats.html#winner">winner</a></span> - Variable in class com.c1games.terminal.algo.<a href="com/c1games/terminal/algo/FrameData.EndStats.html" title="class in com.c1games.terminal.algo">FrameData.EndStats</a></dt>
 <dd>&nbsp;</dd>

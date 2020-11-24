@@ -200,12 +200,12 @@ extends java.lang.Object</pre>
 <tbody>
 <tr class="altColor" id="i0">
 <td class="colFirst"><code>int</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#attemptRemoveFirewall(com.c1games.terminal.algo.Coords)">attemptRemoveFirewall</a></span>&#8203;(<a href="../Coords.html" title="class in com.c1games.terminal.algo">Coords</a>&nbsp;coords)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#attemptRemoveStructure(com.c1games.terminal.algo.Coords)">attemptRemoveStructure</a></span>&#8203;(<a href="../Coords.html" title="class in com.c1games.terminal.algo">Coords</a>&nbsp;coords)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor" id="i1">
 <td class="colFirst"><code>int</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#attemptRemoveFirewallMultiple(java.util.List)">attemptRemoveFirewallMultiple</a></span>&#8203;(java.util.List&lt;<a href="../Coords.html" title="class in com.c1games.terminal.algo">Coords</a>&gt;&nbsp;coords)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#attemptRemoveStructureMultiple(java.util.List)">attemptRemoveStructureMultiple</a></span>&#8203;(java.util.List&lt;<a href="../Coords.html" title="class in com.c1games.terminal.algo">Coords</a>&gt;&nbsp;coords)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor" id="i2">
@@ -236,9 +236,9 @@ extends java.lang.Object</pre>
 </tr>
 <tr class="altColor" id="i6">
 <td class="colFirst"><code><a href="CanRemove.html" title="enum in com.c1games.terminal.algo.map">CanRemove</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#canRemoveFirewall(com.c1games.terminal.algo.Coords)">canRemoveFirewall</a></span>&#8203;(<a href="../Coords.html" title="class in com.c1games.terminal.algo">Coords</a>&nbsp;coords)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#canRemoveStructure(com.c1games.terminal.algo.Coords)">canRemoveStructure</a></span>&#8203;(<a href="../Coords.html" title="class in com.c1games.terminal.algo">Coords</a>&nbsp;coords)</code></th>
 <td class="colLast">
-<div class="block">Result of whether a firewall can be removed at a location.</div>
+<div class="block">Result of whether a structure can be removed at a location.</div>
 </td>
 </tr>
 <tr class="rowColor" id="i7">
@@ -285,22 +285,22 @@ int&nbsp;quantity)</code></th>
 </tr>
 <tr class="rowColor" id="i13">
 <td class="colFirst"><code>boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isFirewall(int)">isFirewall</a></span>&#8203;(int&nbsp;category)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isInfo(int)">isInfo</a></span>&#8203;(int&nbsp;category)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor" id="i14">
 <td class="colFirst"><code>boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isFirewall(com.c1games.terminal.algo.units.UnitType)">isFirewall</a></span>&#8203;(<a href="../units/UnitType.html" title="enum in com.c1games.terminal.algo.units">UnitType</a>&nbsp;type)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isInfo(com.c1games.terminal.algo.units.UnitType)">isInfo</a></span>&#8203;(<a href="../units/UnitType.html" title="enum in com.c1games.terminal.algo.units">UnitType</a>&nbsp;type)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor" id="i15">
 <td class="colFirst"><code>boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isInfo(int)">isInfo</a></span>&#8203;(int&nbsp;category)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isStructure(int)">isStructure</a></span>&#8203;(int&nbsp;category)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="altColor" id="i16">
 <td class="colFirst"><code>boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isInfo(com.c1games.terminal.algo.units.UnitType)">isInfo</a></span>&#8203;(<a href="../units/UnitType.html" title="enum in com.c1games.terminal.algo.units">UnitType</a>&nbsp;type)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isStructure(com.c1games.terminal.algo.units.UnitType)">isStructure</a></span>&#8203;(<a href="../units/UnitType.html" title="enum in com.c1games.terminal.algo.units">UnitType</a>&nbsp;type)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr class="rowColor" id="i17">
@@ -323,7 +323,8 @@ boolean&nbsp;upgrade)</code></th>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#pathfind(com.c1games.terminal.algo.Coords,int)">pathfind</a></span>&#8203;(<a href="../Coords.html" title="class in com.c1games.terminal.algo">Coords</a>&nbsp;start,
 int&nbsp;targetEdge)</code></th>
 <td class="colLast">
-<div class="block">Use the code within the pathfinding package to compute the path that an info unit would take if placed on a particular coordinate,
+<div class="block">Use the code within the pathfinding package to compute the path that a mobile unit
+ would take if placed on a particular coordinate,
  assuming that the layout of the walls do not change.</div>
 </td>
 </tr>
@@ -334,9 +335,9 @@ int&nbsp;targetEdge)</code></th>
 </tr>
 <tr class="rowColor" id="i21">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#removeFirewall(com.c1games.terminal.algo.Coords)">removeFirewall</a></span>&#8203;(<a href="../Coords.html" title="class in com.c1games.terminal.algo">Coords</a>&nbsp;coords)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#removeStructure(com.c1games.terminal.algo.Coords)">removeStructure</a></span>&#8203;(<a href="../Coords.html" title="class in com.c1games.terminal.algo">Coords</a>&nbsp;coords)</code></th>
 <td class="colLast">
-<div class="block">Attempt to remove an existing firewall that we own, or throw an exception if unable.</div>
+<div class="block">Attempt to remove an existing structure that we own, or throw an exception if unable.</div>
 </td>
 </tr>
 <tr class="altColor" id="i22">
@@ -448,8 +449,8 @@ int&nbsp;targetEdge)</code></th>
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="isFirewall(com.c1games.terminal.algo.units.UnitType)">isFirewall</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">isFirewall</span>&#8203;(<span class="arguments"><a href="../units/UnitType.html" title="enum in com.c1games.terminal.algo.units">UnitType</a>&nbsp;type)</span></div>
+<h3><a id="isStructure(com.c1games.terminal.algo.units.UnitType)">isStructure</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">isStructure</span>&#8203;(<span class="arguments"><a href="../units/UnitType.html" title="enum in com.c1games.terminal.algo.units">UnitType</a>&nbsp;type)</span></div>
 </section>
 </li>
 <li class="blockList">
@@ -460,8 +461,8 @@ int&nbsp;targetEdge)</code></th>
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="isFirewall(int)">isFirewall</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">isFirewall</span>&#8203;(<span class="arguments">int&nbsp;category)</span></div>
+<h3><a id="isStructure(int)">isStructure</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">isStructure</span>&#8203;(<span class="arguments">int&nbsp;category)</span></div>
 </section>
 </li>
 <li class="blockList">
@@ -489,7 +490,8 @@ int&nbsp;targetEdge)</code></th>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">getRemoveAt</span>&#8203;(<span class="arguments"><a href="../Coords.html" title="class in com.c1games.terminal.algo">Coords</a>&nbsp;coords)</span></div>
 <div class="block">Nullable.
 
- Only checks whether there is a remove unit at that particular location, denoting whether we have removed a firewall at that unit.
+ Only checks whether there is a remove unit at that particular location, 
+ denoting whether we have removed a structure at that unit.
  Does not actually remove the unit.</div>
 </section>
 </li>
@@ -538,17 +540,17 @@ int&nbsp;quantity)</span></div>
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="canRemoveFirewall(com.c1games.terminal.algo.Coords)">canRemoveFirewall</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="CanRemove.html" title="enum in com.c1games.terminal.algo.map">CanRemove</a></span>&nbsp;<span class="memberName">canRemoveFirewall</span>&#8203;(<span class="arguments"><a href="../Coords.html" title="class in com.c1games.terminal.algo">Coords</a>&nbsp;coords)</span></div>
-<div class="block">Result of whether a firewall can be removed at a location.</div>
+<h3><a id="canRemoveStructure(com.c1games.terminal.algo.Coords)">canRemoveStructure</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType"><a href="CanRemove.html" title="enum in com.c1games.terminal.algo.map">CanRemove</a></span>&nbsp;<span class="memberName">canRemoveStructure</span>&#8203;(<span class="arguments"><a href="../Coords.html" title="class in com.c1games.terminal.algo">Coords</a>&nbsp;coords)</span></div>
+<div class="block">Result of whether a structure can be removed at a location.</div>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="removeFirewall(com.c1games.terminal.algo.Coords)">removeFirewall</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">removeFirewall</span>&#8203;(<span class="arguments"><a href="../Coords.html" title="class in com.c1games.terminal.algo">Coords</a>&nbsp;coords)</span>
-                    throws <span class="exceptions"><a href="CannotRemoveException.html" title="class in com.c1games.terminal.algo.map">CannotRemoveException</a></span></div>
-<div class="block">Attempt to remove an existing firewall that we own, or throw an exception if unable.
+<h3><a id="removeStructure(com.c1games.terminal.algo.Coords)">removeStructure</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">removeStructure</span>&#8203;(<span class="arguments"><a href="../Coords.html" title="class in com.c1games.terminal.algo">Coords</a>&nbsp;coords)</span>
+                     throws <span class="exceptions"><a href="CannotRemoveException.html" title="class in com.c1games.terminal.algo.map">CannotRemoveException</a></span></div>
+<div class="block">Attempt to remove an existing structure that we own, or throw an exception if unable.
 
  This will alter the data within GameState and FrameData as if this operation proceeded (unless an exception is thrown) so that further
  operations can be applied correctly.
@@ -562,14 +564,14 @@ int&nbsp;quantity)</span></div>
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="attemptRemoveFirewall(com.c1games.terminal.algo.Coords)">attemptRemoveFirewall</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">int</span>&nbsp;<span class="memberName">attemptRemoveFirewall</span>&#8203;(<span class="arguments"><a href="../Coords.html" title="class in com.c1games.terminal.algo">Coords</a>&nbsp;coords)</span></div>
+<h3><a id="attemptRemoveStructure(com.c1games.terminal.algo.Coords)">attemptRemoveStructure</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">int</span>&nbsp;<span class="memberName">attemptRemoveStructure</span>&#8203;(<span class="arguments"><a href="../Coords.html" title="class in com.c1games.terminal.algo">Coords</a>&nbsp;coords)</span></div>
 </section>
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="attemptRemoveFirewallMultiple(java.util.List)">attemptRemoveFirewallMultiple</a></h3>
-<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">int</span>&nbsp;<span class="memberName">attemptRemoveFirewallMultiple</span>&#8203;(<span class="arguments">java.util.List&lt;<a href="../Coords.html" title="class in com.c1games.terminal.algo">Coords</a>&gt;&nbsp;coords)</span></div>
+<h3><a id="attemptRemoveStructureMultiple(java.util.List)">attemptRemoveStructureMultiple</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">int</span>&nbsp;<span class="memberName">attemptRemoveStructureMultiple</span>&#8203;(<span class="arguments">java.util.List&lt;<a href="../Coords.html" title="class in com.c1games.terminal.algo">Coords</a>&gt;&nbsp;coords)</span></div>
 </section>
 </li>
 <li class="blockList">
@@ -620,7 +622,8 @@ boolean&nbsp;upgrade)</span></div>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">java.util.List&lt;<a href="../Coords.html" title="class in com.c1games.terminal.algo">Coords</a>&gt;</span>&nbsp;<span class="memberName">pathfind</span>&#8203;(<span class="arguments"><a href="../Coords.html" title="class in com.c1games.terminal.algo">Coords</a>&nbsp;start,
 int&nbsp;targetEdge)</span>
                                 throws <span class="exceptions"><a href="../pathfinding/IllegalPathStartException.html" title="class in com.c1games.terminal.algo.pathfinding">IllegalPathStartException</a></span></div>
-<div class="block">Use the code within the pathfinding package to compute the path that an info unit would take if placed on a particular coordinate,
+<div class="block">Use the code within the pathfinding package to compute the path that a mobile unit
+ would take if placed on a particular coordinate,
  assuming that the layout of the walls do not change.
 
  Throws an IllegalPathStartExceptions if a unit could not be placed in that location.s</div>

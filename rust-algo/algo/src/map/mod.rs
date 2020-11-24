@@ -49,8 +49,8 @@ struct MapStateInner {
     config: Arc<Config>,
     frame: Box<FrameData>,
 
-    walls: Grid<Option<Unit<FirewallUnitType>>>,
-    info: Grid<Vec<Unit<InfoUnitType>>>,
+    walls: Grid<Option<Unit<StructureUnitType>>>,
+    mobile: Grid<Vec<Unit<MobileUnitType>>>,
     remove: Grid<Option<Unit<RemoveUnitType>>>,
     upgrade: Grid<Option<Unit<UpgradeUnitType>>>,
 
@@ -186,8 +186,8 @@ impl MapStateInner {
 }
 
 impl MapState {
-    /// If a ping were spawned at this tile, and it navigated through the map without any walls
-    /// changing or the ping dying, what path would it take?
+    /// If a Scout were spawned at this tile, and it navigated through the map without any walls
+    /// changing or the Scout dying, what path would it take?
     pub fn pathfind(&self, start: Coords, target: MapEdge) -> Result<Vec<Coords>, StartedAtWall> {
         pathfinding::pathfind(self, &self[start], target)
     }
@@ -199,13 +199,13 @@ impl MapTileInner {
         c
     }
 
-    /// Get all info units at tile.
-    fn info_units(c: Coords, map: &MapStateInner) -> Vec<Unit<InfoUnitType>> {
-        map.info[c].clone()
+    /// Get all mobile units at tile.
+    fn mobile_units(c: Coords, map: &MapStateInner) -> Vec<Unit<MobileUnitType>> {
+        map.mobile[c].clone()
     }
 
     /// Get optional wall unit at tile.
-    fn wall_unit(c: Coords, map: &MapStateInner) -> Option<Unit<FirewallUnitType>> {
+    fn wall_unit(c: Coords, map: &MapStateInner) -> Option<Unit<StructureUnitType>> {
         map.walls[c].clone()
     }
 
@@ -253,16 +253,16 @@ impl MapTileInner {
                 coords: c,
                 unit_present: UnitPresent::Wall,
             }
-        } else if unit_type.is_firewall() && Self::info_units(c, map).len() > 0 {
+        } else if unit_type.is_structure() && Self::mobile_units(c, map).len() > 0 {
             CanSpawn::UnitAlreadyPresent {
                 coords: c,
-                unit_present: UnitPresent::Info,
+                unit_present: UnitPresent::Mobile,
             }
         } else if c.y < 0 || c.y >= BOARD_SIZE as i32 / 2 {
             CanSpawn::WrongSideOfMap(c)
         } else if !MAP_BOUNDS.is_in_arena(c) {
             CanSpawn::OutOfBounds(c)
-        } else if unit_type.is_info() && !(
+        } else if unit_type.is_mobile() && !(
             MAP_BOUNDS.is_on_edge[MapEdge::BottomLeft as usize][c.x as usize][c.y as usize] ||
                 MAP_BOUNDS.is_on_edge[MapEdge::BottomRight as usize][c.x as usize][c.y as usize]
         ) {
@@ -272,14 +272,14 @@ impl MapTileInner {
         }
     }
 
-    /// Can a firewall be removed at this tile? If not, why?
-    fn can_remove_firewall(c: Coords, map: &MapStateInner) -> CanRemove {
+    /// Can a Structure be removed at this tile? If not, why?
+    fn can_remove_structure(c: Coords, map: &MapStateInner) -> CanRemove {
         if !MAP_BOUNDS.is_in_arena(c) {
             CanRemove::OutOfBounds(c)
         } else if c.y >= BOARD_SIZE as i32 / 2 {
             CanRemove::WrongSideOfMap(c)
         } else if Self::info_units(c, map).len() > 0 {
-            CanRemove::InfoUnitPresent(c)
+            CanRemove::MobileUnitPresent(c)
         } else if Self::wall_unit(c, map).is_none() {
             CanRemove::NoUnitPresent(c)
         } else {
@@ -309,14 +309,14 @@ impl MapTileInner {
             CanUpgrade::OutOfBounds(c)
         } else if c.y >= BOARD_SIZE as i32 / 2 {
             CanUpgrade::WrongSideOfMap(c)
-        } else if Self::info_units(c, map).len() > 0 {
-            CanUpgrade::InfoUnitPresent(c)
+        } else if Self::mobile_units(c, map).len() > 0 {
+            CanUpgrade::MobileUnitPresent(c)
         } else if Self::wall_unit(c, map).is_none() {
             CanUpgrade::NoUnitPresent(c)
         } else if let Some(err) = {
             let unit = Self::wall_unit(c, map).unwrap();
             let atlas = map.atlas();
-            let info = atlas.type_info(unit.unit_type.into());
+            let info = atlas.type_mobile(unit.unit_type.into());
             let cost = Self::upgrade_cost(info);
 
             let need_bits = cost.bits.unwrap_or(0.0);
@@ -360,11 +360,11 @@ impl MapTileInner {
         map.frame.p1_stats.cores -= cost.cores.unwrap_or(0.0);
         map.frame.p1_stats.bits -= cost.bits.unwrap_or(0.0);
 
-        let unit_info =  map.atlas.type_info(unit_type.into());
+        let unit_info =  map.atlas.type_mobile(unit_type.into());
         match unit_info.unit_category {
-            Some(UnitCategory::Firewall) => {
+            Some(UnitCategory::Structure) => {
                 let unit = Unit {
-                    unit_type: unit_type.into_firewall().unwrap(),
+                    unit_type: unit_type.into_structure().unwrap(),
                     health: unit_info.start_health.unwrap_or(0.0),
                     id: None,
                     owner: PlayerId::Player1,
@@ -372,14 +372,14 @@ impl MapTileInner {
                 map.walls[coords] = Some(unit);
             },
 
-            Some(UnitCategory::Info) => {
+            Some(UnitCategory::Mobile) => {
                 let unit = Unit {
                     unit_type: unit_type.into_info().unwrap(),
                     health: unit_info.start_health.unwrap_or(0.0),
                     id: None,
                     owner: PlayerId::Player1,
                 };
-                map.info[coords].push(unit);
+                map.mobile[coords].push(unit);
             },
 
             None => panic!("unit info of spawnable unit does not have unit category"),
@@ -388,7 +388,7 @@ impl MapTileInner {
         // add it to the command stack
         let unit_type: UnitType = unit_type.into();
         let spawn = SpawnCommand::new(unit_type, coords, &*map.atlas);
-        if unit_type.is_firewall() || unit_type == UnitType::Remove {
+        if unit_type.is_structure() || unit_type == UnitType::Remove {
             map.build_stack.push(spawn);
         } else {
             map.deploy_stack.push(spawn);
@@ -418,7 +418,7 @@ impl MapTileInner {
 
         let wall = map.walls[c].as_ref().unwrap();
         let atlas = map.atlas();
-        let unit_info = atlas.type_info(wall.unit_type.into());
+        let unit_info = atlas.type_mobile(wall.unit_type.into());
         let cost = Self::upgrade_cost(unit_info);
         map.frame.p1_stats.cores -= cost.cores.unwrap_or(0.0);
         map.frame.p1_stats.bits -= cost.bits.unwrap_or(0.0);
@@ -430,11 +430,11 @@ impl MapTileInner {
         Ok(())
     }
 
-    /// Attempt to remove a firewall from a location on the board.
-    fn remove_firewall(c: Coords, map: &mut MapStateInner) -> Result<(), CanRemove> {
+    /// Attempt to remove a Structure from a location on the board.
+    fn remove_structure(c: Coords, map: &mut MapStateInner) -> Result<(), CanRemove> {
         let coords = c;
 
-        match Self::can_remove_firewall(c, map) {
+        match Self::can_remove_structure(c, map) {
             CanRemove::Yes => (),
             cannot => return Err(cannot),
         };
@@ -456,9 +456,9 @@ impl MapTileInner {
         Ok(())
     }
 
-    /// Attempt to remove a firewall from a location on the board, returning whether successful.
-    fn try_remove_firewall(c: Coords, map: &mut MapStateInner) -> bool {
-        Self::remove_firewall(c, map).is_ok()
+    /// Attempt to remove a Structure from a location on the board, returning whether successful.
+    fn try_remove_structure(c: Coords, map: &mut MapStateInner) -> bool {
+        Self::remove_structure(c, map).is_ok()
     }
 
     fn try_upgrade(c: Coords, map: &mut MapStateInner) -> bool {
@@ -487,14 +487,14 @@ pub enum CanSpawn {
     }
 }
 
-/// Whether a firewall can be removed at a location.
+/// Whether a Structure can be removed at a location.
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub enum CanRemove {
     Yes,
     OutOfBounds(Coords),
     WrongSideOfMap(Coords),
     NoUnitPresent(Coords),
-    InfoUnitPresent(Coords),
+    MobileUnitPresent(Coords),
 }
 
 #[derive(Debug, Copy, Clone, PartialEq)]
@@ -503,7 +503,7 @@ pub enum CanUpgrade {
     OutOfBounds(Coords),
     WrongSideOfMap(Coords),
     NoUnitPresent(Coords),
-    InfoUnitPresent(Coords),
+    MobileUnitPresent(Coords),
     AlreadyUpgraded,
     NotEnoughResources {
         have_bits: f32,
@@ -517,7 +517,7 @@ pub enum CanUpgrade {
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub enum UnitPresent {
     Wall,
-    Info
+    Mobile
 }
 
 /// A spendable resource that the player has.
@@ -576,8 +576,8 @@ impl Resource {
     pub fn which_buys(unit_type: impl Into<SpawnableUnitType>) -> Self {
         let unit_type: SpawnableUnitType = unit_type.into();
         match unit_type {
-            SpawnableUnitType::Info(_) => Resource::Bits,
-            SpawnableUnitType::Firewall(_) => Resource::Cores,
+            SpawnableUnitType::Mobile(_) => Resource::Bits,
+            SpawnableUnitType::Structure(_) => Resource::Cores,
         }
     }
 }
@@ -658,11 +658,11 @@ map_tile_delegate! {
     /// Get the coordinates of this tile.
     fn coords(c: Coords, _map: &MapStateInner) -> Coords;
 
-    /// Get all info units at tile.
-    fn info_units(c: Coords, map: &MapStateInner) -> Vec<Unit<InfoUnitType>>;
+    /// Get all mobile units at tile.
+    fn mobile_units(c: Coords, map: &MapStateInner) -> Vec<Unit<MobileUnitType>>;
 
     /// Get optional wall unit at tile.
-    fn wall_unit(c: Coords, map: &MapStateInner) -> Option<Unit<FirewallUnitType>>;
+    fn wall_unit(c: Coords, map: &MapStateInner) -> Option<Unit<StructureUnitType>>;
 
     fn upgrade_unit(c: Coords, map: &MapStateInner) -> Option<Unit<UpgradeUnitType>>;
 
@@ -672,8 +672,8 @@ map_tile_delegate! {
     /// Can the given number of a given unit type be spawned at this tile? If not, why?
     fn can_spawn(c: Coords, map: &MapStateInner, unit_type: impl Into<UnitType>, quantity: u32) -> CanSpawn;
 
-    /// Can a firewall be removed at this tile? If not, why?
-    fn can_remove_firewall(c: Coords, map: &MapStateInner) -> CanRemove;
+    /// Can a structure be removed at this tile? If not, why?
+    fn can_remove_structure(c: Coords, map: &MapStateInner) -> CanRemove;
 
     fn can_upgrade(c: Coords, map: &MapStateInner) -> CanUpgrade;
 
@@ -685,11 +685,11 @@ map_tile_delegate! {
     /// Attempt to spawn a unit at a location, returning whether successful.
     fn try_spawn(c: Coords, map: &mut MapStateInner, unit_type: impl Into<SpawnableUnitType>) -> bool;
 
-    /// Attempt to remove a firewall from a location on the board.
-    fn remove_firewall(c: Coords, map: &mut MapStateInner) -> Result<(), CanRemove>;
+    /// Attempt to remove a Structure from a location on the board.
+    fn remove_structure(c: Coords, map: &mut MapStateInner) -> Result<(), CanRemove>;
 
-    /// Attempt to remove a firewall from a location on the board, returning whether successful.
-    fn try_remove_firewall(c: Coords, map: &mut MapStateInner) -> bool;
+    /// Attempt to remove a Structure from a location on the board, returning whether successful.
+    fn try_remove_structure(c: Coords, map: &mut MapStateInner) -> bool;
 
     fn try_upgrade(c: Coords, map: &mut MapStateInner) -> bool;
 }

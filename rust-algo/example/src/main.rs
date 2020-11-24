@@ -17,36 +17,36 @@ impl GameLoop for ExampleAlgo {
     fn on_turn(&mut self, _: Arc<Config>, map: &MapState) {
         // callback to make a move in the game
 
-        // try to place as many of four filters as possible
+        // try to place as many of four walls as possible
         for &wall_coord in &[
             xy(12, 5),
             xy(13, 5),
             xy(14, 5),
             xy(15, 5),
         ] {
-            map[wall_coord].try_spawn(FirewallUnitType::Filter);
+            map[wall_coord].try_spawn(StructureUnitType::Wall);
         }
 
-        // try to atomically place four pings in two locations
-        let ping_coord_1 = xy(6, 7);
-        let ping_coord_2 = xy(21, 7);
+        // try to atomically place four Scouts in two locations
+        let scout_coord_1 = xy(6, 7);
+        let scout_coord_2 = xy(21, 7);
 
-        if map[ping_coord_1].can_spawn(InfoUnitType::Ping, 2).yes() &&
-            map[ping_coord_2].can_spawn(InfoUnitType::Ping, 2).yes()
+        if map[scout_coord_1].can_spawn(MobileUnitType::Scout, 2).yes() &&
+            map[scout_coord_2].can_spawn(MobileUnitType::Scout, 2).yes()
         {
             for _ in 0..2 {
-                map[ping_coord_1].spawn(InfoUnitType::Ping)
+                map[scout_coord_1].spawn(MobileUnitType::Scout)
                     .expect("Unexpected spawn failure");
-                map[ping_coord_2].spawn(InfoUnitType::Ping)
+                map[scout_coord_2].spawn(MobileUnitType::Scout)
                     .expect("Unexpected spawn failure");
             }
         }
 
-        // if our cores are low, try to delete a firewall
+        // if our cores are low, try to delete a Structure
         if map.frame_data().p1_stats.cores < 5.0 &&
-            map[xy(5, 5)].can_remove_firewall().yes()
+            map[xy(5, 5)].can_remove_structure().yes()
         {
-            map[xy(5, 5)].remove_firewall().unwrap();
+            map[xy(5, 5)].remove_structure().unwrap();
         }
 
         // print the path that an enemy unit would take if spawned at a particular location

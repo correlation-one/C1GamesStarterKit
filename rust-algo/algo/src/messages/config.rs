@@ -37,13 +37,13 @@ pub struct UnitInformation {
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, IntoEnumIterator)]
 pub enum UnitCategory {
-    Firewall,
-    Info,
+    Structure,
+    Mobile,
 }
 
 serde_enum_from_int!(UnitCategory, {
-    0 => UnitCategory::Firewall,
-    1 => UnitCategory::Info,
+    0 => UnitCategory::Structure,
+    1 => UnitCategory::Mobile,
 });
 
 #[derive(Debug, Deserialize, Clone)]

@@ -60,7 +60,7 @@ enum LastDirection {
 
 /// Pathfinding from a particular location will fail if that location is blocked by a wall.
 #[derive(Clone, Debug)]
-pub struct StartedAtWall(pub Coords, pub Unit<FirewallUnitType>);
+pub struct StartedAtWall(pub Coords, pub Unit<StructureUnitType>);
 
 /// Attempt to pathfind from a particular tile on a map, to a certain map edge.
 pub fn pathfind(board: &MapState, start: &MapTile, target: MapEdge) -> Result<Vec<Coords>, StartedAtWall> {

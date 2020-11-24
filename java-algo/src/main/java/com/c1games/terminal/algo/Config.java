@@ -46,8 +46,8 @@ public final class Config {
         float[] cost();
     }
     public static final class UnitInformation implements UnitInformationDisplay, RealUnitInformation {
-        public OptionalDouble attackDamageTower = OptionalDouble.empty();; //firewall
-        public OptionalDouble attackDamageWalker = OptionalDouble.empty(); //information units
+        public OptionalDouble attackDamageTower = OptionalDouble.empty();; //structure
+        public OptionalDouble attackDamageWalker = OptionalDouble.empty(); //mobile units
         public OptionalDouble attackRange = OptionalDouble.empty();
         public OptionalDouble getHitRadius = OptionalDouble.empty();
         public OptionalInt unitCategory = OptionalInt.empty();
@@ -61,8 +61,8 @@ public final class Config {
 
         public OptionalDouble speed = OptionalDouble.empty();
 
-        public OptionalDouble cost1 = OptionalDouble.empty(); //cores
-        public OptionalDouble cost2 = OptionalDouble.empty(); //bits
+        public OptionalDouble cost1 = OptionalDouble.empty(); //SP
+        public OptionalDouble cost2 = OptionalDouble.empty(); //MP
 
         public Optional<String> display = Optional.empty();
         public Optional<String> shorthand = Optional.empty();
@@ -229,7 +229,7 @@ public final class Config {
         public float meleeMultiplier;
         public float destroyOwnUnitDelay;
         public boolean rerouteMidRound;
-        public float firewallBuildTime;
+        public float structureBuildTime;
 
         @Override
         public String toString() {
@@ -245,7 +245,7 @@ public final class Config {
                     ", meleeMultiplier=" + meleeMultiplier +
                     ", destroyOwnUnitDelay=" + destroyOwnUnitDelay +
                     ", rerouteMidRound=" + rerouteMidRound +
-                    ", firewallBuildTime=" + firewallBuildTime +
+                    ", structureBuildTime=" + structureBuildTime +
                     '}';
         }
     }
