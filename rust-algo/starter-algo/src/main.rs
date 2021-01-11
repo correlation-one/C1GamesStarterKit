@@ -170,8 +170,8 @@ fn deploy_attackers(map: &MapState) {
     /*
     While we have remaining bits to spend lets send out interceptors randomly.
     */
-    while map.number_affordable(MobileUnitType::Interceptors) >= 1 {
+    while map.number_affordable(MobileUnitType::Interceptor) >= 1 {
         let coords = friendly_edges[thread_rng().gen::<usize>() % friendly_edges.len()];
-        map[coords].try_spawn(MobileUnitType::Interceptors);
+        map[coords].try_spawn(MobileUnitType::Interceptor);
     }
 }

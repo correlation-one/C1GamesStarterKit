@@ -27,7 +27,7 @@ pub fn parse_frame(
         for unit_type in MobileUnitType::into_enum_iter() {
             let unit_data_vec: &[frame::PlayerUnit] = match unit_type {
                 MobileUnitType::Scout => &units.scout,
-                MobileUnitType::Demolisher => &units.Demolisher,
+                MobileUnitType::Demolisher => &units.demolisher,
                 MobileUnitType::Interceptor => &units.interceptor,
             };
             for unit_data in unit_data_vec {

@@ -165,7 +165,7 @@ public class SpawnCommandSerializeTest {
         Config config = Config.GSON.fromJson(configData, Config.class);
         UnitTypeAtlas atlas = new UnitTypeAtlas(config);
         Gson gson = SpawnCommand.gson(atlas);
-        SpawnCommand command = new SpawnCommand(UnitType.Encryptor, 4, 7);
+        SpawnCommand command = new SpawnCommand(UnitType.Support, 4, 7);
         String ser = gson.toJson(command);
         assert ser.equals("[\"EF\",4,7]");
     }
