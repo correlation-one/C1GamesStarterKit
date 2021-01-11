@@ -132,6 +132,14 @@ impl GameLoop for ExampleAlgo {
 }
 ```
 
+### Running locally basics
+
+1. Install rust. You can use this [link](https://www.rust-lang.org/tools/install) or search 'Install rust' on a search engine like google and follow the most up to date instructions to install rust on your machine.
+2. Compile your algo. Move to the rust-algo working directory, run cargo build. Note that you need to repeat this step to recompile after making changes.
+3. Run ```python ../scripts/run_match.py rust-algo/algo-target```
+
+See the README in the scripts folder for more detailed information on running locally.
+
 ### Project structure
 
 Rust starter algo is organized as a [Cargo workspace](https://doc.rust-lang.org/book/second-edition/ch14-03-cargo-workspaces.html).

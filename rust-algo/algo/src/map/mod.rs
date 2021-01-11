@@ -278,7 +278,7 @@ impl MapTileInner {
             CanRemove::OutOfBounds(c)
         } else if c.y >= BOARD_SIZE as i32 / 2 {
             CanRemove::WrongSideOfMap(c)
-        } else if Self::info_units(c, map).len() > 0 {
+        } else if Self::mobile_units(c, map).len() > 0 {
             CanRemove::MobileUnitPresent(c)
         } else if Self::wall_unit(c, map).is_none() {
             CanRemove::NoUnitPresent(c)
@@ -374,7 +374,7 @@ impl MapTileInner {
 
             Some(UnitCategory::Mobile) => {
                 let unit = Unit {
-                    unit_type: unit_type.into_info().unwrap(),
+                    unit_type: unit_type.into_mobile().unwrap(),
                     health: unit_info.start_health.unwrap_or(0.0),
                     id: None,
                     owner: PlayerId::Player1,

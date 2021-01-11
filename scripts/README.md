@@ -60,7 +60,7 @@ For example, you can run,
 On Unix:
 ```
 $ scripts/run_match.sh python-algo java-algo/algo-target
-$ python3 run_match.py java-algo/algo-target java-algo/algo-target
+$ python3 ./scripts/run_match.py java-algo/algo-target java-algo/algo-target
 ```
 On Windows:
 ```
