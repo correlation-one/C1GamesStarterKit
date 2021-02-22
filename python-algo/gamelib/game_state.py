@@ -24,7 +24,7 @@ class GameState:
     Attributes :
         * UNIT_TYPE_TO_INDEX (dict): Maps a unit to a corresponding index
         * WALL (str): A constant representing the wall unit
-        * FACTORY (str): A constant representing the factory unit
+        * SUPPORT (str): A constant representing the support unit
         * TURRET (str): A constant representing the turret unit
         * SCOUT (str): A constant representing the scout unit
         * DEMOLISHER (str): A constant representing the demolisher unit
@@ -59,12 +59,12 @@ class GameState:
         self.config = config
         self.enable_warnings = True
 
-        global WALL, FACTORY, TURRET, SCOUT, DEMOLISHER, INTERCEPTOR, REMOVE, UPGRADE, STRUCTURE_TYPES, ALL_UNITS, UNIT_TYPE_TO_INDEX
+        global WALL, SUPPORT, TURRET, SCOUT, DEMOLISHER, INTERCEPTOR, REMOVE, UPGRADE, STRUCTURE_TYPES, ALL_UNITS, UNIT_TYPE_TO_INDEX
         UNIT_TYPE_TO_INDEX = {}
         WALL = config["unitInformation"][0]["shorthand"]
         UNIT_TYPE_TO_INDEX[WALL] = 0
-        FACTORY = config["unitInformation"][1]["shorthand"]
-        UNIT_TYPE_TO_INDEX[FACTORY] = 1
+        SUPPORT = config["unitInformation"][1]["shorthand"]
+        UNIT_TYPE_TO_INDEX[SUPPORT] = 1
         TURRET = config["unitInformation"][2]["shorthand"]
         UNIT_TYPE_TO_INDEX[TURRET] = 2
         SCOUT = config["unitInformation"][3]["shorthand"]
@@ -78,8 +78,8 @@ class GameState:
         UPGRADE = config["unitInformation"][7]["shorthand"]
         UNIT_TYPE_TO_INDEX[UPGRADE] = 7
 
-        ALL_UNITS = [SCOUT, DEMOLISHER, INTERCEPTOR, WALL, FACTORY, TURRET]
-        STRUCTURE_TYPES = [WALL, FACTORY, TURRET]
+        ALL_UNITS = [SCOUT, DEMOLISHER, INTERCEPTOR, WALL, SUPPORT, TURRET]
+        STRUCTURE_TYPES = [WALL, SUPPORT, TURRET]
 
         self.ARENA_SIZE = 28
         self.HALF_ARENA = int(self.ARENA_SIZE / 2)
