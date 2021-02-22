@@ -247,7 +247,7 @@ class BasicTests(unittest.TestCase):
         game.game_map.add_unit("DF", [12,12], 0)
         self.assertEqual([], game.get_attackers([13,13], 0), "Are we being attacked by a friend?")
         game.game_map.add_unit("EF", [13,12], 1)
-        self.assertEqual([], game.get_attackers([13,13], 0), "Are we being attacked by a factory?")
+        self.assertEqual([], game.get_attackers([13,13], 0), "Are we being attacked by a support?")
         game.game_map.add_unit("FF", [14,12], 1)
         self.assertEqual([], game.get_attackers([13,13], 0), "Are we being attacked by a wall?")
         game.game_map.add_unit("DF", [12,14], 1)

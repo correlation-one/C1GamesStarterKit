@@ -47,7 +47,7 @@ class GameUnit:
         self.health = self.max_health if not health else health
 
     def __serialize_type(self):
-        from .game_state import STRUCTURE_TYPES, UNIT_TYPE_TO_INDEX, FACTORY
+        from .game_state import STRUCTURE_TYPES, UNIT_TYPE_TO_INDEX, SUPPORT
         type_config = self.config["unitInformation"][UNIT_TYPE_TO_INDEX[self.unit_type]]
         self.stationary = type_config["unitCategory"] == 0
         self.speed = type_config.get("speed", 0)

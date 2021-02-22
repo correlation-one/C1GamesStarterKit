@@ -32,9 +32,9 @@ class AlgoStrategy(gamelib.AlgoCore):
         """
         gamelib.debug_write('Configuring your custom algo strategy...')
         self.config = config
-        global WALL, FACTORY, TURRET, SCOUT, DEMOLISHER, INTERCEPTOR, MP, SP
+        global WALL, SUPPORT, TURRET, SCOUT, DEMOLISHER, INTERCEPTOR, MP, SP
         WALL = config["unitInformation"][0]["shorthand"]
-        FACTORY = config["unitInformation"][1]["shorthand"]
+        SUPPORT = config["unitInformation"][1]["shorthand"]
         TURRET = config["unitInformation"][2]["shorthand"]
         SCOUT = config["unitInformation"][3]["shorthand"]
         DEMOLISHER = config["unitInformation"][4]["shorthand"]
@@ -98,8 +98,8 @@ class AlgoStrategy(gamelib.AlgoCore):
                     game_state.attempt_spawn(SCOUT, best_location, 1000)
 
                 # Lastly, if we have spare SP, let's build some Factories to generate more resources
-                factory_locations = [[13, 2], [14, 2], [13, 3], [14, 3]]
-                game_state.attempt_spawn(FACTORY, factory_locations)
+                support_locations = [[13, 2], [14, 2], [13, 3], [14, 3]]
+                game_state.attempt_spawn(SUPPORT, support_locations)
 
     def build_defences(self, game_state):
         """
@@ -160,7 +160,7 @@ class AlgoStrategy(gamelib.AlgoCore):
         """
         # First let's figure out the cheapest unit
         # We could just check the game rules, but this demonstrates how to use the GameUnit class
-        stationary_units = [WALL, TURRET, FACTORY]
+        stationary_units = [WALL, TURRET, SUPPORT]
         cheapest_unit = WALL
         for unit in stationary_units:
             unit_class = gamelib.GameUnit(unit, game_state.config)
