@@ -1,0 +1,40 @@
+\documentclass[12pt]{article}
+\begin{document}
+\begin{enumerate}
+	\item turn 0
+\begin{enumerate}
+\item Deploy: Turret and upgrade at \{[3,12],[24,12],[10,10],[17,10]\}; Wall at\{[2,12],[2,13], [4,12],[23,12],[24,13],[25,12]\}.
+\item Delete: \{[2,12],[2,13], [4,12],[23,12],[24,13],[25,12]\}
+\end{enumerate}
+    \item turn 1
+\begin{enumerate}
+\item Deploy: Wall at\{[1,13],[2,12],[3,13],[24,13],[25,12],[26,13]\},Support at[17,6], \textbf{7} scout at [20,6]. 
+\item Delete: \{[1,13],[2,12],[3,13],[24,13],[25,12],[26,13],[17,6]\}.
+\end{enumerate}
+    \item turn 2
+\begin{enumerate}
+\item Deploy: Wall at\{[4,11],[5,10],[6,9],[7,8],[8,7],[9,6],[10,5],[11,4],[12,3],[13,2],[14,2]\},\\\{[15,3],[16,4],[17,5],[18,6],[19,7],[20,8]\},\{[0,13],[1,13],[2,13],[26,13],[27,13]\}. Interceptor at\{[22,8],[23,9]\}. 
+\item Delete: \{[0,13],[1,13],[2,13],[26,13],[27,13],[10,10],[17,10]\}.
+\end{enumerate}
+    \item turn 3
+\begin{enumerate}
+\item Deploy: Wall at{[0,13],[1,13],[2,13],[4,13],[24,13],[25,13],[26,13],[27,13]},\\ \{[4,12],[21,12],[22,12][23,12],[19,9],[19,10],[20,10]\}. Turret at \{[20,9],[22,11]\} \textbf{2} Interceptor at [22,8]. 
+\item Delete:\{[0,13],[1,13],[2,13],[4,13],[24,13],[25,13],[26,13],[27,13]\},\\ \{[4,12],[21,12],[22,12][23,12],[19,9],[19,10],[20,10] \},\{[20,9],[22,11]\}.
+\end{enumerate}
+     \item turn 4
+\begin{enumerate}
+\item Deploy: Turret and upgrade at [20,9]. Turret at [22,11]. wall at \\ \{[0,13],[1,13],[2,13],[4,13],[24,13],[25,13],[26,13],[27,13]\} , \{[4,12],[23,12]\}. \textbf{2} Interceptor at [22,8].
+\item Delete:\{[0,13],[1,13],[2,13],[4,13],[24,13],[25,13],[26,13],[27,13]\} , \{[4,12],[23,12]\} .
+\end{enumerate}
+     \item start from this turn 
+\begin{enumerate}
+\item self-repair-1: make sure those walls exist and delete those with less than half life and rebuild it next turn:(equally important)\\ \{[4,11],[5,10],[6,9],[7,8],[8,7],[9,6],[10,5],[11,4],[12,3],[13,2],[14,2]\},\\\{[15,3],[16,4],[17,5],[18,6],[19,7],[20,8]\}
+\item self-repair-2: make sure those walls exist and delete those with less than half life and rebuild it next turn:(equally important, if resources is limited, build them with un-upgraded one, if resources is still limited, build them with walls)\\ \{[3,12],[24,12]\}
+\item self-repair-3: make sure those walls exist and delete those with less than half life and rebuild it next turn:(equally important, if resources is limited, build them with un-upgraded one, if resources is still limited, build them with walls)\\ \{[20,9],[22,11]\}
+\item build wall and delete them:(turn 5 - 20)\\ \{[0,13],[1,13],[2,13],[4,13],[24,13],[25,13],[26,13],[27,13]\} , \{[4,12],[23,12]\}.
+\item build wall and self-repair-4:(21-50)\\ \{[0,13],[1,13],[2,13],[4,13],[24,13],[25,13],[26,13],[27,13]\} , \{[4,12],[23,12]\}.
+\item build wall and self-repair-4:(21-50)\\ \{[1,13],[2,13],[4,13],[24,13],[25,13],[26,13]\} , \{[4,12],[23,12]\}. \\build upgraded wall and delete them:(turn 51 - 100)\\ \{[0,13],[27,13]\}.
+\item build and self-repair-5:(5-50) the following is in order\\ wall \{[19,11],[20,11]\}\\ Turret [20,10] \\ Turret [19,10] \\ Turret upgrade [20,10] \\ Turret upgrade [19,10] \\ wall upgrade \{[19,11],[20,11]\}\\ Turret [22,12]\\ Turret update[22,12]\\ Wall \{[4,13],[5,13],[6,13],[17,13],[18,13],[19,13],[17,11]\}
+\end{enumerate}
+\end{enumerate}
+\end{document}
