@@ -150,11 +150,11 @@ class AlgoStrategy(gamelib.AlgoCore):
             game_state.attempt_spawn(SCOUT, scount_locations, scount_count)
         elif turn_number == 2:
             interceptor_locations = [[20, 6]]
-            interceptor_count = 7
+            interceptor_count = 1
             game_state.attempt_spawn(INTERCEPTOR, interceptor_locations, interceptor_count)
         elif turn_number == 3:
             interceptor_locations = [[22,8],[23,9]]
-            interceptor_count = 1
+            interceptor_count = 2
             game_state.attempt_spawn(INTERCEPTOR, interceptor_locations, interceptor_count)
         elif turn_number == 4:
             interceptor_locations = [[22,8]]
