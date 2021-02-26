@@ -10,3 +10,5 @@ dist/*
 
 *.zip
 */.idea/*
+
+python-algo/documentation/_build/*
