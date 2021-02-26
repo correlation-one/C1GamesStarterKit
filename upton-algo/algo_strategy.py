@@ -79,6 +79,7 @@ class AlgoStrategy(gamelib.AlgoCore):
             self.starter_spawn_attackers(game_state)
         else:
             self.static_defense(game_state)
+            self.main_decision(game_state)
 
 
     def starter_build_defences(self, game_state):
@@ -171,7 +172,7 @@ class AlgoStrategy(gamelib.AlgoCore):
         """ Building and repairing static defenses.
         """
 
-        # Hight priority static defenses
+        # High priority static defenses
         # TODO (a)
 
         # TODO (b)
@@ -196,14 +197,27 @@ class AlgoStrategy(gamelib.AlgoCore):
         a, b, c, d, e, f, mp_l, sp_l = self.decision_function(game_state)
 
         if d != 0 or e != 0:
+            # TODO Demolisher & Interceptor
             pass
         if c!= 0:
+            # TODO Support
             pass
         if f == 0:
+            # TODO left & right active defense
             pass
         elif f == 1:
+            # TODO left active defense
+
+            if a != 0 or b != 0:
+                # TODO send scount
+                pass
             pass
         elif f == 2:
+            # TODO right active defense
+
+            if a != 0 or b != 0:
+                # TODO send scount
+                pass
             pass
 
         return
@@ -212,13 +226,13 @@ class AlgoStrategy(gamelib.AlgoCore):
     def decision_function(self, game_state):
         """ The decision function for the main stage of the game.
         """
-        x, y, z, x_1, y_1, z_1, w, w_1, mp, sp, h = self.gather_info_from_gamestete(game_state)
+        x, y, z, x_1, y_1, z_1, w, w_1, mp, sp, h = self.gather_info_from_gamestate(game_state)
         a, b, c, d, e, f, mp_l, sp_l = 0, 0, 0, 0, 0, 0, 0, 0
 
         return a, b, c, d, e, f, mp_l, sp_l
 
 
-    def gather_info_from_gamestete(self, game_state):
+    def gather_info_from_gamestate(self, game_state):
         """ Gather information from GameState for the decision function.
         """
         x, y, z, x_1, y_1, z_1, w, w_1, mp, sp, h = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
