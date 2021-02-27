@@ -73,14 +73,18 @@ class AlgoStrategy(gamelib.AlgoCore):
         Building defenses and creating mobile units on offense.
         """
 
-        self.build_defences(game_state)
-        self.spawn_attackers(game_state)
-        #  self.remove_defenses(game_state)
+        turn_number = game_state.turn_number
+        if turn_number < 5:
+            self.starter_build_defences(game_state)
+            self.starter_spawn_attackers(game_state)
+        else:
+            self.static_defense(game_state)
+            self.main_decision(game_state)
 
 
-    def build_defences(self, game_state):
+    def starter_build_defences(self, game_state):
         """
-        Build defenses
+        Starter strategy for building defenses
         """
         turn_number = game_state.turn_number
 
@@ -133,17 +137,17 @@ class AlgoStrategy(gamelib.AlgoCore):
 
             game_state.attempt_remove(wall_locations)
         elif turn_number >= 5:
-            pass
+            return
 
 
-    def spawn_attackers(self, game_state):
+    def starter_spawn_attackers(self, game_state):
         """
-        Prepare attackers for action phase
+        Starter strategy for preparing attackers for action phase
         """
         turn_number = game_state.turn_number
 
         if turn_number == 0:
-            pass
+            return
         elif turn_number == 1:
             scount_locations = [[20, 6]]
             scount_count = 7
@@ -161,14 +165,102 @@ class AlgoStrategy(gamelib.AlgoCore):
             interceptor_count = 2
             game_state.attempt_spawn(INTERCEPTOR, interceptor_locations, interceptor_count)
         elif turn_number >= 5:
+            return
+
+
+    def static_defense(self, game_state):
+        """ Building and repairing static defenses.
+        """
+
+        # High priority static defenses
+        # TODO (a) self repair 1
+        turret_locations = []
+        #  game_state.attempt_spawn(TURRET, turret_locations)
+        #  game_state.attempt_upgrade(turret_locations)
+
+        wall_locations = []
+        # Find walls with less than half hp
+        self.find_low_hp_buildings(game_state, wall_locations, hp_percent=0.5)
+        #  game_state.attempt_spawn(WALL, wall_locations)
+
+        #  game_state.attempt_remove(wall_locations)
+
+        # TODO (b) self repair 2
+
+        # TODO (c) self repair 3
+
+
+        # TODO turn based static defenses
+        turn_number = game_state.turn_number
+
+        if turn_number >= 5 and turn_number <= 20:
+            pass
+        elif turn_number >= 21 and turn_number <= 50:
+            pass
+        elif turn_number >= 51 and turn_number <= 100:
             pass
 
 
-    #  def remove_defenses(self, game_state):
-    #      """
-    #      Plan removal of defensive buildings after action phase
-    #      """
-    #      pass
+    def find_low_hp_buildings(self, game_state, locaitons, hp_percent):
+      """ Find the buildings with hit points below hp_percent.
+      """
+      low_hp_locations = []
+      # TODO find units with hp lower than the hp_percent
+
+      return low_hp_locations
+
+
+    def main_decision(self, game_state):
+        """ The main responsive active defense and offense strategy.
+        """
+        a, b, c, d, e, f, mp_l, sp_l = self.decision_function(game_state)
+
+        if d != 0 or e != 0:
+            # TODO Demolisher & Interceptor
+            pass
+        if c!= 0:
+            # TODO Support
+            pass
+        if f == 0:
+            # TODO left & right active defense
+            pass
+        elif f == 1:
+            # TODO left active defense
+
+            if a != 0 or b != 0:
+                # TODO send scount
+                pass
+            pass
+        elif f == 2:
+            # TODO right active defense
+
+            if a != 0 or b != 0:
+                # TODO send scount
+                pass
+            pass
+
+        return
+
+
+    def decision_function(self, game_state):
+        """ The decision function for the main stage of the game.
+        """
+        x, y, z, x_1, y_1, z_1, w, w_1, mp, sp, h = self.gather_info_from_gamestate(game_state)
+        a, b, c, d, e, f, mp_l, sp_l = 0, 0, 0, 0, 0, 0, 0, 0
+
+        # TODO main decision for the strategy
+
+        return a, b, c, d, e, f, mp_l, sp_l
+
+
+    def gather_info_from_gamestate(self, game_state):
+        """ Gather information from GameState for the decision function.
+        """
+        x, y, z, x_1, y_1, z_1, w, w_1, mp, sp, h = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        # TODO parse information from the GameState object
+
+        return x, y, z, x_1, y_1, z_1, w, w_1, mp, sp, h
+
 
 if __name__ == "__main__":
     algo = AlgoStrategy()
