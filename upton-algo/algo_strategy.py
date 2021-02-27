@@ -185,13 +185,13 @@ class AlgoStrategy(gamelib.AlgoCore):
         if completeness_a:
             upgraded_turret_locations_b = [[3,12],[24,12]]
             completeness_b = \
-            self.self_repair(self, game_state=game_state, locations=upgraded_turret_locations_b, unit_type=TURRET, hp_percent=.5, upgrade=True)
+                self.self_repair(self, game_state=game_state, locations=upgraded_turret_locations_b, unit_type=TURRET, hp_percent=.5, upgrade=True)
         
         # TODO (c) self repair 3
         if completeness_b:
             upgraded_turret_locations_c = [[20,9],[22,11]]
             completeness_c = \
-            self.self_repair(self, game_state=game_state, locations=upgraded_turret_locations_c, unit_type=TURRET, hp_percent=.5, upgrade=True)
+                self.self_repair(self, game_state=game_state, locations=upgraded_turret_locations_c, unit_type=TURRET, hp_percent=.5, upgrade=True)
         
         # TODO turn based static defenses
         if completeness_c:
@@ -353,6 +353,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 
         if f == 0 and self.continuous_f_0 == 5:
             d = (mp - e)//4
+            self.continuous_f_0 = 0
         else:
             d = 0
 
