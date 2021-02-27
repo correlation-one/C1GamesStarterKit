@@ -204,10 +204,18 @@ class AlgoStrategy(gamelib.AlgoCore):
     def find_low_hp_buildings(self, game_state, locaitons, hp_percent):
       """ Find the buildings with hit points below hp_percent.
       """
-      low_hp_locations = []
-      # TODO find units with hp lower than the hp_percent
+        low_hp_locations = []
 
-      return low_hp_locations
+        for location in locaitons:
+            unit = game_state.contains_stationary_unit(location)
+            if unit and unit.health/unit.max_health < hp_percent: 
+            # ?? Can .max_health give the health of an upgraded unit??
+                low_hp_locations.append(location)
+
+        
+        # TODO find units with hp lower than the hp_percent
+
+        return low_hp_locations
 
 
     def main_decision(self, game_state):
@@ -258,6 +266,64 @@ class AlgoStrategy(gamelib.AlgoCore):
         """
         x, y, z, x_1, y_1, z_1, w, w_1, mp, sp, h = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         # TODO parse information from the GameState object
+        h = game_state.my_health # my health
+        mp = game_state.get_resource('MP') # my mobile points
+        sp = game_state.get_resource('SP') # my structure points
+        # total number of Turret(not upgraded)
+        locations_z = [[1,15],[2,15],[1,14],[2,14] [3,14]]
+        for location in locations_z:
+            unit = game_state.contains_stationary_unit(location)
+            if unit.unit_type == 'TURRET' and unit.upgraded == False:
+                z += 1
+
+        locations_z_1 = [[25,15],[26,15],[24,14],[25,14] [26,14]]
+        for location in locations_z_1:
+            unit = game_state.contains_stationary_unit(location)
+            if unit.unit_type == 'TURRET' and unit.upgraded == False:
+                z_1 += 1
+
+        # total number of UPGRADED Turret
+
+        locations_x = [[1,15],[2,15]]
+        for location in locations_x:
+            unit = game_state.contains_stationary_unit(location)
+            if unit.unit_type == 'TURRET' and unit.upgraded == True:
+                x += 1
+
+        locations_y = [[1,14],[2,14] [3,14]]
+        for location in locations_y:
+            unit = game_state.contains_stationary_unit(location)
+            if unit.unit_type == 'TURRET' and unit.upgraded == True:
+                y += 1
+
+        locations_x_1 = [[25,15],[26,15]]
+        for location in locations_x_1:
+            unit = game_state.contains_stationary_unit(location)
+            if unit.unit_type == 'TURRET' and unit.upgraded == True:
+                x_1 += 1
+
+        locations_y_1 = [[24,14],[25,14],[26,14]]
+        for location in locations_y_1:
+            unit = game_state.contains_stationary_unit(location)
+            if unit.unit_type == 'TURRET' and unit.upgraded == True:
+                y_1 += 1
+
+        # w=0 represents empty grid, w=1 represents wall, w = 2 represents upgraded wall
+        location_w = [0,14]
+        unit_w = game_state.contains_stationary_unit(location_w)
+        if not unit_w: w = 0
+        if 'WALL' == unit_w.unit_type and unit_w.upgraded == False: w = 1
+        if 'WALL' == unit_w.unit_type and unit_w.upgraded == True: w = 2
+
+        location_w_1 = [27,14]
+        unit_w_1 = game_state.contains_stationary_unit(location_w_1)
+        if not unit_w_1:
+            w_1 = 0
+        elif 'WALL' == unit_w_1.unit_type:
+            if unit_w_1.upgraded == False:
+                w_1 = 1
+            else:
+                w_1 = 2
 
         return x, y, z, x_1, y_1, z_1, w, w_1, mp, sp, h
 

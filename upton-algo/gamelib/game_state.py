@@ -123,6 +123,9 @@ class GameState:
         p1units = state["p1Units"]
         p2units = state["p2Units"]
 
+        self.p1units = p1units
+        self.p2units = p2units
+
         self.__create_parsed_units(p1units, 0)
         self.__create_parsed_units(p2units, 1)
 
@@ -512,6 +515,35 @@ class GameState:
             if unit.stationary:
                 return unit
         return False
+
+    def contains_certain_upgraded_unit(self, location):
+        """If the location is bloked and the struction is upgraded, return the updated unit name
+
+        Args:
+            location: The location to check
+
+        Returns:
+            unit name if the location is bloked and the struction is upgraded, False otherwise
+            
+        """
+        if not self.game_map.in_arena_bounds(location):
+            self.warn('Checked for stationary unit outside of arena bounds')
+            return False
+        my_upgraded_units = self.p1units[7] # List of units which are UPGRADE
+        # A single unit's stats are represented as a list as follows: [
+        # [0] : X coordinate.
+        # [1] : Y coordinate.
+        # [2] : Unit health. For REMOVE this is number of turns before removal.
+        # [3] : Unique string identifier for each game object. Will stay the same between frames throughout the game.
+        # ]
+        my_upgraded_units_locations = list()
+        for unit in my_upgraded_units:
+            my_upgraded_units_locations.append(unit[0:2])
+        if location in my_upgraded_units_locations:
+            return self.contains_stationary_unit(location)
+        else:
+            self.warn('location {} has no upgraded unit'.format(location))
+            return False
 
     def warn(self, message):
         """ Used internally by game_state to print warnings

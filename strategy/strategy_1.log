@@ -1,0 +1,216 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.4.7)  26 FEB 2021 19:40
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**strategy_1.tex
+(./strategy_1.tex
+LaTeX2e <2020-02-02> patch level 5
+L3 programming layer <2020-03-06>
+(/usr/local/texlive/2020/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2019/12/20 v1.4l Standard LaTeX document class
+(/usr/local/texlive/2020/texmf-dist/tex/latex/base/size12.clo
+File: size12.clo 2019/12/20 v1.4l Standard LaTeX file (size option)
+)
+\c@part=\count167
+\c@section=\count168
+\c@subsection=\count169
+\c@subsubsection=\count170
+\c@paragraph=\count171
+\c@subparagraph=\count172
+\c@figure=\count173
+\c@table=\count174
+\abovecaptionskip=\skip47
+\belowcaptionskip=\skip48
+\bibindent=\dimen134
+)
+(/usr/local/texlive/2020/texmf-dist/tex/latex/l3backend/l3backend-pdfmode.def
+File: l3backend-pdfmode.def 2020-03-12 L3 backend support: PDF mode
+\l__kernel_color_stack_int=\count175
+\l__pdf_internal_box=\box45
+)
+(./strategy_1.aux)
+\openout1 = `strategy_1.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 2.
+LaTeX Font Info:    ... okay on input line 2.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 2.
+LaTeX Font Info:    ... okay on input line 2.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 2.
+LaTeX Font Info:    ... okay on input line 2.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 2.
+LaTeX Font Info:    ... okay on input line 2.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 2.
+LaTeX Font Info:    ... okay on input line 2.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 2.
+LaTeX Font Info:    ... okay on input line 2.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 2.
+LaTeX Font Info:    ... okay on input line 2.
+LaTeX Font Info:    Trying to load font information for OMS+cmr on input line 6
+.
+ (/usr/local/texlive/2020/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 2019/12/16 v2.5j Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 6.
+
+Overfull \hbox (1.59096pt too wide) in paragraph at lines 6--7
+[]\OT1/cmr/m/n/12 Deploy: Tur-ret and up-grade at \OMS/cmsy/m/n/12 f\OT1/cmr/m/
+n/12 [3,12],[24,12],[10,10],[17,10]\OMS/cmsy/m/n/12 g\OT1/cmr/m/n/12 ; Wall
+ []
+
+
+Overfull \hbox (0.503pt too wide) in paragraph at lines 11--12
+[]\OT1/cmr/m/n/12 Deploy: Wall at\OMS/cmsy/m/n/12 f\OT1/cmr/m/n/12 [1,13],[2,12
+],[3,13],[24,13],[25,12],[26,13]\OMS/cmsy/m/n/12 g\OT1/cmr/m/n/12 ,Support
+ []
+
+
+Overfull \hbox (71.32866pt too wide) in paragraph at lines 16--17
+[]\OT1/cmr/m/n/12 Deploy: Wall at\OMS/cmsy/m/n/12 f\OT1/cmr/m/n/12 [4,11],[5,10
+],[6,9],[7,8],[8,7],[9,6],[10,5],[11,4],[12,3],[13,2],[14,2]\OMS/cmsy/m/n/12 g\
+OT1/cmr/m/n/12 , 
+ []
+
+
+Overfull \hbox (38.45692pt too wide) in paragraph at lines 16--17
+\OMS/cmsy/m/n/12 f\OT1/cmr/m/n/12 [15,3],[16,4],[17,5],[18,6],[19,7],[20,8]\OMS
+/cmsy/m/n/12 g\OT1/cmr/m/n/12 ,\OMS/cmsy/m/n/12 f\OT1/cmr/m/n/12 [0,13],[1,13],
+[2,13],[26,13],[27,13]\OMS/cmsy/m/n/12 g\OT1/cmr/m/n/12 .
+ []
+
+
+Overfull \hbox (14.28743pt too wide) in paragraph at lines 21--22
+[]\OT1/cmr/m/n/12 Deploy: Wall at[0,13],[1,13],[2,13],[4,13],[24,13],[25,13],[2
+6,13],[27,13], 
+ []
+
+
+Overfull \hbox (47.48692pt too wide) in paragraph at lines 21--22
+\OMS/cmsy/m/n/12 f\OT1/cmr/m/n/12 [4,12],[21,12],[22,12][23,12],[19,9],[19,10],
+[20,10]\OMS/cmsy/m/n/12 g\OT1/cmr/m/n/12 . Tur-ret at \OMS/cmsy/m/n/12 f\OT1/cm
+r/m/n/12 [20,9],[22,11]\OMS/cmsy/m/n/12 g
+ []
+
+
+Overfull \hbox (30.88478pt too wide) in paragraph at lines 26--27
+\OMS/cmsy/m/n/12 f\OT1/cmr/m/n/12 [0,13],[1,13],[2,13],[4,13],[24,13],[25,13],[
+26,13],[27,13]\OMS/cmsy/m/n/12 g \OT1/cmr/m/n/12 , \OMS/cmsy/m/n/12 f\OT1/cmr/m
+/n/12 [4,12],[23,12]\OMS/cmsy/m/n/12 g\OT1/cmr/m/n/12 .
+ []
+
+
+Overfull \hbox (63.35806pt too wide) in paragraph at lines 27--28
+[]\OT1/cmr/m/n/12 Delete:\OMS/cmsy/m/n/12 f\OT1/cmr/m/n/12 [0,13],[1,13],[2,13]
+,[4,13],[24,13],[25,13],[26,13],[27,13]\OMS/cmsy/m/n/12 g \OT1/cmr/m/n/12 , \OM
+S/cmsy/m/n/12 f\OT1/cmr/m/n/12 [4,12],[23,12]\OMS/cmsy/m/n/12 g
+ []
+
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 33.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 33.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 33.
+[1
+
+{/usr/local/texlive/2020/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+
+! Package inputenc Error: Unicode character ， (U+FF0C)
+(inputenc)                not set up for use with LaTeX.
+
+See the inputenc package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.44 ...,[6,13],[17,12],[18,12],[19,12],[17,11]，
+                                                  [18,11]\}\\ Wall upgrade \...
+
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+! Package inputenc Error: Unicode character ， (U+FF0C)
+(inputenc)                not set up for use with LaTeX.
+
+See the inputenc package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.44 ...,[6,13],[17,12],[18,12],[19,12],[17,11]，
+                                                  [18,11]\}\
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+Overfull \hbox (15.35562pt too wide) in paragraph at lines 44--45
+\OT1/cmr/m/n/12 Wall up-grade \OMS/cmsy/m/n/12 f\OT1/cmr/m/n/12 [4,13],[5,13],[
+6,13],[17,12],[18,12],[19,12],[17,11][18,11]\OMS/cmsy/m/n/12 g 
+ []
+
+[2]
+Overfull \hbox (26.12915pt too wide) in paragraph at lines 48--49
+\OT1/cmr/bx/n/12 if the Op-po-nent's Mo-bile points \OT1/cmr/m/n/12 is like: $\
+OML/cmm/m/it/12 H[] < \OT1/cmr/m/n/12 15$ or \OT1/cmr/bx/n/12 if \OMS/cmsy/m/n/
+12 f\OT1/cmr/m/n/12 [1,14],[2,14]\OMS/cmsy/m/n/12 g
+ []
+
+[3]
+Overfull \hbox (32.00409pt too wide) in paragraph at lines 49--50
+\OT1/cmr/bx/n/12 if the Op-po-nent's Mo-bile points \OT1/cmr/m/n/12 is like: $\
+OML/cmm/m/it/12 H[] < \OT1/cmr/m/n/12 15$ or \OT1/cmr/bx/n/12 if \OMS/cmsy/m/n/
+12 f\OT1/cmr/m/n/12 [26,14],[2,15]\OMS/cmsy/m/n/12 g
+ []
+
+[4]
+Overfull \hbox (15.92232pt too wide) in paragraph at lines 53--54
+\OT1/cmr/m/n/12 num-ber of Tur-ret(not up-graded) in \OMS/cmsy/m/n/12 f\OT1/cmr
+/m/n/12 [1,15],[2,15],[1,14],[2,14][3,14]\OMS/cmsy/m/n/12 g\OT1/cmr/m/n/12 .$\O
+ML/cmm/m/it/12 w$
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 53--54
+
+ []
+
+
+Overfull \hbox (63.3385pt too wide) in paragraph at lines 53--54
+\OT1/cmr/m/n/12 to-tal num-ber of Tur-ret(not up-graded) in \OMS/cmsy/m/n/12 f\
+OT1/cmr/m/n/12 [25,15],[26,15],[24,14],[25,14][26,14]\OMS/cmsy/m/n/12 g\OT1/cmr
+/m/n/12 . 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 53--54
+
+ []
+
+
+Overfull \hbox (12.52222pt too wide) in paragraph at lines 53--54
+\OML/cmm/m/it/12 O\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 x; y; z; []; []; []; w; [];
+ MP; SP; H\OT1/cmr/m/n/12 ) = (\OML/cmm/m/it/12 a; b; c; d; e; f; MP[]; SP[]\OT
+1/cmr/m/n/12 )$, where
+ []
+
+[5] (./strategy_1.aux) ) 
+Here is how much of TeX's memory you used:
+ 400 strings out of 480608
+ 6792 string characters out of 5903631
+ 243610 words of memory out of 5000000
+ 16363 multiletter control sequences out of 15000+600000
+ 535381 words of font info for 34 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 24i,4n,21p,1387b,244s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/local/texlive/2020/texmf-dist/fonts/type1/public/
+amsfonts/cm/cmbx12.pfb></usr/local/texlive/2020/texmf-dist/fonts/type1/public/a
+msfonts/cm/cmmi12.pfb></usr/local/texlive/2020/texmf-dist/fonts/type1/public/am
+sfonts/cm/cmmi8.pfb></usr/local/texlive/2020/texmf-dist/fonts/type1/public/amsf
+onts/cm/cmr12.pfb></usr/local/texlive/2020/texmf-dist/fonts/type1/public/amsfon
+ts/cm/cmsy10.pfb>
+Output written on strategy_1.pdf (5 pages, 62813 bytes).
+PDF statistics:
+ 40 PDF objects out of 1000 (max. 8388607)
+ 27 compressed objects within 1 object stream
+ 0 named destinations out of 1000 (max. 500000)
+ 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+
