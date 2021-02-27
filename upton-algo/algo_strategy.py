@@ -257,8 +257,10 @@ class AlgoStrategy(gamelib.AlgoCore):
         # build defenses in hierarchy
         defenses_built = 0
         for target_type in building_hierarchy[hierarchy_index:]:
-            defenses_built += self.build_defenses(locaitons=locations_to_build[:], unit_type=target_type, upgrade=upgrade, mark_remove=False)
-            locations_to_build = locations_to_build[defenses_built:]
+            if locations_to_build:
+                defenses_built += self.build_defenses(locaitons=locations_to_build[:], unit_type=target_type, upgrade=upgrade, mark_remove=False)
+                locations_to_build = locations_to_build[defenses_built:]
+        return defenses_built
 
 
     def find_low_hp_buildings(self, game_state, locaitons, hp_percent):
