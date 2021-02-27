@@ -349,7 +349,6 @@ class AlgoStrategy(gamelib.AlgoCore):
             d = 0
 
         sp_l = sp - c
-        sp_l = sp - a - b - 2*d - e
         mp_l = mp - a - b - 2*d - e
 
         return a, b, c, d, e, f, mp_l, sp_l
