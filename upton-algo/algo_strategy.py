@@ -235,12 +235,18 @@ class AlgoStrategy(gamelib.AlgoCore):
             return build_status
 
 
-    def self_repair(self, game_state, locations, unit_type, hp_percent):
+    def self_repair(self, game_state, locations, unit_type, hp_percent, upgrade=False):
         """ Self repair buildings
 
         If the buildings don't exist, build them.
         If the buildings are below the hp_percent, mark them for remove.
+
+        Build defenses with hierarchy.
         """
+        building_hierarchy = [TURRET, WALL]
+
+        hierarchy_index = building_hierarchy.index(unit_type)
+
         # find buildings to build
         locations_to_build = [location for location in locaitons if not game_state.contains_stationary_unit(location)]
 
@@ -248,8 +254,11 @@ class AlgoStrategy(gamelib.AlgoCore):
         locations_to_remove = self.find_low_hp_buildings(game_state=game_state, locaitons=locaitons, hp_percent=hp_percent)
         game_state.attempt_remove(locations_to_remove)
 
-        # call build defenses
-        return self.build_defenses( locaitons=locations_to_build, unit_type=unit_type, mark_remove=False)
+        # build defenses in hierarchy
+        defenses_built = 0
+        for target_type in building_hierarchy[hierarchy_index:]:
+            defenses_built += self.build_defenses(locaitons=locations_to_build[:], unit_type=target_type, upgrade=upgrade, mark_remove=False)
+            locations_to_build = locations_to_build[defenses_built:]
 
 
     def find_low_hp_buildings(self, game_state, locaitons, hp_percent):
