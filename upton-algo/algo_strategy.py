@@ -249,6 +249,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 
         # find buildings to build
         locations_to_build = [location for location in locaitons if not game_state.contains_stationary_unit(location)]
+        number_to_build = len(locations_to_build)
 
         # find buildings to remove
         locations_to_remove = self.find_low_hp_buildings(game_state=game_state, locaitons=locaitons, hp_percent=hp_percent)
@@ -260,7 +261,7 @@ class AlgoStrategy(gamelib.AlgoCore):
             if locations_to_build:
                 defenses_built += self.build_defenses(locaitons=locations_to_build[:], unit_type=target_type, upgrade=upgrade, mark_remove=False)
                 locations_to_build = locations_to_build[defenses_built:]
-        return defenses_built
+        return defenses_built == number_to_build
 
 
     def find_low_hp_buildings(self, game_state, locaitons, hp_percent):
