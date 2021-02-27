@@ -209,11 +209,9 @@ class AlgoStrategy(gamelib.AlgoCore):
         for location in locaitons:
             unit = game_state.contains_stationary_unit(location)
             if unit and unit.health/unit.max_health < hp_percent: 
-            # ?? Can .max_health give the health of an upgraded unit??
+            # TODO Can .max_health give the health of an upgraded unit??
                 low_hp_locations.append(location)
 
-        
-        # TODO find units with hp lower than the hp_percent
 
         return low_hp_locations
 
@@ -253,19 +251,58 @@ class AlgoStrategy(gamelib.AlgoCore):
     def decision_function(self, game_state):
         """ The decision function for the main stage of the game.
         """
-        x, y, z, x_1, y_1, z_1, w, w_1, mp, sp, h = self.gather_info_from_gamestate(game_state)
+        x, y, z, x_1, y_1, z_1, w, w_1, mp, sp, h, r = self.gather_info_from_gamestate(game_state)
         a, b, c, d, e, f, mp_l, sp_l = 0, 0, 0, 0, 0, 0, 0, 0
 
         # TODO main decision for the strategy
+        e = (5<= r < 20) + 2*(20 <= r <40) + 3*(40 <= r < 60) + 4*(60 <= r < 80) + 5(r <= 100)
+        # TODO ??where is 80 <= r < 100??
+        term_a = g_function((x + .25*z)*w, y*w, w)
+        term_b = g_function(x + 0.25*z, y, w)
+        term_a_1 = g_function((x_1+.25*z_1)*w_1, y_1*w_1, w_1)
+        term_b_1 = g_function(x_1+0.25*z_1, y_1, w_1)
+
+        if mp >= term_a - 5.5*w + term_b + 4 + int(r/10) and mp >= term_a_1 - 5.5*w_1 + term_b_1 + 4 + int(r/10):
+            f = 0
+            c = 0
+            a = 0
+            b = 0
+        # TODO the above condition may not be necessary since all variables are intialed as 0
+        elif (term_b - 5.5*w)/(term_a - 5.5*w + term_b) >= (term_b_1 - 5.5*w_1)/(term_a_1 - 5.5*w_1 + term_b_1):
+            f = 1
+            c = 2
+            a = term_a_1
+            b = mp - a
+        elif (term_b - 5.5*w)/(term_a - 5.5*w + term_b) < (term_b_1 - 5.5*w_1)/(term_a_1 - 5.5*w_1 + term_b_1):
+            f = 2
+            c = 2
+            a = term_a
+            b = mp - a
+
+        if f == 0: # TODO for previous 4 sequential turns?!
+            d = int((mp - e)/4)
+        else:
+            d = 0
+
+        sp_l = sp - c
+        sp_l = sp - a - b - 2*d - e
+        # TODO is it mp_l??
 
         return a, b, c, d, e, f, mp_l, sp_l
 
+    def g_function(self, i, j, t):
+        """A function used in decision_function.
+        """
+        g = 5.5*t + 2*i + 3*j
+
+        return g
 
     def gather_info_from_gamestate(self, game_state):
         """ Gather information from GameState for the decision function.
         """
-        x, y, z, x_1, y_1, z_1, w, w_1, mp, sp, h = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        x, y, z, x_1, y_1, z_1, w, w_1, mp, sp, h, r = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         # TODO parse information from the GameState object
+        r = game_state.turn_number
         h = game_state.my_health # my health
         mp = game_state.get_resource('MP') # my mobile points
         sp = game_state.get_resource('SP') # my structure points
