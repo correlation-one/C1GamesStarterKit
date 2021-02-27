@@ -307,13 +307,13 @@ class AlgoStrategy(gamelib.AlgoCore):
         mp = game_state.get_resource(MP) # my mobile points
         sp = game_state.get_resource(SP) # my structure points
         # total number of Turret(not upgraded)
-        locations_z = [[1,15],[2,15],[1,14],[2,14] [3,14]]
+        locations_z = [[1,15],[2,15],[1,14],[2,14],[3,14]]
         for location in locations_z:
             unit = game_state.contains_stationary_unit(location)
             if (unit.unit_type == TURRET) and (unit.upgraded == False):
                 z += 1
 
-        locations_z_1 = [[25,15],[26,15],[24,14],[25,14] [26,14]]
+        locations_z_1 = [[25,15],[26,15],[24,14],[25,14],[26,14]]
         for location in locations_z_1:
             unit = game_state.contains_stationary_unit(location)
             if (unit.unit_type == TURRET) and (unit.upgraded == False):
@@ -327,7 +327,7 @@ class AlgoStrategy(gamelib.AlgoCore):
             if (unit.unit_type == TURRET) and (unit.upgraded == True):
                 x += 1
 
-        locations_y = [[1,14],[2,14] [3,14]]
+        locations_y = [[1,14],[2,14],[3,14]]
         for location in locations_y:
             unit = game_state.contains_stationary_unit(location)
             if (unit.unit_type == TURRET) and (unit.upgraded == True):
