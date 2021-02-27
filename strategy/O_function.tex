@@ -1,0 +1,60 @@
+\documentclass[12pt]{article}
+\usepackage{bbm}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\begin{document}
+
+define $O(x,y,z,\bar{x},\bar{y},\bar{z},w,\bar{w},MP,SP,H,R) = (a,b,c,d,e,f,MP_l,SP_l)$.
+
+\begin{align*}
+e &= \mathbbm{1}\{5 \leq R <20\}	+2* \mathbbm{1}\{20 \leq R <40\} +	3*\mathbbm{1}\{40 \leq R <60\}\\
+&+ 4*\mathbbm{1}\{60 \leq R <80\}	+ 5*\mathbbm{1}\{R \leq 100\} 
+\end{align*}
+
+Here $\floor*{5.4} = 5$ means round down.
+\begin{align*}
+	f = 0 \quad &\text{if $MP \geq g((x+0.25z)w,yw,w) - 5.5w + g(x+0.25z,y,w)+4 + \floor*{\frac{R}{10}}$}\quad \\ &\text{and if $MP \geq g((\bar{x}+0.25\bar{z})\bar{w},\bar{y}\bar{w},\bar{w}) - 5.5\bar{w} + g(\bar{x}+0.25\bar{z},\bar{y},\bar{w})+4 + \floor*{\frac{R}{10}}$}\\ &\text{otherwise,}
+\end{align*}
+
+\begin{equation*}
+  f =
+    \begin{cases}
+      1 & \frac{g(x+0.25z,y,w)-5.5w}{g((x+0.25z)w,yw,w) - 5.5w + g(x+0.25z,y,w)} \geq \frac{g(\bar{x}+0.25\bar{z},\bar{y},\bar{w})-5.5\bar{w}}{g((\bar{x}+0.25\bar{z})\bar{w},\bar{y}\bar{w},\bar{w}) - 5.5\bar{w} + g(\bar{x}+0.25\bar{z},\bar{y},\bar{w})}  \\
+      2 & \frac{g(x+0.25z,y,w)-5.5w}{g((x+0.25z)w,yw,w) - 5.5w + g(x+0.25z,y,w)} < \frac{g(\bar{x}+0.25\bar{z},\bar{y},\bar{w})-5.5\bar{w}}{g((\bar{x}+0.25\bar{z})\bar{w},\bar{y}\bar{w},\bar{w}) - 5.5\bar{w} + g(\bar{x}+0.25\bar{z},\bar{y},\bar{w})}  \\
+    \end{cases}       
+\end{equation*}
+\begin{align*}
+& c = 2 \quad \text{if $f = 1$ or $f=2$ }\\
+&c=0 \quad\text{otherwise}	
+\end{align*}
+ \begin{align*}
+& d = \floor*{\frac{MP-e}{4}} \quad \text{if $f = 0$ for previous $4$ sequential turns }\\
+&d=0 \quad\text{otherwise}	
+\end{align*}
+\begin{align*}
+& a = g((\bar{x}+0.25\bar{z})\bar{w},\bar{y}\bar{w},\bar{w}) \quad \text{if $f = 1$}\\
+& a = g((x+0.25z)w,yw,w) \quad \text{if $ f = 2$ }\\
+&a=0 \quad\text{if f = 0}	
+\end{align*}
+ \begin{align*}
+& b = MP-a \quad \text{if $f = 1$ or $f = 2$}\\
+&b=0 \quad\text{if f = 0}	
+\end{align*}
+
+$g$ is defined below:
+\begin{equation*}
+g(i,j,t) =5.5t +2i+3j  	
+\end{equation*}
+
+\begin{equation*}
+SP_l = SP - c	
+\end{equation*}
+
+\begin{equation*}
+SP_l = SP - a -b - 2d -e	
+\end{equation*}
+\end{document}
