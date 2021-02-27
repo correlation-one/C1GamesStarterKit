@@ -320,7 +320,7 @@ class AlgoStrategy(gamelib.AlgoCore):
         # TODO main decision for the strategy
         #  e = (5<= r < 20) + 2*(20 <= r <40) + 3*(40 <= r < 60) + 4*(60 <= r < 80) + 5*(r <= 100)
         # TODO if r in [0, 100) the following is the optimal approach
-        e = min(r // 20 + 1, 5)
+        e = r // 20 + 1
         term_a = g_function((x + .25*z)*w, y*w, w)
         term_b = g_function(x + 0.25*z, y, w)
         term_a_1 = g_function((x_1+.25*z_1)*w_1, y_1*w_1, w_1)
