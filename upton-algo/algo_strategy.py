@@ -202,8 +202,8 @@ class AlgoStrategy(gamelib.AlgoCore):
 
 
     def find_low_hp_buildings(self, game_state, locaitons, hp_percent):
-      """ Find the buildings with hit points below hp_percent.
-      """
+        """ Find the buildings with hit points below hp_percent.
+        """
         low_hp_locations = []
 
         for location in locaitons:
@@ -262,7 +262,7 @@ class AlgoStrategy(gamelib.AlgoCore):
         term_a_1 = g_function((x_1+.25*z_1)*w_1, y_1*w_1, w_1)
         term_b_1 = g_function(x_1+0.25*z_1, y_1, w_1)
 
-        if (mp >= term_a - 5.5*w + term_b + 4 + int(r/10)) and (mp >= term_a_1 - 5.5*w_1 + term_b_1 + 4 + int(r/10)):
+        if (mp >= term_a - 5.5*w + term_b + 4 + r//10) and (mp >= term_a_1 - 5.5*w_1 + term_b_1 + 4 + r//10):
             f = 0
             c = 0
             a = 0
@@ -280,7 +280,7 @@ class AlgoStrategy(gamelib.AlgoCore):
             b = mp - a
 
         if f == 0: # TODO for previous 4 sequential turns?!
-            d = int((mp - e)/4)
+            d = (mp - e)//4
         else:
             d = 0
 
@@ -362,7 +362,7 @@ class AlgoStrategy(gamelib.AlgoCore):
             else:
                 w_1 = 2
 
-        return x, y, z, x_1, y_1, z_1, w, w_1, mp, sp, h
+        return x, y, z, x_1, y_1, z_1, w, w_1, mp, sp, h, r
 
 
 if __name__ == "__main__":
