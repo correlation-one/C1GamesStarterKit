@@ -26,6 +26,7 @@ class AlgoStrategy(gamelib.AlgoCore):
         random.seed(seed)
         gamelib.debug_write('Random seed: {}'.format(seed))
 
+
     def on_game_start(self, config):
         """ 
         Read in config and perform any initial setup here 
@@ -42,7 +43,8 @@ class AlgoStrategy(gamelib.AlgoCore):
         MP = 1
         SP = 0
         # This is a good place to do initial setup
-        self.scored_on_locations = []
+        #  self.scored_on_locations = []
+        self.continuous_f_0 = 0
 
     def on_turn(self, turn_state):
         """
@@ -201,6 +203,55 @@ class AlgoStrategy(gamelib.AlgoCore):
             pass
 
 
+    def build_defenses(self, game_state, locations, unit_type, upgrade=False, mark_remove=False):
+        """ Build defenses at given locations.
+
+        If upgrade==True, try to build as many updated buildings as possible, then try to build the
+        unupgraded buildings.
+        """
+        # TODO check if can afford
+        base_unit_cost = game_state.type_cost(unit_type)[SP]
+        if upgrade:
+            unit_cost = base_unit_cost + game_state.type_cost(unit_type, upgrade=True)[SP]
+        else:
+            unit_cost = base_unit_cost
+        available_SP = game_state.get_resource(SP)
+        number_affordable = available_SP // unit_cost
+
+        # TODO if yes, build them, else return False
+        if number_affordable == 0:
+            if upgrade:
+                return self.build_defenses(game_state, locations, unit_type, upgrade=False, mark_remove=mark_remove)
+            else:
+                return False
+        else:
+            build_status = game_state.attempt_spawn(unit_type, locations[:number_affordable])
+            if upgrade:
+                upgrade_status = game_state.attempt_upgrade(locations[:number_affordable])
+                if build_status != upgrade_status:
+                    raise Exception("Number of spawn buildings does not match upgraded buildings.")
+                if number_affordable < len(locaitons):
+                    build_status += self.build_defenses(game_state, locations[number_affordable:], unit_type, upgrade=False, mark_remove=mark_remove)
+            return build_status
+
+
+    def self_repair(self, game_state, locations, unit_type, hp_percent):
+        """ Self repair buildings
+
+        If the buildings don't exist, build them.
+        If the buildings are below the hp_percent, mark them for remove.
+        """
+        # find buildings to build
+        locations_to_build = [location for location in locaitons if not game_state.contains_stationary_unit(location)]
+
+        # find buildings to remove
+        locations_to_remove = self.find_low_hp_buildings(game_state=game_state, locaitons=locaitons, hp_percent=hp_percent)
+        game_state.attempt_remove(locations_to_remove)
+
+        # call build defenses
+        return self.build_defenses( locaitons=locations_to_build, unit_type=unit_type, mark_remove=False)
+
+
     def find_low_hp_buildings(self, game_state, locaitons, hp_percent):
         """ Find the buildings with hit points below hp_percent.
         """
@@ -255,8 +306,9 @@ class AlgoStrategy(gamelib.AlgoCore):
         a, b, c, d, e, f, mp_l, sp_l = 0, 0, 0, 0, 0, 0, 0, 0
 
         # TODO main decision for the strategy
-        e = (5<= r < 20) + 2*(20 <= r <40) + 3*(40 <= r < 60) + 4*(60 <= r < 80) + 5(r <= 100)
-        # TODO ??where is 80 <= r < 100??
+        #  e = (5<= r < 20) + 2*(20 <= r <40) + 3*(40 <= r < 60) + 4*(60 <= r < 80) + 5*(r <= 100)
+        # TODO if r in [0, 100) the following is the optimal approach
+        e = min(r // 20 + 1, 5)
         term_a = g_function((x + .25*z)*w, y*w, w)
         term_b = g_function(x + 0.25*z, y, w)
         term_a_1 = g_function((x_1+.25*z_1)*w_1, y_1*w_1, w_1)
@@ -286,7 +338,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 
         sp_l = sp - c
         sp_l = sp - a - b - 2*d - e
-        # TODO is it mp_l??
+        mp_l = mp - a - b - 2*d - e
 
         return a, b, c, d, e, f, mp_l, sp_l
 
