@@ -173,11 +173,21 @@ class AlgoStrategy(gamelib.AlgoCore):
         """
 
         # High priority static defenses
-        # TODO (a)
+        # TODO (a) self repair 1
+        turret_locations = []
+        #  game_state.attempt_spawn(TURRET, turret_locations)
+        #  game_state.attempt_upgrade(turret_locations)
 
-        # TODO (b)
+        wall_locations = []
+        # Find walls with less than half hp
+        self.find_low_hp_buildings(game_state, wall_locations, hp_percent=0.5)
+        #  game_state.attempt_spawn(WALL, wall_locations)
 
-        # TODO (c)
+        #  game_state.attempt_remove(wall_locations)
+
+        # TODO (b) self repair 2
+
+        # TODO (c) self repair 3
 
 
         # TODO turn based static defenses
@@ -189,6 +199,15 @@ class AlgoStrategy(gamelib.AlgoCore):
             pass
         elif turn_number >= 51 and turn_number <= 100:
             pass
+
+
+    def find_low_hp_buildings(self, game_state, locaitons, hp_percent):
+      """ Find the buildings with hit points below hp_percent.
+      """
+      low_hp_locations = []
+      # TODO find units with hp lower than the hp_percent
+
+      return low_hp_locations
 
 
     def main_decision(self, game_state):
@@ -229,6 +248,8 @@ class AlgoStrategy(gamelib.AlgoCore):
         x, y, z, x_1, y_1, z_1, w, w_1, mp, sp, h = self.gather_info_from_gamestate(game_state)
         a, b, c, d, e, f, mp_l, sp_l = 0, 0, 0, 0, 0, 0, 0, 0
 
+        # TODO main decision for the strategy
+
         return a, b, c, d, e, f, mp_l, sp_l
 
 
@@ -236,6 +257,8 @@ class AlgoStrategy(gamelib.AlgoCore):
         """ Gather information from GameState for the decision function.
         """
         x, y, z, x_1, y_1, z_1, w, w_1, mp, sp, h = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        # TODO parse information from the GameState object
+
         return x, y, z, x_1, y_1, z_1, w, w_1, mp, sp, h
 
 
