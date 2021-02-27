@@ -333,22 +333,25 @@ class AlgoStrategy(gamelib.AlgoCore):
 
         if (mp >= term_a - 5.5*w + term_b + 4 + r//10) and (mp >= term_a_1 - 5.5*w_1 + term_b_1 + 4 + r//10):
             f = 0
+            self.continuous_f_0 += 1
             c = 0
             a = 0
             b = 0
         # TODO the above condition may not be necessary since all variables are intialed as 0
         elif (term_b - 5.5*w)/(term_a - 5.5*w + term_b) >= (term_b_1 - 5.5*w_1)/(term_a_1 - 5.5*w_1 + term_b_1):
             f = 1
+            self.continuous_f_0 = 0
             c = 2
             a = term_a_1
             b = mp - a
         elif (term_b - 5.5*w)/(term_a - 5.5*w + term_b) < (term_b_1 - 5.5*w_1)/(term_a_1 - 5.5*w_1 + term_b_1):
             f = 2
+            self.continuous_f_0 = 0
             c = 2
             a = term_a
             b = mp - a
 
-        if f == 0: # TODO for previous 4 sequential turns?!
+        if f == 0 and self.continuous_f_0 == 5:
             d = (mp - e)//4
         else:
             d = 0
