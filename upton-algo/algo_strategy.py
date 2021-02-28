@@ -291,10 +291,12 @@ class AlgoStrategy(gamelib.AlgoCore):
 
         if d != 0 or e != 0:
             # TODO Demolisher & Interceptor
-            pass
+            game_state.attempt_spawn(DEMOLISHER, [15,1])
+            game_state.attempt_spawn(INTERCEPTOR, [19,5])
         if c!= 0:
             # TODO Support
-            pass
+            support_locations = [[13,3],[14,3],[15,4],[16,5],[17,6],[18,7],[14,4],[15,5],[16,6],[17,7]]
+            self.build_defenses(game_state=game_state, locations=support_locations, unit_type=SUPPORT, upgrade=False, mark_remove=True)
         if f == 0:
             # TODO left & right active defense
             pass
@@ -436,6 +438,54 @@ class AlgoStrategy(gamelib.AlgoCore):
 
         return x, y, z, x_1, y_1, z_1, w, w_1, mp, sp, h, r
 
+    def get_active_defense_locations(self, defense_type):
+        """ Return the coordinates for active defense strategy
+
+        defense_type: left(0), right(1)
+        """
+        if defense_type == 0:
+            # Left active defense
+            return [[0,13],[1,13],[0,13],[1,12],[2,12]]
+        elif defense_type == 1:
+            # Right active defense
+            return [[26,13],[27,13],[27,13],[26,12],[27,12]]
+        else:
+            raise ValueError
+
+
+    def active_defense(self, game_state, defense_type):
+        """ Build active defenses
+
+        defense_type: left(0), right(1)
+        """
+        active_locations = self.get_active_defense_locations(defense_type)
+        oppo_MP = game_state.get_resource(MP, player_index=1)
+
+        # if certain state is empty or marked deleted
+        state_1_14 = (not game_state.contains_stationary_unit([1,14])) or (game_state.contains_stationary_unit([1,14]).pending_removal)
+        state_2_14 = (not game_state.contains_stationary_unit([2,14])) or (game_state.contains_stationary_unit([2,14]).pending_removal)
+        state_1_15 = (not game_state.contains_stationary_unit([1,15])) or (game_state.contains_stationary_unit([1,15]).pending_removal)
+        # trigger == 1, when {[1,14],[2,14]} or {[1,14],[1,15]} are empty or deleted, == 0 otherwise
+        trigger = (state_1_14 and state_2_14) or (state_1_14 and state_1_15)
+        # marked deleted: game_state.contains_stationary_unit(location).pending_removal
+        if game_state.attempt_spawn(WALL, active_locations[:2]) < 2:
+            return
+        if trigger:
+            if oppo_MP >= 15:
+               if not game_state.attempt_upgrade(active_locations[2]):
+                    return
+            if oppo_MP >= 25:
+                if not game_state.attempt_spawn(TURRET, active_locations[3]):
+                    return
+            if oppo_MP >= 35:
+                if not game_state.attempt_upgrade(active_locations[3]):
+                    return
+            if oppo_MP >= 45:
+                if not game_state.attempt_spawn(TURRET, active_locations[4]):
+                    return
+                if not game_state.attempt_upgrade(active_locations[4]):
+                    return
+        
 
 if __name__ == "__main__":
     algo = AlgoStrategy()
