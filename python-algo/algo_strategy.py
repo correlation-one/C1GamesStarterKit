@@ -147,7 +147,7 @@ class AlgoStrategy(gamelib.AlgoCore):
         while game_state.get_resource(MP) >= (2*game_state.type_cost(INTERCEPTOR)[MP])
             # Choose a random deploy location.
 
-            deploy_location = deploy_locations[[12,1], [15,1]]
+            deploy_location = [[12,1], [15,1]]
 
             game_state.attempt_spawn(INTERCEPTOR, deploy_location)
             """
