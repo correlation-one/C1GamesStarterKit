@@ -84,10 +84,10 @@ class AlgoStrategy(gamelib.AlgoCore):
             self.stall_with_interceptors(game_state)
         else:
             if game_state.get_resource(MP) > 8 && game_state.turn_number % 2 == 0:
-                    # To simplify we will just check sending them from back left and right
-                    scout_spawn_location_options = [[12, 1], [15, 1]]
-                    best_location = self.least_damage_spawn_location(game_state, scout_spawn_location_options)
-                    game_state.attempt_spawn(SCOUT, best_location, 1000)
+                # To simplify we will just check sending them from back left and right
+                scout_spawn_location_options = [[12, 1], [15, 1]]
+                best_location = self.least_damage_spawn_location(game_state, scout_spawn_location_options)
+                game_state.attempt_spawn(SCOUT, best_location, 1000)
 
                 # Lastly, if we have spare SP, let's build some Factories to generate more resources
                 support_locations = [[13, 2], [14, 2], [13, 3], [14, 3]]
