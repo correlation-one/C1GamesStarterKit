@@ -159,10 +159,7 @@ class AlgoStrategy(gamelib.AlgoCore):
             deploy_location = [[12,1], [15,1]]
 
             game_state.attempt_spawn(INTERCEPTOR, deploy_location)
-            """
-            We don't have to remove the location since multiple mobile
-            units can occupy the same space.
-            """
+
 
     def demolisher_line_strategy(self, game_state):
         """
