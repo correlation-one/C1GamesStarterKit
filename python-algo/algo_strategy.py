@@ -140,7 +140,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 
         # Remove locations that are blocked by our own structures
         # since we can't deploy units there.
-        # deploy_locations = self.filter_blocked_locations(friendly_edges, game_state)
+        deploy_locations = self.filter_blocked_locations(friendly_edges, game_state)
 
         # While we have remaining MP to spend lets send out interceptors randomly.
         while game_state.get_resource(MP) >= game_state.type_cost(INTERCEPTOR)[MP] and len(deploy_locations) > 0:
