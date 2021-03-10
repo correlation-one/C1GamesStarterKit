@@ -9,11 +9,8 @@ import json
 """
 Most of the algo code you write will be in this file unless you create new
 modules yourself. Start by modifying the 'on_turn' function.
-
 Advanced strategy tips:
-
   - You can analyze action frames by modifying on_action_frame function
-
   - The GameState.map object can be manually manipulated to create hypothetical
   board states. Though, we recommended making a copy of the map to preserve
   the actual current map state.
@@ -80,36 +77,27 @@ class AlgoStrategy(gamelib.AlgoCore):
         self.build_reactive_defense(game_state)
 
         # If the turn is less than 5, stall with interceptors and wait to see enemy's base
-        if game_state.turn_number < 5 && game_state.turn_number % 2 == 1:
+        if game_state.turn_number < 5:
             self.stall_with_interceptors(game_state)
         else:
-            if game_state.get_resource(MP) > 8 && game_state.turn_number % 2 == 0:
-                # To simplify we will just check sending them from back left and right
-                scout_spawn_location_options = [[12, 1], [15, 1]]
-                best_location = self.least_damage_spawn_location(game_state, scout_spawn_location_options)
-                game_state.attempt_spawn(SCOUT, best_location, 1000)
+            # Now let's analyze the enemy base to see where their defenses are concentrated.
+            # If they have many units in the front we can build a line for our demolishers to attack them at long range.
+            if self.detect_enemy_unit(game_state, unit_type=None, valid_x=None, valid_y=[14, 15]) > 10:
+                self.demolisher_line_strategy(game_state)
+            else:
+                # They don't have many units in the front so lets figure out their least defended area and send Scouts there.
+
+                # Only spawn Scouts every other turn
+                # Sending more at once is better since attacks can only hit a single scout at a time
+                if game_state.turn_number % 2 == 1:
+                    # To simplify we will just check sending them from back left and right
+                    scout_spawn_location_options = [[13, 0], [14, 0]]
+                    best_location = self.least_damage_spawn_location(game_state, scout_spawn_location_options)
+                    game_state.attempt_spawn(SCOUT, best_location, 1000)
 
                 # Lastly, if we have spare SP, let's build some Factories to generate more resources
                 support_locations = [[13, 2], [14, 2], [13, 3], [14, 3]]
                 game_state.attempt_spawn(SUPPORT, support_locations)
-            # Now let's analyze the enemy base to see where their defenses are concentrated.
-            # If they have many units in the front we can build a line for our demolishers to attack them at long range.
-            # if self.detect_enemy_unit(game_state, unit_type=None, valid_x=None, valid_y=[14, 15]) > 10:
-            #     self.demolisher_line_strategy(game_state)
-            # else:
-            #     # They don't have many units in the front so lets figure out their least defended area and send Scouts there.
-            #
-            #     # Only spawn Scouts every other turn
-            #     # Sending more at once is better since attacks can only hit a single scout at a time
-            #     if game_state.turn_number % 2 == 1:
-            #         # To simplify we will just check sending them from back left and right
-            #         scout_spawn_location_options = [[13, 0], [14, 0]]
-            #         best_location = self.least_damage_spawn_location(game_state, scout_spawn_location_options)
-            #         game_state.attempt_spawn(SCOUT, best_location, 1000)
-            #
-            #     # Lastly, if we have spare SP, let's build some Factories to generate more resources
-            #     support_locations = [[13, 2], [14, 2], [13, 3], [14, 3]]
-            #     game_state.attempt_spawn(SUPPORT, support_locations)
 
     def build_defences(self, game_state):
         """
@@ -159,7 +147,10 @@ class AlgoStrategy(gamelib.AlgoCore):
             deploy_location = [[12,1], [15,1]]
 
             game_state.attempt_spawn(INTERCEPTOR, deploy_location)
-
+            """
+            We don't have to remove the location since multiple mobile
+            units can occupy the same space.
+            """
 
     def demolisher_line_strategy(self, game_state):
         """
