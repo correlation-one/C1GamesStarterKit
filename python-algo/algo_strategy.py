@@ -53,7 +53,7 @@ class AlgoStrategy(gamelib.AlgoCore):
         game engine.
         """
         game_state = gamelib.GameState(self.config, turn_state)
-        game_state.attempt_spawn(DEMOLISHER, [24, 10], 3) 
+        game_state.attempt_spawn(DEMOLISHER, [24, 10], 3)
         gamelib.debug_write('Performing turn {} of your custom algo strategy'.format(game_state.turn_number))
         game_state.suppress_warnings(True)  #Comment or remove this line to enable warnings.
 
@@ -134,7 +134,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 
     def stall_with_interceptors(self, game_state):
         """
-        Send out interceptors at random locations to defend our base from enemy moving units.
+        Help structures with interceptors
         """
         # We can spawn moving units on our edges so a list of all our edge locations
         friendly_edges = game_state.game_map.get_edge_locations(game_state.game_map.BOTTOM_LEFT) + game_state.game_map.get_edge_locations(game_state.game_map.BOTTOM_RIGHT)
@@ -144,10 +144,10 @@ class AlgoStrategy(gamelib.AlgoCore):
         deploy_locations = self.filter_blocked_locations(friendly_edges, game_state)
 
         # While we have remaining MP to spend lets send out interceptors randomly.
-        while game_state.get_resource(MP) >= game_state.type_cost(INTERCEPTOR)[MP] and len(deploy_locations) > 0:
+        while game_state.get_resource(MP) >= (2*game_state.type_cost(INTERCEPTOR)[MP])
             # Choose a random deploy location.
-            deploy_index = random.randint(0, len(deploy_locations) - 1)
-            deploy_location = deploy_locations[deploy_index]
+
+            deploy_location = deploy_locations[[12,1], [15,1]]
 
             game_state.attempt_spawn(INTERCEPTOR, deploy_location)
             """
