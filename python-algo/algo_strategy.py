@@ -53,6 +53,7 @@ class AlgoStrategy(gamelib.AlgoCore):
         game engine.
         """
         game_state = gamelib.GameState(self.config, turn_state)
+        game_state.attempt_spawn(DEMOLISHER, [24, 10], 3) 
         gamelib.debug_write('Performing turn {} of your custom algo strategy'.format(game_state.turn_number))
         game_state.suppress_warnings(True)  #Comment or remove this line to enable warnings.
 
@@ -110,12 +111,12 @@ class AlgoStrategy(gamelib.AlgoCore):
         # More community tools available at: https://terminal.c1games.com/rules#Download
 
         # Place turrets that attack enemy units
-        turret_locations = [[0, 13], [27, 13], [8, 11], [19, 11], [13, 11], [14, 11]]
+        turret_locations = [[2, 11], [5, 11], [22, 11], [25, 11], [8, 8], [19, 8], [11, 5], [16, 5]]
         # attempt_spawn will try to spawn units if we have resources, and will check if a blocking unit is already there
         game_state.attempt_spawn(TURRET, turret_locations)
 
         # Place walls in front of turrets to soak up damage for them
-        wall_locations = [[8, 12], [19, 12]]
+        wall_locations = [[21, 11], [20, 10],[19, 9],[18, 8],[17, 7],[16, 6],[15, 5],[12, 5],[10, 7],[11, 6],[9, 8],[8, 9],[7, 10],[6, 11]]
         game_state.attempt_spawn(WALL, wall_locations)
         # upgrade walls so they soak more damage
         game_state.attempt_upgrade(wall_locations)
