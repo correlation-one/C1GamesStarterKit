@@ -7,7 +7,7 @@ Last Updated: 14 Nov 2018
 Contact: Message @Isaac at https://forum.c1games.com/
 Copyright: CC0 - completely open to edit, share, etc
 
-Short Description: 
+Short Description:
 This is a python script to visualize replay files in a similar format to the online version.
 You can also run games and watch them as they play (this is slow).
 Lastly, it allows you to save these visualizations in video format.
@@ -469,7 +469,7 @@ class PatchWrapper:
 
 		for ID in self.units:
 			self.units[ID].remove()
-		
+
 		self.units = {}
 		self.remove_lbls()
 
@@ -970,7 +970,7 @@ class Graph:
 
 	# this is the main function that moves the head forward
 	def advance(self):
-		
+
 		# don't update - the user has paused the game
 		if self.is_manual and not self.single_advance:
 			return
@@ -1052,8 +1052,9 @@ class Graph:
 			yield num
 
 	# format all of the raw unit data into how my functions recieve it
+	# pings, emps
 	def cache_units(self, units, p_index):
-		filters, encryptors, destructors, pings, emps, scramblers, removes = units
+		filters, encryptors, destructors, pings, emps, scramblers, removes, upgrades = units
 		units_new = []
 		for unit in filters: units_new.append((FILTER, (unit[0], unit[1]), unit[2], p_index, unit[3]))
 		for unit in encryptors: units_new.append((ENCRYPTOR, (unit[0], unit[1]), unit[2], p_index, unit[3]))
@@ -1071,7 +1072,7 @@ class Graph:
 			self.data[self.head[0]+1,-1]
 		except KeyError as e:								# outside of turn limit
 			try:
-				self.data[self.head[0],self.head[1]+1]		
+				self.data[self.head[0],self.head[1]+1]
 			except KeyError as e:							# outside of frame limit
 				self.end_of_game = True 					# must be end of game
 
@@ -1099,7 +1100,7 @@ class Graph:
 
 		Returns:
 			True if the location is on the board, False otherwise
-		
+
 		"""
 		x, y = location
 		full_board = 28
@@ -1252,7 +1253,7 @@ def run_match(a1='', a2=''):
 	print("Is windows: {}".format(is_windows))
 
 	# Set default path for algos if script is run with no params
-	default_algo = parent_dir + "/algos/starter-algo-ZIPME/run.ps1" if is_windows else parent_dir + "/algos/starter-algo-ZIPME/run.sh" 
+	default_algo = parent_dir + "/algos/starter-algo-ZIPME/run.ps1" if is_windows else parent_dir + "/algos/starter-algo-ZIPME/run.sh"
 	algo1 = default_algo
 	algo2 = default_algo
 
