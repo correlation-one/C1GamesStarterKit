@@ -1,0 +1,768 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>gamelib package &#8212; C1 Terminal Python Starterkit 1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="gamelib" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="gamelib-package">
+<h1>gamelib package<a class="headerlink" href="#gamelib-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-gamelib">
+<span id="module-overview-start-here"></span><h2>Module Overview (Start Here)<a class="headerlink" href="#module-gamelib" title="Permalink to this headline">¶</a></h2>
+<p>The gamelib package contains modules that assist in algo creation</p>
+<p>The GameState class in game_state.py is the main class most players interact with.
+It contains functions that let you get information about resources, deploy units, and help you strategize your move.</p>
+<p>The GameMap class in game_map.py represents the current game map. It can be used to access information related to the locations of units.
+Investigating it is useful for any player that wants to access more information about the current state of the game.</p>
+<p>The GameUnit class in unit.py represetns a single unit.
+Investigating it is useful for any player that wants to access information about units.</p>
+<p>The AlgoCore class in algocore.py handles communication with the game engine, and forms the bones of an algo. AlgoStrategy inherits from it.
+Investigating it is useful for advanced players interested in getting data from the action phase or communicating directly with the game engine.</p>
+<p>The Navigation class in navigation.py contains functions related to pathfinding, which are used by GameState in pathing related functions.
+Investigating it is useful for advanced player who want to optimize the slow default pathing algorithm we provide.</p>
+<p>util.py contains a small handful of functions that help with communication, including the debug-printing function, debug_write().</p>
+</div>
+<div class="section" id="module-gamelib.algocore">
+<span id="algo-core-gamelib-algocore"></span><h2>Algo Core (gamelib.algocore)<a class="headerlink" href="#module-gamelib.algocore" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gamelib.algocore.AlgoCore">
+<em class="property">class </em><code class="sig-prename descclassname">gamelib.algocore.</code><code class="sig-name descname">AlgoCore</code><a class="headerlink" href="#gamelib.algocore.AlgoCore" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class handles communication with the game engine.</p>
+<p>algo_strategy.py subclasses it.</p>
+<dl class="simple">
+<dt>Attributes :</dt><dd><ul class="simple">
+<li><p>config (JSON): json object containing information about the game</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="gamelib.algocore.AlgoCore.on_action_frame">
+<code class="sig-name descname">on_action_frame</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">action_frame_game_state</span></em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.algocore.AlgoCore.on_action_frame" title="Permalink to this definition">¶</a></dt>
+<dd><p>After each deploy phase, the game engine will run the action phase of the round.
+The action phase is made up of a sequence of distinct frames.
+Each of these frames is sent to the algo in order.
+They can be handled in this function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gamelib.algocore.AlgoCore.on_game_start">
+<code class="sig-name descname">on_game_start</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.algocore.AlgoCore.on_game_start" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is called once at the start of the game.
+By default, it just initializes the config.</p>
+<p>You can override it it in algo_strategy.py to perform start of game setup</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gamelib.algocore.AlgoCore.on_turn">
+<code class="sig-name descname">on_turn</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">game_state</span></em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.algocore.AlgoCore.on_turn" title="Permalink to this definition">¶</a></dt>
+<dd><p>This step function is called at the start of each turn.
+It is passed the current game state, which can be used to initiate a new GameState object.
+By default, it sends empty commands to the game engine.</p>
+<p>algo_strategy.py inherits from AlgoCore and overrides this on turn function.
+Adjusting the on_turn function in algo_strategy is the main way to adjust your algo’s logic.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gamelib.algocore.AlgoCore.start">
+<code class="sig-name descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.algocore.AlgoCore.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start the parsing loop.
+After starting the algo, it will wait until it recieves information from the game
+engine, proccess this information, and respond if needed to take it’s turn.
+The algo continues this loop until it recieves the “End” turn message from the game.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-gamelib.game_map">
+<span id="game-map-gamelib-game-map"></span><h2>Game Map (gamelib.game_map)<a class="headerlink" href="#module-gamelib.game_map" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gamelib.game_map.GameMap">
+<em class="property">class </em><code class="sig-prename descclassname">gamelib.game_map.</code><code class="sig-name descname">GameMap</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_map.GameMap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Holds data about the current game map and provides functions
+useful for getting information related to the map.</p>
+<p>game_map[x, y] will return a list of Units located at that location,
+or an empty list if there are no units at the location</p>
+<dl class="simple">
+<dt>Attributes :</dt><dd><ul class="simple">
+<li><p>config (JSON): Contains information about the current game rules</p></li>
+<li><p>enable_warnings (bool): If true, debug messages for game_map functions will print out</p></li>
+<li><p>ARENA_SIZE (int): The size of the arena.</p></li>
+<li><p>HALF_ARENA (int): Half of the size of the arena.</p></li>
+<li><p>TOP_RIGHT (int): A constant that represents the top right edge</p></li>
+<li><p>TOP_LEFT (int): A constant that represents the top left edge</p></li>
+<li><p>BOTTOM_LEFT (int): Hidden challenge! Can you guess what this constant represents???</p></li>
+<li><p>BOTTOM_RIGHT (int): A constant that represents the bottom right edge</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="gamelib.game_map.GameMap.add_unit">
+<code class="sig-name descname">add_unit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">unit_type</span></em>, <em class="sig-param"><span class="n">location</span></em>, <em class="sig-param"><span class="n">player_index</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_map.GameMap.add_unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a single GameUnit to the map at the given location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>unit_type</strong> – The type of the new unit. Use the constants provided in algo_strategy.</p></li>
+<li><p><strong>location</strong> – A list of two integers representing the [x,y] coordinate of the new unit</p></li>
+<li><p><strong>player_index</strong> – The index corresponding to the player controlling the new unit, 0 for you 1 for the enemy</p></li>
+</ul>
+</dd>
+</dl>
+<p>This function does not affect your turn and only changes the data stored in GameMap. The intended use of this function
+is to allow you to create arbitrary gamestates. Using this function on the game_map provided with game_state will
+desynchronize it from the actual gamestate, and can cause issues.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gamelib.game_map.GameMap.distance_between_locations">
+<code class="sig-name descname">distance_between_locations</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">location_1</span></em>, <em class="sig-param"><span class="n">location_2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_map.GameMap.distance_between_locations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Euclidean distance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>location_1</strong> – An arbitrary location, [x, y]</p></li>
+<li><p><strong>location_2</strong> – An arbitrary location, [x, y]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The euclidean distance between the two locations</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gamelib.game_map.GameMap.get_edge_locations">
+<code class="sig-name descname">get_edge_locations</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">quadrant_description</span></em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_map.GameMap.get_edge_locations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes in an edge description and returns a list of locations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>quadrant_description</strong> – A constant corresponding to one of the 4 edges. See game_map.TOP_LEFT, game_map.BOTTOM_RIGHT, and similar constants.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of locations along the requested edge</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gamelib.game_map.GameMap.get_edges">
+<code class="sig-name descname">get_edges</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_map.GameMap.get_edges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all of the edges and their edge locations</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A list with four lists inside of it of locations corresponding to the four edges.
+[0] = top_right, [1] = top_left, [2] = bottom_left, [3] = bottom_right.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gamelib.game_map.GameMap.get_locations_in_range">
+<code class="sig-name descname">get_locations_in_range</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">location</span></em>, <em class="sig-param"><span class="n">radius</span></em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_map.GameMap.get_locations_in_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets locations in a circular area around a location</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>location</strong> – The center of our search area</p></li>
+<li><p><strong>radius</strong> – The radius of our search area</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The locations that are within our search area</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gamelib.game_map.GameMap.in_arena_bounds">
+<code class="sig-name descname">in_arena_bounds</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">location</span></em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_map.GameMap.in_arena_bounds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the given location is inside the diamond shaped game board.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>location</strong> – A map location</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the location is on the board, False otherwise</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gamelib.game_map.GameMap.remove_unit">
+<code class="sig-name descname">remove_unit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">location</span></em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_map.GameMap.remove_unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove all units on the map in the given location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>location</strong> – The location that you will empty of units</p>
+</dd>
+</dl>
+<p>This function does not affect your turn and only changes the data stored in GameMap. The intended use of this function
+is to allow you to create arbitrary gamestates. Using this function on the GameMap inside game_state can cause your algo to crash.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gamelib.game_map.GameMap.warn">
+<code class="sig-name descname">warn</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">message</span></em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_map.GameMap.warn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used internally by game_map to print out default messaging</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-gamelib.game_state">
+<span id="game-state-gamelib-game-state"></span><h2>Game State (gamelib.game_state)<a class="headerlink" href="#module-gamelib.game_state" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gamelib.game_state.GameState">
+<em class="property">class </em><code class="sig-prename descclassname">gamelib.game_state.</code><code class="sig-name descname">GameState</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em>, <em class="sig-param"><span class="n">serialized_string</span></em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_state.GameState" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents the entire gamestate for a given turn
+Provides methods related to resources and unit deployment</p>
+<dl class="simple">
+<dt>Attributes :</dt><dd><ul class="simple">
+<li><p>UNIT_TYPE_TO_INDEX (dict): Maps a unit to a corresponding index</p></li>
+<li><p>WALL (str): A constant representing the wall unit</p></li>
+<li><p>SUPPORT (str): A constant representing the support unit</p></li>
+<li><p>TURRET (str): A constant representing the turret unit</p></li>
+<li><p>SCOUT (str): A constant representing the scout unit</p></li>
+<li><p>DEMOLISHER (str): A constant representing the demolisher unit</p></li>
+<li><p>INTERCEPTOR (str): A constant representing the interceptor unit</p></li>
+<li><p>REMOVE (str): A constant representing removing your own unit</p></li>
+<li><p>UPGRADE (str): A constant representing upgrading a unit</p></li>
+<li><p>STRUCTURE_TYPES (list): A list of the structure units</p></li>
+<li><p>ARENA_SIZE (int): The size of the arena</p></li>
+<li><p>HALF_ARENA (int): Half the size of the arena</p></li>
+<li><p>MP (int): A constant representing the Mobile Points resource, used in the get_resource function</p></li>
+<li><p>SP (int): A constant representing the SP resource, used in the get_resource function</p></li>
+<li><p>game_map (:obj: GameMap): The current GameMap. To retrieve a list of GameUnits at a location, use game_map[x, y]</p></li>
+<li><p>turn_number (int): The current turn number. Starts at 0.</p></li>
+<li><p>my_health (int): Your current remaining health</p></li>
+<li><p>my_time (int): The time you took to submit your previous turn</p></li>
+<li><p>enemy_health (int): Your opponents current remaining health</p></li>
+<li><p>enemy_time (int): Your opponents current remaining time</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="gamelib.game_state.GameState.attempt_remove">
+<code class="sig-name descname">attempt_remove</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">locations</span></em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_state.GameState.attempt_remove" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempts to remove existing friendly structures in the given locations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>locations</strong> – A location or list of locations we want to remove structures from</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The number of structures successfully flagged for removal</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gamelib.game_state.GameState.attempt_spawn">
+<code class="sig-name descname">attempt_spawn</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">unit_type</span></em>, <em class="sig-param"><span class="n">locations</span></em>, <em class="sig-param"><span class="n">num</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_state.GameState.attempt_spawn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempts to spawn new units with the type given in the given locations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>unit_type</strong> – The type of unit we want to spawn</p></li>
+<li><p><strong>locations</strong> – A single location or list of locations to spawn units at</p></li>
+<li><p><strong>num</strong> – The number of units of unit_type to deploy at the given location(s)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The number of units successfully spawned</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gamelib.game_state.GameState.attempt_upgrade">
+<code class="sig-name descname">attempt_upgrade</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">locations</span></em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_state.GameState.attempt_upgrade" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempts to upgrade units in the given locations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>locations</strong> – A single location or list of locations to upgrade units at</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The number of units successfully upgraded</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gamelib.game_state.GameState.can_spawn">
+<code class="sig-name descname">can_spawn</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">unit_type</span></em>, <em class="sig-param"><span class="n">location</span></em>, <em class="sig-param"><span class="n">num</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_state.GameState.can_spawn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if we can spawn a unit at a location.</p>
+<p>To units, we need to be able to afford them, and the location must be
+in bounds, unblocked, on our side of the map, not on top of a unit we can’t stack with,
+and on an edge if the unit is mobile.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>unit_type</strong> – The type of the unit</p></li>
+<li><p><strong>location</strong> – The location we want to spawn the unit</p></li>
+<li><p><strong>num</strong> – The number of units we want to spawn</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if we can spawn the unit(s)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gamelib.game_state.GameState.contains_stationary_unit">
+<code class="sig-name descname">contains_stationary_unit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">location</span></em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_state.GameState.contains_stationary_unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if a location is blocked, return structures unit if it is</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>location</strong> – The location to check</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A structures unit if there is a stationary unit at the location, False otherwise</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gamelib.game_state.GameState.find_path_to_edge">
+<code class="sig-name descname">find_path_to_edge</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start_location</span></em>, <em class="sig-param"><span class="n">target_edge</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_state.GameState.find_path_to_edge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the path a unit at a given location would take.
+If final point is not on an edge, it is a self destruct path</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_location</strong> – The location of a hypothetical unit</p></li>
+<li><p><strong>target_edge</strong> – The edge the unit wants to reach. game_map.TOP_LEFT, game_map.BOTTOM_RIGHT, etc. Induced from start_location if None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of locations corresponding to the path the unit would take
+to get from it’s starting location to the best available end location</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gamelib.game_state.GameState.get_attackers">
+<code class="sig-name descname">get_attackers</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">location</span></em>, <em class="sig-param"><span class="n">player_index</span></em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_state.GameState.get_attackers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the stationary units threatening a given location</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>location</strong> – The location of a hypothetical defender</p></li>
+<li><p><strong>player_index</strong> – The index corresponding to the defending player, 0 for you 1 for the enemy</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of units that would attack a unit controlled by the given player at the given location</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gamelib.game_state.GameState.get_resource">
+<code class="sig-name descname">get_resource</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">resource_type</span></em>, <em class="sig-param"><span class="n">player_index</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_state.GameState.get_resource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a players resources</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>resource_type</strong> – MP (1) or SP (0)</p></li>
+<li><p><strong>player_index</strong> – The index corresponding to the player whos resources you are querying, 0 for you 1 for the enemy</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The number of the given resource the given player controls</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gamelib.game_state.GameState.get_resources">
+<code class="sig-name descname">get_resources</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">player_index</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_state.GameState.get_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a players resources as a list</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>player_index</strong> – The index corresponding to the player whos resources you are querying, 0 for you 1 for the enemy</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>[Float, Float] list where the first entry is SP the second is MP</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gamelib.game_state.GameState.get_target">
+<code class="sig-name descname">get_target</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">attacking_unit</span></em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_state.GameState.get_target" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns target of given unit based on current map of the game board.
+A Unit can often have many other units in range, and Units that attack do so once each frame.</p>
+<dl class="simple">
+<dt>Their targeting priority is as follows:</dt><dd><p>Infantry &gt; Nearest Unit &gt; Lowest Health &gt; Lowest Y position &gt; Closest to edge (Highest distance of X from the boards center, 13.5)</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>attacking_unit</strong> – A GameUnit</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The GameUnit this unit would choose to attack.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gamelib.game_state.GameState.get_target_edge">
+<code class="sig-name descname">get_target_edge</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start_location</span></em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_state.GameState.get_target_edge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the target edge given a starting location</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>start_location</strong> – The location of a hypothetical unit</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The edge this unit would attempt to reach if it was spawned at this location (int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gamelib.game_state.GameState.number_affordable">
+<code class="sig-name descname">number_affordable</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">unit_type</span></em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_state.GameState.number_affordable" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of units of a given type we can afford</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>unit_type</strong> – A unit type, SCOUT, WALL, etc.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The number of units affordable of the given unit_type.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gamelib.game_state.GameState.project_future_MP">
+<code class="sig-name descname">project_future_MP</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">turns_in_future</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">player_index</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">current_MP</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_state.GameState.project_future_MP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predicts the number of MP we will have on a future turn</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>turns_in_future</strong> – The number of turns in the future we want to look forward to predict</p></li>
+<li><p><strong>player_index</strong> – The player whose MP we are tracking</p></li>
+<li><p><strong>current_MP</strong> – If we pass a value here, we will use that value instead of the current MP of the given player.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The number of MP the given player will have after the given number of turns</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gamelib.game_state.GameState.submit_turn">
+<code class="sig-name descname">submit_turn</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_state.GameState.submit_turn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Submit and end your turn.
+Must be called at the end of your turn or the algo will hang.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gamelib.game_state.GameState.suppress_warnings">
+<code class="sig-name descname">suppress_warnings</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">suppress</span></em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_state.GameState.suppress_warnings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Suppress all warnings</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>suppress</strong> – If true, disable warnings. If false, enable warnings.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gamelib.game_state.GameState.type_cost">
+<code class="sig-name descname">type_cost</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">unit_type</span></em>, <em class="sig-param"><span class="n">upgrade</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_state.GameState.type_cost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the cost of a unit based on its type</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>unit_type</strong> – The units type (string shorthand)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The units costs as a list [SP, MP]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gamelib.game_state.GameState.warn">
+<code class="sig-name descname">warn</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">message</span></em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_state.GameState.warn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used internally by game_state to print warnings</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="gamelib.game_state.is_stationary">
+<code class="sig-prename descclassname">gamelib.game_state.</code><code class="sig-name descname">is_stationary</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">unit_type</span></em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.game_state.is_stationary" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>unit_type</strong> – A unit type</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Boolean, True if the unit is stationary, False otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-gamelib.navigation">
+<span id="navigation-gamelib-navigation"></span><h2>Navigation (gamelib.navigation)<a class="headerlink" href="#module-gamelib.navigation" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gamelib.navigation.Node">
+<em class="property">class </em><code class="sig-prename descclassname">gamelib.navigation.</code><code class="sig-name descname">Node</code><a class="headerlink" href="#gamelib.navigation.Node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A pathfinding node</p>
+<dl class="simple">
+<dt>Attributes :</dt><dd><ul class="simple">
+<li><p>visited_idealness (bool): Have we visited this node during the idealness search step?</p></li>
+<li><p>visited_validate (bool): Have we visited this node during the validation step?</p></li>
+<li><p>blocked (bool): Is there a structures at this node’s location</p></li>
+<li><p>pathlength: The distance between this node and the target location</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="gamelib.navigation.ShortestPathFinder">
+<em class="property">class </em><code class="sig-prename descclassname">gamelib.navigation.</code><code class="sig-name descname">ShortestPathFinder</code><a class="headerlink" href="#gamelib.navigation.ShortestPathFinder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Handles pathfinding</p>
+<dl class="simple">
+<dt>Attributes :</dt><dd><ul class="simple">
+<li><p>HORIZONTAL (int): A constant representing a horizontal movement</p></li>
+<li><p>VERTICAL (int): A constant representing a vertical movement</p></li>
+<li><p>game_state (:obj: GameState): The current gamestate</p></li>
+<li><p>game_map (:obj: GameMap): The current gamemap</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="gamelib.navigation.ShortestPathFinder.initialize_map">
+<code class="sig-name descname">initialize_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">game_state</span></em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.navigation.ShortestPathFinder.initialize_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes the map</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>game_state</strong> – A GameState object representing the gamestate we want to traverse</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gamelib.navigation.ShortestPathFinder.navigate_multiple_endpoints">
+<code class="sig-name descname">navigate_multiple_endpoints</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start_point</span></em>, <em class="sig-param"><span class="n">end_points</span></em>, <em class="sig-param"><span class="n">game_state</span></em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.navigation.ShortestPathFinder.navigate_multiple_endpoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the path a unit would take to reach a set of endpoints</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_point</strong> (<em>*</em>) – The starting location of the unit</p></li>
+<li><p><strong>end_points</strong> (<em>*</em>) – The end points of the unit, should be a list of edge locations</p></li>
+<li><p><strong>game_state</strong> (<em>*</em>) – The current game state</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The path a unit at start_point would take when trying to reach end_points given the current game state.
+Note that this path can change if a tower is destroyed during pathing, or if you or your enemy places structures.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="gamelib.navigation.ShortestPathFinder.print_map">
+<code class="sig-name descname">print_map</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.navigation.ShortestPathFinder.print_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints an ASCII version of the current game map for debug purposes</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-gamelib.unit">
+<span id="game-unit-gamelib-unit"></span><h2>Game Unit  (gamelib.unit)<a class="headerlink" href="#module-gamelib.unit" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="gamelib.unit.GameUnit">
+<em class="property">class </em><code class="sig-prename descclassname">gamelib.unit.</code><code class="sig-name descname">GameUnit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">unit_type</span></em>, <em class="sig-param"><span class="n">config</span></em>, <em class="sig-param"><span class="n">player_index</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">health</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">x</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">y</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.unit.GameUnit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Holds information about a Unit.</p>
+<dl class="simple">
+<dt>Attributes :</dt><dd><ul class="simple">
+<li><p>unit_type (string): This unit’s type</p></li>
+<li><p>config (JSON): Contains information about the game</p></li>
+<li><p>player_index (integer): The player that controls this unit. 0 for you, 1 for your opponent.</p></li>
+<li><p>x (integer): The x coordinate of the unit</p></li>
+<li><p>y (integer): The y coordinate of the unit</p></li>
+<li><p>stationary (bool): Whether or not this unit is a structures</p></li>
+<li><p>speed (float): A unit will move once every 1/speed frames</p></li>
+<li><p>damage_f (int): The amount of damage this mobile unit will deal to enemy structures.</p></li>
+<li><p>damage_i (int): The amount of damage this mobile unit will deal to enemy mobile units.</p></li>
+<li><p>attackRange (float): The effective range of this unit for attacking</p></li>
+<li><p>shieldRange (float): The effective range of this unit for shielding</p></li>
+<li><p>max_health (float): The starting health of this unit. Note than ‘health’ can be increased beyond this value by shielding in some game configurations.</p></li>
+<li><p>health (float): The current health of this unit</p></li>
+<li><p>cost ([int, int]): The resource costs of this unit first is SP second is MP</p></li>
+<li><p>shieldPerUnit (float): how much shield is given per unit</p></li>
+<li><p>pending_removal (boolean): If this unit is marked for removal by its owner</p></li>
+<li><p>upgraded (boolean): If this unit is upgraded</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="gamelib.unit.GameUnit.upgrade">
+<code class="sig-name descname">upgrade</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.unit.GameUnit.upgrade" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="gamelib.unit.is_stationary">
+<code class="sig-prename descclassname">gamelib.unit.</code><code class="sig-name descname">is_stationary</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">unit_type</span></em>, <em class="sig-param"><span class="n">structure_types</span></em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.unit.is_stationary" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>unit_type</strong> – A unit type</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Boolean, True if the unit is stationary, False otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-gamelib.util">
+<span id="util-gamelib-util"></span><h2>Util  (gamelib.util)<a class="headerlink" href="#module-gamelib.util" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="gamelib.util.debug_write">
+<code class="sig-prename descclassname">gamelib.util.</code><code class="sig-name descname">debug_write</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">msg</span></em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.util.debug_write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints a message to the games debug output</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>msg</strong> – The message to output</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="gamelib.util.get_command">
+<code class="sig-prename descclassname">gamelib.util.</code><code class="sig-name descname">get_command</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.util.get_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets input from stdin</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="gamelib.util.send_command">
+<code class="sig-prename descclassname">gamelib.util.</code><code class="sig-name descname">send_command</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cmd</span></em><span class="sig-paren">)</span><a class="headerlink" href="#gamelib.util.send_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends your turn to standard output.
+Should usually only be called by ‘GameState.submit_turn()’</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">C1 Terminal Python Starterkit</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">gamelib package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-gamelib">Module Overview (Start Here)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-gamelib.algocore">Algo Core (gamelib.algocore)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-gamelib.game_map">Game Map (gamelib.game_map)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-gamelib.game_state">Game State (gamelib.game_state)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-gamelib.navigation">Navigation (gamelib.navigation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-gamelib.unit">Game Unit  (gamelib.unit)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-gamelib.util">Util  (gamelib.util)</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">gamelib</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Correlation One.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/gamelib.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
