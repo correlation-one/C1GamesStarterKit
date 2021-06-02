@@ -97,5 +97,4 @@ Helper functions and values that do not yet have a better place to live.
 
 The starter strategy is designed to highlight a few common `GameMap` functions
 and give the user a functioning example to work with. It's gameplan is to 
-draw the C1 logo, place turrets in its corners, and randomly spawn factories
-and units.
+draw the C1 logo, place turrets in its corners, and randomly spawn units.

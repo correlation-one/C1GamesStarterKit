@@ -97,7 +97,7 @@ class AlgoStrategy(gamelib.AlgoCore):
                     best_location = self.least_damage_spawn_location(game_state, scout_spawn_location_options)
                     game_state.attempt_spawn(SCOUT, best_location, 1000)
 
-                # Lastly, if we have spare SP, let's build some Factories to generate more resources
+                # Lastly, if we have spare SP, let's build some supports
                 support_locations = [[13, 2], [14, 2], [13, 3], [14, 3]]
                 game_state.attempt_spawn(SUPPORT, support_locations)
 
