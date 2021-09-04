@@ -63,3 +63,5 @@ Java algos require the Java Development Kit. Java algos also require [Gradle]
 
 To run your algo locally or on our servers, or to enroll your algo in a competition, please see the [documentation 
 for the Terminal command line interface in the scripts directory](https://github.com/correlation-one/AIGamesStarterKit/tree/master/scripts)
+
+hello hello
