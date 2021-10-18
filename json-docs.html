@@ -173,7 +173,7 @@
               [0] : List of <code class=" language-undefined">WALL</code> units.
             </p>
             <p class="method-list-item-description">
-              [1] : List of <code class=" language-undefined">FACTORY</code> units.
+              [1] : List of <code class=" language-undefined">SUPPORT</code> units.
             </p>
             <p class="method-list-item-description">  
               [2] : List of <code class=" language-undefined">TURRET</code> units.
@@ -188,10 +188,10 @@
               [5] : List of <code class=" language-undefined">INTERCEPTOR</code> units.
             </p>
             <p class="method-list-item-description">  
-              [6] : List of firewall locations marked to <code class=" language-undefined">REMOVE</code>.
+              [6] : List of structure locations marked to <code class=" language-undefined">REMOVE</code>.
             </p>
             <p class="method-list-item-description">  
-              [7] : List of locations where the firewall has an <code class=" language-undefined">UPGRADE</code>.
+              [7] : List of locations where the structure has an <code class=" language-undefined">UPGRADE</code>.
             </p>
       </li>
 
@@ -329,7 +329,7 @@
               List describing single breach event: [
             </p>
             <p class="method-list-item-description">
-              [0] : [ X, Y ] Formatted location of breaching unit.
+              [0] : [ X, Y ] Formatted location of scoring unit.
             </p>
             <p class="method-list-item-description">
               [1] : Player health damage done by breach. Currently, will always be 1.
@@ -496,25 +496,25 @@
             </span>
         </h3>
             <p class="method-list-item-description">
-              List of death events. Death occurs when a unit is removed from the game through getting damaged, player removal, or breaching.
+              List of removal events. Removal occurs when a unit is removed from the game through getting damaged, player removal, or scoring.
             </p>
             <p class="method-list-item-description">
-              List describing single death event: [
+              List describing single removal event: [
             </p>
             <p class="method-list-item-description">
               [0] : [ X, Y ] Formatted location of dead unit.
             </p>
             <p class="method-list-item-description">  
-              [1] : Integer <a class="sidebar-nav-item" href="#frame-unittype">UnitType</a> of unit that died. 
+              [1] : Integer <a class="sidebar-nav-item" href="#frame-unittype">UnitType</a> of unit that was removed. 
             </p>
             <p class="method-list-item-description">  
-              [2] : ID for unit that died. Unique string identifier for each game object. Will stay the same between frames throughout the game.
+              [2] : ID for unit that was removed. Unique string identifier for each game object. Will stay the same between frames throughout the game.
             </p>
             <p class="method-list-item-description">  
-              [3] : Player number for player that owns the unit that died. Either 1 or 2.
+              [3] : Player number for player that owns the unit that was removed. Either 1 or 2.
             </p>
             <p class="method-list-item-description">  
-              [4] : Boolean, if true was a player removing their own firewall.
+              [4] : Boolean, if true was a player removing their own structure.
             </p>
             <p class="method-list-item-description">
               ]
@@ -649,10 +649,10 @@
               {
             </p>
             <p class="method-list-item-description">
-              "stationary_resource_spent": Float representing how many stationary units worth of resources were deployed.
+              "stationary_resource_spent": Float representing how many structure points were spent.
             </p>
             <p class="method-list-item-description">
-              "dynamic_resource_spoiled": Float representing how many resources used to deploy moving units were wasted from decay.
+              "dynamic_resource_spoiled": Float representing how much MP was lost to decay.
             </p>
             <p class="method-list-item-description">
               "crashed": Boolean describing if the algo crashed or timed out.
@@ -662,16 +662,16 @@
             </p>
 
             <p class="method-list-item-description">
-              "dynamic_resource_destroyed": Float representing amount of resources spent on moving units who died before breaching.
+              "dynamic_resource_destroyed": Float representing amount of resources spent on mobile units who was removed before scoring.
             </p>
             <p class="method-list-item-description">
               "time_damage_taken": Float representing damage taken from going over the time limit.
             </p>
             <p class="method-list-item-description">
-              "dynamic_resource_spent": Float representing total resources spent deploying moving units.
+              "dynamic_resource_spent": Float representing total resources spent deploying mobile units.
             </p>
             <p class="method-list-item-description">
-              "stationary_resource_left_on_board": Float describing how many resources worth of stationary units remain on the board belonging to this player.
+              "stationary_resource_left_on_board": Float describing how much SP worth of structures remain on the board belonging to this player.
             </p>
 
             <p class="method-list-item-description">
@@ -817,6 +817,13 @@
         Attributes
     </h5>
   <ul class="method-list-group">
+    <li class="method-list-item" id="frame-config-seasonCompatibilityMode">
+    <p class="method-list-item-description">
+      "seasonCompatibilityModeP1": For internal use. Always 5.
+    </p>
+    <p class="method-list-item-description">
+      "seasonCompatibilityModeP2": For internal use. Always 5.
+    </p>
     <li class="method-list-item" id="frame-config-debug">
       <h3 class="method-list-item-label"><a href="#account_card_object-object" class="header-anchor"></a>
         debug
@@ -870,22 +877,22 @@
                 {
               </p>
               <p class="method-list-item-description">
-                [0]: <a class="sidebar-nav-item" href="#frame-config-stationaryconfig">Stationary unit config</a> describing <code class=" language-undefined">WALL</code>.
+                [0]: <a class="sidebar-nav-item" href="#frame-config-stationaryconfig">Structure config</a> describing <code class=" language-undefined">WALL</code>.
               </p>
               <p class="method-list-item-description">
-                [1]: <a class="sidebar-nav-item" href="#frame-config-stationaryconfig">Stationary unit config</a> describing <code class=" language-undefined">FACTORY</code>.
+                [1]: <a class="sidebar-nav-item" href="#frame-config-stationaryconfig">Structure config</a> describing <code class=" language-undefined">SUPPORT</code>.
               </p>
               <p class="method-list-item-description">
-                [2]: <a class="sidebar-nav-item" href="#frame-config-stationaryconfig">Stationary unit config</a> describing <code class=" language-undefined">TURRET</code>.
+                [2]: <a class="sidebar-nav-item" href="#frame-config-stationaryconfig">Structure config</a> describing <code class=" language-undefined">TURRET</code>.
               </p>
               <p class="method-list-item-description">
-                [3]: <a class="sidebar-nav-item" href="#frame-config-moveconfig">Moving unit config</a> describing <code class=" language-undefined">SCOUT</code>.
+                [3]: <a class="sidebar-nav-item" href="#frame-config-moveconfig">Mobile unit config</a> describing <code class=" language-undefined">SCOUT</code>.
               </p>
               <p class="method-list-item-description">
-                [4]: <a class="sidebar-nav-item" href="#frame-config-moveconfig">Moving unit config</a> describing <code class=" language-undefined">DEMOLISHER</code>.
+                [4]: <a class="sidebar-nav-item" href="#frame-config-moveconfig">Mobile unit config</a> describing <code class=" language-undefined">DEMOLISHER</code>.
               </p>
               <p class="method-list-item-description">
-                [5]: <a class="sidebar-nav-item" href="#frame-config-moveconfig">Moving unit config</a> describing <code class=" language-undefined">INTERCEPTOR</code>.
+                [5]: <a class="sidebar-nav-item" href="#frame-config-moveconfig">Mobile unit config</a> describing <code class=" language-undefined">INTERCEPTOR</code>.
               </p>
               <p class="method-list-item-description">
                 [6]: <a class="sidebar-nav-item" href="#frame-config-removeconfig">Remove config</a> describing <code class=" language-undefined">REMOVE</code>.
@@ -900,37 +907,61 @@
 
       <li class="method-list-item" id="frame-config-stationaryconfig">
           <h3 class="method-list-item-label"><a href="#account_card_object-object" class="header-anchor"></a>
-            <span class="method-list-item-label-badge">Stationary Unit Config</span>
+            <span class="method-list-item-label-badge">Structure Config</span>
               <span class="method-list-item-validation">
                   { ... }
               </span>
           </h3>
               <p class="method-list-item-description">
-                Contains config variables for stationary units in the game <code class=" language-undefined">WALL</code>, <code class=" language-undefined">FACTORY</code>, <code class=" language-undefined">TURRET</code>.
+                Contains config variables for structures in the game <code class=" language-undefined">WALL</code>, <code class=" language-undefined">SUPPORT</code>, <code class=" language-undefined">TURRET</code>.
               </p>
               <p class="method-list-item-description">
                 {
               </p>
               <p class="method-list-item-description">
+                "icon": String. A slug corresponding to the icon to use for this unit on the playground.
+              </p>
+              <p class="method-list-item-description">
+                "iconxScale": Float. Scales the units icon.
+              </p>
+              <p class="method-list-item-description">
+                "iconyScale": Float. Scales the units icon.
+              </p>
+              <p class="method-list-item-description">
                 "damage": Float describing how much damage the unit will do to enemies if they are in range.
               </p>
               <p class="method-list-item-description">
-                "cost": Float representing how many stationary resources are required to deploy the unit.
+                "cost1": Float representing how much SP is required to deploy the unit.
               </p>
               <p class="method-list-item-description">
                 "getHitRadius": Float describing how big this units hitbox is.
               </p>
               <p class="method-list-item-description">
+                "shieldPerUnit": Float describing how much shielding the unit provides.
+              </p>
+              <p class="method-list-item-description">
                 "display": String for the name of the unit.
               </p>
               <p class="method-list-item-description">
-                "range": Float for the range of the unit.
+                "attackRange": Float. The range from which this unit can attack.
+              </p>
+              <p class="method-list-item-description">
+                "shieldRange": Float. The range from which this unit can grant shields.
               </p>
               <p class="method-list-item-description">
                 "shorthand": String for the shorthand of the unit, is used to communicate what units an algo wishes to deploy.
               </p>
               <p class="method-list-item-description">
-                "stability": Float for the health of the unit. When it is 0 or below the unit will die.
+                "startHealth": Float for the health of the unit. When it is 0 or below the unit will be removed.
+              </p>
+              <p class="method-list-item-description">
+                "unitCategory": Integer. Always 0 for structures.
+              </p>
+              <p class="method-list-item-description">
+                "refundPercentage": Float. What percentage of resources can be recovered when removing the unit.
+              </p>
+              <p class="method-list-item-description">
+                "turnsRequiredToRemove": Integer. The number of action phases that will pass before the unit is removed.
               </p>
               <p class="method-list-item-description">
                 "generatesResource1": Float for the amount of MP this unit will generate each round
@@ -939,19 +970,22 @@
                 "generatesResource2": Float for the amount of SP this unit will generate each round
               </p>
               <p class="method-list-item-description">
+                "upgrade": Stationary unit config. Describes the upgraded version of the unit. Cost1 is the upgrade cost. Missing values are inherited from the base unit.
+              </p>
+              <p class="method-list-item-description">
                 }
               </p>
       </li>
 
       <li class="method-list-item" id="frame-config-moveconfig">
           <h3 class="method-list-item-label"><a href="#account_card_object-object" class="header-anchor"></a>
-            <span class="method-list-item-label-badge">Moving Unit Config</span>
+            <span class="method-list-item-label-badge">Mobile Unit Config</span>
               <span class="method-list-item-validation">
                   { ... }
               </span>
           </h3>
               <p class="method-list-item-description">
-                Contains config variables for dynamic moving units in the game <code class=" language-undefined">SCOUT</code>, <code class=" language-undefined">DEMOLISHER</code>, <code class=" language-undefined">INTERCEPTOR</code>.
+                Contains config variables for mobile units in the game <code class=" language-undefined">SCOUT</code>, <code class=" language-undefined">DEMOLISHER</code>, <code class=" language-undefined">INTERCEPTOR</code>.
               </p>
               <p class="method-list-item-description">
                 {
@@ -966,34 +1000,52 @@
                 "iconyScale": Float used on playground to scale the unit icon
               </p>
               <p class="method-list-item-description">
-                "damageI": Float describing how much damage the unit will do to moving units in range.
+                "attackDamageWalker": Float describing how much damage the unit will do to mobile units in range.
               </p>
               <p class="method-list-item-description">
-                "damageToPlayer": Float describing how much damage the unit will do to player health if it breaches.
+                "attackDamageTower": Float describing how much damage the unit will do to structures in range.
               </p>
               <p class="method-list-item-description">
-                "cost": Float representing how many dynamic resources are required to deploy the unit.
+                "playerBreachDamage": Integer describing how much damage the unit will do to the enemy player when it scores.
+              </p>
+              <p class="method-list-item-description">
+                "cost2": The amount of MP required to deploy the unit.
               </p>
               <p class="method-list-item-description">
                 "getHitRadius": Float describing how big this units hitbox is.
               </p>
               <p class="method-list-item-description">
-                "damageF": Float describing how much damage the unit will do to stationary units in range.
+                "display": String of the units display name.
               </p>
               <p class="method-list-item-description">
-                "display": String for the name of the unit.
+                "attackRange": The distance the unit can attack.
               </p>
               <p class="method-list-item-description">
-                "range": Float for the range of the unit.
+                "shorthand": String. A code-friendly slug representing the unit. 
               </p>
               <p class="method-list-item-description">
-                "shorthand": String for the shorthand of the unit, is used to communicate what units an algo wishes to deploy.
-              </p>
-              <p class="method-list-item-description">
-                "stability": Float for the health of the unit. When it is 0 or below the unit will die.
+                "startHealth": Float for the health of the unit. When it is 0 or below the unit will be removed.
               </p>
               <p class="method-list-item-description">
                 "speed": Float for the speed of a unit, (1 / speed) determines how many frames it takes before the unit will move.
+              </p>
+              <p class="method-list-item-description">
+                "unitCategory": Integer. Always 1 for mobile units.
+              </p>
+              <p class="method-list-item-description">
+                "selfDestructDamageWalker": Float. How much damage this units self destruct deals to enemy mobile units in range.
+              </p>
+              <p class="method-list-item-description">
+                "selfDestructDamageTower": Float. How much damage this units self destruct deals to enemy mobile units in range.
+              </p>
+              <p class="method-list-item-description">
+                "metalForBreach": Float. The amount of SP you earn when this unit scores
+              </p>
+              <p class="method-list-item-description">
+                "selfDestructRange": Float. The range of this units self destruct.
+              </p>
+              <p class="method-list-item-description">
+                "selfDestructStepsRequired": Integer. The number of steps this unit will need to take before being able to self destruct.
               </p>
               <p class="method-list-item-description">
                 }
@@ -1152,61 +1204,6 @@
                 }
               </p>
             </li>
-      
-        <li class="method-list-item" id="frame-config-mechanics">
-            <h3 class="method-list-item-label"><a href="#account_card_object-object" class="header-anchor"></a>
-              mechanics
-                <span class="method-list-item-validation">
-                    { ... }
-                </span>
-            </h3>
-              <p class="method-list-item-description">
-                Contains various variables that influence gameplay mechanics.
-              </p>
-              <p class="method-list-item-description">
-                {
-              </p>
-              <p class="method-list-item-description">
-                "basePlayerHealthDamage": Float, how much player health damage will be received on a breach.
-              </p>
-              <p class="method-list-item-description">
-                "damageGrowthBasedOnY": Float, <b>depracated</b> determined how much player health damage was done based on how deep the unit was in enemy territory when breaching.
-              </p>
-              <p class="method-list-item-description">
-                "bitsCanStackOnDeployment": Boolean, if true will allow more than one moving unit to be deployed on the same location.
-              </p>
-              <p class="method-list-item-description">
-                "destroyOwnUnitRefund": Float, determines what fraction of a unit's cost is refunded when a stationary unit is removed by the player who owns it.
-              </p>
-              <p class="method-list-item-description">
-                "destroyOwnUnitsEnabled": Boolean, if true allows players to remove their own stationary units.
-              </p>
-              <p class="method-list-item-description">
-                "stepsRequiredSelfDestruct": Integer, minimum number of steps a unit has to take before its self destruct does damage. Used to balance the self destruct mechanic.
-              </p>
-              <p class="method-list-item-description">
-                "selfDestructRadius": Float, radius from the self destructing unit's center that determines what units will be damaged by a self destruct.
-              </p>
-              <p class="method-list-item-description">
-                "shieldDecayPerFrame": Float, what fraction of a shield will decay per frame.
-              </p>
-              <p class="method-list-item-description">
-                "meleeMultiplier": Float, <b>depracated</b> determines how much damage a melee attack does, melee attacks are no longer used.
-              </p>
-              <p class="method-list-item-description">
-                "destroyOwnUnitDelay": Integer, number of turns before a unit will be removed when a player attempts to remove their own stationary unit.
-              </p>
-              <p class="method-list-item-description">
-                "rerouteMidRound": Boolean, <b>deprecated</b> determines if a unit will reroute when a stationary unit is destroyed in the middle of a round. This is not currently supported, setting this to false will cause undefined behavior.
-              </p>
-              <p class="method-list-item-description">
-                "firewallBuildTime": Integer, <b>deprecated</b> determines how many turns a stationary unit will take to spawn. This is not currently supported, setting this variable higher than 0 may cause undefined behavior.
-              </p>
-              <p class="method-list-item-description">
-                }
-              </p>
-            </li>
-
   </ul>
 </div>
 
@@ -1215,83 +1212,150 @@
     <div class="method-example-part">
       <code class="method-example-object language-undefined"><pre class=" language-json"><code class=" language-json">
 <span class="token punctuation">{</span>
+  <span class="token json-key">"seasonCompatibilityModeP1"</span><span class="token punctuation">: </span><span class="token number">5</span><span class="token punctuation">,</span>
+  <span class="token json-key">"seasonCompatibilityModeP2"</span><span class="token punctuation">: </span><span class="token number">5</span><span class="token punctuation">,</span>
   <span class="token json-key">"debug"</span><span class="token punctuation">: </span><span class="token punctuation">{</span>
     <span class="token json-key">"printMapString"</span><span class="token punctuation">: </span><span class="token keyword">false</span><span class="token punctuation">,</span>
     <span class="token json-key">"printTStrings"</span><span class="token punctuation">: </span><span class="token keyword">false</span><span class="token punctuation">,</span>
     <span class="token json-key">"printActStrings"</span><span class="token punctuation">: </span><span class="token keyword">false</span><span class="token punctuation">,</span>
     <span class="token json-key">"printHitStrings"</span><span class="token punctuation">: </span><span class="token keyword">false</span><span class="token punctuation">,</span>
-    <span class="token json-key">"printPlayerInputStrings"</span><span class="token punctuation">: </span><span class="token keyword">true</span><span class="token punctuation">,</span>
+    <span class="token json-key">"printPlayerInputStrings"</span><span class="token punctuation">: </span><span class="token keyword">false</span><span class="token punctuation">,</span>
     <span class="token json-key">"printBotErrors"</span><span class="token punctuation">: </span><span class="token keyword">true</span><span class="token punctuation">,</span>
     <span class="token json-key">"printPlayerGetHitStrings"</span><span class="token punctuation">: </span><span class="token keyword">false</span>
   <span class="token punctuation">}</span><span class="token punctuation">,</span>
   <span class="token json-key">"unitInformation"</span><span class="token punctuation">: </span><span class="token punctuation">[</span>
     <span class="token punctuation">{</span>
-      <span class="token json-key">"damage"</span><span class="token punctuation">: </span><span class="token token number">0.0</span><span class="token punctuation">,</span>
-      <span class="token json-key">"cost"</span><span class="token punctuation">: </span><span class="token token number">1.0</span><span class="token punctuation">,</span>
-      <span class="token json-key">"getHitRadius"</span><span class="token punctuation">: </span><span class="token token number">0.51</span><span class="token punctuation">,</span>
-      <span class="token json-key">"display"</span><span class="token punctuation">: </span><span class="token json-string">"Filter"</span>
-      <span class="token json-key">"range"</span><span class="token punctuation">: </span><span class="token token number">0.0</span><span class="token punctuation">,</span>
-      <span class="token json-key">"shorthand"</span><span class="token punctuation">: </span><span class="token json-string">"FF"</span>
-      <span class="token json-key">"stability"</span><span class="token punctuation">: </span><span class="token token number">60.0</span>
+      <span class="token json-key">"icon"</span><span class="token punctuation">: </span><span class="token token json-string">S3_filter</span><span class="token punctuation">,</span>
+      <span class="token json-key">"iconxScale"</span><span class="token punctuation">: </span><span class="token token number">0.4</span><span class="token punctuation">,</span>
+      <span class="token json-key">"iconyScale"</span><span class="token punctuation">: </span><span class="token token number">0.4</span><span class="token punctuation">,</span>
+      <span class="token json-key">"cost1"</span><span class="token punctuation">: </span><span class="token token number">1.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"getHitRadius"</span><span class="token punctuation">: </span><span class="token token number">0.01</span><span class="token punctuation">,</span>
+      <span class="token json-key">"display"</span><span class="token punctuation">: </span><span class="token json-string">"Filter"</span><span class="token punctuation">,</span>
+      <span class="token json-key">"shorthand"</span><span class="token punctuation">: </span><span class="token json-string">"FF"</span><span class="token punctuation">,</span>
+      <span class="token json-key">"startHealth"</span><span class="token punctuation">: </span><span class="token token number">60.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"unitCategory"</span><span class="token punctuation">: </span><span class="token token number">0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"refundPercentage"</span><span class="token punctuation">: </span><span class="token token number">0.75</span><span class="token punctuation">,</span>
+      <span class="token json-key">"turnsRequiredToRemove"</span><span class="token punctuation">: </span><span class="token token number">1</span><span class="token punctuation">,</span>
+      <span class="token json-key">"upgrade"</span><span class="token punctuation">: </span><span class="token token punctuation">{</span>
+        <span class="token json-key">"startHealth"</span><span class="token punctuation">: </span><span class="token token number">120.0</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
     <span class="token punctuation">}</span><span class="token punctuation">,</span>
     <span class="token punctuation">{</span>
-      <span class="token json-key">"damage"</span><span class="token punctuation">: </span><span class="token token number">0.0</span><span class="token punctuation">,</span>
-      <span class="token json-key">"cost"</span><span class="token punctuation">: </span><span class="token token number">4.0</span><span class="token punctuation">,</span>
-      <span class="token json-key">"getHitRadius"</span><span class="token punctuation">: </span><span class="token token number">0.51</span><span class="token punctuation">,</span>
-      <span class="token json-key">"shieldAmount"</span><span class="token punctuation">: </span><span class="token token number">10.0</span><span class="token punctuation">,</span>
-      <span class="token json-key">"display"</span><span class="token punctuation">: </span><span class="token json-string">"Encryptor"</span>
-      <span class="token json-key">"range"</span><span class="token punctuation">: </span><span class="token token number">3.0</span><span class="token punctuation">,</span>
-      <span class="token json-key">"shorthand"</span><span class="token punctuation">: </span><span class="token json-string">"EF"</span>
-      <span class="token json-key">"stability"</span><span class="token punctuation">: </span><span class="token token number">30.0</span>
+      <span class="token json-key">"icon"</span><span class="token punctuation">: </span><span class="token token json-string">S3_encryptor</span><span class="token punctuation">,</span>
+      <span class="token json-key">"iconxScale"</span><span class="token punctuation">: </span><span class="token token number">0.5</span><span class="token punctuation">,</span>
+      <span class="token json-key">"iconyScale"</span><span class="token punctuation">: </span><span class="token token number">0.5</span><span class="token punctuation">,</span>
+      <span class="token json-key">"cost1"</span><span class="token punctuation">: </span><span class="token token number">4.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"getHitRadius"</span><span class="token punctuation">: </span><span class="token token number">0.01</span><span class="token punctuation">,</span>
+      <span class="token json-key">"shieldPerUnit"</span><span class="token punctuation">: </span><span class="token token number">3.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"display"</span><span class="token punctuation">: </span><span class="token json-string">"Encryptor"</span><span class="token punctuation">,</span>
+      <span class="token json-key">"shieldRange"</span><span class="token punctuation">: </span><span class="token token number">3.5</span><span class="token punctuation">,</span>
+      <span class="token json-key">"shorthand"</span><span class="token punctuation">: </span><span class="token json-string">"EF"</span><span class="token punctuation">,</span>
+      <span class="token json-key">"startHealth"</span><span class="token punctuation">: </span><span class="token token number">30.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"unitCategory"</span><span class="token punctuation">: </span><span class="token token number">0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"shieldBonusPerY"</span><span class="token punctuation">: </span><span class="token token number">0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"refundPercentage"</span><span class="token punctuation">: </span><span class="token token number">0.75</span><span class="token punctuation">,</span>
+      <span class="token json-key">"turnsRequiredToRemove"</span><span class="token punctuation">: </span><span class="token token number">1</span><span class="token punctuation">,</span>
+      <span class="token json-key">"upgrade"</span><span class="token punctuation">: </span><span class="token token punctuation">{</span>
+        <span class="token json-key">"shieldPerUnit"</span><span class="token punctuation">: </span><span class="token token number">4</span><span class="token punctuation">,</span>
+        <span class="token json-key">"shieldRange"</span><span class="token punctuation">: </span><span class="token token number">7</span><span class="token punctuation">,</span>
+        <span class="token json-key">"shieldBonusPerY"</span><span class="token punctuation">: </span><span class="token token number">0.3</span><span class="token punctuation">,</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
     <span class="token punctuation">}</span><span class="token punctuation">,</span>
     <span class="token punctuation">{</span>
-      <span class="token json-key">"damage"</span><span class="token punctuation">: </span><span class="token token number">4.0</span><span class="token punctuation">,</span>
-      <span class="token json-key">"cost"</span><span class="token punctuation">: </span><span class="token token number">3.0</span><span class="token punctuation">,</span>
-      <span class="token json-key">"getHitRadius"</span><span class="token punctuation">: </span><span class="token token number">0.51</span><span class="token punctuation">,</span>
-      <span class="token json-key">"display"</span><span class="token punctuation">: </span><span class="token json-string">"Destructor"</span>
-      <span class="token json-key">"range"</span><span class="token punctuation">: </span><span class="token token number">3.0</span><span class="token punctuation">,</span>
-      <span class="token json-key">"shorthand"</span><span class="token punctuation">: </span><span class="token json-string">"DF"</span>
-      <span class="token json-key">"stability"</span><span class="token punctuation">: </span><span class="token token number">75.0</span>
+      <span class="token json-key">"icon"</span><span class="token punctuation">: </span><span class="token token json-string">S3_destructor</span><span class="token punctuation">,</span>
+      <span class="token json-key">"iconxScale"</span><span class="token punctuation">: </span><span class="token token number">0.5</span><span class="token punctuation">,</span>
+      <span class="token json-key">"iconyScale"</span><span class="token punctuation">: </span><span class="token token number">0.5</span><span class="token punctuation">,</span>
+      <span class="token json-key">"attackDamageWalker"</span><span class="token punctuation">: </span><span class="token token number">5.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"cost1"</span><span class="token punctuation">: </span><span class="token token number">2.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"getHitRadius"</span><span class="token punctuation">: </span><span class="token token number">0.01</span><span class="token punctuation">,</span>
+      <span class="token json-key">"display"</span><span class="token punctuation">: </span><span class="token json-string">"Destructor"</span><span class="token punctuation">,</span>
+      <span class="token json-key">"attackRange"</span><span class="token punctuation">: </span><span class="token token number">2.5</span><span class="token punctuation">,</span>
+      <span class="token json-key">"shorthand"</span><span class="token punctuation">: </span><span class="token json-string">"DF"</span><span class="token punctuation">,</span>
+      <span class="token json-key">"startHealth"</span><span class="token punctuation">: </span><span class="token token number">75.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"unitCategory"</span><span class="token punctuation">: </span><span class="token token number">0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"refundPercentage"</span><span class="token punctuation">: </span><span class="token token number">0.75</span><span class="token punctuation">,</span>
+      <span class="token json-key">"turnsRequiredToRemove"</span><span class="token punctuation">: </span><span class="token token number">1</span><span class="token punctuation">,</span>
+      <span class="token json-key">"upgrade"</span><span class="token punctuation">: </span><span class="token token punctuation">{</span>
+        <span class="token json-key">"cost1"</span><span class="token punctuation">: </span><span class="token token number">4</span><span class="token punctuation">,</span>
+        <span class="token json-key">"attackDamageWalker"</span><span class="token punctuation">: </span><span class="token token number">3.5</span><span class="token punctuation">,</span>
+        <span class="token json-key">"attackRange"</span><span class="token punctuation">: </span><span class="token token number">16.0</span><span class="token punctuation">,</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
     <span class="token punctuation">}</span><span class="token punctuation">,</span>
     <span class="token punctuation">{</span>
-      <span class="token json-key">"damageI"</span><span class="token punctuation">: </span><span class="token token number">1.0</span><span class="token punctuation">,</span>
-      <span class="token json-key">"damageToPlayer"</span><span class="token punctuation">: </span><span class="token token number">1.0</span><span class="token punctuation">,</span>
-      <span class="token json-key">"cost"</span><span class="token punctuation">: </span><span class="token token number">1.0</span><span class="token punctuation">,</span>
-      <span class="token json-key">"getHitRadius"</span><span class="token punctuation">: </span><span class="token token number">0.51</span><span class="token punctuation">,</span>
-      <span class="token json-key">"damageF"</span><span class="token punctuation">: </span><span class="token token number">1.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"icon"</span><span class="token punctuation">: </span><span class="token token json-string">S3_destructor</span><span class="token punctuation">,</span>
+      <span class="token json-key">"iconxScale"</span><span class="token punctuation">: </span><span class="token token number">0.5</span><span class="token punctuation">,</span>
+      <span class="token json-key">"iconyScale"</span><span class="token punctuation">: </span><span class="token token number">0.5</span><span class="token punctuation">,</span>
+      <span class="token json-key">"attackDamageTower"</span><span class="token punctuation">: </span><span class="token token number">2.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"attackDamageWalker"</span><span class="token punctuation">: </span><span class="token token number">2.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"playerBreachDamage"</span><span class="token punctuation">: </span><span class="token token number">1.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"cost2"</span><span class="token punctuation">: </span><span class="token token number">1.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"getHitRadius"</span><span class="token punctuation">: </span><span class="token token number">0.01</span><span class="token punctuation">,</span>
       <span class="token json-key">"display"</span><span class="token punctuation">: </span><span class="token json-string">"Ping"</span>
-      <span class="token json-key">"range"</span><span class="token punctuation">: </span><span class="token token number">3.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"attackRange"</span><span class="token punctuation">: </span><span class="token token number">3.5</span><span class="token punctuation">,</span>
       <span class="token json-key">"shorthand"</span><span class="token punctuation">: </span><span class="token json-string">"PI"</span>
-      <span class="token json-key">"stability"</span><span class="token punctuation">: </span><span class="token token number">15.0</span><span class="token punctuation">,</span>
-      <span class="token json-key">"speed"</span><span class="token punctuation">: </span><span class="token token number">0.5</span>
+      <span class="token json-key">"startHealth"</span><span class="token punctuation">: </span><span class="token token number">15.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"speed"</span><span class="token punctuation">: </span><span class="token token number">1</span>
+      <span class="token json-key">"unitCategory"</span><span class="token punctuation">: </span><span class="token token number">1</span><span class="token punctuation">,</span>
+      <span class="token json-key">"selfDestructDamageWalker"</span><span class="token punctuation">: </span><span class="token token number">15.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"selfDestructDamageTower"</span><span class="token punctuation">: </span><span class="token token number">15.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"metalForBreach"</span><span class="token punctuation">: </span><span class="token token number">1.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"selfDestructRange"</span><span class="token punctuation">: </span><span class="token token number">1.5</span><span class="token punctuation">,</span>
+      <span class="token json-key">"selfDestructStepsRequired"</span><span class="token punctuation">: </span><span class="token token number">5</span><span class="token punctuation">,</span>
     <span class="token punctuation">}</span><span class="token punctuation">,</span>
     <span class="token punctuation">{</span>
-      <span class="token json-key">"damageI"</span><span class="token punctuation">: </span><span class="token token number">3.0</span><span class="token punctuation">,</span>
-      <span class="token json-key">"damageToPlayer"</span><span class="token punctuation">: </span><span class="token token number">1.0</span><span class="token punctuation">,</span>
-      <span class="token json-key">"cost"</span><span class="token punctuation">: </span><span class="token token number">3.0</span><span class="token punctuation">,</span>
-      <span class="token json-key">"getHitRadius"</span><span class="token punctuation">: </span><span class="token token number">0.51</span><span class="token punctuation">,</span>
-      <span class="token json-key">"damageF"</span><span class="token punctuation">: </span><span class="token token number">3.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"icon"</span><span class="token punctuation">: </span><span class="token token json-string">S3_emp</span><span class="token punctuation">,</span>
+      <span class="token json-key">"iconxScale"</span><span class="token punctuation">: </span><span class="token token number">0.47</span><span class="token punctuation">,</span>
+      <span class="token json-key">"iconyScale"</span><span class="token punctuation">: </span><span class="token token number">0.47</span><span class="token punctuation">,</span>
+      <span class="token json-key">"attackDamageTower"</span><span class="token punctuation">: </span><span class="token token number">8.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"attackDamageWalker"</span><span class="token punctuation">: </span><span class="token token number">8.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"playerBreachDamage"</span><span class="token punctuation">: </span><span class="token token number">1.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"cost2"</span><span class="token punctuation">: </span><span class="token token number">3.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"getHitRadius"</span><span class="token punctuation">: </span><span class="token token number">0.01</span><span class="token punctuation">,</span>
       <span class="token json-key">"display"</span><span class="token punctuation">: </span><span class="token json-string">"EMP"</span>
-      <span class="token json-key">"range"</span><span class="token punctuation">: </span><span class="token token number">5.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"attackRange"</span><span class="token punctuation">: </span><span class="token token number">4.5</span><span class="token punctuation">,</span>
       <span class="token json-key">"shorthand"</span><span class="token punctuation">: </span><span class="token json-string">"EI"</span>
-      <span class="token json-key">"stability"</span><span class="token punctuation">: </span><span class="token token number">5.0</span><span class="token punctuation">,</span>
-      <span class="token json-key">"speed"</span><span class="token punctuation">: </span><span class="token token number">0.25</span>
+      <span class="token json-key">"startHealth"</span><span class="token punctuation">: </span><span class="token token number">5.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"speed"</span><span class="token punctuation">: </span><span class="token token number">0.5</span>
+      <span class="token json-key">"unitCategory"</span><span class="token punctuation">: </span><span class="token token number">1</span><span class="token punctuation">,</span>
+      <span class="token json-key">"selfDestructDamageWalker"</span><span class="token punctuation">: </span><span class="token token number">5.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"selfDestructDamageTower"</span><span class="token punctuation">: </span><span class="token token number">5.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"metalForBreach"</span><span class="token punctuation">: </span><span class="token token number">1.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"selfDestructRange"</span><span class="token punctuation">: </span><span class="token token number">1.5</span><span class="token punctuation">,</span>
+      <span class="token json-key">"selfDestructStepsRequired"</span><span class="token punctuation">: </span><span class="token token number">5</span><span class="token punctuation">,</span>
     <span class="token punctuation">}</span><span class="token punctuation">,</span>
     <span class="token punctuation">{</span>
-      <span class="token json-key">"damageI"</span><span class="token punctuation">: </span><span class="token token number">10.0</span><span class="token punctuation">,</span>
-      <span class="token json-key">"damageToPlayer"</span><span class="token punctuation">: </span><span class="token token number">1.0</span><span class="token punctuation">,</span>
-      <span class="token json-key">"cost"</span><span class="token punctuation">: </span><span class="token token number">1.0</span><span class="token punctuation">,</span>
-      <span class="token json-key">"getHitRadius"</span><span class="token punctuation">: </span><span class="token token number">0.51</span><span class="token punctuation">,</span>
-      <span class="token json-key">"damageF"</span><span class="token punctuation">: </span><span class="token token number">0.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"icon"</span><span class="token punctuation">: </span><span class="token token json-string">S3_scrambler</span><span class="token punctuation">,</span>
+      <span class="token json-key">"iconxScale"</span><span class="token punctuation">: </span><span class="token token number">0.5</span><span class="token punctuation">,</span>
+      <span class="token json-key">"iconyScale"</span><span class="token punctuation">: </span><span class="token token number">0.5</span><span class="token punctuation">,</span>
+      <span class="token json-key">"attackDamageWalker"</span><span class="token punctuation">: </span><span class="token token number">20.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"playerBreachDamage"</span><span class="token punctuation">: </span><span class="token token number">1.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"cost2"</span><span class="token punctuation">: </span><span class="token token number">1.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"getHitRadius"</span><span class="token punctuation">: </span><span class="token token number">0.01</span><span class="token punctuation">,</span>
       <span class="token json-key">"display"</span><span class="token punctuation">: </span><span class="token json-string">"Scrambler"</span>
-      <span class="token json-key">"range"</span><span class="token punctuation">: </span><span class="token token number">3.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"attackRange"</span><span class="token punctuation">: </span><span class="token token number">4.5</span><span class="token punctuation">,</span>
       <span class="token json-key">"shorthand"</span><span class="token punctuation">: </span><span class="token json-string">"SI"</span>
-      <span class="token json-key">"stability"</span><span class="token punctuation">: </span><span class="token token number">40.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"startHealth"</span><span class="token punctuation">: </span><span class="token token number">40.0</span><span class="token punctuation">,</span>
       <span class="token json-key">"speed"</span><span class="token punctuation">: </span><span class="token token number">0.25</span>
+      <span class="token json-key">"unitCategory"</span><span class="token punctuation">: </span><span class="token token number">1</span><span class="token punctuation">,</span>
+      <span class="token json-key">"selfDestructDamageWalker"</span><span class="token punctuation">: </span><span class="token token number">40.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"selfDestructDamageTower"</span><span class="token punctuation">: </span><span class="token token number">40.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"metalForBreach"</span><span class="token punctuation">: </span><span class="token token number">1.0</span><span class="token punctuation">,</span>
+      <span class="token json-key">"selfDestructRange"</span><span class="token punctuation">: </span><span class="token token number">1.5</span><span class="token punctuation">,</span>
+      <span class="token json-key">"selfDestructStepsRequired"</span><span class="token punctuation">: </span><span class="token token number">5</span><span class="token punctuation">,</span>
     <span class="token punctuation">}</span><span class="token punctuation">,</span>
     <span class="token punctuation">{</span>
       <span class="token json-key">"display"</span><span class="token punctuation">: </span><span class="token json-string">"Remove"</span>
       <span class="token json-key">"shorthand"</span><span class="token punctuation">: </span><span class="token json-string">"RM"</span>
+      <span class="token json-key">"icon"</span><span class="token punctuation">: </span><span class="token token json-string">S3_removal</span><span class="token punctuation">,</span>
+      <span class="token json-key">"iconxScale"</span><span class="token punctuation">: </span><span class="token token number">0.4</span><span class="token punctuation">,</span>
+      <span class="token json-key">"iconyScale"</span><span class="token punctuation">: </span><span class="token token number">0.4</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span>
+    <span class="token punctuation">{</span>
+      <span class="token json-key">"display"</span><span class="token punctuation">: </span><span class="token json-string">"Upgrade"</span>
+      <span class="token json-key">"shorthand"</span><span class="token punctuation">: </span><span class="token json-string">"UP"</span>
+      <span class="token json-key">"icon"</span><span class="token punctuation">: </span><span class="token token json-string">S3_upgrade</span><span class="token punctuation">,</span>
+      <span class="token json-key">"iconxScale"</span><span class="token punctuation">: </span><span class="token token number">0.4</span><span class="token punctuation">,</span>
+      <span class="token json-key">"iconyScale"</span><span class="token punctuation">: </span><span class="token token number">0.4</span><span class="token punctuation">,</span>
     <span class="token punctuation">}</span>
   <span class="token punctuation">]</span><span class="token punctuation">,</span>
   <span class="token json-key">"timingAndReplay"</span><span class="token punctuation">: </span><span class="token punctuation">{</span>
@@ -1322,20 +1386,10 @@
     <span class="token json-key">"bitDecayPerRound"</span><span class="token punctuation">: </span><span class="token token number">0.33333</span><span class="token punctuation">,</span>
     <span class="token json-key">"startingCores"</span><span class="token punctuation">: </span><span class="token token number">25.0</span>
   <span class="token punctuation">}</span><span class="token punctuation">,</span>
-  <span class="token json-key">"mechanics"</span><span class="token punctuation">: </span><span class="token punctuation">{</span>
-    <span class="token json-key">"basePlayerHealthDamage"</span><span class="token punctuation">: </span><span class="token token number">1.0</span><span class="token punctuation">,</span>
-    <span class="token json-key">"damageGrowthBasedOnY"</span><span class="token punctuation">: </span><span class="token token number">0.0</span><span class="token punctuation">,</span>
-    <span class="token json-key">"bitsCanStackOnDeployment"</span><span class="token punctuation">: </span><span class="token keyword">true</span><span class="token punctuation">,</span>
-    <span class="token json-key">"destroyOwnUnitRefund"</span><span class="token punctuation">: </span><span class="token token number">0.5</span><span class="token punctuation">,</span>
-    <span class="token json-key">"destroyOwnUnitsEnabled"</span><span class="token punctuation">: </span><span class="token keyword">true</span><span class="token punctuation">,</span>
-    <span class="token json-key">"stepsRequiredSelfDestruct"</span><span class="token punctuation">: </span><span class="token token number">5</span><span class="token punctuation">,</span>
-    <span class="token json-key">"selfDestructRadius"</span><span class="token punctuation">: </span><span class="token token number">1.5</span><span class="token punctuation">,</span>
-    <span class="token json-key">"shieldDecayPerFrame"</span><span class="token punctuation">: </span><span class="token token number">0.15</span><span class="token punctuation">,</span>
-    <span class="token json-key">"meleeMultiplier"</span><span class="token punctuation">: </span><span class="token token number">0</span><span class="token punctuation">,</span>
-    <span class="token json-key">"destroyOwnUnitDelay"</span><span class="token punctuation">: </span><span class="token token number">1</span><span class="token punctuation">,</span>
-    <span class="token json-key">"rerouteMidRound"</span><span class="token punctuation">: </span><span class="token keyword">true</span><span class="token punctuation">,</span>
-    <span class="token json-key">"firewallBuildTime"</span><span class="token punctuation">: </span><span class="token token number">0</span>
-  <span class="token punctuation">}</span>
+  <span class="token json-key">"misc"</span><span class="token punctuation">: </span><span class="token punctuation">{</span>
+    <span class="token json-key">"numBlockedLocations"</span><span class="token punctuation">: </span><span class="token token number">0</span><span class="token punctuation">,</span>
+    <span class="token json-key">"blockedLocations"</span><span class="token punctuation">: </span><span class="token token json-string">[]</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
 <span class="token punctuation">}</span>
           
           
