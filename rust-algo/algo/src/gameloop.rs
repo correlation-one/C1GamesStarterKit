@@ -1,18 +1,11 @@
-
 use crate::{
-    messages::Config,
-    messages::frame::Phase,
     io::GameDataReader,
-    map::{
-        MapState,
-        parse::parse_frame,
-    },
+    map::{parse::parse_frame, MapState},
+    messages::frame::Phase,
+    messages::Config,
 };
 
-use std::{
-    process,
-    sync::Arc,
-};
+use std::{process, sync::Arc};
 
 /// A trait for a simple, single-threaded game loop, which the user can implement and then plug into a
 /// game loop driver to create a working algo.
@@ -37,30 +30,25 @@ pub trait GameLoop {
     fn on_turn(&mut self, config: Arc<Config>, state: &MapState);
 }
 
-
 /// Run a game loop until the game ends and the process exits.
 pub fn run_game_loop(mut game_loop: impl GameLoop) -> ! {
-    let mut io = GameDataReader::new();
+    let mut io = GameDataReader::default();
     let (config, atlas) = io.config().expect("Config error");
     game_loop.initialize(config.clone());
     loop {
         let frame = io.next_frame_any_type().expect("Frame error");
         match frame.turn_info.phase {
             Phase::Deploy => {
-                let map =
-                    parse_frame(config.clone(), frame, atlas.clone())
-                        .expect("Frame error");
+                let map = parse_frame(config.clone(), frame, atlas.clone()).expect("Frame error");
 
                 game_loop.on_turn(config.clone(), &map);
                 map.submit();
-            },
+            }
             Phase::Action => {
-                let map =
-                    parse_frame(config.clone(), frame, atlas.clone())
-                        .expect("Frame error");
+                let map = parse_frame(config.clone(), frame, atlas.clone()).expect("Frame error");
 
                 game_loop.on_action_frame(config.clone(), &map);
-            },
+            }
             Phase::EndGame => {
                 process::exit(0);
             }

@@ -1,4 +1,3 @@
-
 extern crate algo;
 extern crate serde_json;
 
@@ -8,7 +7,7 @@ use std::io::stdin;
 use std::io::BufRead;
 
 fn main() {
-    let mut reader = GameDataReader::new();
+    let mut reader = GameDataReader::default();
     loop {
         let map = reader.next_turn_map().unwrap();
         let start: [f32; 2] = {

@@ -1,4 +1,3 @@
-
 use super::*;
 
 pub fn parse_frame(
@@ -6,15 +5,11 @@ pub fn parse_frame(
     frame: Box<FrameData>,
     atlas: Arc<UnitTypeAtlas>,
 ) -> Result<MapState, MapParseError> {
-// create the grids
-    let mut walls: Grid<Option<Unit<StructureUnitType>>> =
-        Grid::from_generator(|_| None);
-    let mut remove: Grid<Option<Unit<RemoveUnitType>>> =
-        Grid::from_generator(|_| None);
-    let mut upgrade: Grid<Option<Unit<UpgradeUnitType>>> =
-        Grid::from_generator(|_| None);
-    let mut mobile: Grid<Vec<Unit<MobileUnitType>>> =
-        Grid::from_generator(|_| Vec::new());
+    // create the grids
+    let mut walls: Grid<Option<Unit<StructureUnitType>>> = Grid::from_generator(|_| None);
+    let mut remove: Grid<Option<Unit<RemoveUnitType>>> = Grid::from_generator(|_| None);
+    let mut upgrade: Grid<Option<Unit<UpgradeUnitType>>> = Grid::from_generator(|_| None);
+    let mut mobile: Grid<Vec<Unit<MobileUnitType>>> = Grid::from_generator(|_| Vec::new());
 
     // for each player
     for player in PlayerId::into_enum_iter() {
@@ -31,7 +26,8 @@ pub fn parse_frame(
                 MobileUnitType::Interceptor => &units.interceptor,
             };
             for unit_data in unit_data_vec {
-                mobile.get_mut(unit_data.coords)
+                mobile
+                    .get_mut(unit_data.coords)
                     .ok_or(MapParseError::UnitInIllegalPosition(unit_data.coords))?
                     .push(Unit {
                         unit_type,
@@ -50,7 +46,8 @@ pub fn parse_frame(
                 StructureUnitType::Turret => &units.turret,
             };
             for unit_data in unit_data_vec {
-                let slot: &mut Option<Unit<StructureUnitType>> = walls.get_mut(unit_data.coords)
+                let slot: &mut Option<Unit<StructureUnitType>> = walls
+                    .get_mut(unit_data.coords)
                     .ok_or(MapParseError::UnitInIllegalPosition(unit_data.coords))?;
                 if slot.is_some() {
                     return Err(MapParseError::MultipleWallsSamePosition(unit_data.coords));
@@ -59,14 +56,15 @@ pub fn parse_frame(
                     unit_type,
                     health: unit_data.stability,
                     id: Some(unit_data.unit_id.clone()),
-                    owner: player
+                    owner: player,
                 });
             }
         }
 
         // fill in the remove units
         for unit_data in &units.remove {
-            let slot: &mut Option<Unit<RemoveUnitType>> = remove.get_mut(unit_data.coords)
+            let slot: &mut Option<Unit<RemoveUnitType>> = remove
+                .get_mut(unit_data.coords)
                 .ok_or(MapParseError::UnitInIllegalPosition(unit_data.coords))?;
             if slot.is_some() {
                 return Err(MapParseError::MultipleRemovesSamePosition(unit_data.coords));
@@ -75,26 +73,27 @@ pub fn parse_frame(
                 unit_type: RemoveUnitType,
                 health: unit_data.stability,
                 id: Some(unit_data.unit_id.clone()),
-                owner: player
+                owner: player,
             });
         }
 
         // fill in the upgrade units
         for unit_data in &units.upgrade {
-            let slot: &mut Option<Unit<UpgradeUnitType>> = upgrade.get_mut(unit_data.coords)
+            let slot: &mut Option<Unit<UpgradeUnitType>> = upgrade
+                .get_mut(unit_data.coords)
                 .ok_or(MapParseError::UnitInIllegalPosition(unit_data.coords))?;
             if slot.is_some() {
-                return Err(MapParseError::MultipleUpgradesSamePosition(unit_data.coords));
+                return Err(MapParseError::MultipleUpgradesSamePosition(
+                    unit_data.coords,
+                ));
             }
             *slot = Some(Unit {
                 unit_type: UpgradeUnitType,
                 health: unit_data.stability,
                 id: Some(unit_data.unit_id.clone()),
-                owner: player
+                owner: player,
             });
         }
-
-
     }
 
     let inner = MapStateInner {
@@ -123,10 +122,7 @@ pub fn parse_frame(
         }
     });
 
-    Ok(MapState {
-        inner,
-        tile_grid,
-    })
+    Ok(MapState { inner, tile_grid })
 }
 
 /// All the ways in which a map can fail to parse from a string.

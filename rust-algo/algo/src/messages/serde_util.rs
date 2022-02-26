@@ -1,4 +1,3 @@
-
 /// Implement Deserialize that translates integer
 /// constants to enum variants.
 macro_rules! serde_enum_from_int {
@@ -56,11 +55,11 @@ pub trait DeserializeAs: Sized {
 /// Implement `Serialize` for a type by delegating to its
 /// implementation of `DeserializeAs`.
 macro_rules! deser_as {
-    ($t:ty)=>{
+    ($t:ty) => {
         impl<'de> serde::de::Deserialize<'de> for $t {
             fn deserialize<D>(d: D) -> Result<Self, D::Error>
             where
-                D: serde::de::Deserializer<'de>
+                D: serde::de::Deserializer<'de>,
             {
                 use $crate::messages::serde_util::DeserializeAs;
 
@@ -70,7 +69,6 @@ macro_rules! deser_as {
         }
     };
 }
-
 
 /// Allows implementation of `Serialize` through a delegate
 /// data model type, which this type first converts into.
@@ -83,7 +81,7 @@ pub trait SerializeAs: Sized {
 /// Implement `Serialize` for a type by delegating to its
 /// implementation of `SerializeAs`.
 macro_rules! ser_as {
-    ($t:ty)=>{
+    ($t:ty) => {
         impl serde::ser::Serialize for $t {
             fn serialize<S>(&self, s: S) -> Result<S::Ok, S::Error>
             where
@@ -95,9 +93,8 @@ macro_rules! ser_as {
                 <$t as SerializeAs>::Model::serialize(&model, s)
             }
         }
-    }
+    };
 }
-
 
 /// Implement `DeserializeAs` for a struct, by directly
 /// mirroring its named fields into a tuple.
@@ -133,8 +130,8 @@ pub struct RoundNumber(f64);
 
 impl<'de> serde::de::Deserialize<'de> for RoundNumber {
     fn deserialize<D>(d: D) -> Result<Self, D::Error>
-        where
-            D: serde::de::Deserializer<'de>
+    where
+        D: serde::de::Deserializer<'de>,
     {
         use serde::de::{Error, Visitor};
         use std::fmt::{self, Formatter};

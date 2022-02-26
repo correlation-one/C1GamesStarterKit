@@ -1,12 +1,8 @@
-
-use crate::{
-    coords::*,
-    bounds::BOARD_SIZE,
-};
+use crate::{bounds::BOARD_SIZE, coords::*};
 
 use std::{
-    mem::{MaybeUninit, ManuallyDrop},
     fmt::{self, Debug, Formatter},
+    mem::{ManuallyDrop, MaybeUninit},
     ops::{Index, IndexMut},
     ptr,
 };
@@ -31,9 +27,9 @@ impl<T> Grid<T> {
 
                     let addr: *mut [[T; BOARD_SIZE]; BOARD_SIZE] = data.as_mut_ptr();
                     let addr: *mut [T; BOARD_SIZE] = addr as _;
-                    let addr: *mut [T; BOARD_SIZE] = addr.offset(x as isize);
+                    let addr: *mut [T; BOARD_SIZE] = addr.add(x);
                     let addr: *mut T = addr as _;
-                    let addr: *mut T = addr.offset(y as isize);
+                    let addr: *mut T = addr.add(y);
 
                     ptr::write(addr, value);
                 }
@@ -42,9 +38,7 @@ impl<T> Grid<T> {
             let data: [[T; BOARD_SIZE]; BOARD_SIZE] =
                 MaybeUninit::assume_init(ManuallyDrop::into_inner(data));
 
-            Grid {
-                data
-            }
+            Grid { data }
         }
     }
 
@@ -81,14 +75,12 @@ impl<T> IndexMut<Coords> for Grid<T> {
 
 impl<T: Debug> Debug for Grid<T> {
     fn fmt(&self, f: &mut Formatter) -> Result<(), fmt::Error> {
-        let strings: Grid<String> =
-            Grid::from_generator(|c| format!("{:?}", self.get(c).unwrap()));
+        let strings: Grid<String> = Grid::from_generator(|c| format!("{:?}", self.get(c).unwrap()));
 
         let mut max_len = None;
         for x in 0..BOARD_SIZE {
             for y in 0..BOARD_SIZE {
-                let len = strings.get(Coords::from([x, y])).unwrap()
-                    .chars().collect::<Vec<char>>().len();
+                let len = strings.get(Coords::from([x, y])).unwrap().chars().count();
                 if let Some(max) = max_len {
                     if len > max {
                         max_len = Some(len);
@@ -107,12 +99,12 @@ impl<T: Debug> Debug for Grid<T> {
             for x in 0..BOARD_SIZE {
                 let elem = strings.get(Coords::from([x, y])).unwrap();
                 builder.push_str(elem);
-                let elem_len = elem.chars().collect::<Vec<char>>().len();
+                let elem_len = elem.chars().count();
                 for _ in 0..max_len - elem_len {
                     builder.push(' ');
                 }
                 if x < BOARD_SIZE - 1 {
-                    builder.push_str(",");
+                    builder.push(',');
                 }
             }
             builder.push(']');

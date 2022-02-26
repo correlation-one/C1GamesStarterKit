@@ -1,9 +1,8 @@
 //! Unit types in the game.
 
 use crate::messages::config::UnitInformation;
-use std::collections::HashMap;
 use enum_iterator::IntoEnumIterator;
-
+use std::collections::HashMap;
 
 /// Any unit type, including the remove type.
 #[derive(Debug, Copy, Clone, Eq, PartialEq, PartialOrd, Ord, Hash, IntoEnumIterator)]
@@ -25,16 +24,13 @@ impl UnitType {
             UnitType::Wall => Some(StructureUnitType::Wall),
             UnitType::Support => Some(StructureUnitType::Support),
             UnitType::Turret => Some(StructureUnitType::Turret),
-            _ => None
+            _ => None,
         }
     }
 
     /// Whether self is a StructureUnitType.
     pub fn is_structure(self) -> bool {
-        match self {
-            UnitType::Wall | UnitType::Support | UnitType::Turret => true,
-            _ => false
-        }
+        matches!(self, UnitType::Wall | UnitType::Support | UnitType::Turret)
     }
 
     /// Attempt to convert to an MobileUnitType.
@@ -43,16 +39,16 @@ impl UnitType {
             UnitType::Scout => Some(MobileUnitType::Scout),
             UnitType::Demolisher => Some(MobileUnitType::Demolisher),
             UnitType::Interceptor => Some(MobileUnitType::Interceptor),
-            _ => None
+            _ => None,
         }
     }
 
     /// Whether self is an MobileUnitType.
     pub fn is_mobile(self) -> bool {
-        match self {
-            UnitType::Scout | UnitType::Demolisher | UnitType::Interceptor => true,
-            _ => false
-        }
+        matches!(
+            self,
+            UnitType::Scout | UnitType::Demolisher | UnitType::Interceptor
+        )
     }
 
     /// Whether self is a unit type which can be spawned.
@@ -64,10 +60,8 @@ impl UnitType {
     pub fn as_spawnable(self) -> Option<SpawnableUnitType> {
         if let Some(mobile) = self.as_mobile() {
             Some(SpawnableUnitType::Mobile(mobile))
-        } else if let Some(wall) = self.as_structure() {
-            Some(SpawnableUnitType::Structure(wall))
         } else {
-            None
+            self.as_structure().map(SpawnableUnitType::Structure)
         }
     }
 }
@@ -80,9 +74,9 @@ pub enum StructureUnitType {
     Turret,
 }
 
-impl Into<UnitType> for StructureUnitType {
-    fn into(self) -> UnitType {
-        match self {
+impl From<StructureUnitType> for UnitType {
+    fn from(st: StructureUnitType) -> Self {
+        match st {
             StructureUnitType::Wall => UnitType::Wall,
             StructureUnitType::Support => UnitType::Support,
             StructureUnitType::Turret => UnitType::Turret,
@@ -90,9 +84,9 @@ impl Into<UnitType> for StructureUnitType {
     }
 }
 
-impl Into<SpawnableUnitType> for StructureUnitType {
-    fn into(self) -> SpawnableUnitType {
-        SpawnableUnitType::Structure(self)
+impl From<StructureUnitType> for SpawnableUnitType {
+    fn from(st: StructureUnitType) -> Self {
+        Self::Structure(st)
     }
 }
 
@@ -104,9 +98,9 @@ pub enum MobileUnitType {
     Interceptor,
 }
 
-impl Into<UnitType> for MobileUnitType {
-    fn into(self) -> UnitType {
-        match self {
+impl From<MobileUnitType> for UnitType {
+    fn from(m: MobileUnitType) -> Self {
+        match m {
             MobileUnitType::Scout => UnitType::Scout,
             MobileUnitType::Demolisher => UnitType::Demolisher,
             MobileUnitType::Interceptor => UnitType::Interceptor,
@@ -114,27 +108,28 @@ impl Into<UnitType> for MobileUnitType {
     }
 }
 
-impl Into<SpawnableUnitType> for MobileUnitType {
-    fn into(self) -> SpawnableUnitType {
-        SpawnableUnitType::Mobile(self)
+impl From<MobileUnitType> for SpawnableUnitType {
+    fn from(m: MobileUnitType) -> Self {
+        Self::Mobile(m)
     }
 }
 
 /// A unit-like struct which represents the remove unit type.
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
 pub struct RemoveUnitType;
-impl Into<UnitType> for RemoveUnitType {
-    fn into(self) -> UnitType {
-        UnitType::Remove
+impl From<RemoveUnitType> for UnitType {
+    fn from(_: RemoveUnitType) -> Self {
+        Self::Remove
     }
 }
 
 /// A unit-like struct which represents the upgrade unit type.
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
 pub struct UpgradeUnitType;
-impl Into<UnitType> for UpgradeUnitType {
-    fn into(self) -> UnitType {
-        UnitType::Upgrade
+
+impl From<UpgradeUnitType> for UnitType {
+    fn from(_: UpgradeUnitType) -> Self {
+        Self::Upgrade
     }
 }
 
@@ -148,16 +143,16 @@ impl SpawnableUnitType {
     /// Is this an MobileUnitType?
     pub fn is_mobile(&self) -> bool {
         match self {
-            &SpawnableUnitType::Mobile(_) => true,
-            &SpawnableUnitType::Structure(_) => false,
+            SpawnableUnitType::Mobile(_) => true,
+            SpawnableUnitType::Structure(_) => false,
         }
     }
 
     /// Is this a StructureUnitType?
     pub fn is_structure(&self) -> bool {
         match self {
-            &SpawnableUnitType::Mobile(_) => false,
-            &SpawnableUnitType::Structure(_) => true,
+            SpawnableUnitType::Mobile(_) => false,
+            SpawnableUnitType::Structure(_) => true,
         }
     }
 
@@ -175,9 +170,10 @@ impl SpawnableUnitType {
         }
     }
 }
-impl Into<UnitType> for SpawnableUnitType {
-    fn into(self) -> UnitType {
-        match self {
+
+impl From<SpawnableUnitType> for UnitType {
+    fn from(s: SpawnableUnitType) -> Self {
+        match s {
             SpawnableUnitType::Mobile(unit_type) => unit_type.into(),
             SpawnableUnitType::Structure(unit_type) => unit_type.into(),
         }
@@ -196,13 +192,16 @@ impl UnitTypeAtlas {
         let mut lookup = HashMap::new();
         for unit_type in UnitType::into_enum_iter() {
             lookup.insert(
-                unit_information[unit_type as usize].shorthand.clone().unwrap(),
+                unit_information[unit_type as usize]
+                    .shorthand
+                    .clone()
+                    .unwrap(),
                 unit_type,
             );
         }
         UnitTypeAtlas {
             unit_information,
-            unit_type_lookup: lookup
+            unit_type_lookup: lookup,
         }
     }
 
@@ -217,13 +216,15 @@ impl UnitTypeAtlas {
     }
 
     /// Convert a unit type shorthand into a UnitType.
-    pub fn type_from_shorthand(&self, shorthand: &String) -> Option<UnitType> {
+    pub fn type_from_shorthand(&self, shorthand: &str) -> Option<UnitType> {
         self.unit_type_lookup.get(shorthand).cloned()
     }
 
     /// Convert a unit type into its shorthand.
     pub fn type_into_shorthand(&self, unit_type: UnitType) -> &str {
-        self.unit_information[unit_type as usize].shorthand.as_ref().unwrap()
+        self.unit_information[unit_type as usize]
+            .shorthand
+            .as_ref()
+            .unwrap()
     }
 }
-

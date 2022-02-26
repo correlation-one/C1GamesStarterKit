@@ -1,24 +1,21 @@
-
 use crate::{
-    messages::{FrameData, Config, frame},
     map::{
+        parse::{self, MapParseError},
         MapState,
-        parse::{
-            self,
-            MapParseError,
-        },
     },
+    messages::{frame, Config, FrameData},
     units::UnitTypeAtlas,
 };
+use serde::Deserialize;
+use serde_json;
 use std::{
     io::{stdin, BufRead},
     sync::Arc,
 };
-use serde::Deserialize;
-use serde_json;
 
 /// A IO object for receiving and storing the Config from the game engine, creating from the Config
 /// and UnitTypeAtlas, and then receiving all subsequent frames.
+#[derive(Default)]
 pub struct GameDataReader {
     config: Option<(Arc<Config>, Arc<UnitTypeAtlas>)>,
 }
@@ -28,12 +25,6 @@ fn deser_json<'a, T: Deserialize<'a>>(string: &'a str) -> Result<T, serde_json::
 }
 
 impl GameDataReader {
-    pub fn new() -> Self {
-        GameDataReader {
-            config: None
-        }
-    }
-
     /// Get the config, and unit type atlas, waiting for it if necessary.
     pub fn config(&mut self) -> Result<(Arc<Config>, Arc<UnitTypeAtlas>), serde_json::Error> {
         match &mut self.config {
@@ -60,8 +51,7 @@ impl GameDataReader {
         let stdin = stdin();
         let line = stdin.lock().lines().next().unwrap().unwrap();
 
-        deser_json(line.as_ref())
-            .map(|data| Box::new(data))
+        deser_json(line.as_ref()).map(Box::new)
     }
 
     /// Get the next frame of the deploy phase.
@@ -77,10 +67,10 @@ impl GameDataReader {
     /// Get the next frame of the deploy phase, and then use it in conjunction with the Config
     /// and UnitTypeAtlas to attempt to parse a Map.
     pub fn next_turn_map(&mut self) -> Result<MapState, MapParseError> {
-        let (config, atlas) = self.config()
-            .map_err(|e| MapParseError::DeserializeError(e))?;
-        let frame = self.next_turn_frame()
-            .map_err(|e| MapParseError::DeserializeError(e))?;
+        let (config, atlas) = self.config().map_err(MapParseError::DeserializeError)?;
+        let frame = self
+            .next_turn_frame()
+            .map_err(MapParseError::DeserializeError)?;
         parse::parse_frame(config, frame, atlas)
     }
 }

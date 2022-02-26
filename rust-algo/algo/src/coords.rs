@@ -1,15 +1,10 @@
-
 use crate::{
-    messages::serde_util::{
-        SerializeAs,
-        DeserializeAs,
-        RoundNumber,
-    },
-    bounds::{MAP_BOUNDS, MapEdge},
+    bounds::{MapEdge, MAP_BOUNDS},
+    messages::serde_util::{DeserializeAs, RoundNumber, SerializeAs},
 };
 use std::{
+    fmt::{self, Debug, Display, Formatter},
     ops::*,
-    fmt::{self, Debug, Display, Formatter}
 };
 
 use num_traits::cast::ToPrimitive;
@@ -54,10 +49,9 @@ pub const fn xy(x: i32, y: i32) -> Coords {
 /// Macro version of coordinates constructor, for use in initializing constants.
 #[macro_export]
 macro_rules! xy {
-    ($x:expr, $y:expr)=>{ Coords {
-        x: $x,
-        y: $y,
-    }};
+    ($x:expr, $y:expr) => {
+        Coords { x: $x, y: $y }
+    };
 }
 
 /// <0, 0> coordinate constant.
@@ -92,7 +86,6 @@ impl DeserializeAs for Coords {
 ser_as!(Coords);
 deser_as!(Coords);
 
-
 impl Debug for Coords {
     fn fmt(&self, f: &mut Formatter) -> Result<(), fmt::Error> {
         f.write_str(&format!("[{},{}]", self.x, self.y))
@@ -104,7 +97,6 @@ impl Display for Coords {
         f.write_str(&format!("<{},{}>", self.x, self.y))
     }
 }
-
 
 impl<I: ToPrimitive> From<[I; 2]> for Coords {
     fn from(components: [I; 2]) -> Self {
@@ -222,4 +214,3 @@ impl RemAssign<i32> for Coords {
         self.y %= rhs;
     }
 }
-

@@ -1,4 +1,3 @@
-
 #[macro_use]
 extern crate algo;
 extern crate rand;
@@ -11,42 +10,31 @@ fn main() {
 }
 
 const STRUCTURE_LOCATIONS_C: &[Coords] = &[
-   xy!(8, 11),
-   xy!(9, 11),
-   xy!(7, 10),
-   xy!(7, 9),
-   xy!(7, 8),
-   xy!(8, 7),
-   xy!(9, 7),
+    xy!(8, 11),
+    xy!(9, 11),
+    xy!(7, 10),
+    xy!(7, 9),
+    xy!(7, 8),
+    xy!(8, 7),
+    xy!(9, 7),
 ];
 
 const STRUCTURE_LOCATIONS_1: &[Coords] = &[
-   xy!(17, 11),
-   xy!(18, 11),
-   xy!(18, 10),
-   xy!(18, 9),
-   xy!(18, 8),
-   xy!(17, 7),
-   xy!(18, 7),
-   xy!(19, 7),
+    xy!(17, 11),
+    xy!(18, 11),
+    xy!(18, 10),
+    xy!(18, 9),
+    xy!(18, 8),
+    xy!(17, 7),
+    xy!(18, 7),
+    xy!(19, 7),
 ];
 
-const STRUCTURE_LOCATIONS_DOTS: &[Coords] = &[
-   xy!(11, 7),
-   xy!(13, 9),
-   xy!(15, 11),
-];
+const STRUCTURE_LOCATIONS_DOTS: &[Coords] = &[xy!(11, 7), xy!(13, 9), xy!(15, 11)];
 
-const DEFENSIVE_TURRET_LOCATIONS: &[Coords] = &[
-   xy!(0, 13),
-   xy!(27, 13),
-];
+const DEFENSIVE_TURRET_LOCATIONS: &[Coords] = &[xy!(0, 13), xy!(27, 13)];
 
-const DEFENSIVE_SUPPORT_LOCATIONS: &[Coords] = &[
-   xy!(3, 11),
-   xy!(4, 11),
-   xy!(5, 11),
-];
+const DEFENSIVE_SUPPORT_LOCATIONS: &[Coords] = &[xy!(3, 11), xy!(4, 11), xy!(5, 11)];
 
 /// Rust implementation of the standard starter algo.
 struct StarterAlgo;
@@ -57,8 +45,10 @@ impl GameLoop for StarterAlgo {
     }
 
     fn on_turn(&mut self, _: Arc<Config>, map: &MapState) {
-        eprintln!("Performing turn {} of your custom algo strategy",
-                  map.frame_data().turn_info.turn_number);
+        eprintln!(
+            "Performing turn {} of your custom algo strategy",
+            map.frame_data().turn_info.turn_number
+        );
         build_c1_logo(map);
         build_defenses(map);
         deploy_attackers(map);
@@ -99,8 +89,8 @@ fn build_defenses(map: &MapState) {
     }
 
     /*
-    Lastly lets build supports in random locations. 
-    Building randomly is not effective, but we'll leave 
+    Lastly lets build supports in random locations.
+    Building randomly is not effective, but we'll leave
     it to you to figure out better strategies.
 
     First we get all locations on the bottom half of the map
@@ -118,8 +108,7 @@ fn build_defenses(map: &MapState) {
         }
     }
     thread_rng().shuffle(&mut possible_spawn_points);
-    while map.number_affordable(StructureUnitType::Support) > 0 &&
-        possible_spawn_points.len() > 0
+    while map.number_affordable(StructureUnitType::Support) > 0 && !possible_spawn_points.is_empty()
     {
         let coords = possible_spawn_points.pop().unwrap();
         map[coords].try_spawn(StructureUnitType::Support);
@@ -164,8 +153,18 @@ fn deploy_attackers(map: &MapState) {
     list of those locations.
      */
     let mut friendly_edges = Vec::new();
-    friendly_edges.extend(MAP_BOUNDS.coords_on_edge(MapEdge::BottomLeft).iter().cloned());
-    friendly_edges.extend(MAP_BOUNDS.coords_on_edge(MapEdge::BottomRight).iter().cloned());
+    friendly_edges.extend(
+        MAP_BOUNDS
+            .coords_on_edge(MapEdge::BottomLeft)
+            .iter()
+            .cloned(),
+    );
+    friendly_edges.extend(
+        MAP_BOUNDS
+            .coords_on_edge(MapEdge::BottomRight)
+            .iter()
+            .cloned(),
+    );
 
     /*
     While we have remaining bits to spend lets send out interceptors randomly.

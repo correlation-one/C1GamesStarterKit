@@ -1,12 +1,11 @@
-
 //! Rust model of data passed between the game and this algo.
 
 /// Utilities for serializing and deserializing.
 #[macro_use]
 pub mod serde_util;
 
-use serde::Deserialize;
 use enum_iterator::IntoEnumIterator;
+use serde::Deserialize;
 
 /// Model of config data.
 pub mod config;
@@ -23,7 +22,6 @@ pub struct Config {
     pub resources: config::Resources,
 }
 
-
 /// The frame data, received every game frame.
 #[derive(Debug, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
@@ -37,7 +35,6 @@ pub struct FrameData {
     pub events: frame::Events,
 }
 
-
 /// Player 1 or player 2.
 #[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, IntoEnumIterator)]
 pub enum PlayerId {
@@ -49,4 +46,3 @@ serde_enum_from_int!(PlayerId, {
     1 => PlayerId::Player1,
     2 => PlayerId::Player2,
 });
-

@@ -1,34 +1,17 @@
-
 use crate::{
-    units::*,
+    bounds::{MapEdge, BOARD_SIZE, MAP_BOUNDS},
     coords::Coords,
-    messages::{
-        PlayerId,
-        FrameData,
-        Config,
-        frame,
-        config::{
-            UnitCategory,
-            UnitInformation,
-        },
-    },
-    bounds::{
-        MAP_BOUNDS,
-        BOARD_SIZE,
-        MapEdge
-    },
-    grid::Grid,
-    pathfinding::{self, StartedAtWall},
     enum_iterator::IntoEnumIterator,
+    grid::Grid,
+    messages::{
+        config::{UnitCategory, UnitInformation},
+        frame, Config, FrameData, PlayerId,
+    },
+    pathfinding::{self, StartedAtWall},
+    units::*,
 };
 
-use std::{
-    u32,
-    sync::Arc,
-    rc::Rc,
-    cell::RefCell,
-    ops::{Index},
-};
+use std::{cell::RefCell, ops::Index, rc::Rc, sync::Arc, u32};
 
 use serde::Serialize;
 use serde_json;
@@ -94,8 +77,8 @@ impl Index<Coords> for MapState {
 impl MapTile {
     pub fn valid(&self) -> bool {
         match self {
-            &MapTile::Some(_) => true,
-            &MapTile::None => false,
+            MapTile::Some(_) => true,
+            MapTile::None => false,
         }
     }
 
@@ -220,10 +203,14 @@ impl MapTileInner {
     }
 
     /// Can the given number of a given unit type be spawned at this tile? If not, why?
-    fn can_spawn(c: Coords, map: &MapStateInner, unit_type: impl Into<UnitType>, quantity: u32) -> CanSpawn {
+    fn can_spawn(
+        c: Coords,
+        map: &MapStateInner,
+        unit_type: impl Into<UnitType>,
+        quantity: u32,
+    ) -> CanSpawn {
         let unit_type = unit_type.into();
         if let Some(not_enough_resources) = {
-
             unit_type.as_spawnable().and_then(|spawnable| {
                 let cost = map.cost_of(spawnable);
 
@@ -243,9 +230,7 @@ impl MapTileInner {
                 } else {
                     None
                 }
-
             })
-
         } {
             not_enough_resources
         } else if unit_type != UnitType::Remove && Self::wall_unit(c, map).is_some() {
@@ -253,7 +238,7 @@ impl MapTileInner {
                 coords: c,
                 unit_present: UnitPresent::Wall,
             }
-        } else if unit_type.is_structure() && Self::mobile_units(c, map).len() > 0 {
+        } else if unit_type.is_structure() && !Self::mobile_units(c, map).is_empty() {
             CanSpawn::UnitAlreadyPresent {
                 coords: c,
                 unit_present: UnitPresent::Mobile,
@@ -262,10 +247,10 @@ impl MapTileInner {
             CanSpawn::WrongSideOfMap(c)
         } else if !MAP_BOUNDS.is_in_arena(c) {
             CanSpawn::OutOfBounds(c)
-        } else if unit_type.is_mobile() && !(
-            MAP_BOUNDS.is_on_edge[MapEdge::BottomLeft as usize][c.x as usize][c.y as usize] ||
-                MAP_BOUNDS.is_on_edge[MapEdge::BottomRight as usize][c.x as usize][c.y as usize]
-        ) {
+        } else if unit_type.is_mobile()
+            && !(MAP_BOUNDS.is_on_edge[MapEdge::BottomLeft as usize][c.x as usize][c.y as usize]
+                || MAP_BOUNDS.is_on_edge[MapEdge::BottomRight as usize][c.x as usize][c.y as usize])
+        {
             CanSpawn::NotOnEdge(c)
         } else {
             CanSpawn::Yes
@@ -278,7 +263,7 @@ impl MapTileInner {
             CanRemove::OutOfBounds(c)
         } else if c.y >= BOARD_SIZE as i32 / 2 {
             CanRemove::WrongSideOfMap(c)
-        } else if Self::mobile_units(c, map).len() > 0 {
+        } else if !Self::mobile_units(c, map).is_empty() {
             CanRemove::MobileUnitPresent(c)
         } else if Self::wall_unit(c, map).is_none() {
             CanRemove::NoUnitPresent(c)
@@ -288,28 +273,30 @@ impl MapTileInner {
     }
 
     fn upgrade_cost(unit_info: &UnitInformation) -> Cost {
-        let cores = unit_info.upgrade.as_ref()
+        let cores = unit_info
+            .upgrade
+            .as_ref()
             .and_then(|info| info.cost1)
-            .unwrap_or(unit_info.cost1
-                .unwrap_or(0.0));
-        let bits = unit_info.upgrade.as_ref()
+            .unwrap_or_else(|| unit_info.cost1.unwrap_or(0.0));
+        let bits = unit_info
+            .upgrade
+            .as_ref()
             .and_then(|info| info.cost2)
-            .unwrap_or(unit_info.cost2
-                .unwrap_or(0.0));
+            .unwrap_or_else(|| unit_info.cost2.unwrap_or(0.0));
 
         Cost {
             cores: Some(cores),
             bits: Some(bits),
-        }.filter_nonzero()
+        }
+        .filter_nonzero()
     }
 
     fn can_upgrade(c: Coords, map: &MapStateInner) -> CanUpgrade {
-
         if !MAP_BOUNDS.is_in_arena(c) {
             CanUpgrade::OutOfBounds(c)
         } else if c.y >= BOARD_SIZE as i32 / 2 {
             CanUpgrade::WrongSideOfMap(c)
-        } else if Self::mobile_units(c, map).len() > 0 {
+        } else if !Self::mobile_units(c, map).is_empty() {
             CanUpgrade::MobileUnitPresent(c)
         } else if Self::wall_unit(c, map).is_none() {
             CanUpgrade::NoUnitPresent(c)
@@ -345,14 +332,18 @@ impl MapTileInner {
     }
 
     /// Attempt to spawn a unit on the board.
-    fn spawn(c: Coords, map: &mut MapStateInner, unit_type: impl Into<SpawnableUnitType>) -> Result<(), CanSpawn> {
+    fn spawn(
+        c: Coords,
+        map: &mut MapStateInner,
+        unit_type: impl Into<SpawnableUnitType>,
+    ) -> Result<(), CanSpawn> {
         let coords = c;
 
         let unit_type = unit_type.into();
         // assert that the move is valid
         match Self::can_spawn(c, map, unit_type, 1) {
             CanSpawn::Yes => (),
-            cannot => return Err(cannot)
+            cannot => return Err(cannot),
         };
 
         // subtract the cost from our wealth
@@ -360,7 +351,7 @@ impl MapTileInner {
         map.frame.p1_stats.cores -= cost.cores.unwrap_or(0.0);
         map.frame.p1_stats.bits -= cost.bits.unwrap_or(0.0);
 
-        let unit_info =  map.atlas.type_mobile(unit_type.into());
+        let unit_info = map.atlas.type_mobile(unit_type.into());
         match unit_info.unit_category {
             Some(UnitCategory::Structure) => {
                 let unit = Unit {
@@ -370,7 +361,7 @@ impl MapTileInner {
                     owner: PlayerId::Player1,
                 };
                 map.walls[coords] = Some(unit);
-            },
+            }
 
             Some(UnitCategory::Mobile) => {
                 let unit = Unit {
@@ -380,7 +371,7 @@ impl MapTileInner {
                     owner: PlayerId::Player1,
                 };
                 map.mobile[coords].push(unit);
-            },
+            }
 
             None => panic!("unit info of spawnable unit does not have unit category"),
         };
@@ -399,7 +390,11 @@ impl MapTileInner {
     }
 
     /// Attempt to spawn a unit at a location, returning whether successful.
-    fn try_spawn(c: Coords, map: &mut MapStateInner, unit_type: impl Into<SpawnableUnitType>) -> bool {
+    fn try_spawn(
+        c: Coords,
+        map: &mut MapStateInner,
+        unit_type: impl Into<SpawnableUnitType>,
+    ) -> bool {
         Self::spawn(c, map, unit_type).is_ok()
     }
 
@@ -423,9 +418,8 @@ impl MapTileInner {
         map.frame.p1_stats.cores -= cost.cores.unwrap_or(0.0);
         map.frame.p1_stats.bits -= cost.bits.unwrap_or(0.0);
 
-        map.build_stack.push(SpawnCommand::new(
-            UnitType::Upgrade, c, &*map.atlas
-        ));
+        map.build_stack
+            .push(SpawnCommand::new(UnitType::Upgrade, c, &*map.atlas));
 
         Ok(())
     }
@@ -448,9 +442,8 @@ impl MapTileInner {
         });
 
         // add it to the command stack
-        map.build_stack.push(SpawnCommand::new(
-            UnitType::Remove, coords, &*map.atlas
-        ));
+        map.build_stack
+            .push(SpawnCommand::new(UnitType::Remove, coords, &*map.atlas));
 
         // success
         Ok(())
@@ -483,8 +476,8 @@ pub enum CanSpawn {
     },
     UnitAlreadyPresent {
         coords: Coords,
-        unit_present: UnitPresent
-    }
+        unit_present: UnitPresent,
+    },
 }
 
 /// Whether a Structure can be removed at a location.
@@ -517,14 +510,14 @@ pub enum CanUpgrade {
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub enum UnitPresent {
     Wall,
-    Mobile
+    Mobile,
 }
 
 /// A spendable resource that the player has.
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub enum Resource {
     Cores,
-    Bits
+    Bits,
 }
 
 /// A unit on the map.
@@ -587,7 +580,7 @@ impl SpawnCommand {
         SpawnCommand(
             atlas.type_into_shorthand(unit_type).to_owned(),
             coords.x,
-            coords.y
+            coords.y,
         )
     }
 }

@@ -1,8 +1,7 @@
-use crate::coords::*;
 use super::PlayerId;
-use serde::Deserialize;
+use crate::coords::*;
 use enum_iterator::IntoEnumIterator;
-
+use serde::Deserialize;
 
 use super::serde_util::{DeserializeAs, RoundNumber};
 
@@ -17,12 +16,9 @@ pub struct TurnInfo {
 impl DeserializeAs for TurnInfo {
     type Model = (Phase, RoundNumber, RoundNumber, RoundNumber);
 
-    fn from_model((
-                      phase,
-                      turn_number,
-                      action_phase_frame_number,
-                      total_number_frames,
-                  ): Self::Model) -> Self {
+    fn from_model(
+        (phase, turn_number, action_phase_frame_number, total_number_frames): Self::Model,
+    ) -> Self {
         TurnInfo {
             phase,
             turn_number: turn_number.int(),
@@ -34,12 +30,11 @@ impl DeserializeAs for TurnInfo {
 
 deser_as!(TurnInfo);
 
-
 #[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, IntoEnumIterator)]
 pub enum Phase {
     Deploy,
     Action,
-    EndGame
+    EndGame,
 }
 
 serde_enum_from_int!(Phase, {
@@ -56,12 +51,15 @@ pub struct PlayerStats {
     pub time_taken_last_turn_millis: f32,
 }
 
-deser_as_tuple!(PlayerStats, (
-    integrity: f64,
-    cores: f32,
-    bits: f32,
-    time_taken_last_turn_millis: f32,
-));
+deser_as_tuple!(
+    PlayerStats,
+    (
+        integrity: f64,
+        cores: f32,
+        bits: f32,
+        time_taken_last_turn_millis: f32,
+    )
+);
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct PlayerUnit {
@@ -69,7 +67,6 @@ pub struct PlayerUnit {
     pub stability: f32,
     pub unit_id: String,
 }
-
 
 impl DeserializeAs for PlayerUnit {
     type Model = (i32, i32, f32, String);
@@ -85,7 +82,6 @@ impl DeserializeAs for PlayerUnit {
 
 deser_as!(PlayerUnit);
 
-
 #[derive(Debug, Clone, PartialEq)]
 pub struct PlayerUnits {
     pub wall: Vec<PlayerUnit>,
@@ -98,17 +94,19 @@ pub struct PlayerUnits {
     pub upgrade: Vec<PlayerUnit>,
 }
 
-deser_as_tuple!(PlayerUnits, (
-    wall: Vec<PlayerUnit>,
-    support: Vec<PlayerUnit>,
-    turret: Vec<PlayerUnit>,
-    scout: Vec<PlayerUnit>,
-    demolisher: Vec<PlayerUnit>,
-    interceptor: Vec<PlayerUnit>,
-    remove: Vec<PlayerUnit>,
-    upgrade: Vec<PlayerUnit>,
-));
-
+deser_as_tuple!(
+    PlayerUnits,
+    (
+        wall: Vec<PlayerUnit>,
+        support: Vec<PlayerUnit>,
+        turret: Vec<PlayerUnit>,
+        scout: Vec<PlayerUnit>,
+        demolisher: Vec<PlayerUnit>,
+        interceptor: Vec<PlayerUnit>,
+        remove: Vec<PlayerUnit>,
+        upgrade: Vec<PlayerUnit>,
+    )
+);
 
 #[derive(Debug, Deserialize, Clone, PartialEq)]
 #[serde(rename_all = "camelCase")]
@@ -120,7 +118,6 @@ pub struct EndStats {
     pub frames: i32,
     pub winner: Winner,
 }
-
 
 #[derive(Copy, Deserialize, Debug, Clone, PartialEq)]
 pub struct PlayerEndStats {
@@ -134,12 +131,11 @@ pub struct PlayerEndStats {
     pub total_computation_time: f32,
 }
 
-
 #[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, IntoEnumIterator)]
 pub enum Winner {
     Tie,
     Player1,
-    Player2
+    Player2,
 }
 
 serde_enum_from_int!(Winner, {
@@ -147,7 +143,6 @@ serde_enum_from_int!(Winner, {
     1 => Winner::Player1,
     2 => Winner::Player2,
 });
-
 
 #[derive(Debug, Deserialize, Clone, PartialEq)]
 #[serde(rename_all = "camelCase")]
@@ -164,7 +159,6 @@ pub struct Events {
     pub spawn: Vec<SpawnEvent>,
 }
 
-
 #[derive(Debug, Clone, PartialEq)]
 pub struct AttackEvent {
     pub source: Coords,
@@ -176,16 +170,18 @@ pub struct AttackEvent {
     pub source_player: PlayerId,
 }
 
-deser_as_tuple!(AttackEvent, (
-    source: Coords,
-    target: Coords,
-    damage: f32,
-    attacker_type: u8,
-    source_unit_id: String,
-    target_unit_id: String,
-    source_player: PlayerId,
-));
-
+deser_as_tuple!(
+    AttackEvent,
+    (
+        source: Coords,
+        target: Coords,
+        damage: f32,
+        attacker_type: u8,
+        source_unit_id: String,
+        target_unit_id: String,
+        source_player: PlayerId,
+    )
+);
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct BreachEvent {
@@ -196,14 +192,16 @@ pub struct BreachEvent {
     pub unit_owner: PlayerId,
 }
 
-deser_as_tuple!(BreachEvent, (
-    coords: Coords,
-    damage: f32,
-    breacher_type: u8,
-    breacher_id: String,
-    unit_owner: PlayerId,
-));
-
+deser_as_tuple!(
+    BreachEvent,
+    (
+        coords: Coords,
+        damage: f32,
+        breacher_type: u8,
+        breacher_id: String,
+        unit_owner: PlayerId,
+    )
+);
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct DamageEvent {
@@ -214,14 +212,16 @@ pub struct DamageEvent {
     pub unit_owner: PlayerId,
 }
 
-deser_as_tuple!(DamageEvent, (
-    coords: Coords,
-    damage: f32,
-    damager_type: u8,
-    damager_id: String,
-    unit_owner: PlayerId,
-));
-
+deser_as_tuple!(
+    DamageEvent,
+    (
+        coords: Coords,
+        damage: f32,
+        damager_type: u8,
+        damager_id: String,
+        unit_owner: PlayerId,
+    )
+);
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct DeathEvent {
@@ -232,14 +232,16 @@ pub struct DeathEvent {
     pub is_self_removal: bool,
 }
 
-deser_as_tuple!(DeathEvent, (
-    coords: Coords,
-    destroyed_unit_type: u8,
-    destroyed_unit_id: String,
-    unit_owner: PlayerId,
-    is_self_removal: bool,
-));
-
+deser_as_tuple!(
+    DeathEvent,
+    (
+        coords: Coords,
+        destroyed_unit_type: u8,
+        destroyed_unit_id: String,
+        unit_owner: PlayerId,
+        is_self_removal: bool,
+    )
+);
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct MeleeEvent {
@@ -251,15 +253,17 @@ pub struct MeleeEvent {
     pub attacker_player_id: PlayerId,
 }
 
-deser_as_tuple!(MeleeEvent, (
-    attacker_location: Coords,
-    target_location: Coords,
-    damage_dealt: f32,
-    attacker_unit_type: u8,
-    attacker_unit_id: String,
-    attacker_player_id: PlayerId,
-));
-
+deser_as_tuple!(
+    MeleeEvent,
+    (
+        attacker_location: Coords,
+        target_location: Coords,
+        damage_dealt: f32,
+        attacker_unit_type: u8,
+        attacker_unit_id: String,
+        attacker_player_id: PlayerId,
+    )
+);
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct MoveEvent {
@@ -271,15 +275,17 @@ pub struct MoveEvent {
     pub owner: PlayerId,
 }
 
-deser_as_tuple!(MoveEvent, (
-    old_location: Coords,
-    new_location: Coords,
-    desired_next_lcoation: Coords,
-    unit_type: u8,
-    unit_id: String,
-    owner: PlayerId,
-));
-
+deser_as_tuple!(
+    MoveEvent,
+    (
+        old_location: Coords,
+        new_location: Coords,
+        desired_next_lcoation: Coords,
+        unit_type: u8,
+        unit_id: String,
+        owner: PlayerId,
+    )
+);
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct SelfDestructEvent {
@@ -291,15 +297,17 @@ pub struct SelfDestructEvent {
     pub exploding_unit_owner: PlayerId,
 }
 
-deser_as_tuple!(SelfDestructEvent, (
-    source: Coords,
-    targets: Vec<Coords>,
-    damage: f32,
-    exploding_unit_type: u8,
-    exploding_unit_id: String,
-    exploding_unit_owner: PlayerId,
-));
-
+deser_as_tuple!(
+    SelfDestructEvent,
+    (
+        source: Coords,
+        targets: Vec<Coords>,
+        damage: f32,
+        exploding_unit_type: u8,
+        exploding_unit_id: String,
+        exploding_unit_owner: PlayerId,
+    )
+);
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct ShieldEvent {
@@ -312,16 +320,18 @@ pub struct ShieldEvent {
     pub support_owner: PlayerId,
 }
 
-deser_as_tuple!(ShieldEvent, (
-    support_coords: Coords,
-    mobile_coords: Coords,
-    shield_amount: f32,
-    support_type: u8,
-    support_unit_id: String,
-    mobile_unit_id: String,
-    support_owner: PlayerId,
-));
-
+deser_as_tuple!(
+    ShieldEvent,
+    (
+        support_coords: Coords,
+        mobile_coords: Coords,
+        shield_amount: f32,
+        support_type: u8,
+        support_unit_id: String,
+        mobile_unit_id: String,
+        support_owner: PlayerId,
+    )
+);
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct SpawnEvent {
@@ -331,9 +341,12 @@ pub struct SpawnEvent {
     pub owner: PlayerId,
 }
 
-deser_as_tuple!(SpawnEvent, (
-    spawn_location: Coords,
-    spawning_unit_type: u8,
-    spawning_unit_id: String,
-    owner: PlayerId,
-));
+deser_as_tuple!(
+    SpawnEvent,
+    (
+        spawn_location: Coords,
+        spawning_unit_type: u8,
+        spawning_unit_id: String,
+        owner: PlayerId,
+    )
+);

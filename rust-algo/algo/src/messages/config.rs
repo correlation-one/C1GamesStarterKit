@@ -1,6 +1,5 @@
-
-use serde::{Deserialize};
 use enum_iterator::IntoEnumIterator;
+use serde::Deserialize;
 
 #[derive(Debug, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
@@ -61,5 +60,5 @@ pub struct Resources {
     pub cores_per_round: f32,
     pub starting_bits: f32,
     pub bit_decay_per_round: f32,
-    pub starting_cores: f32
+    pub starting_cores: f32,
 }
