@@ -367,7 +367,7 @@ class GameState:
         if unit_type not in ALL_UNITS:
             self._invalid_unit(unit_type)
             return
-        if num < 1:
+        if num < 1 or not locations:
             self.warn("Attempted to spawn fewer than one units! ({})".format(num))
             return
       
@@ -423,6 +423,10 @@ class GameState:
             The number of units successfully upgraded
 
         """
+
+		if not locations:
+            self.warn("Attempted to upgrade fewer than one units!")
+			return
 
         if type(locations[0]) == int:
             locations = [locations]
