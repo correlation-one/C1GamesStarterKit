@@ -424,9 +424,9 @@ class GameState:
 
         """
 
-		if not locations:
-            self.warn("Attempted to upgrade fewer than one units!")
-			return
+        if not locations:
+	    self.warn("Attempted to upgrade fewer than one units!")
+	    return
 
         if type(locations[0]) == int:
             locations = [locations]
