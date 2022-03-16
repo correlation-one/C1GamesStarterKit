@@ -227,12 +227,12 @@ except ImportError:
 
 
 global FILTER, ENCRYPTOR, DESTRUCTOR, PING, EMP, SCRAMBLER, MAX_HP, GET_VERTS, SPEED, BLIT
-FILTER = 0
-ENCRYPTOR = 1
-DESTRUCTOR = 2
-PING = 3
-EMP = 4
-SCRAMBLER = 5
+FILTER = 0     # wall
+ENCRYPTOR = 1  # support
+DESTRUCTOR = 2 # turret
+PING = 3       # scout
+EMP = 4        # demolisher
+SCRAMBLER = 5  # interceptor
 MAX_HP = {FILTER:60, ENCRYPTOR:30, DESTRUCTOR:75, PING:15, EMP:5, SCRAMBLER:40}
 SPEED = {'1':.25, '2':.5, '3':1, '4':2, '5':4, '6':8} # speed versions, key is user input (number)
 
@@ -853,8 +853,8 @@ class Graph:
 		self.board_ax.set_xticks(range(-1, 29))
 		self.board_ax.set_yticks(range(-1, 29))
 		self.board_ax.tick_params(axis=u'both', which=u'both',length=0)
-		self.board_ax.set_xticklabels(['']+list(range(28)))
-		self.board_ax.set_yticklabels(['']+list(range(28)))
+		self.board_ax.set_xticklabels(['']+list(range(29)))
+		self.board_ax.set_yticklabels(['']+list(range(29)))
 		[spine.set_visible(False) for n, spine in self.board_ax.spines.items()]
 		self.board_ax.set_title('Local Match Visualizer')
 
@@ -1053,7 +1053,7 @@ class Graph:
 
 	# format all of the raw unit data into how my functions recieve it
 	def cache_units(self, units, p_index):
-		filters, encryptors, destructors, pings, emps, scramblers, removes = units
+		filters, encryptors, destructors, pings, emps, scramblers, removes, upgrades = units
 		units_new = []
 		for unit in filters: units_new.append((FILTER, (unit[0], unit[1]), unit[2], p_index, unit[3]))
 		for unit in encryptors: units_new.append((ENCRYPTOR, (unit[0], unit[1]), unit[2], p_index, unit[3]))
