@@ -99,7 +99,7 @@ class AlgoStrategy(gamelib.AlgoCore):
                     game_state.attempt_spawn(SCOUT, best_location, 1000)
 
                 # Lastly, if we have spare SP, let's build some supports
-                support_locations = [[13, 2], [14, 2], [13, 3], [14, 3]]
+                support_locations = [[8, 7]]
                 game_state.attempt_spawn(SUPPORT, support_locations)
 
     def build_defences(self, game_state):
@@ -111,12 +111,12 @@ class AlgoStrategy(gamelib.AlgoCore):
         # More community tools available at: https://terminal.c1games.com/rules#Download
 
         # Place turrets that attack enemy units
-        turret_locations = [[0, 13], [27, 13], [8, 11], [19, 11], [13, 11], [14, 11]]
+        turret_locations = [[26, 12], [6, 9], [5, 10], [3, 13], [2, 13]]
         # attempt_spawn will try to spawn units if we have resources, and will check if a blocking unit is already there
         game_state.attempt_spawn(TURRET, turret_locations)
         
         # Place walls in front of turrets to soak up damage for them
-        wall_locations = [[8, 12], [19, 12]]
+        wall_locations = [[27, 13], [26, 13], [25, 11], [24, 10], [23, 9], [22, 8], [21, 8], [20, 8], [19, 8], [18, 8], [17, 8], [16, 8], [15, 8], [14, 8], [13, 8], [12, 8], [11, 8], [10, 8], [9, 8], [7, 8], [6, 10], [6, 11], [6, 12], [4, 13], [0, 13]]
         game_state.attempt_spawn(WALL, wall_locations)
         # upgrade walls so they soak more damage
         game_state.attempt_upgrade(wall_locations)
