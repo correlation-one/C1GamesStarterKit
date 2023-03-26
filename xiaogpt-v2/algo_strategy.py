@@ -33,9 +33,14 @@ class AlgoStrategy(gamelib.AlgoCore):
         self.second_wall = [[6, 13], [22, 13], [23, 13], [24, 13], [25, 13], [26, 13]]
         
         
-        self.interceptor_destruct_strategy_wall = [[17, 9], [18, 9], [19, 9], [20, 9], [21, 9], [22, 9], [23, 9], [17, 8], [17, 7], [18, 7], [19, 7], [20, 7], [21, 7]]
-        self.interceptor_str_deploy = [[22, 8]]
+        # self.interceptor_destruct_strategy_wall = [[17, 9], [18, 9], [19, 9], [20, 9], [21, 9], [22, 9], [23, 9], [17, 8], [17, 7], [18, 7], [19, 7], [20, 7], [21, 7]]
+        
+        # self.interceptor_str_deploy = [[22, 8]]
         #! notice I hard code this wall that will never be destroyed, to indecate the self destruct strategy
+        self.interceptor_destruct_strategy_wall = [[19, 11], [20, 11], [21, 11], [22, 11], [23, 11], [24, 11], [25, 11], [19, 10], [19, 9], [20, 9], [21, 9], [22, 9], [23, 9]]
+        self.interceptor_str_deploy = [[24, 10]]
+        
+        
         self.wall_indecate_self_destruct_strategy = [[17,4]]
         self.attack_from_left = False
     def on_game_start(self, config):
