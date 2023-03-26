@@ -66,6 +66,14 @@ class AlgoStrategy(gamelib.AlgoCore):
     strategy and can safely be replaced for your custom algo.
     """
 
+# Key takeaway: if you want a wall to be defensive, upgrade it
+# 
+# Steps:
+# 1. Set up the V wall
+# 2. Set up the five horizontal wall on the left
+# 3. The space below the five horizontal wall 
+
+
     def starter_strategy(self, game_state):
         """
         For defense we will use a spread out layout and some interceptors early on.
@@ -77,6 +85,8 @@ class AlgoStrategy(gamelib.AlgoCore):
         self.build_defences(game_state)
         # Now build reactive defenses based on where the enemy scored
         self.build_reactive_defense(game_state)
+
+
 
         # If the turn is less than 5, stall with interceptors and wait to see enemy's base
         if game_state.turn_number < 5:
@@ -110,15 +120,18 @@ class AlgoStrategy(gamelib.AlgoCore):
         # More community tools available at: https://terminal.c1games.com/rules#Download
 
         # Place turrets that attack enemy units
-        turret_locations = [[0, 13], [27, 13], [8, 11], [19, 11], [13, 11], [14, 11]]
+        turret_locations = [[4, 12], [7, 9]]
         # attempt_spawn will try to spawn units if we have resources, and will check if a blocking unit is already there
         game_state.attempt_spawn(TURRET, turret_locations)
         
         # Place walls in front of turrets to soak up damage for them
-        wall_locations = [[8, 12], [19, 12]]
+        wall_locations = [[0, 13], [1, 13], [2, 13], [3,13], [4,13], [5,13], [27, 13], [26, 12], [25, 11], [24, 10], [23, 9], [22, 8], [21, 7], [20, 6], [19, 5], [18, 4], [17, 3], [16, 2],[15,2],[14,2],[13,2],[12,3],[11,4],[10,5],[9,6],[8,7],[7,8],[6,9],[7,10]]
+        upgraded_wall_locations = [[0, 13], [1, 13], [2, 13], [3,13], [4,13], [5,13],[8,7],[6,9],[7,10]]
         game_state.attempt_spawn(WALL, wall_locations)
+
         # upgrade walls so they soak more damage
-        game_state.attempt_upgrade(wall_locations)
+        game_state.attempt_upgrade(upgraded_wall_locations)
+
 
     def build_reactive_defense(self, game_state):
         """
