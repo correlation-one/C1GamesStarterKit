@@ -25,7 +25,8 @@ class AlgoStrategy(gamelib.AlgoCore):
         seed = random.randrange(maxsize)
         random.seed(seed)
         gamelib.debug_write('Random seed: {}'.format(seed))
-
+        first_line_support = [[2, 12], [3, 12]]
+        second_line_support = [[1, 12], [2, 11], [3, 11], [4, 11], [3, 10], [4, 10]]
     def on_game_start(self, config):
         """ 
         Read in config and perform any initial setup here 
@@ -81,35 +82,23 @@ class AlgoStrategy(gamelib.AlgoCore):
         For offense we will use long range demolishers if they place stationary units near the enemy's front.
         If there are no stationary units to attack in the front, we will send Scouts to try and score quickly.
         """
-        # First, place basic defenses
+        # STAGE 1: Build defensive wall
         self.build_defences(game_state)
-        # Now build reactive defenses based on where the enemy scored
+        # STAGE 2: Build additional wall
         self.build_stage2_defence(game_state)
-
-
-
-        # If the turn is less than 5, stall with interceptors and wait to see enemy's base
-        if game_state.turn_number < 5:
-            self.stall_with_interceptors(game_state)
-        else:
-            # Now let's analyze the enemy base to see where their defenses are concentrated.
-            # If they have many units in the front we can build a line for our demolishers to attack them at long range.
-            if self.detect_enemy_unit(game_state, unit_type=None, valid_x=None, valid_y=[14, 15]) > 10:
-                self.demolisher_line_strategy(game_state)
-            else:
-                # They don't have many units in the front so lets figure out their least defended area and send Scouts there.
-
-                # Only spawn Scouts every other turn
-                # Sending more at once is better since attacks can only hit a single scout at a time
-                if game_state.turn_number % 2 == 1:
-                    # To simplify we will just check sending them from back left and right
-                    scout_spawn_location_options = [[13, 0], [14, 0]]
-                    best_location = self.least_damage_spawn_location(game_state, scout_spawn_location_options)
-                    game_state.attempt_spawn(SCOUT, best_location, 1000)
-
-                # Lastly, if we have spare SP, let's build some supports
-                support_locations = [[13, 2], [14, 2], [13, 3], [14, 3]]
-                game_state.attempt_spawn(SUPPORT, support_locations)
+        # STAGE 3: if SP and MP >= 12 build supports and launch attack, if opponent has more than 12S SP, attempt to call upgrade_turrets
+        #check if supports are already present
+        unit1 = game_state.contains_stationary_unit(self.first_line_supports[0])
+        unit2 = game_state.contains_stationary_unit(self.first_line_supports[1])
+        if ((game_state.get_resource(1,0) >= 12 and game_state.get_resource(0,0) >= 12) or (unit1 != False and unit2 != False and game_state.get_resource(1,0) >= 12)):
+            self.build_supports(game_state)            
+            self.launch_attack_weak(game_state)
+            
+        elif(game_state.get_resource(1,1) >= 12):
+            self.upgrade_turrets(game_state)
+        # otherwise we save money for the next round
+        
+        
 
     def build_defences(self, game_state):
         """
@@ -151,6 +140,25 @@ class AlgoStrategy(gamelib.AlgoCore):
         game_state.attempt_spawn(WALL, wall_location2)
         game_state.attempt_upgrade(wall_location2)
 
+    def build_supports(self, game_state):
+        """
+        Build basic supports using hardcoded locations.
+        """
+
+        # Place walls in front of turrets to soak up damage for them
+        support_locations = self.first_line_support
+        game_state.attempt_spawn(SUPPORT, support_locations)
+        game_state.attempt_upgrade(support_locations)
+
+    def launch_attack_weak(self, game_state):
+        game_state.attempt_spawn(DEMOLISHER, [15, 1], 1)
+        game_state.attempt_spawn(SCOUT, [15,1], 1000)
+    def launch_attack_strong(self, game_state):
+        game_state.attempt_spawn(SCOUT, [15,1], 1000)
+        
+    def upgrade_turrets(self, game_state):
+        turret_locations = [[7, 9]]
+        game_state.attempt_upgrade(turret_locations)
 
     def build_reactive_defense(self, game_state):
         """
