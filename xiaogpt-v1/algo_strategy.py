@@ -25,8 +25,8 @@ class AlgoStrategy(gamelib.AlgoCore):
         seed = random.randrange(maxsize)
         random.seed(seed)
         gamelib.debug_write('Random seed: {}'.format(seed))
-        first_line_support = [[2, 12], [3, 12]]
-        second_line_support = [[1, 12], [2, 11], [3, 11], [4, 11], [3, 10], [4, 10]]
+        self.first_line_support = [[2, 12], [3, 12]]
+        self.second_line_support = [[1, 12], [2, 11], [3, 11], [4, 11], [3, 10], [4, 10]]
     def on_game_start(self, config):
         """ 
         Read in config and perform any initial setup here 
@@ -87,13 +87,13 @@ class AlgoStrategy(gamelib.AlgoCore):
         # STAGE 2: Build additional wall
         self.build_stage2_defence(game_state)
         # STAGE 3: if SP and MP >= 12 build supports and launch attack, if opponent has more than 12S SP, attempt to call upgrade_turrets
-        #check if supports are already present
+        # check if supports are already present
         unit1 = game_state.contains_stationary_unit(self.first_line_supports[0])
         unit2 = game_state.contains_stationary_unit(self.first_line_supports[1])
         if ((game_state.get_resource(1,0) >= 12 and game_state.get_resource(0,0) >= 12) or (unit1 != False and unit2 != False and game_state.get_resource(1,0) >= 12)):
             self.build_supports(game_state)            
             self.launch_attack_weak(game_state)
-            
+
         elif(game_state.get_resource(1,1) >= 12):
             self.upgrade_turrets(game_state)
         # otherwise we save money for the next round
