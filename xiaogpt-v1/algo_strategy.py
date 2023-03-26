@@ -84,7 +84,7 @@ class AlgoStrategy(gamelib.AlgoCore):
         # First, place basic defenses
         self.build_defences(game_state)
         # Now build reactive defenses based on where the enemy scored
-        self.build_reactive_defense(game_state)
+        self.build_stage2_defence(game_state)
 
 
 
@@ -116,7 +116,6 @@ class AlgoStrategy(gamelib.AlgoCore):
         Build basic defenses using hardcoded locations.
         Remember to defend corners and avoid placing units in the front where enemy demolishers can attack them.
         """
-        # Useful tool for setting up your base locations: https://www.kevinbai.design/terminal-map-maker
         # More community tools available at: https://terminal.c1games.com/rules#Download
 
         # Place turrets that attack enemy units
@@ -131,6 +130,26 @@ class AlgoStrategy(gamelib.AlgoCore):
 
         # upgrade walls so they soak more damage
         game_state.attempt_upgrade(upgraded_wall_locations)
+
+    def build_stage2_defence(self, game_state):
+        """
+        Build basic defenses using hardcoded locations.
+        Remember to defend corners and avoid placing units in the front where enemy demolishers can attack them.
+        """
+        # More community tools available at: https://terminal.c1games.com/rules#Download
+
+        # Place turrets that attack enemy units
+        turret_locations = [[5, 12]]
+        # attempt_spawn will try to spawn units if we have resources, and will check if a blocking unit is already there
+        game_state.attempt_spawn(TURRET, turret_locations)
+        
+        # Place walls in front of turrets to soak up damage for them
+        wall_location1 = [[6, 12]]
+        game_state.attempt_spawn(WALL, wall_location1)
+        game_state.attempt_upgrade(wall_location1)
+        wall_location2 = [[8, 9]]
+        game_state.attempt_spawn(WALL, wall_location2)
+        game_state.attempt_upgrade(wall_location2)
 
 
     def build_reactive_defense(self, game_state):
