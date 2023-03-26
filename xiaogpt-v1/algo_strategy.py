@@ -88,10 +88,14 @@ class AlgoStrategy(gamelib.AlgoCore):
         self.build_stage2_defence(game_state)
         # STAGE 3: if SP and MP >= 12 build supports and launch attack, if opponent has more than 12S SP, attempt to call upgrade_turrets
         # check if supports are already present
-        unit1 = game_state.contains_stationary_unit(self.first_line_supports[0])
-        unit2 = game_state.contains_stationary_unit(self.first_line_supports[1])
+        unit1 = game_state.contains_stationary_unit(self.first_line_support[0])
+        unit2 = game_state.contains_stationary_unit(self.first_line_support[1])
+        # if(unit1 != False or unit2 != False):
+
+
+
         if ((game_state.get_resource(1,0) >= 12 and game_state.get_resource(0,0) >= 12) or (unit1 != False and unit2 != False and game_state.get_resource(1,0) >= 12)):
-            self.build_supports(game_state)            
+            self.build_supports(game_state)  
             self.launch_attack_weak(game_state)
 
         elif(game_state.get_resource(1,1) >= 12):
