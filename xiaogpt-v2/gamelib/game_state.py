@@ -376,6 +376,17 @@ class GameState:
         spawned_units = 0
         for location in locations:
             for i in range(num):
+
+                # # ! overwrite this, so if heath less than 25%, we delete it
+                # # get the health of the unit
+                # if is_stationary(unit_type):
+                #     if self.contains_stationary_unit(location) and self.game_map[location].heath:
+
+
+
+
+                # attempt_remove
+
                 if self.can_spawn(unit_type, location, 1):
                     x, y = map(int, location)
                     costs = self.type_cost(unit_type)
