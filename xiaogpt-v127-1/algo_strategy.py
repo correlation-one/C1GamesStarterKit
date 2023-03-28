@@ -25,6 +25,7 @@ class AlgoStrategy(gamelib.AlgoCore):
         seed = random.randrange(maxsize)
         random.seed(seed)
         gamelib.debug_write('Random seed: {}'.format(seed))
+        self.defensive_stage = 0
         self.attack_from = [19,5]
         self.first_support = [ [3, 12], [2, 12]]
         self.second_support = [[1, 12], [2, 11], [3, 11], [4, 11], [3, 10], [4, 10], [4, 9]]
@@ -101,16 +102,42 @@ class AlgoStrategy(gamelib.AlgoCore):
         For offense we will use long range demolishers if they place stationary units near the enemy's front.
         If there are no stationary units to attack in the front, we will send Scouts to try and score quickly.
         """
+        self.fix_health(game_state)
         # STAGE 1: Build defensive wall
         self.build_stage1_defences(game_state)
         # STAGE 2: Build additional wall
         self.build_stage2_defence(game_state)
         # STAGE 3: Build essential first support
         self.build_stage3_defence(game_state)
+        self.integrate_defensive_turrets(game_state)
         self.trigger_attack(game_state)
         if(self.get_MP(game_state, 0) >= 20):
             self.launch_attack_full(game_state)
 
+        # if(self.get_SP(game_state, 0) >= 40):
+        #     self.build_extra_supports(game_state)
+    def integrate_defensive_turrets(self, game_state):
+        if(self.get_SP(game_state, 0) >= 30):
+            self.defensive_stage = 1
+            game_state.attempt_remove([[7,9], [8, 9]])
+    def fix_health(self, game_state):
+        # recycle bad walls and stuff
+        for y in range(14):
+            for x in range(13-y, 15+y):
+                for unit in game_state.game_map[x,y]:
+                    if unit.stationary:
+                        if unit.health < unit.max_health * 0.25:
+                            game_state.attempt_remove([x,y])
+    def build_extra_supports(self,game_state):
+        turret_locations = [[25, 12], [24, 11], [23, 10]]
+        support_locations = [[12, 4], [13, 4], [14, 4]]
+        wall_locations = [[25, 13], [24, 12], [23, 11], [22, 10]]
+        wall2 = [[26, 13]]
+        game_state.attempt_spawn(TURRET, turret_locations)
+        game_state.attempt_spawn(SUPPORT,support_locations)
+        game_state.attempt_spawn(WALL,wall_locations)
+        game_state.attempt_spawn(WALL,wall2)
+        game_state.attempt_upgade(wall_locations)
 
     def build_second_wall(self,game_state):
         game_state.attempt_spawn(WALL, self.second_wall)
@@ -145,7 +172,7 @@ class AlgoStrategy(gamelib.AlgoCore):
         # More community tools available at: https://terminal.c1games.com/rules#Download
 
         # Place turrets that attack enemy units
-        turret_locations = [[5, 12]]
+        turret_locations = [[5, 12]]if self.defensive_stage == 0 else [[5, 12], [3, 12], [8,9]]
         # attempt_spawn will try to spawn units if we have resources, and will check if a blocking unit is already there
         game_state.attempt_spawn(TURRET, turret_locations)
         
@@ -153,9 +180,13 @@ class AlgoStrategy(gamelib.AlgoCore):
         wall_location1 = [[6, 12]]
         game_state.attempt_spawn(WALL, wall_location1)
         game_state.attempt_upgrade(wall_location1)
-        wall_location2 = [[8, 9]]
+        wall_location2 = [[8,9]] if self.defensive_stage == 0 else [[8,10],[9,9]]
+        wall_location2 += [[27,13], [26, 12], [25, 11]]
         game_state.attempt_spawn(WALL, wall_location2)
-        game_state.attempt_upgrade(wall_location2)
+
+        game_state.attempt_upgrade(wall_location2+[[26,12],[25, 11]])
+        if(game_state.turn_number % 4 == 0):
+            self.build_second_wall(game_state)
 
     def build_stage3_defence(self, game_state):
         my_SP = self.get_SP(game_state, 0)
@@ -182,7 +213,7 @@ class AlgoStrategy(gamelib.AlgoCore):
         count_of_all_support = self.number_of_units_on_the_locations(game_state, self.first_support + self.second_support)
         my_MP = self.get_MP(game_state, 0)
         # if we have enough money, launch an attack
-        if(my_MP >= 12):
+        if(my_MP >= 14):
             # if there is lots of supports, launch a strong attack
             if(count_of_all_support >= 2 and count_of_all_support <= 4):
                 self.launch_attack_weak(game_state)
@@ -208,6 +239,7 @@ class AlgoStrategy(gamelib.AlgoCore):
         game_state.attempt_spawn(SCOUT, self.attack_from, 1000)
     
     def launch_attack_strong(self, game_state):
+        game_state.attempt_spawn(DEMOLISHER, self.attack_from, 1)
         game_state.attempt_spawn(SCOUT, self.attack_from, 1000)
         
     
