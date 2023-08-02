@@ -47,9 +47,9 @@ class AlgoCore(object):
     def start(self):
         """ 
         Start the parsing loop.
-        After starting the algo, it will wait until it recieves information from the game 
-        engine, proccess this information, and respond if needed to take it's turn. 
-        The algo continues this loop until it recieves the "End" turn message from the game.
+        After starting the algo, it will wait until it receives information from the game 
+        engine, process this information, and respond if needed to take it's turn. 
+        The algo continues this loop until it receives the "End" turn message from the game.
         """
         debug_write(BANNER_TEXT)
 

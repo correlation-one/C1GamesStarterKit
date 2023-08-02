@@ -36,7 +36,7 @@ At a minimum you must implement the `on_turn` method which handles responding to
 the game state for each turn. Refer to the `starter_strategy` method for inspiration.
 
 If your algo requires initialization then you should also implement the
-`on_game_start` method and do any inital setup there.
+`on_game_start` method and do any initial setup there.
 
 ### `documentation`
 
@@ -72,11 +72,11 @@ just overwrite the core methods that you would like to behave differently.
 ### `gamelib/game_map.py`
 
 This module contains the `GameMap` class which is used to parse the game state
-and provide functions for querying it. 
+and provide functions for querying it.
 
 ### `gamelib/navigation.py`
 
-Functions and classes used to implement pathfinding.
+Functions and classes used to implement path-finding.
 
 ### `gamelib/tests.py`
 
@@ -96,5 +96,5 @@ Helper functions and values that do not yet have a better place to live.
 ## Strategy Overview
 
 The starter strategy is designed to highlight a few common `GameMap` functions
-and give the user a functioning example to work with. It's gameplan is to 
+and give the user a functioning example to work with. It's gameplan is to
 draw the C1 logo, place turrets in its corners, and randomly spawn units.

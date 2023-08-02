@@ -63,7 +63,7 @@ where REPLAY_FILE is the file you'd like to look at. You can list as many files 
 >py scripts/contributions/get_results.py -f [REPLAY_FILE].replay [REPLAY_FILE].replay [REPLAY_FILE].replay
 
 ----------------------------------------------------------------------------------------
--n: Run a number of replay files from most recent to olders (by date modified)
+-n: Run a number of replay files from most recent to the oldest (by date modified)
 
 You can specify how many replays back you would like to run (by date) using the -n parameter. Example:
 >py scripts/contributions/get_results.py -n 3
@@ -108,7 +108,7 @@ Where PARAMETERS is a list of the above options you would like to graph
 For example:
 >py scripts/contributions/get_results.py -g health
 
-You can get more specfic and choose when you would like a new graph, using ':' as a delimiter.
+You can get more specific and choose when you would like a new graph, using ':' as a delimiter.
 
 For example:
 >py scripts/contributions/get_results.py -g health : bits cores
@@ -215,7 +215,7 @@ def parse_args():
 	ap.add_argument(
 		"-v", "--verbose",
 		action='store_true',
-		help="will force the program to run each replay seperately and print information individual games\n\n")
+		help="will force the program to run each replay separately and print information individual games\n\n")
 	ap.add_argument(
 		"-avg", "--averages",
 		nargs="*",

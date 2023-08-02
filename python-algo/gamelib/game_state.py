@@ -185,7 +185,7 @@ class GameState:
 
         Args:
             resource_type: MP (1) or SP (0)
-            player_index: The index corresponding to the player whos resources you are querying, 0 for you 1 for the enemy
+            player_index: The index corresponding to the player whose resources you are querying, 0 for you 1 for the enemy
 
         Returns:
             The number of the given resource the given player controls
@@ -209,7 +209,7 @@ class GameState:
         """Gets a players resources as a list
 
         Args:
-            player_index: The index corresponding to the player whos resources you are querying, 0 for you 1 for the enemy
+            player_index: The index corresponding to the player whose resources you are querying, 0 for you 1 for the enemy
 
         Returns:
             [Float, Float] list where the first entry is SP the second is MP

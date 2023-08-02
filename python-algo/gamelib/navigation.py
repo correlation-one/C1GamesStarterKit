@@ -5,7 +5,7 @@ import queue
 from .util import debug_write
 
 class Node:
-    """A pathfinding node
+    """A path-finding node
 
     Attributes :
         * visited_idealness (bool): Have we visited this node during the idealness search step?
@@ -26,7 +26,7 @@ be accurate, but top players may want to write their own pathfinding
 code to maximise time efficiency
 """
 class ShortestPathFinder:
-    """Handles pathfinding
+    """Handles path-finding
 
     Attributes :
         * HORIZONTAL (int): A constant representing a horizontal movement
@@ -162,7 +162,7 @@ class ShortestPathFinder:
         """Breadth first search of the grid, setting the pathlengths of each node
 
         """
-        #VALDIATION
+        #VALIDATION
         #Add our most ideal tiles to current
         current = queue.Queue()
         if ideal_tile in end_points:

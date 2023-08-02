@@ -25,7 +25,7 @@ All code provided in the starterkit is meant to be used as a starting point, and
 ## Windows Setup
 
 If you are running Windows, you will need Windows PowerShell installed. This comes pre-installed on Windows 10.
-Some windows users might need to run the following PowerShell commands in adminstrator mode (right-click the 
+Some windows users might need to run the following PowerShell commands in administrator mode (right-click the
 PowerShell icon, and click "run as administrator"):
     
     `Set-ExecutionPolicy Unrestricted`
