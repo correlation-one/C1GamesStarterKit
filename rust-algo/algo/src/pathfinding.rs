@@ -58,7 +58,7 @@ enum LastDirection {
     Vertical
 }
 
-/// Pathfinding from a particular location will fail if that location is blocked by a wall.
+/// Path-finding from a particular location will fail if that location is blocked by a wall.
 #[derive(Clone, Debug)]
 pub struct StartedAtWall(pub Coords, pub Unit<StructureUnitType>);
 
