@@ -75,7 +75,7 @@ scripts\run_match.ps1 java-algo/algo-target python-algo
 py -3 run_match.py
 ```
 
-For details on modifying how a game is run locally including what is displayed, and time limits, check out the game-configs.json file in the parent directory. Documentation on what the variables do is available on [the doc server](./json-docs.html).
+For details on modifying how a game is run locally including what is displayed, and time limits, check out the game-configs.json file in the parent directory. Documentation on what the variables do is available on [the doc server](https://correlation-one.github.io/C1GamesStarterKit/).
 
 ## Uploading your algo
 
