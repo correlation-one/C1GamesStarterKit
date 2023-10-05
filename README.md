@@ -6,6 +6,15 @@ language-specific starter algos, to help you start your journey to develop the u
 For more details about competitions and the game itself please check out our
 [main site](https://terminal.c1games.com/rules).
 
+# Onboarding Details
+Owner : correlation-one/foundational-services 
+
+Team : Foundational Services
+
+DeepSource Auto-Onboard : No
+
+DevLake Auto-Onboard : No
+
 ## Manual Play
 
 We recommend you familiarize yourself with the game and its strategic elements, by playing manually,
