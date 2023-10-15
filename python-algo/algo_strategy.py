@@ -1,3 +1,4 @@
+from custom_logic.util.operations import Operation, OperationType
 import gamelib
 import random
 import math
@@ -5,6 +6,7 @@ import warnings
 from sys import maxsize
 import json
 
+from custom_logic.atk_strategy import AtkStrategies, AttackDirection, find_best_strategy, AttackStrategyNames
 
 """
 Most of the algo code you write will be in this file unless you create new
@@ -25,6 +27,11 @@ class AlgoStrategy(gamelib.AlgoCore):
         seed = random.randrange(maxsize)
         random.seed(seed)
         gamelib.debug_write('Random seed: {}'.format(seed))
+
+        # for 2-turn strategy
+        self.past_ops: list[Operation] | None = None
+        self.past_atk_name: AttackStrategyNames = None
+        self.past_direction: AttackDirection = None
 
     def on_game_start(self, config):
         """ 
@@ -59,47 +66,48 @@ class AlgoStrategy(gamelib.AlgoCore):
         self.starter_strategy(game_state)
 
         game_state.submit_turn()
+        
+    # returns (# of successful spawn, # of successful remove)
+    def run_operations(self, game_state, ops: list[Operation]) -> tuple[int, int]:
+        num_successful_spawn = 0
+        num_successful_remove = 0
+        for op in ops:
+            num_successful = op.run_operation(game_state)
+            match op.op_type:
+                case OperationType.SPAWN:
+                    num_successful_spawn += num_successful
+                case OperationType.REMOVE:
+                    num_successful_remove += num_successful
+        
+        return (num_successful_spawn, num_successful_remove)
 
+    def starter_strategy(self, game_state: gamelib.GameState):
+        if self.past_ops is not None:
+            self.run_operations(game_state, self.past_ops)
+
+            self.past_ops = None
+            self.past_atk_name = None
+            self.past_direction = None
+            return
+
+        num_mobile = game_state.get_resource(1)
+
+        best_strategy = find_best_strategy(game_state, num_mobile)
+        best_strategy_ops = best_strategy[0]
+        best_strategy_name = best_strategy[1]
+        best_strategy_dir = best_strategy[2]
+
+        if len(best_strategy_ops) == 2: # is 2 turn strategy
+            self.past_ops = best_strategy_ops[1]
+            self.past_atk_name = best_strategy_name
+            self.past_direction = best_strategy_dir
+        
+        self.run_operations(game_state, best_strategy_ops[0])
 
     """
     NOTE: All the methods after this point are part of the sample starter-algo
     strategy and can safely be replaced for your custom algo.
     """
-
-    def starter_strategy(self, game_state):
-        """
-        For defense we will use a spread out layout and some interceptors early on.
-        We will place turrets near locations the opponent managed to score on.
-        For offense we will use long range demolishers if they place stationary units near the enemy's front.
-        If there are no stationary units to attack in the front, we will send Scouts to try and score quickly.
-        """
-        # First, place basic defenses
-        self.build_defences(game_state)
-        # Now build reactive defenses based on where the enemy scored
-        self.build_reactive_defense(game_state)
-
-        # If the turn is less than 5, stall with interceptors and wait to see enemy's base
-        if game_state.turn_number < 5:
-            self.stall_with_interceptors(game_state)
-        else:
-            # Now let's analyze the enemy base to see where their defenses are concentrated.
-            # If they have many units in the front we can build a line for our demolishers to attack them at long range.
-            if self.detect_enemy_unit(game_state, unit_type=None, valid_x=None, valid_y=[14, 15]) > 10:
-                self.demolisher_line_strategy(game_state)
-            else:
-                # They don't have many units in the front so lets figure out their least defended area and send Scouts there.
-
-                # Only spawn Scouts every other turn
-                # Sending more at once is better since attacks can only hit a single scout at a time
-                if game_state.turn_number % 2 == 1:
-                    # To simplify we will just check sending them from back left and right
-                    scout_spawn_location_options = [[13, 0], [14, 0]]
-                    best_location = self.least_damage_spawn_location(game_state, scout_spawn_location_options)
-                    game_state.attempt_spawn(SCOUT, best_location, 1000)
-
-                # Lastly, if we have spare SP, let's build some supports
-                support_locations = [[13, 2], [14, 2], [13, 3], [14, 3]]
-                game_state.attempt_spawn(SUPPORT, support_locations)
 
     def build_defences(self, game_state):
         """
