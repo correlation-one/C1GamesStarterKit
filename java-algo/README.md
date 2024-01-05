@@ -38,11 +38,13 @@ which wraps your `GameLoop` in a `GameLoopDriver` and `.run()`s it.
 
 There are three callbacks for `GameLoop` which you can implement
 
+``` java
     void initialize(GameIO io, Config config)
     
     void onActionFrame(GameIO io, GameState move)
     
     void onTurn(GameIO io, GameState move)
+```
 
 However, it is only essential to implement `onTurn`. The `GameState` provides fast and 
 convenient access to the game board, and the ability to perform actions, such as placing a 
@@ -57,7 +59,7 @@ available on the playground. As an abstraction over this logic, the `GameIO` met
 returns a `PrintStream` which can be safely used for logging.
 
 ### Example Algo
-
+``` java
     // an example algo which showcases the key features provided in this repository
     public class ExampleAlgo implements GameLoop {
         public static void main(String[] args) {
@@ -105,6 +107,7 @@ returns a `PrintStream` which can be safely used for logging.
             }
         }
     }
+```
 
 ### Map Bounds
 
@@ -132,8 +135,10 @@ If you create your algo by modifying `src/main/java/com/c1games/terminal/starter
 then you can simply upload or compile. **If you create a new main method, in a new class file, for 
 your algo, you will have to modify the `mainClassName` in the `build.gradle` file.** It is currently set to:
 
+```
     // Define the main class for the application
     mainClassName = 'com.c1games.terminal.starteralgo.StarterAlgo'
+```
 
 If you change your build process such that you are no longer building to the directory `algo-target`, you can
 configure the path which will be packaged with the `compile-target` field in `algo.json`.
