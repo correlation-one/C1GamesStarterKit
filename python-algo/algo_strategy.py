@@ -75,6 +75,7 @@ class AlgoStrategy(gamelib.AlgoCore):
         """
         # First, place basic defenses
         self.build_defences(game_state)
+
         # Now build reactive defenses based on where the enemy scored
         self.build_reactive_defense(game_state)
 
@@ -110,15 +111,15 @@ class AlgoStrategy(gamelib.AlgoCore):
         # More community tools available at: https://terminal.c1games.com/rules#Download
 
         # Place turrets that attack enemy units
-        turret_locations = [[0, 13], [27, 13], [8, 11], [19, 11], [13, 11], [14, 11]]
+        turret_locations = [[2, 13], [25, 13], [6, 13], [21, 13], [11, 13], [16, 13]]
         # attempt_spawn will try to spawn units if we have resources, and will check if a blocking unit is already there
         game_state.attempt_spawn(TURRET, turret_locations)
         
-        # Place walls in front of turrets to soak up damage for them
-        wall_locations = [[8, 12], [19, 12]]
+        # # Place walls in front of turrets to soak up damage for them
+        wall_locations = [[3, 12], [24, 12]]
         game_state.attempt_spawn(WALL, wall_locations)
-        # upgrade walls so they soak more damage
-        game_state.attempt_upgrade(wall_locations)
+        # # upgrade walls so they soak more damage
+        # game_state.attempt_upgrade(wall_locations)
 
     def build_reactive_defense(self, game_state):
         """
@@ -127,9 +128,9 @@ class AlgoStrategy(gamelib.AlgoCore):
         as shown in the on_action_frame function
         """
         for location in self.scored_on_locations:
-            # Build turret one space above so that it doesn't block our own edge spawn locations
-            build_location = [location[0], location[1]+1]
-            game_state.attempt_spawn(TURRET, build_location)
+            game_state.attempt_upgrade(location)
+        corner_turrets = [[2, 13], [25, 13]]
+        game_state.attempt_upgrade(corner_turrets)
 
     def stall_with_interceptors(self, game_state):
         """

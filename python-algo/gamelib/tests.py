@@ -1,7 +1,7 @@
 import unittest
 import json
-from .game_state import GameState
-from .unit import GameUnit
+from gamelib.game_state import GameState
+from gamelib.unit import GameUnit
 
 class BasicTests(unittest.TestCase):
 
