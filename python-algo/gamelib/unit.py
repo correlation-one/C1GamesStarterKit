@@ -72,7 +72,7 @@ class GameUnit:
         self.max_health = type_config.get("startHealth", self.max_health)
         self.shieldPerUnit = type_config.get("shieldPerUnit", self.shieldPerUnit)
         self.shieldBonusPerY = type_config.get("shieldBonusPerY", self.shieldBonusPerY)
-        self.cost = [type_config.get("cost1", 0) + self.cost[0], type_config.get("cost2", 0) + self.cost[1]]
+        self.cost = [type_config.get("cost1", self.cost[0]) + self.cost[0], type_config.get("cost2", self.cost[1]) + self.cost[1]]
         self.upgraded = True
 
 
