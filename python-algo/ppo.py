@@ -97,6 +97,8 @@ class ActorCritic(nn.Module):
 
         if self.has_continuous_action_space:
             action_mean = self.actor(state)
+            action_mean = 9.5*action_mean # bounding type [-9.5, 9.5]
+            action_mean = torch.round(action_mean)
             cov_mat = torch.diag(self.action_var).unsqueeze(dim=0)
             dist = MultivariateNormal(action_mean, cov_mat)
         else:
