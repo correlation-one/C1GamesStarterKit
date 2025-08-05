@@ -9,6 +9,7 @@ from torch.distributions import MultivariateNormal
 from torch.distributions import Categorical
 
 import numpy as np
+import gymnasium as gym
 
 device = torch.device('cpu')
 
@@ -82,10 +83,14 @@ class ActorCritic(nn.Module):
 
 
     def forward(self, state):
-        action_mean = self.actor(state)
-        state_val = self.critic(state)
-
-        return action_mean, state_val
+        if self.has_continuous_action_space:
+            action_mean = self.actor(state)
+            state_val = self.critic(state)
+            return action_mean, state_val
+        else:
+            action_probs = self.actor(state)
+            state_val = self.critic(state)
+            return action_probs, state_val
 
     def act(self, state):
 
@@ -284,6 +289,7 @@ print("=========================================================================
 
 ####### initialize environment hyperparameters ######
 
+# TODO: make gym env
 env_name = "CartPole-v1"
 has_continuous_action_space = False
 
