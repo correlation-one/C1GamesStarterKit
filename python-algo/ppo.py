@@ -11,6 +11,8 @@ from torch.distributions import Categorical
 import numpy as np
 import gymnasium as gym
 
+from matplotlib import pyplot as plt
+
 device = torch.device('cpu')
 
 class RolloutBuffer:
@@ -322,6 +324,11 @@ lr_critic = 0.001       # learning rate for critic network
 
 random_seed = 0         # set random seed if required (0 = no random seed)
 
+# TODO: set vars
+action_std_decay_rate = 0
+min_action_std = 0
+action_std_decay_freq = 0
+
 #####################################################
 
 
@@ -510,11 +517,13 @@ while time_step <= max_training_timesteps:
             log_running_episodes = 0
 
         # printing average reward
+        avg_reward = []
         if time_step % print_freq == 0:
 
             # print average reward till last episode
             print_avg_reward = print_running_reward / print_running_episodes
             print_avg_reward = round(print_avg_reward, 2)
+            avg_reward.append(print_avg_reward)
 
             print("Episode : {} \t\t Timestep : {} \t\t Average Reward : {}".format(i_episode, time_step, print_avg_reward))
 
@@ -532,6 +541,11 @@ while time_step <= max_training_timesteps:
             
         # break; if the episode is over
         if done:
+            plt.xlabel("Epochs", list(epoch for epoch in range(1, K_epochs + 1)))
+            plt.ylabel("Average Reward", list(avg_reward))
+            plt.title("Average Reward per Epoch")
+            plt.savefig("avg_reward_per_epoch.png")
+            plt.show() # i had to do ts because plt.show() erases the canvas after lmfao
             break
 
     print_running_reward += current_ep_reward
