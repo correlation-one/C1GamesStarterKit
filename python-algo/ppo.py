@@ -9,7 +9,6 @@ from torch.distributions import MultivariateNormal
 from torch.distributions import Categorical
 
 import numpy as np
-import gymnasium as gym
 
 from matplotlib import pyplot as plt
 
