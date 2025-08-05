@@ -541,6 +541,7 @@ while time_step <= max_training_timesteps:
             
         # break; if the episode is over
         if done:
+            plt.figure(figsize=(10, 5))
             plt.xlabel("Epochs", list(epoch for epoch in range(1, K_epochs + 1)))
             plt.ylabel("Average Reward", list(avg_reward))
             plt.title("Average Reward per Epoch")
