@@ -81,9 +81,11 @@ class ActorCritic(nn.Module):
             print("--------------------------------------------------------------------------------------------")
 
 
-    def forward(self):
-        raise NotImplementedError
-    
+    def forward(self, state):
+        action_mean = self.actor(state)
+        state_val = self.critic(state)
+
+        return action_mean, state_val
 
     def act(self, state):
 
