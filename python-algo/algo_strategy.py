@@ -5,6 +5,8 @@ import warnings
 from sys import maxsize
 import json
 
+from ppo import PPO
+
 
 """
 Most of the algo code you write will be in this file unless you create new
