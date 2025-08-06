@@ -32,6 +32,15 @@ class RolloutBuffer:
         del self.state_values[:]
         del self.is_terminals[:]
 
+    def json(self):
+        return {
+            'actions': self.actions,
+            'states': self.states,
+            'logprobs': self.logprobs,
+            'rewards': self.rewards,
+            'state_values': self.state_values,
+            'is_terminals': self.is_terminals
+        }
 
 class ActorCritic(nn.Module):
     def __init__(self, state_dim, action_dim, has_continuous_action_space, action_std_init):
@@ -97,8 +106,6 @@ class ActorCritic(nn.Module):
 
         if self.has_continuous_action_space:
             action_mean = self.actor(state)
-            action_mean = 9.5*action_mean # bounding type [-9.5, 9.5]
-            action_mean = torch.round(action_mean)
             cov_mat = torch.diag(self.action_var).unsqueeze(dim=0)
             dist = MultivariateNormal(action_mean, cov_mat)
         else:
@@ -106,6 +113,8 @@ class ActorCritic(nn.Module):
             dist = Categorical(action_probs)
 
         action = dist.sample()
+        action = 5.5*action + 5
+        torch.round(action_mean)
         action_logprob = dist.log_prob(action)
         state_val = self.critic(state)
 
@@ -193,7 +202,7 @@ class PPO:
         print("--------------------------------------------------------------------------------------------")
 
 
-    def select_action(self, state):
+    def select_action(self, state, dims):
 
         if self.has_continuous_action_space:
             with torch.no_grad():
@@ -205,7 +214,7 @@ class PPO:
             self.buffer.logprobs.append(action_logprob)
             self.buffer.state_values.append(state_val)
 
-            return action.detach().cpu().numpy().flatten()
+            return torch.reshape(action.detach().cpu(), dims).numpy().flatten()
 
         else:
             with torch.no_grad():

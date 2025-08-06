@@ -1,6 +1,7 @@
 import os
 import glob
 import time
+import subprocess
 from datetime import datetime
 
 import torch
@@ -19,9 +20,8 @@ from ppo import PPO
 
 ####### initialize environment hyperparameters ######
 
-# TODO: make gym env
-env_name = "CartPole-v1"
-has_continuous_action_space = False
+# TODO: update these because theyre highk cooked.
+has_continuous_action_space = True
 
 max_ep_len = 400                    # max timesteps in one episode
 max_training_timesteps = int(1e5)   # break training loop if timeteps > max_training_timesteps
@@ -41,7 +41,7 @@ action_std = None
 
 ################ PPO hyperparameters ################
 
-
+env_name = 'terminal'
 update_timestep = max_ep_len * 4      # update policy every n timesteps
 K_epochs = 40               # update policy for K epochs
 eps_clip = 0.2              # clip parameter for PPO
@@ -59,22 +59,9 @@ action_std_decay_freq = 0
 
 #####################################################
 
-
-
-print("training environment name : " + env_name)
-
-env = gym.make(env_name)
-
 # state space dimension
-state_dim = env.observation_space.shape[0]
-
-# action space dimension
-if has_continuous_action_space:
-    action_dim = env.action_space.shape[0]
-else:
-    action_dim = env.action_space.n
-
-
+state_dim = 28*28 + 7
+action_dim = 14*28
 
 ###################### logging ######################
 
@@ -168,7 +155,6 @@ if random_seed:
     print("--------------------------------------------------------------------------------------------")
     print("setting random seed to ", random_seed)
     torch.manual_seed(random_seed)
-    env.seed(random_seed)
     np.random.seed(random_seed)
 
 #####################################################
@@ -207,7 +193,6 @@ i_episode = 0
 # training loop
 while time_step <= max_training_timesteps:
     
-    state = env.reset()
     current_ep_reward = 0
 
     for t in range(1, max_ep_len+1):
