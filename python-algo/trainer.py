@@ -31,7 +31,7 @@ print_freq = max_ep_len * 4     # print avg reward in the interval (in num times
 log_freq = max_ep_len * 2       # log avg reward in the interval (in num timesteps)
 save_model_freq = int(2e4)      # save model frequency (in num timesteps)
 
-action_std = None
+action_std = 0.6
 
 
 #####################################################
@@ -195,8 +195,15 @@ while time_step <= max_training_timesteps:
         with open(load_dir, 'r') as f:
             ppo_agent.buffer.json_load(json.load(f))
     
-    ppo_agent.update()
+    print("[DEBUG] Loaded {} states".format(len(ppo_agent.buffer.states)))
 
+    if len(ppo_agent.buffer.states) > 0: # very goofy error
+        ppo_agent.update()
+    else:
+         print("Warning: Buffer is empty, skipping update.")
+
+    # ppo_agent.update()
+    
     print("--------------------------------------------------------------------------------------------")
     print("saving model at : " + checkpoint_path)
     ppo_agent.save(checkpoint_path)

@@ -32,7 +32,7 @@ class AlgoStrategy(gamelib.AlgoCore):
         random.seed(seed)
         gamelib.debug_write('Random seed: {}'.format(seed))
 
-    def on_game_start(self, config):
+    def on_game_start(self, config, checkpoint_path=None):
         """ 
         Read in config and perform any initial setup here 
         """
@@ -66,6 +66,12 @@ class AlgoStrategy(gamelib.AlgoCore):
         }
 
         self.model = PPO(*self.modelconfig)
+        if checkpoint_path:
+            try:
+                self.model.load(checkpoint_path)
+                debug_write("Loaded model from checkpoint: {}".format(checkpoint_path))
+            except Exception as e:
+                debug_write("Warning: Failed to load model weights")
         self.model_num = 0
 
         self.action_std_decay_rate = 0
@@ -156,6 +162,8 @@ class AlgoStrategy(gamelib.AlgoCore):
                     """
                     This is the end game message. This means the game is over so break and finish the program.
                     """
+                    print("[DEBUG] Saving buffer with {} states".format(self.model.buffer.states))
+                    print("[DEBUG] First state shape: {}" if self.model.buffer.states else "No states in buffer")
                     game_state = gamelib.GameState(self.config, game_state_string)
                     self.model.buffer.rewards.append(self.reward(game_state))
                     self.model.buffer.is_terminals.append(True)
@@ -170,7 +178,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 
                     checkpoint_path = directory + "PPO_{}.json".format(self.model_num)
                     with open(checkpoint_path, 'w') as f:
-                        json.dumps(self.model.buffer.json_dump(), f)
+                        json.dump(self.model.buffer.json_dump(), f)
 
                     debug_write("Got end state, game over. Stopping algo.")
                     break
@@ -233,6 +241,7 @@ class AlgoStrategy(gamelib.AlgoCore):
         }
 
         action = self.model.select_action(inp, (28, 14))
+        # self.model.buffer.actions.append(action)
         self.action_to_strat(action)
 
         game_state.submit_turn()
