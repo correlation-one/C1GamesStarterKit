@@ -85,7 +85,7 @@ class AlgoStrategy(gamelib.AlgoCore):
         directory = "PPO_preTrained/terminal"
         if os.path.exists(directory) and os.listdir(directory):
             load_path = max([f for f in os.scandir(directory)], key=lambda x: x.stat().st_mtime).name
-            load_dir = directory + '/terminal/' + load_path
+            load_dir = directory + load_path
             self.model.load(load_dir)
             self.model_num = len(os.listdir(directory))
 
@@ -170,7 +170,7 @@ class AlgoStrategy(gamelib.AlgoCore):
 
                     checkpoint_path = directory + "PPO_{}.json".format(self.model_num)
                     with open(checkpoint_path, 'w') as f:
-                        json.dumps(self.model.buffer.json(), f)
+                        json.dumps(self.model.buffer.json_dump(), f)
 
                     debug_write("Got end state, game over. Stopping algo.")
                     break

@@ -32,7 +32,7 @@ class RolloutBuffer:
         del self.state_values[:]
         del self.is_terminals[:]
 
-    def json(self):
+    def json_dump(self):
         return {
             'actions': self.actions,
             'states': self.states,
@@ -41,6 +41,14 @@ class RolloutBuffer:
             'state_values': self.state_values,
             'is_terminals': self.is_terminals
         }
+    
+    def json_load(self, loaded):
+        self.actions = loaded['actions']
+        self.states = loaded['states']
+        self.logprobs = loaded['logprobs']
+        self.rewards = loaded['rewards']
+        self.state_values = loaded['state_values']
+        self.is_terminals = loaded['is_terminals']
 
 class ActorCritic(nn.Module):
     def __init__(self, state_dim, action_dim, has_continuous_action_space, action_std_init):
