@@ -96,17 +96,9 @@ print("logging at : " + log_f_name)
 
 run_num_pretrained = 0      #### change this to prevent overwriting weights in same env_name folder
 
-directory = "PPO_preTrained"
+directory = "./PPO_preTrained/"
 if not os.path.exists(directory):
       os.makedirs(directory)
-
-directory = directory + '/' + env_name + '/'
-if not os.path.exists(directory):
-      os.makedirs(directory)
-
-
-checkpoint_path = directory + "PPO_{}_{}_{}.pth".format(env_name, random_seed, run_num_pretrained)
-print("save checkpoint path : " + checkpoint_path)
 
 #####################################################
 
@@ -184,11 +176,24 @@ time_step = 0
 i_episode = 0
 
 while time_step <= max_training_timesteps:
-    
-    result = subprocess.run(['python3', 'run_match.py'], capture_output=True)
+
+    count = 0
+    for path in os.listdir(directory):
+        if os.path.isfile(os.path.join(directory, path)):
+            count += 1
+    print('File count:', count)
+    checkpoint_path = directory + "PPO_{}.pt".format(count)
+    print("--------------------------------------------------------------------------------------------")
+    print("saving model at : " + checkpoint_path)
+    ppo_agent.save(checkpoint_path)
+    print("model saved")
+    print("Elapsed Time  : ", datetime.now().replace(microsecond=0) - start_time)
+    print("--------------------------------------------------------------------------------------------")
+
+    result = subprocess.run(['python3', 'run_match.py'], cwd='../scripts', capture_output=True)
     print(result.stdout)
 
-    directory = "PPO_rewards/terminal/"
+    directory = "./PPO_rewards/terminal/"
     if os.path.exists(directory) and os.listdir(directory):
         load_path = max([f for f in os.scandir(directory)], key=lambda x: x.stat().st_mtime).name
         load_dir = directory + load_path
@@ -201,15 +206,6 @@ while time_step <= max_training_timesteps:
         ppo_agent.update()
     else:
          print("Warning: Buffer is empty, skipping update.")
-
-    # ppo_agent.update()
-    
-    print("--------------------------------------------------------------------------------------------")
-    print("saving model at : " + checkpoint_path)
-    ppo_agent.save(checkpoint_path)
-    print("model saved")
-    print("Elapsed Time  : ", datetime.now().replace(microsecond=0) - start_time)
-    print("--------------------------------------------------------------------------------------------")
 
 # TODO: logging, implement decay action std or smth
 

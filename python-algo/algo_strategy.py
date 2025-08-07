@@ -32,7 +32,7 @@ class AlgoStrategy(gamelib.AlgoCore):
         random.seed(seed)
         gamelib.debug_write('Random seed: {}'.format(seed))
 
-    def on_game_start(self, config, checkpoint_path=None):
+    def on_game_start(self, config):
         """ 
         Read in config and perform any initial setup here 
         """
@@ -66,12 +66,6 @@ class AlgoStrategy(gamelib.AlgoCore):
         }
 
         self.model = PPO(*self.modelconfig)
-        if checkpoint_path:
-            try:
-                self.model.load(checkpoint_path)
-                debug_write("Loaded model from checkpoint: {}".format(checkpoint_path))
-            except Exception as e:
-                debug_write("Warning: Failed to load model weights")
         self.model_num = 0
 
         self.action_std_decay_rate = 0
@@ -88,12 +82,13 @@ class AlgoStrategy(gamelib.AlgoCore):
 
         self.equivsp = 0
 
-        directory = "PPO_preTrained/terminal"
-        if os.path.exists(directory) and os.listdir(directory):
-            load_path = max([f for f in os.scandir(directory)], key=lambda x: x.stat().st_mtime).name
-            load_dir = directory + load_path
-            self.model.load(load_dir)
+        directory = "./python-algo/PPO_preTrained/"
+        if os.path.exists(directory):
+            debug_write(self.newest(directory))
+            self.model.load(self.newest(directory))
             self.model_num = len(os.listdir(directory))
+        else:
+            debug_write('kms why loading no work')
 
         self.config = config
         global WALL, SUPPORT, TURRET, SCOUT, DEMOLISHER, INTERCEPTOR, MP, SP, UNIT_TYPE_TO_INDEX
@@ -162,13 +157,12 @@ class AlgoStrategy(gamelib.AlgoCore):
                     """
                     This is the end game message. This means the game is over so break and finish the program.
                     """
-                    print("[DEBUG] Saving buffer with {} states".format(self.model.buffer.states))
-                    print("[DEBUG] First state shape: {}" if self.model.buffer.states else "No states in buffer")
+                    
                     game_state = gamelib.GameState(self.config, game_state_string)
                     self.model.buffer.rewards.append(self.reward(game_state))
                     self.model.buffer.is_terminals.append(True)
 
-                    directory = "PPO_rewards/"
+                    directory = "./python-algo/PPO_rewards/"
                     if not os.path.exists(directory):
                         os.makedirs(directory)
 
@@ -214,15 +208,15 @@ class AlgoStrategy(gamelib.AlgoCore):
                         if j <= 13:
                             self.equivsp += 0.75 * (arr[0].cost[0]) * (arr[0].health / arr[0].max_health)
 
-        inp = torch.cat(torch.reshape(torch.tensor(mapped), (28*28,)), torch.tensor([
-            game_state.get_resource('MP', 0),
-            game_state.get_resource('SP', 0),
+        inp = torch.cat((torch.reshape(torch.tensor(mapped), (28*28,)), torch.tensor([
+            game_state.get_resource(MP, 0),
+            game_state.get_resource(SP, 0),
             game_state.my_health,
-            game_state.get_resource('MP', 1),
-            game_state.get_resource('SP', 1),
+            game_state.get_resource(MP, 1),
+            game_state.get_resource(SP, 1),
             game_state.enemy_health,
             game_state.turn_number
-        ]), 0)
+        ])), 0)
 
         gamelib.debug_write('Performing turn {} of your custom algo strategy'.format(game_state.turn_number))
         game_state.suppress_warnings(True)  #Comment or remove this line to enable warnings.
@@ -234,15 +228,16 @@ class AlgoStrategy(gamelib.AlgoCore):
         self.prev_reward_calc = {
             'health': game_state.my_health,
             'ehealth': game_state.enemy_health,
-            'mp': game_state.get_resource('MP', 0),
-            'sp': game_state.get_resource('SP', 0),
+            'mp': game_state.get_resource(MP, 0),
+            'sp': game_state.get_resource(SP, 0),
             'board_equiv_sp': self.equivsp,
             'invp': 0
         }
 
-        action = self.model.select_action(inp, (28, 14))
-        # self.model.buffer.actions.append(action)
-        self.action_to_strat(action)
+        action = self.model.select_action(inp)
+        debug_write(action)
+        debug_write(len(action))
+        self.action_to_strat(action, game_state)
 
         game_state.submit_turn()
 
@@ -252,12 +247,20 @@ class AlgoStrategy(gamelib.AlgoCore):
     strategy and can safely be replaced for your custom algo.
     """
 
+    def newest(self, path):
+        files = os.listdir(path)
+        paths = [] 
+        for file in files:
+            if os.path.isfile(os.path.join(path, file)):
+                paths.append(os.path.join(path, file))
+        return max(paths, key=os.path.getctime)
+
     def reward(self, game_state):
         return (
-            (game_state.health - self.prev_reward_calc['health'])*self.dim(self.prev_reward_calc['health'], self.rewards['health']['a'])*self.rewards['health']['def'] +
+            (game_state.my_health - self.prev_reward_calc['health'])*self.dim(self.prev_reward_calc['health'], self.rewards['health']['a'])*self.rewards['health']['def'] +
             (self.prev_reward_calc['ehealth'] - game_state.enemy_health)*self.dim(self.prev_reward_calc['ehealth'], self.rewards['health']['a'])*self.rewards['health']['def'] +
-            (game_state.get_resource('MP', 0) - self.prev_reward_calc['mp'])*self.dim(self.prev_reward_calc['mp'], self.rewards['mp']['a'])*self.rewards['mp']['def'] + 
-            (game_state.get_resource('SP', 0) + self.prev_reward_calc['board_equiv_sp'] - self.equivsp - self.prev_reward_calc['sp'])*self.dim(self.prev_reward_calc['sp'], self.rewards['sp']['a'])*self.rewards['sp']['def'] +
+            (game_state.get_resource(MP, 0) - self.prev_reward_calc['mp'])*self.dim(self.prev_reward_calc['mp'], self.rewards['mp']['a'])*self.rewards['mp']['def'] + 
+            (game_state.get_resource(SP, 0) + self.prev_reward_calc['board_equiv_sp'] - self.equivsp - self.prev_reward_calc['sp'])*self.dim(self.prev_reward_calc['sp'], self.rewards['sp']['a'])*self.rewards['sp']['def'] +
             self.prev_reward_calc['invp']
         )
 
@@ -265,23 +268,23 @@ class AlgoStrategy(gamelib.AlgoCore):
         reference = [WALL, TURRET, SUPPORT, WALL, TURRET, SUPPORT, SCOUT, DEMOLISHER, INTERCEPTOR]
         for i in range(28):
             for j in range(14):
-                if action[i][j] != 0:
+                if action[14 * i + j] != 0:
                     if game_state.game_map.in_arena_bounds((i, j)):
-                        if action[i][j] == 10:
+                        if action[14 * i + j] == 10:
                             if not game_state.contains_stationary_unit((i, j)):
                                 self.prev_reward_calc['invp'] += self.rewards['invalid_placement']
                             else:
                                 game_state.attempt_remove([i, j])
                         elif not game_state.contains_stationary_unit((i, j)):
-                            if action[i][j] <= 6 and action[i][j] >= 4:
-                                if game_state.get_resources()[0] >= game_state.type_cost(reference[action[i][j] - 1], True)[0] + game_state.type_cost(reference[action[i][j] - 1])[0]:
-                                    game_state.attempt_spawn(reference[action[i][j] - 1], [(i, j)], 1)
+                            if action[14 * i + j] <= 6 and action[14 * i + j] >= 4:
+                                if game_state.get_resources()[0] >= game_state.type_cost(reference[action[14 * i + j] - 1], True)[0] + game_state.type_cost(reference[action[14 * i + j] - 1])[0]:
+                                    game_state.attempt_spawn(reference[action[14 * i + j] - 1], [(i, j)], 1)
                                     game_state.attempt_upgrade([(i, j)])
                                 else:
                                     self.prev_reward_calc['invp'] += self.rewards['invalid_placement']
                             else:
-                                if game_state.can_spawn(reference[action[i][j] - 1], (1, j), 1):
-                                    game_state.attempt_spawn(reference[action[i][j] - 1], [(i ,j)], 1)
+                                if game_state.can_spawn(reference[action[14 * i + j] - 1], (1, j), 1):
+                                    game_state.attempt_spawn(reference[action[14 * i + j] - 1], [(i ,j)], 1)
                                 else:
                                     self.prev_reward_calc['invp'] += self.rewards['invalid_placement']
                         else:

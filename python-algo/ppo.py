@@ -1,6 +1,7 @@
 import os
 import glob
 import time
+import json
 from datetime import datetime
 
 import torch
@@ -33,14 +34,14 @@ class RolloutBuffer:
         del self.is_terminals[:]
 
     def json_dump(self):
-        return {
+        return json.dumps({
             'actions': [a.cpu().numpy().tolist() for a in self.actions],
             'states': [s.cpu().numpy().tolist() for s in self.states],
             'logprobs': [lp.cpu().numpy().tolist() for lp in self.logprobs],
             'rewards': self.rewards,
             'state_values': [sv.cpu().numpy().tolist() for sv in self.state_values],
             'is_terminals': self.is_terminals
-        }
+        })
     
     def json_load(self, loaded):
         self.actions = [torch.tensor(a, dtype=torch.float32) for a in loaded['actions']]
@@ -67,8 +68,7 @@ class ActorCritic(nn.Module):
                             nn.Tanh(),
                             nn.Linear(64, 64),
                             nn.Tanh(),
-                            nn.Linear(64, action_dim),
-                            nn.Tanh()
+                            nn.Linear(64, action_dim)
                         )
         else:
             self.actor = nn.Sequential(
@@ -121,8 +121,7 @@ class ActorCritic(nn.Module):
             dist = Categorical(action_probs)
 
         action = dist.sample()
-        action = 5.5*action + 5
-        torch.round(action_mean)
+        action = torch.round(torch.clamp(action, min=-0.5, max=10.5)).to(dtype=torch.int64)
         action_logprob = dist.log_prob(action)
         state_val = self.critic(state)
 
@@ -210,7 +209,7 @@ class PPO:
         print("--------------------------------------------------------------------------------------------")
 
 
-    def select_action(self, state, dims):
+    def select_action(self, state):
 
         if self.has_continuous_action_space:
             with torch.no_grad():
@@ -222,7 +221,7 @@ class PPO:
             self.buffer.logprobs.append(action_logprob)
             self.buffer.state_values.append(state_val)
 
-            return torch.reshape(action.detach().cpu(), dims).numpy().flatten()
+            return action.detach().cpu().numpy().flatten()
 
         else:
             with torch.no_grad():

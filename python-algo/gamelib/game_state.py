@@ -175,8 +175,8 @@ class GameState:
         """Submit and end your turn.
             Must be called at the end of your turn or the algo will hang.
         """
-        build_string = json.dump(self._build_stack)
-        deploy_string = json.dump(self._deploy_stack)
+        build_string = json.dumps(self._build_stack)
+        deploy_string = json.dumps(self._deploy_stack)
         send_command(build_string)
         send_command(deploy_string)
 
