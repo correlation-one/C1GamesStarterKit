@@ -61,7 +61,7 @@ class GameUnit:
         self.cost = [type_config.get("cost1", 0), type_config.get("cost2", 0)]
 
 
-    def upgrade(self):
+    def upgrade(self, change_health=False):
         from .game_state import UNIT_TYPE_TO_INDEX
         type_config = self.config["unitInformation"][UNIT_TYPE_TO_INDEX[self.unit_type]].get("upgrade", {})
         self.speed = type_config.get("speed", self.speed)
@@ -69,6 +69,8 @@ class GameUnit:
         self.damage_i = type_config.get("attackDamageWalker", self.damage_i)
         self.attackRange = type_config.get("attackRange", self.attackRange)
         self.shieldRange = type_config.get("shieldRange", self.shieldRange)
+        if change_health:
+            self.health += type_config.get("startHealth", self.max_health) - self.max_health
         self.max_health = type_config.get("startHealth", self.max_health)
         self.shieldPerUnit = type_config.get("shieldPerUnit", self.shieldPerUnit)
         self.shieldBonusPerY = type_config.get("shieldBonusPerY", self.shieldBonusPerY)

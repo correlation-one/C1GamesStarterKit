@@ -445,7 +445,7 @@ class GameState:
                     if resources[SP] >= costs[SP] and resources[MP] >= costs[MP]:
                         self.__set_resource(SP, 0 - costs[SP])
                         self.__set_resource(MP, 0 - costs[MP])
-                        existing_unit.upgrade()
+                        existing_unit.upgrade(True)
                         self._build_stack.append((UPGRADE, x, y))
                         spawned_units += 1
             else:
