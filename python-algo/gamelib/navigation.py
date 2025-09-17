@@ -256,38 +256,41 @@ class ShortestPathFinder:
         """Compare two tiles and return True if the unit would rather move to the new one
 
         """
-        #True if we are moving in a different direction than prev move and prev is not
-        #If we previously moved horizontal, and now one of our options has a different x position then the other (the two options are not up/down)
-        if previous_move_direction == self.HORIZONTAL and not new_tile[0] == prev_best[0]:
-            #We want to go up now. If we have not changed our y, we are not going up
+        # True if prev_best moved in the same direction as previous_move_direction but new_tile doesn't.
+        # If we previously moved horizontal, and now one of our options has a different y position while he other has the same,
+        # we will prefer the one with the different y position.
+        if previous_move_direction == self.HORIZONTAL and abs(new_tile[0] - prev_best[0]) == 1:
+            # We want to go vertically now. If we have not changed our y, we are not going vertically.
             if prev_tile[1] == new_tile[1]:
-                return False 
-            return True
-        if previous_move_direction == self.VERTICAL and not new_tile[1] == prev_best[1]:
-            if prev_tile[0] == new_tile[0]:
-                #debug_write("contender {} has the same x coord as prev tile {} so we will keep best move {}".format(new_tile, prev_tile, prev_best))
                 return False
             return True
-        if previous_move_direction == 0: 
-            if prev_tile[1] == new_tile[1]: 
+        if previous_move_direction == self.VERTICAL and abs(new_tile[1] - prev_best[1]) == 1:
+            # We want to go horizontally now. If we have not changed our y, we are not going horizontally.
+            if prev_tile[0] == new_tile[0]:
+                # debug_write("contender {} has the same x coord as prev tile {} so we will keep best move {}".format(new_tile, prev_tile, prev_best))
+                return False
+            return True
+        if previous_move_direction == 0:
+            # We haven't moved at all which means we are at the start of our path (the edge).
+            if prev_tile[1] == new_tile[1]:
                 return False
             return True
         
-        #To make it here, both moves are on the same axis 
+        # To make it here, both moves are on the same axis.
         direction = self._get_direction_from_endpoints(end_points)
-        if new_tile[1] == prev_best[1]: #If they both moved horizontal...
-            if direction[0] == 1 and new_tile[0] > prev_best[0]: #If we moved right and right is our direction, we moved towards our direction
+        if new_tile[1] == prev_best[1]: # If they both moved horizontally...
+            if direction[0] == 1 and new_tile[0] > prev_best[0]: # If we moved right and right is our direction, we moved towards our direction.
                 return True 
-            if direction[0] == -1 and new_tile[0] < prev_best[0]: #If we moved left and left is our direction, we moved towards our direction
+            if direction[0] == -1 and new_tile[0] < prev_best[0]: # If we moved left and left is our direction, we moved towards our direction.
                 return True 
             return False 
-        if new_tile[0] == prev_best[0]: #If they both moved vertical...
-            if direction[1] == 1 and new_tile[1] > prev_best[1]: #If we moved up and up is our direction, we moved towards our direction
+        if new_tile[0] == prev_best[0]: # If they both moved vertically...
+            if direction[1] == 1 and new_tile[1] > prev_best[1]: # If we moved up and up is our direction, we moved towards our direction.
                 return True
-            if direction[1] == -1 and new_tile[1] < prev_best[1]: #If we moved down and down is our direction, we moved towards our direction
+            if direction[1] == -1 and new_tile[1] < prev_best[1]: # If we moved down and down is our direction, we moved towards our direction.
                 return True
             return False
-        return True
+        return True  # The code should never reach this point.
 
     def print_map(self):
         """Prints an ASCII version of the current game map for debug purposes
