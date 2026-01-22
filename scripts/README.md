@@ -4,7 +4,7 @@ These guides assume that your working directory is the root of this repository.
 
 ## Creating your algo
 
-Refer to the README within that directory for language-specific instructions for
+Refer to the README within python-algo for specific instructions for
 creating an algo.
 
 If you want, you can duplicate the algo directories, and create your algo by modifying the copy.
