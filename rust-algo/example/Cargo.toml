@@ -1,7 +1,0 @@
-[package]
-name = "example"
-version = "0.1.0"
-authors = ["Phoenix Kahlo <phoenix@correlation-one.com>"]
-
-[dependencies]
-algo = { path = "../algo" }
