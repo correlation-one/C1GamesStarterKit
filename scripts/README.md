@@ -4,8 +4,7 @@ These guides assume that your working directory is the root of this repository.
 
 ## Creating your algo
 
-Once you have selected one of the supported algo languages within this repository, such as `python-algo`
-or `java-algo`, refer to the README within that directory for language-specific instructions for
+Refer to the README within that directory for language-specific instructions for
 creating an algo.
 
 If you want, you can duplicate the algo directories, and create your algo by modifying the copy.
@@ -20,23 +19,21 @@ The way the script works is that it runs your algo and feeds it test states from
 
 You can also use this script to test what your algo does given a specific state by pointing it to a replay that contains that state. So if your algo seems to crash in a specific replay, just download the replay and use this script to see the errors in your algo locally.
 
-Note if using a compiled language (java, rust) make sure the {algo directory} argument points to where the compiled algo lives that contains the run.sh, which defaults to the algo-target folder.
-
 Examples:
 
 On Unix:
 
 ```console
 ./scripts/test_algo_mac python-algo/
-./scripts/test_algo_mac java-algo/algo-target/
-./scripts/test_algo_mac java-algo/algo-target/ ~/Downloads/my_replay.replay
+./scripts/test_algo_mac python-algo/algo-target/
+./scripts/test_algo_mac python-algo/algo-target/ ~/Downloads/my_replay.replay
 ```
 
 On Windows:
 
 ```console
-> .\scripts\test_algo_windows.exe .\rust-algo\algo-target\
-> .\scripts\test_algo_windows.exe .\rust-algo\algo-target\ C:\Users\Justin\Downloads\my_replay.replay
+> .\scripts\test_algo_windows.exe .\python-algo\algo-target\
+> .\scripts\test_algo_windows.exe .\python-algo\algo-target\ C:\Users\Justin\Downloads\my_replay.replay
 ```
 
 ## Running local matches
@@ -63,14 +60,14 @@ For example, you can run,
 On Unix:
 
 ```console
-scripts/run_match.sh python-algo java-algo/algo-target
-python3 ./scripts/run_match.py java-algo/algo-target java-algo/algo-target
+scripts/run_match.sh python-algo python-algo/algo-target
+python3 ./scripts/run_match.py python-algo/algo-target python-algo/algo-target
 ```
 
 On Windows:
 
 ```console
-scripts\run_match.ps1 java-algo/algo-target python-algo
+scripts\run_match.ps1 python-algo/algo-target python-algo
 py -3 run_match.py
 ```
 
