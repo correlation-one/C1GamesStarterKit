@@ -54,11 +54,6 @@ For detailed troubleshooting help related to both website problems and local dev
 Python algos require Python 3 to run. If you are running Unix (Mac OS or Linux), the command `python3` must run on 
 Bash or Terminal. If you are running Windows, the command `py -3` must run on PowerShell.
    
-#### Java Requirements
-
-Java algos require the Java Development Kit. Java algos also require [Gradle]
-(https://gradle.org/install/) for compilation.
-   
 ## Running Algos
 
 To run your algo locally or on our servers, or to enroll your algo in a competition, please see the [documentation 
