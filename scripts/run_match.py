@@ -30,6 +30,11 @@ default_algo = parent_dir + "\\python-algo\\run.ps1" if is_windows else parent_d
 algo1 = default_algo
 algo2 = default_algo
 
+checkpoint_path = ""
+if len(sys.argv) > 1:
+    checkpoint_path = sys.argv[1]
+    print("Checkpoint path: ", checkpoint_path)
+
 # If script run with params, use those algo locations when running the game
 if len(sys.argv) > 1:
     algo1 = sys.argv[1]
@@ -56,4 +61,7 @@ else:
 print("Algo 1: ", algo1)
 print("Algo 2:", algo2)
 
-run_single_game("cd {} && java -jar engine.jar work {} {}".format(parent_dir, algo1, algo2))
+run_command = f"cd {parent_dir} && java -jar engine.jar work {algo1} {algo2} {checkpoint_path}"
+
+# run_single_game("cd {} && java -jar engine.jar work {} {}".format(parent_dir, algo1, algo2))
+run_single_game(run_command)
