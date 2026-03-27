@@ -1,0 +1,12 @@
+aggression,run,winner,agent_points,opponent_points,turns,agent_sp_spent,agent_mp_spent,agent_mp_wasted,agent_sp_on_board,opponent_sp_spent,opponent_mp_spent,agent_crashed,opponent_crashed,replay_file,turn_count
+0.0,1,agent,6.0,5.0,100,464.0,950.0,0.0,62.0,38.0,919.0,False,False,aggression_0.00_run1.replay,100
+0.1,1,agent,9.0,3.0,100,508.0,950.0,0.0,58.0,38.0,919.0,False,False,aggression_0.10_run1.replay,100
+0.2,1,opponent,6.0,43.0,91,470.0,838.0,0.0,56.0,70.0,884.0,False,False,aggression_0.20_run1.replay,92
+0.3,1,opponent,5.0,43.0,49,290.0,350.0,0.0,52.0,64.0,420.0,False,False,aggression_0.30_run1.replay,50
+0.4,1,agent,43.0,0.0,43,174.0,420.0,6.8,96.0,76.0,283.0,False,False,aggression_0.40_run1.replay,44
+0.5,1,agent,40.0,7.0,33,174.0,300.0,6.0,96.0,70.0,223.0,False,False,aggression_0.50_run1.replay,34
+0.6,1,agent,46.0,35.0,25,177.0,207.0,8.5,92.0,76.0,189.0,False,False,aggression_0.60_run1.replay,26
+0.7,1,opponent,9.0,40.0,17,107.0,186.0,0.0,67.0,64.0,135.0,False,False,aggression_0.70_run1.replay,18
+0.8,1,opponent,9.0,40.0,17,107.0,188.0,0.0,67.0,64.0,135.0,False,False,aggression_0.80_run1.replay,18
+0.9,1,opponent,13.0,43.0,21,108.0,239.0,0.0,62.0,64.0,156.0,False,False,aggression_0.90_run1.replay,22
+1.0,1,opponent,16.0,47.0,11,70.0,118.0,0.0,62.0,48.0,78.0,False,False,aggression_1.00_run1.replay,12
