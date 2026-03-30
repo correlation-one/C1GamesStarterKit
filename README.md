@@ -91,39 +91,46 @@ python3 analyze_results.py
 
 ---
 
-## Results (11-value sweep, 1 run each)
 
-| Aggression | Winner | Agent Pts | Opp Pts | Turns | SP Spent | MP Spent |
-|:----------:|:------:|:---------:|:-------:|:-----:|:--------:|:--------:|
-| 0.00 | ✅ agent | 6 | 5 | 100 | 464 | 950 |
-| 0.10 | ✅ agent | 9 | 3 | 100 | 508 | 950 |
-| 0.20 | ❌ opponent | 6 | 43 | 91 | 470 | 838 |
-| 0.30 | ❌ opponent | 5 | 43 | 49 | 290 | 350 |
-| **0.40** | **✅ agent** | **43** | **0** | **43** | **174** | **420** |
-| **0.50** | **✅ agent** | **40** | **7** | **33** | **174** | **300** |
-| **0.60** | **✅ agent** | **46** | **35** | **25** | **177** | **207** |
-| 0.70 | ❌ opponent | 9 | 40 | 17 | 107 | 186 |
-| 0.80 | ❌ opponent | 9 | 40 | 17 | 107 | 188 |
-| 0.90 | ❌ opponent | 13 | 43 | 21 | 108 | 239 |
-| 1.00 | ❌ opponent | 16 | 47 | 11 | 70 | 118 |
+## Results (Multi-run sweep, 10 runs per aggression)
 
-### Key takeaways
+![Aggression vs. Win Rate Heatmap](sweep_heatmap.png)
+
+| Aggression | Matches | Win% | Avg Agent Pts | Avg Opp Pts | Avg Turns |
+|:----------:|:-------:|:----:|:-------------:|:-----------:|:---------:|
+| 0.00 | 10 | 80% | 9.0 | 4.3 | 100.0 |
+| 0.10 | 10 | 70% | 9.3 | 11.5 | 98.6 |
+| 0.20 | 10 | 40% | 7.2 | 22.3 | 93.4 |
+| 0.30 | 10 | 0% | 4.8 | 44.0 | 59.4 |
+| 0.40 | 10 | 100% | 49.7 | 4.8 | 43.6 |
+| 0.50 | 10 | 100% | 46.0 | 0.8 | 33.6 |
+| 0.60 | 10 | 100% | 48.1 | 29.7 | 25.0 |
+| 0.70 | 10 | 0% | 9.1 | 40.7 | 16.3 |
+| 0.80 | 10 | 0% | 10.1 | 40.5 | 16.5 |
+| 0.90 | 10 | 0% | 13.9 | 44.9 | 16.0 |
+| 1.00 | 10 | 0% | 10.1 | 47.2 | 11.0 |
+
+### Key takeaways (updated)
 
 1. **The sweet spot is aggression 0.4–0.6.** Agents that balance offense and defense
-   dominate — they score the most points, concede the fewest, and win decisively.
+  dominate — they win every match, score the most points, and finish games quickly.
 
 2. **Extremes both fail, but for different reasons:**
-   - **Full defense (0.0–0.1):** Survives to turn 100 but barely scores. "Wins" only because
-     the starter opponent is weak. Against a better opponent this turtling stalls out.
-   - **Full offense (0.7–1.0):** Scores some points but gets overwhelmed fast (games end by turn 11–21).
-     Not enough structure to survive counter-attacks.
+  - **Full defense (0.0–0.1):** Survives to turn 100 but barely scores. "Wins" only because
+    the starter opponent is weak. Against a better opponent this turtling stalls out.
+  - **Full offense (0.7–1.0):** Scores some points but gets overwhelmed fast (games end by turn 11–21).
+    Not enough structure to survive counter-attacks.
 
 3. **The 0.2–0.3 zone is a "valley"** — too aggressive to turtle effectively, but not aggressive
-   enough to kill the opponent before defenses crumble. Worst of both worlds.
+  enough to kill the opponent before defenses crumble. Worst of both worlds.
 
-4. **Resource efficiency varies dramatically:**
-   - Defense agents spend 464+ SP and 950 MP over 100 turns but score only 6–9 points.
-   - Balanced agents spend ~174 SP and ~300 MP in 33 turns and score 40+ points.
+4. **Statistical significance:**
+  - Running 10 matches per aggression value reveals the true trends and variability.
+  - The win rate heatmap visually highlights the sharp transition from success to failure.
+
+5. **Resource efficiency varies dramatically:**
+  - Defense agents spend 400–480 SP and 950 MP over 100 turns but score only ~9 points.
+  - Balanced agents spend ~150–200 SP and ~300 MP in 25–45 turns and score 45+ points.
 
 ### Alignment connection
 
