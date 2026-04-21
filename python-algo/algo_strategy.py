@@ -5,6 +5,12 @@ import warnings
 from sys import maxsize
 import json
 
+from state_memory import StateMemory
+from threat_analyzer import ThreatAnalyzer
+from economy_controller import EconomyController
+from defense_manager import DefenseManager
+from attack_planner import AttackPlanner
+
 
 """
 Most of the algo code you write will be in this file unless you create new
@@ -32,17 +38,11 @@ class AlgoStrategy(gamelib.AlgoCore):
         """
         gamelib.debug_write('Configuring your custom algo strategy...')
         self.config = config
-        global WALL, SUPPORT, TURRET, SCOUT, DEMOLISHER, INTERCEPTOR, MP, SP
-        WALL = config["unitInformation"][0]["shorthand"]
-        SUPPORT = config["unitInformation"][1]["shorthand"]
-        TURRET = config["unitInformation"][2]["shorthand"]
-        SCOUT = config["unitInformation"][3]["shorthand"]
-        DEMOLISHER = config["unitInformation"][4]["shorthand"]
-        INTERCEPTOR = config["unitInformation"][5]["shorthand"]
-        MP = 1
-        SP = 0
-        # This is a good place to do initial setup
-        self.scored_on_locations = []
+        self.state_memory = StateMemory()
+        self.threat_analyzer = ThreatAnalyzer()
+        self.economy_controller = EconomyController()
+        self.defense_manager = DefenseManager()
+        self.attack_planner = AttackPlanner()
 
     def on_turn(self, turn_state):
         """
@@ -56,7 +56,11 @@ class AlgoStrategy(gamelib.AlgoCore):
         gamelib.debug_write('Performing turn {} of your custom algo strategy'.format(game_state.turn_number))
         game_state.suppress_warnings(True)  #Comment or remove this line to enable warnings.
 
-        self.starter_strategy(game_state)
+        self.state_memory.update(game_state)
+        threat = self.threat_analyzer.assess(game_state, self.state_memory)
+        decision = self.economy_controller.decide(game_state, threat)
+        self.defense_manager.build(game_state, decision, self.state_memory)
+        self.attack_planner.plan_and_execute(game_state, decision)
 
         game_state.submit_turn()
 
@@ -218,19 +222,8 @@ class AlgoStrategy(gamelib.AlgoCore):
         Processing the action frames is complicated so we only suggest it if you have time and experience.
         Full doc on format of a game frame at in json-docs.html in the root of the Starterkit.
         """
-        # Let's record at what position we get scored on
-        state = json.loads(turn_string)
-        events = state["events"]
-        breaches = events["breach"]
-        for breach in breaches:
-            location = breach[0]
-            unit_owner_self = True if breach[4] == 1 else False
-            # When parsing the frame data directly, 
-            # 1 is integer for yourself, 2 is opponent (StarterKit code uses 0, 1 as player_index instead)
-            if not unit_owner_self:
-                gamelib.debug_write("Got scored on at: {}".format(location))
-                self.scored_on_locations.append(location)
-                gamelib.debug_write("All locations: {}".format(self.scored_on_locations))
+        game_state = json.loads(turn_string)
+        self.state_memory.record_action_frame(game_state)
 
 
 if __name__ == "__main__":
