@@ -174,6 +174,32 @@ def main():
     print("═" * 65)
     print(f"\nTotal: {len(results)} matches across {len(by_aggr)} aggression levels")
 
+    # ── Write summary CSV (averages per aggression level) ────────────────
+    summary_rows = []
+    for aggr in sorted(by_aggr.keys()):
+        rows = by_aggr[aggr]
+        n = len(rows)
+        wins = sum(1 for r in rows if r["winner"] == "agent")
+        summary_rows.append({
+            "aggression_value":     aggr,
+            "matches":              n,
+            "win_rate":             round(wins / n, 4),
+            "avg_agent_score":      round(sum(r["agent_points"] for r in rows) / n, 2),
+            "avg_opponent_score":   round(sum(r["opponent_points"] for r in rows) / n, 2),
+            "avg_turns":            round(sum(r["turns"] for r in rows) / n, 2),
+            "avg_agent_sp_spent":   round(sum(r["agent_sp_spent"] for r in rows) / n, 2),
+            "avg_agent_mp_spent":   round(sum(r["agent_mp_spent"] for r in rows) / n, 2),
+            "avg_agent_mp_wasted":  round(sum(r["agent_mp_wasted"] for r in rows) / n, 2),
+        })
+
+    summary_path = os.path.join(ROOT, "sweep_summary.csv")
+    with open(summary_path, "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=list(summary_rows[0].keys()))
+        writer.writeheader()
+        writer.writerows(summary_rows)
+    print(f"Summary CSV written to {summary_path}")
+    print("\n  Next step: python3 plot_results.py")
+
 
 if __name__ == "__main__":
     main()

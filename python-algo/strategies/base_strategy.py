@@ -48,12 +48,29 @@ class BaseStrategy:
         Args:
             aggression: float in [0, 1].
                 0.0 = full defense, 0.5 = balanced, 1.0 = full offense.
+
+        REWARD / OBJECTIVE FUNCTION
+        ─────────────────────────────────────────────────────────────────
+        The agent implicitly optimizes:
+
+            R(s, c) = c · offense_value(s) + (1 - c) · defense_value(s)
+
+        where `c` = aggression (this parameter).
+
+        All concrete thresholds and flags below are linearly interpolated
+        from their defensive extreme (c=0) to their offensive extreme (c=1)
+        using _lerp(defense_val, offense_val, c).
+
+        Higher c  →  attack sooner, spend more MP, skip upgrades/supports
+        Lower  c  →  build more structure, upgrade, stall early turns
+        ─────────────────────────────────────────────────────────────────
         """
         self.aggression = max(0.0, min(1.0, aggression))
         self.scored_on_locations = []
 
-        # ── Derived weights (interpolated from aggression) ───────────────
-        # MP threshold to attack:  high when defensive, low when offensive
+        # ── Derived weights (interpolated from aggression = c) ───────────
+        # MP threshold to attack:  high (defensive) → low (offensive)
+        # _lerp(defense_val=18, offense_val=5, t=c)
         self.offense_mp_threshold = _lerp(18, 5, self.aggression)
         # Whether to upgrade structures (less likely when offensive)
         self.upgrade_priority = self.aggression < 0.7
