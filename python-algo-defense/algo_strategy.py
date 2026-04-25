@@ -4,22 +4,19 @@ import os
 import json
 from sys import maxsize
 
-from strategies import STRATEGIES, make_strategy
+from strategies import STRATEGIES
 
 
 """
 algo_strategy.py — Entry point for the Terminal algo.
 
-Set AGGRESSION to a float 0.0–1.0 for continuous parameter sweep:
-    AGGRESSION=0.3   → somewhat defensive
+Set the STRATEGY environment variable to choose which agent variant runs:
+    STRATEGY=baseline   (default — balanced heuristic)
+    STRATEGY=offense    (attack-heavy)
+    STRATEGY=defense    (turtle / fortress)
 
-Or set the STRATEGY environment variable to use a named preset:
-    STRATEGY=baseline   (default — aggression 0.5)
-    STRATEGY=offense    (aggression 0.85)
-    STRATEGY=defense    (aggression 0.15)
-
-All variants share the same decision pipeline defined in
-strategies/base_strategy.py; only the aggression parameter differs.
+All three variants share the same decision pipeline defined in
+strategies/base_strategy.py; only the weights and thresholds differ.
 """
 
 
@@ -30,22 +27,15 @@ class AlgoStrategy(gamelib.AlgoCore):
         random.seed(seed)
         gamelib.debug_write('Random seed: {}'.format(seed))
 
-        # ── Pick strategy: AGGRESSION env var takes priority ─────────────
-        aggression_str = os.environ.get("AGGRESSION", "")
-        if aggression_str:
-            aggression = float(aggression_str)
-            self.strategy = make_strategy(aggression)
+        # Pick strategy variant from environment variable (default: baseline)
+        strategy_name = os.environ.get("STRATEGY", "baseline").lower()
+        if strategy_name not in STRATEGIES:
             gamelib.debug_write(
-                "Using aggression={:.2f}".format(aggression))
-        else:
-            strategy_name = os.environ.get("STRATEGY", "baseline").lower()
-            if strategy_name not in STRATEGIES:
-                gamelib.debug_write(
-                    "Unknown strategy '{}', falling back to baseline".format(
-                        strategy_name))
-                strategy_name = "baseline"
-            self.strategy = STRATEGIES[strategy_name]()
-            gamelib.debug_write("Using strategy: {}".format(strategy_name))
+                "Unknown strategy '{}', falling back to baseline".format(strategy_name))
+            strategy_name = "baseline"
+
+        self.strategy = STRATEGIES[strategy_name]()
+        gamelib.debug_write("Using strategy: {}".format(strategy_name))
 
     def on_game_start(self, config):
         """Read in config and perform any initial setup here."""

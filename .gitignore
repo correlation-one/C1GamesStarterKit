@@ -1,6 +1,7 @@
 *.DS_Store*
 *.replay
 *__pycache__*
+.sweep_tmp/
 
 algos/*
 !algos/starter-algo-ZIPME
