@@ -20,7 +20,7 @@ For documentation of the game-config or the json format the engine uses to commu
 
 For advanced users you can install java and run the game engine locally. Java 10 or above is required: [Java Development Kit 10 or above](http://www.oracle.com/technetwork/java/javase/downloads/jdk10-downloads-4416644.html).
 
-All code provided in the starterkit is meant to be used as a starting point, and can be overwritten completely by more advanced players to improve performance or provide additional utility.
+All code provided in the starterkit is meant to be used as a starting point, and can be overwritten almost completely by more advanced players to improve performance or provide additional utility. Note that `algo_strategy.py` must remain the entry point for Python algos — the platform requires this filename and will reject uploads where it is absent.
 
 ## Windows Setup
 
