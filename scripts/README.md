@@ -79,6 +79,8 @@ Zip your algo with the platform-appropriate `zipalgo` binary, found in the `scri
 will generate a deflated zip archive, while ignoring globs found in a `.zipignore` file in the directory
 being zipped. The `.zipignore` file works like a .gitignore file, but excludes files from the zip archive.
 
+> **Note:** Uploads missing `algo_strategy.py` will fail compilation.
+
 For example, you can run:
 
 ```console
