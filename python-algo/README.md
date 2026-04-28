@@ -38,6 +38,9 @@ the game state for each turn. Refer to the `starter_strategy` method for inspira
 If your algo requires initialization then you should also implement the
 `on_game_start` method and do any initial setup there.
 
+> **Important:** `algo_strategy.py` must remain the entry point for your algo. The
+> platform requires this — compilation will fail if it is missing or renamed.
+
 ### `documentation`
 
 A directory containing the sphinx generated programming documentation, as well as the files required
@@ -47,14 +50,13 @@ You will need to install sphinx for this command to work.
 
 ### `run.sh`
 
-A script that contains logic to invoke your code. You do not need to run this directly.
-See the 'scripts' folder in the Starterkit for information about testing locally.
+A script that invokes your algo. You do not need to run this directly, and you
+should not modify it. Any changes you make will be discarded by the platform.
 
 ### `run.ps1`
 
-A script that contains logic to invoke your code. You shouldn't need to change
-this unless you change file structure or require a more customized process
-startup.
+A Windows PowerShell script used to invoke your algo locally. Like `run.sh`,
+this file is managed by the platform and should not be modified.
 
 ### `gamelib/__init__.py`
 
